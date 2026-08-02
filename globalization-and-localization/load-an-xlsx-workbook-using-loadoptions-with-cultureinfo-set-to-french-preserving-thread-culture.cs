@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading;
 using Aspose.Cells;
 
-class Program
+class LoadWorkbookWithFrenchCulture
 {
     static void Main()
     {
@@ -12,19 +12,16 @@ class Program
 
         try
         {
-            // Set thread culture to French (France) to match the load options
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-
-            // Create LoadOptions and assign French culture
+            // Create LoadOptions and set French culture (fr-FR)
             LoadOptions loadOptions = new LoadOptions();
             loadOptions.CultureInfo = new CultureInfo("fr-FR");
 
-            // Load the XLSX workbook using the specified LoadOptions
+            // Load the workbook using the constructor that accepts file path and LoadOptions
             Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-            // Example usage: read the string value of cell A1
-            string cellValue = workbook.Worksheets[0].Cells["A1"].StringValue;
-            Console.WriteLine($"A1 value: {cellValue}");
+            // Example: read a cell value formatted according to French culture
+            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine("A1 value (French culture): " + sheet.Cells["A1"].StringValue);
         }
         finally
         {

@@ -4,57 +4,51 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTextureDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // 1. Create a new workbook and add some sample data.
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Product");
+        worksheet.Cells["B1"].PutValue("Quantity");
+        worksheet.Cells["A2"].PutValue("Apples");
+        worksheet.Cells["B2"].PutValue(150);
+        worksheet.Cells["A3"].PutValue("Oranges");
+        worksheet.Cells["B3"].PutValue(200);
+
+        // 2. Render the worksheet to a PNG image in memory using SheetRender.
+        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
+        renderOptions.ImageType = ImageType.Png;               // PNG output
+        SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
+
+        byte[] worksheetPng;
+        using (MemoryStream pngStream = new MemoryStream())
         {
-            // 1. Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue("Row 1");
-            sheet.Cells["B2"].PutValue(123);
-            sheet.Cells["A3"].PutValue("Row 2");
-            sheet.Cells["B3"].PutValue(456);
-
-            // 2. Render the first worksheet page to a PNG image in memory
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Png,
-                OnePagePerSheet = true
-            };
-            SheetRender sheetRender = new SheetRender(sheet, renderOptions);
-            byte[] pngBytes;
-            using (MemoryStream pngStream = new MemoryStream())
-            {
-                // Use the provided ToImage(int, Stream) method
-                sheetRender.ToImage(0, pngStream);
-                pngBytes = pngStream.ToArray(); // Capture the rendered PNG bytes
-            }
-
-            // 3. Add a rectangle shape that will use the rendered PNG as its texture
-            // Parameters: upper left row, upper left column, upper left offsetX, offsetY, width, height
-            Shape textureShape = sheet.Shapes.AddRectangle(5, 0, 0, 0, 200, 150);
-            // Set the fill type to texture
-            textureShape.Fill.FillType = FillType.Texture;
-
-            // 4. Apply the rendered PNG as the texture image data
-            TextureFill textureFill = textureShape.Fill.TextureFill;
-            textureFill.ImageData = pngBytes;          // Use the PNG bytes as texture
-            textureFill.IsTiling = true;               // Tile the texture for demonstration
-            textureFill.Transparency = 0.1;            // Slight transparency
-            textureFill.Scale = 0.8;                   // Scale the texture
-
-            // 5. Optionally configure 3D format to enhance visual effect
-            textureShape.ThreeDFormat.ExtrusionHeight = 20;
-            textureShape.ThreeDFormat.Material = PresetMaterialType.Metal;
-
-            // 6. Save the workbook with the textured shape
-            workbook.Save("WorkbookWithTextureShape.xlsx");
-
-            Console.WriteLine("Workbook created. The worksheet was rendered to PNG and applied as a texture to a shape.");
+            // Render first page (index 0) to the stream – follows the provided rule.
+            sheetRender.ToImage(0, pngStream);
+            worksheetPng = pngStream.ToArray();                // Capture image bytes
         }
+
+        // 3. Add a shape that will use the rendered worksheet image as a texture.
+        //    The shape is a rectangle positioned at row 5, column 2.
+        Shape texturedShape = worksheet.Shapes.AddRectangle(5, 2, 5, 2, 250, 150);
+        texturedShape.Fill.FillType = FillType.Texture;        // Enable texture fill
+
+        // 4. Configure the texture fill with the image data from step 2.
+        TextureFill textureFill = texturedShape.Fill.TextureFill;
+        textureFill.ImageData = worksheetPng;                  // Set the PNG as texture
+        textureFill.IsTiling = true;                          // Tile the texture
+        textureFill.Scale = 0.9;                               // Slightly shrink the texture
+
+        // 5. Apply 3‑D formatting to enhance visual effects.
+        texturedShape.ThreeDFormat.Material = PresetMaterialType.Metal; // Metallic look
+        texturedShape.ThreeDFormat.ExtrusionHeight = 20;                // Give depth
+        texturedShape.ThreeDFormat.RotationX = 25;                     // Tilt X
+        texturedShape.ThreeDFormat.RotationY = 15;                     // Tilt Y
+
+        // 6. Save the workbook with the textured 3‑D shape.
+        workbook.Save("WorkbookWith3DTextureShape.xlsx");
     }
 }

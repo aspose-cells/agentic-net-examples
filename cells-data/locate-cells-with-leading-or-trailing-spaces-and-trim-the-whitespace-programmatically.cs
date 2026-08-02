@@ -1,16 +1,16 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTrimWhitespace
+namespace TrimCellWhitespaceExample
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Load an existing workbook (replace with your actual file path)
+            // Load an existing workbook (replace with your file path)
             Workbook workbook = new Workbook("input.xlsx");
 
-            // Get the first worksheet (or iterate through all worksheets if needed)
+            // Get the first worksheet (or iterate through all worksheets as needed)
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
@@ -45,7 +45,7 @@ namespace AsposeCellsTrimWhitespace
                 }
             }
 
-            // Save the modified workbook (replace with desired output path)
+            // Save the modified workbook
             workbook.Save("output.xlsx");
         }
     }

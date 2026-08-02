@@ -1,43 +1,37 @@
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace MergeHeaderExample
+class MergeHeaderExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Define the header range (first row, columns A to E)
-            int firstRow = 0;          // zero‑based index for row 1
-            int firstColumn = 0;       // zero‑based index for column A
-            int totalRows = 1;         // only the header row
-            int totalColumns = 5;      // columns A‑E
+        // Define the header range (e.g., A1 to D1)
+        int firstRow = 0;          // zero‑based index for the first row (header row)
+        int firstColumn = 0;       // zero‑based index for the first column (A)
+        int totalRows = 1;         // only one row for the header
+        int totalColumns = 4;      // span four columns (A to D)
 
-            // Merge the header range into a single cell
-            cells.Merge(firstRow, firstColumn, totalRows, totalColumns);
+        // Merge the header cells into a single cell
+        cells.Merge(firstRow, firstColumn, totalRows, totalColumns);
 
-            // Create a style with navy blue fill
-            Style headerStyle = cells[firstRow, firstColumn].GetStyle();
-            headerStyle.Pattern = BackgroundType.Solid;   // enable solid fill
-            headerStyle.ForegroundColor = Color.Navy;     // set fill color to navy blue
-            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-            headerStyle.VerticalAlignment = TextAlignmentType.Center;
-            headerStyle.Font.IsBold = true;
+        // Create a style with navy blue fill color
+        Style headerStyle = workbook.CreateStyle();
+        headerStyle.Pattern = BackgroundType.Solid;
+        headerStyle.ForegroundColor = Color.Navy;
 
-            // Apply the style to the merged cell (upper‑left cell of the range)
-            cells[firstRow, firstColumn].SetStyle(headerStyle);
+        // Apply the style to the merged cell (top‑left cell of the range)
+        cells[firstRow, firstColumn].SetStyle(headerStyle);
 
-            // Optionally set a header value
-            cells[firstRow, firstColumn].PutValue("Report Header");
+        // Optional: set a header text
+        cells[firstRow, firstColumn].PutValue("Header");
 
-            // Save the workbook
-            workbook.Save("MergedHeader.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("MergedHeader.xlsx");
     }
 }

@@ -1,47 +1,40 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHyperlinkExample
+namespace AsposeCellsHyperlinkDemo
 {
     class Program
     {
         static void Main()
         {
-            // Array of file paths to be imported
+            // Array of file paths to be added to the worksheet
             string[] filePaths = new string[]
             {
-                @"C:\Documents\Report1.pdf",
-                @"C:\Documents\Report2.pdf",
-                @"C:\Documents\Report3.pdf"
+                @"C:\Docs\Report1.pdf",
+                @"C:\Docs\Report2.pdf",
+                @"C:\Docs\Report3.pdf"
             };
 
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define where to place the file paths (column A) and hyperlinks (column B)
-            int startRow = 0;          // Row index 0 => first row (A1)
-            int pathColumn = 0;        // Column index 0 => column A
-            int hyperlinkColumn = 1;   // Column index 1 => column B
+            // Import the file paths vertically starting at cell A1 (row 0, column 0)
+            // Using the ImportArray method with isVertical = true
+            worksheet.Cells.ImportArray(filePaths, 0, 0, true);
 
-            // Import the file path strings vertically into column A (ImportArray rule)
-            worksheet.Cells.ImportArray(filePaths, startRow, pathColumn, true);
-
-            // Add a hyperlink in the adjacent cell (column B) for each file path
+            // Add a hyperlink in the adjacent column (B) for each file path
             for (int i = 0; i < filePaths.Length; i++)
             {
-                int currentRow = startRow + i;
+                // Set display text for the hyperlink cell (optional)
+                worksheet.Cells[i, 1].PutValue("Open");
 
-                // Add hyperlink to the cell at (currentRow, hyperlinkColumn) (HyperlinkCollection.Add rule)
-                worksheet.Hyperlinks.Add(currentRow, hyperlinkColumn, 1, 1, filePaths[i]);
-
-                // Optional: set display text for the hyperlink
-                worksheet.Cells[currentRow, hyperlinkColumn].PutValue("Open File");
+                // Add hyperlink to cell B(i+1) pointing to the corresponding file path
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+                worksheet.Hyperlinks.Add(i, 1, 1, 1, filePaths[i]);
             }
 
-            // Save the workbook (lifecycle rule)
+            // Save the workbook to an Excel file
             workbook.Save("FilePathsWithHyperlinks.xlsx");
         }
     }

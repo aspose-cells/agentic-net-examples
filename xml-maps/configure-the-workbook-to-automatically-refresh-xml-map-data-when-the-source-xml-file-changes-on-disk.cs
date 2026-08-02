@@ -10,28 +10,26 @@ class Program
         Workbook workbook = new Workbook();
 
         // Add an XML map that points to the source XML file on disk
-        // The file "data.xml" should exist in the same folder as the executable
+        // Replace "data.xml" with the actual path to your XML file or XSD schema
         int mapIndex = workbook.Worksheets.XmlMaps.Add("data.xml");
         XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
         xmlMap.Name = "DataMap";
 
-        // Link a cell (A1) to an element in the XML map.
-        // Adjust the XPath to match the structure of your XML file.
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Item");
+        // (Optional) Link a cell to an element in the XML map so that the cell shows XML data
+        // Adjust the XPath to match your XML structure
+        workbook.Worksheets[0].Cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Item");
 
-        // Configure the external connection associated with the XML map
-        // so that it refreshes automatically when the workbook is opened.
-        if (workbook.DataConnections.Count > 0)
+        // Ensure that any external connections (including the one created for the XML map)
+        // are refreshed automatically when the workbook is opened
+        foreach (ExternalConnection connection in workbook.DataConnections)
         {
-            ExternalConnection connection = workbook.DataConnections[0];
             connection.RefreshOnLoad = true;
         }
 
-        // Additionally, tell Excel to refresh all connections on opening.
+        // Additionally, tell Excel to refresh all connections on opening the file
         workbook.Worksheets.IsRefreshAllConnections = true;
 
         // Save the workbook
-        workbook.Save("RefreshXmlMap.xlsx");
+        workbook.Save("WorkbookWithAutoRefresh.xlsx");
     }
 }

@@ -1,55 +1,31 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomNumberFormatToTsv
+namespace AsposeCellsCustomNumberFormatToTabCsv
 {
     class Program
     {
         static void Main()
         {
-            // Paths for input and output files
-            string sourcePath = "input.xlsx";
-            string outputPath = "output.tsv";
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            try
-            {
-                // Verify that the source workbook exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Error: Input file '{sourcePath}' not found.");
-                    return;
-                }
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(sourcePath);
+            // Apply a custom number format to a range (e.g., cells B2:B5)
+            Style customStyle = workbook.CreateStyle();
+            // Example: display numbers with two decimal places and thousand separator
+            customStyle.Custom = "#,##0.00";
+            // Apply the style to the desired range
+            sheet.Cells.CreateRange("B2", "B5").ApplyStyle(customStyle, new StyleFlag { NumberFormat = true });
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Configure text save options for CSV with tab delimiter
+            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
+            saveOptions.Separator = '\t'; // Tab delimiter
 
-                // Create a custom style with a number format (e.g., two decimal places)
-                Style customStyle = workbook.CreateStyle();
-                customStyle.Custom = "#,##0.00";
-
-                // Apply the custom style to a range of cells (column B rows 2‑5)
-                Aspose.Cells.Range range = sheet.Cells.CreateRange("B2:B5");
-                range.ApplyStyle(customStyle, new StyleFlag { NumberFormat = true });
-
-                // Prepare text save options for TSV output
-                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
-                {
-                    Separator = '\t' // Use tab as the delimiter
-                };
-
-                // Save the workbook as a tab‑delimited CSV file
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Workbook saved as tab‑delimited CSV to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as a tab‑delimited CSV file
+            workbook.Save("output.tsv", saveOptions);
         }
     }
 }

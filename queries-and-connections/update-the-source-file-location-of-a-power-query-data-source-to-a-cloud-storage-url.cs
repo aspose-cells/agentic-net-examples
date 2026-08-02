@@ -1,61 +1,42 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.ExternalConnections;
 using Aspose.Cells.QueryTables;
 
-namespace AsposeCellsExamples
+class UpdatePowerQuerySource
 {
-    public class UpdatePowerQuerySourceFileLocation
+    static void Main()
     {
-        public static void Main()
-        {
-            Run();
-        }
+        // Load the workbook that contains the Power Query data source
+        Workbook workbook = new Workbook("input.xlsx");
 
-        public static void Run()
+        // New cloud storage URL to replace the existing source file location
+        string cloudUrl = "https://mycloudstorage.blob.core.windows.net/data/sourcefile.xlsx";
+
+        // Iterate through all external connections in the workbook
+        foreach (ExternalConnection connection in workbook.DataConnections)
         {
-            try
+            // If the connection uses a file‑based source, update its SourceFile property
+            if (!string.IsNullOrEmpty(connection.SourceFile))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+                connection.SourceFile = cloudUrl;
+            }
 
-                // Verify input file exists
-                if (!File.Exists(inputPath))
+            // For Power Query connections, also update any file paths inside the formula items
+            if (connection.PowerQueryFormula != null)
+            {
+                foreach (PowerQueryFormulaItem item in connection.PowerQueryFormula.PowerQueryFormulaItems)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook containing Power Query connections
-                Workbook workbook = new Workbook(inputPath);
-
-                // Define old path segment and new cloud storage URL
-                string oldPathSegment = @"C:\Data\";
-                string newCloudUrl = "https://cloudstorage.example.com/data/";
-
-                // Iterate through all Power Query formulas
-                foreach (PowerQueryFormula formula in workbook.DataMashup.PowerQueryFormulas)
-                {
-                    foreach (PowerQueryFormulaItem item in formula.PowerQueryFormulaItems)
+                    if (!string.IsNullOrEmpty(item.Value) && item.Value.Contains("C:\\"))
                     {
-                        // Replace old path with new URL if present
-                        if (!string.IsNullOrEmpty(item.Value) && item.Value.Contains(oldPathSegment))
-                        {
-                            string updatedValue = item.Value.Replace(oldPathSegment, newCloudUrl);
-                            item.Value = updatedValue;
-                            Console.WriteLine($"Updated Power Query item: {updatedValue}");
-                        }
+                        // Replace local drive references with the cloud URL
+                        item.Value = item.Value.Replace("C:\\", cloudUrl);
                     }
                 }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
             }
         }
+
+        // Save the workbook with the updated data source location
+        workbook.Save("output.xlsx");
     }
 }

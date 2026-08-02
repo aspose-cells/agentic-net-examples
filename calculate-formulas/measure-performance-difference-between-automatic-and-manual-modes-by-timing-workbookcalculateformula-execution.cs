@@ -2,63 +2,70 @@ using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Define size of data set to generate a noticeable calculation load
+        int dataRows = 1000;
+        int dataCols = 10;
+
+        // Fill cells with numeric values
+        for (int row = 0; row < dataRows; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate the worksheet with sample data and formulas
-            // Column A will contain base values, columns B‑J will contain formulas that reference the previous column
-            const int totalRows = 500;
-            const int totalCols = 10; // A‑J
-
-            for (int row = 0; row < totalRows; row++)
+            for (int col = 0; col < dataCols; col++)
             {
-                // Base value in column A
-                cells[row, 0].PutValue(row + 1);
-
-                // Formulas in columns B‑J
-                for (int col = 1; col < totalCols; col++)
-                {
-                    // Example formula: =B1*2 (each cell doubles the value of the left neighbour)
-                    string leftCellName = CellsHelper.CellIndexToName(row, col - 1);
-                    cells[row, col].Formula = $"={leftCellName}*2";
-                }
+                cells[row, col].PutValue(row + col);
             }
-
-            // -----------------------------------------------------------------
-            // Measure calculation time in Automatic mode
-            // -----------------------------------------------------------------
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-            Stopwatch swAuto = Stopwatch.StartNew();
-            workbook.CalculateFormula(); // calculate all formulas
-            swAuto.Stop();
-
-            Console.WriteLine($"Automatic mode calculation time: {swAuto.ElapsedMilliseconds} ms");
-
-            // -----------------------------------------------------------------
-            // Measure calculation time in Manual mode
-            // -----------------------------------------------------------------
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Optionally change a cell to simulate a typical manual recalculation scenario
-            cells[0, 0].PutValue(999);
-
-            Stopwatch swManual = Stopwatch.StartNew();
-            workbook.CalculateFormula(); // explicit calculation required in Manual mode
-            swManual.Stop();
-
-            Console.WriteLine($"Manual mode calculation time: {swManual.ElapsedMilliseconds} ms");
-
-            // Save the workbook (optional, demonstrates usage of the save API)
-            workbook.Save("PerformanceDemo.xlsx");
         }
+
+        // Add a formula in each row that sums the values of that row
+        for (int row = 0; row < dataRows; row++)
+        {
+            // Example: =SUM(A1:J1) for the first row, =SUM(A2:J2) for the second, etc.
+            string sumFormula = $"=SUM(A{row + 1}:{GetColumnLetter(dataCols)}{row + 1})";
+            cells[row, dataCols].Formula = sumFormula;
+        }
+
+        // -------------------- Automatic mode timing --------------------
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        Stopwatch sw = Stopwatch.StartNew();
+        workbook.CalculateFormula(); // Calculate all formulas
+        sw.Stop();
+        Console.WriteLine($"Automatic mode calculation time: {sw.ElapsedMilliseconds} ms");
+
+        // -------------------- Manual mode timing --------------------
+        // Switch to manual mode
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+
+        // Modify a cell to ensure a recalculation is needed
+        cells[0, 0].PutValue(999);
+
+        sw.Restart();
+        workbook.CalculateFormula(); // Manual calculation invoked explicitly
+        sw.Stop();
+        Console.WriteLine($"Manual mode calculation time: {sw.ElapsedMilliseconds} ms");
+
+        // Save the workbook (optional, demonstrates usage of the save rule)
+        workbook.Save("PerformanceComparison.xlsx");
+    }
+
+    // Helper method to convert a 1‑based column index to its Excel column letter (e.g., 1 -> A, 27 -> AA)
+    static string GetColumnLetter(int columnNumber)
+    {
+        int dividend = columnNumber;
+        string columnName = string.Empty;
+        while (dividend > 0)
+        {
+            int modulo = (dividend - 1) % 26;
+            columnName = Convert.ToChar(65 + modulo) + columnName;
+            dividend = (dividend - modulo) / 26;
+        }
+        return columnName;
     }
 }

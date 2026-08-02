@@ -1,20 +1,29 @@
+// Title: C# – Batch copy all drawing objects from a template worksheet to multiple new sheets with Aspose.Cells
+// Description: Loads a template workbook, extracts every Shape from the "Template" worksheet, creates a destination workbook, adds several blank worksheets, and uses Shapes.AddCopy to duplicate each drawing object on every new sheet while preserving its original row and column placement. The final workbook is saved as XLSX.
+// Keywords: Aspose.Cells | C# copy shapes | batch copy drawing objects | worksheet shapes | AddCopy method | Aspose.Cells .NET example | duplicate drawing objects | copy shapes multiple sheets | Excel shape cloning | Aspose.Cells GitHub sample | Aspose.Cells API | copy charts programmatically
+// Common Searches: Aspose.Cells copy shapes to new worksheet C# | batch copy drawing objects Aspose.Cells .NET | duplicate all shapes from a template sheet using Aspose | how to copy worksheet shapes to multiple sheets in C# | AddCopy shape example Aspose.Cells | copy charts and images across worksheets C# Aspose | Aspose.Cells shape cloning code sample
+// Developer Intent: Programmatically duplicate every shape from a template worksheet onto each newly created worksheet in a separate workbook.
+// Use Cases: Generate a report workbook where a pre‑designed header graphic is automatically placed on every report sheet. | Create a batch of invoice worksheets that share the same company logo, watermark, and decorative shapes. | Clone a dashboard layout—including charts, images, and connectors—across several analysis sheets while keeping exact positions.
+// AI Prompts: Write C# code using Aspose.Cells to copy all shapes from a source worksheet to a list of target worksheets, preserving row/column positions and handling errors. | Explain how to modify the batch copy loop to apply different row or column offsets based on the target worksheet index. | Show how to extend the example to also copy shape formatting such as line style, fill color, and text formatting.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsBatchCopy
+namespace AsposeCellsBatchCopyDrawingObjects
 {
+    // Loads a template workbook, extracts every Shape from the "Template" worksheet, creates a destination workbook, adds several blank worksheets, and uses Shapes.AddCopy to duplicate each drawing object on every new sheet while preserving its original row and column placement. The final workbook is saved as XLSX.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string templatePath = "Template.xlsx";
-                const string resultPath = "BatchCopyResult.xlsx";
+                const string templatePath = "TemplateWorkbook.xlsx";
+                const string destinationPath = "DestinationWorkbook.xlsx";
 
-                // Verify that the template file exists
+                // Verify that the template file exists to avoid FileNotFoundException
                 if (!File.Exists(templatePath))
                 {
                     Console.WriteLine($"Template file not found: {templatePath}");
@@ -23,47 +32,56 @@ namespace AsposeCellsBatchCopy
 
                 // Load the template workbook that contains the source worksheet with drawing objects
                 Workbook templateWorkbook = new Workbook(templatePath);
-                Worksheet templateSheet = templateWorkbook.Worksheets[0];
+                Worksheet templateSheet = templateWorkbook.Worksheets["Template"]; // source sheet name
 
-                // Number of new worksheets to create
-                int newSheetCount = 5;
-
-                for (int i = 0; i < newSheetCount; i++)
+                if (templateSheet == null)
                 {
-                    // Create a new blank worksheet
-                    string newSheetName = $"Copy_{i + 1}";
-                    Worksheet newSheet = templateWorkbook.Worksheets.Add(newSheetName);
+                    Console.WriteLine("Source worksheet 'Template' not found in the template workbook.");
+                    return;
+                }
 
-                    ShapeCollection srcShapes = templateSheet.Shapes;
-                    ShapeCollection destShapes = newSheet.Shapes;
+                // Create a new workbook that will receive the copied drawing objects
+                Workbook destinationWorkbook = new Workbook();
+                // Remove the default sheet created by the constructor
+                destinationWorkbook.Worksheets.Clear();
 
-                    // Copy each shape from the source worksheet to the destination worksheet
-                    foreach (Shape srcShape in srcShapes)
+                // Names of the new worksheets to be created
+                string[] newSheetNames = { "CopySheet1", "CopySheet2", "CopySheet3" };
+
+                foreach (string sheetName in newSheetNames)
+                {
+                    // Add a new blank worksheet
+                    Worksheet newSheet = destinationWorkbook.Worksheets.Add(sheetName);
+
+                    // Iterate through all shapes (drawing objects) in the template sheet
+                    foreach (Shape sourceShape in templateSheet.Shapes)
                     {
                         try
                         {
-                            // Preserve original position using shape bounds
-                            int topRow = srcShape.UpperLeftRow;
-                            int leftColumn = srcShape.UpperLeftColumn;
-                            int bottomRow = srcShape.LowerRightRow;
-                            int rightColumn = srcShape.LowerRightColumn;
-
-                            // AddCopy requires the target cell range for the shape
-                            destShapes.AddCopy(srcShape, topRow, leftColumn, bottomRow, rightColumn);
+                            // Copy each shape to the new worksheet preserving its original cell position.
+                            // Offsets are set to 0 because the Shape class in this version does not expose offset properties.
+                            newSheet.Shapes.AddCopy(
+                                sourceShape,
+                                sourceShape.UpperLeftRow,
+                                0, // row offset (pixels)
+                                sourceShape.UpperLeftColumn,
+                                0  // column offset (pixels)
+                            );
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to copy shape '{srcShape.Name}': {ex.Message}");
+                            Console.WriteLine($"Failed to copy shape '{sourceShape.Name}': {ex.Message}");
                         }
                     }
                 }
 
-                // Save the workbook with the newly created worksheets that now contain the copied drawing objects
-                templateWorkbook.Save(resultPath);
-                Console.WriteLine($"Workbook saved successfully to {resultPath}");
+                // Save the result workbook
+                destinationWorkbook.Save(destinationPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {destinationPath}");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

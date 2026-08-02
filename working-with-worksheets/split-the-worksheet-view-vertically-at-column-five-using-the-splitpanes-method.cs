@@ -1,55 +1,38 @@
-using System;
-using System.IO;
+// Title: C# – Split an Excel worksheet vertically at column 5 using Aspose.Cells
+// Description: Shows how to enable pane splitting, set the first visible column of the right pane to column 5 (after column E), and save the workbook with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# split pane | vertical split column 5 | FirstVisibleColumnOfRightPane | Excel pane splitting .NET
+// Common Searches: Aspose.Cells split pane at specific column | How to set vertical split after column E in C# | GetPanes FirstVisibleColumnOfRightPane example | Split Excel view vertically using Aspose.Cells
+// Developer Intent: Create a vertical split so the right pane starts at column 5.
+// Use Cases: Freeze the first five columns while scrolling horizontally | Compare data side‑by‑side in large worksheets | Design a template where left columns stay visible during data entry
+// AI Prompts: Write C# code to split a worksheet at column 10 and freeze the left pane with Aspose.Cells. | Show how to read and modify the current vertical split position at runtime. | Provide an example that adds both a vertical split at column 5 and a horizontal split at row 15 using Aspose.Cells.
+
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Shows how to enable pane splitting, set the first visible column of the right pane to column 5 (after column E), and save the workbook with Aspose.Cells for .NET.
+class SplitWorksheetVertically
 {
-    public class SplitWorksheetVerticallyAtColumnFive
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // (Optional) Add sample data
+        for (int i = 0; i < 20; i++)
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Split the worksheet window (creates two panes)
-                worksheet.Split();
-
-                // Set the first visible column of the right pane to column index 5 (zero‑based)
-                PaneCollection panes = worksheet.GetPanes();
-                panes.FirstVisibleColumnOfRightPane = 5; // Splits vertically at column F (index 5)
-
-                // Define output file path
-                string outputPath = "SplitAtColumnFive.xlsx";
-
-                // Ensure the directory exists before saving
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            sheet.Cells[i, 0].PutValue($"Row {i + 1}");
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SplitWorksheetVerticallyAtColumnFive.Run();
-        }
+        // Split the window
+        sheet.Split();
+
+        // Get the pane collection and set the vertical split at column 5 (zero‑based index)
+        PaneCollection panes = sheet.GetPanes();
+        panes.FirstVisibleColumnOfRightPane = 5; // splits after column E
+
+        // Save the workbook
+        workbook.Save("SplitAtColumn5.xlsx", SaveFormat.Xlsx);
     }
 }

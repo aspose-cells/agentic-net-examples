@@ -1,61 +1,53 @@
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlHeadingVerification
 {
+    // Author: Aspose.Cells .NET example – verifies worksheet title appears as a heading in exported HTML
     class Program
     {
         static void Main()
         {
-            // -------------------- Create workbook --------------------
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // First worksheet with custom name
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sales";
-            sheet1.Cells["A1"].PutValue("Product");
-            sheet1.Cells["B1"].PutValue("Quantity");
-            sheet1.Cells["A2"].PutValue("Apple");
-            sheet1.Cells["B2"].PutValue(150);
+            // Set a custom worksheet name (this will be the title we expect in HTML)
+            string worksheetTitle = "SalesReport";
+            sheet.Name = worksheetTitle;
 
-            // Second worksheet
-            Worksheet sheet2 = workbook.Worksheets.Add("Inventory");
-            sheet2.Cells["A1"].PutValue("Item");
-            sheet2.Cells["B1"].PutValue("Stock");
-            sheet2.Cells["A2"].PutValue("Banana");
-            sheet2.Cells["B2"].PutValue(300);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(150);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(200);
 
-            // -------------------- Save as single HTML file --------------------
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Configure HTML save options to export row/column headings and worksheet properties
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                SaveAsSingleFile = true,   // all sheets in one HTML file
-                ShowAllSheets = true,      // ensure all sheets are rendered
-                ExportHeadings = true      // export row/column headings (optional)
+                ExportRowColumnHeadings = true,   // export A, B, 1, 2 … headings
+                ExportWorksheetProperties = true // include worksheet name as a heading
             };
-            string htmlPath = "WorkbookExport.html";
-            workbook.Save(htmlPath, saveOptions);
 
-            // -------------------- Load generated HTML --------------------
+            // Save the workbook as HTML
+            string htmlPath = "SalesReport.html";
+            workbook.Save(htmlPath, htmlOptions);
+
+            // Read the generated HTML file
             string htmlContent = File.ReadAllText(htmlPath);
 
-            // -------------------- Verify heading tags contain worksheet titles --------------------
-            bool salesHeadingFound = Regex.IsMatch(htmlContent, @"<h[1-6][^>]*>\s*Sales\s*</h[1-6]>", RegexOptions.IgnoreCase);
-            bool inventoryHeadingFound = Regex.IsMatch(htmlContent, @"<h[1-6][^>]*>\s*Inventory\s*</h[1-6]>", RegexOptions.IgnoreCase);
+            // Simple verification: check if the worksheet title appears inside an <h1> tag
+            // (Aspose.Cells typically wraps the worksheet name in a <h1> element)
+            string expectedHeading = $"<h1>{worksheetTitle}</h1>";
+            bool headingFound = htmlContent.Contains(expectedHeading, StringComparison.OrdinalIgnoreCase);
 
-            Console.WriteLine($"Heading for 'Sales' sheet found: {salesHeadingFound}");
-            Console.WriteLine($"Heading for 'Inventory' sheet found: {inventoryHeadingFound}");
-
-            // Simple assertion (could be replaced with a testing framework)
-            if (salesHeadingFound && inventoryHeadingFound)
-            {
-                Console.WriteLine("HTML verification succeeded: all worksheet titles are present as headings.");
-            }
-            else
-            {
-                Console.WriteLine("HTML verification failed: missing worksheet title headings.");
-            }
+            // Output verification result
+            Console.WriteLine(headingFound
+                ? "Verification succeeded: worksheet title heading found in HTML."
+                : "Verification failed: worksheet title heading not found in HTML.");
         }
     }
 }

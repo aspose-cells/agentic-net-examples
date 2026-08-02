@@ -1,88 +1,74 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsDrawObjectDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example
+    // Custom handler to capture draw object details during rendering
+    public class CustomDrawObjectEventHandler : DrawObjectEventHandler
     {
-        // Create a new workbook and populate some cells
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["B1"].PutValue("World");
-        sheet.Cells["A2"].PutValue(123);
-        sheet.Cells["B2"].PutValue(456);
-
-        // Add a shape so that shape draw objects are also generated
-        Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 120, 60);
-        shape.Text = "Sample Shape";
-
-        // Create an instance of the custom handler
-        var handler = new CaptureDrawObjectHandler();
-
-        // Set rendering options and assign the handler
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
         {
-            ImageType = ImageType.Png,
-            OnePagePerSheet = true,
-            DrawObjectEventHandler = handler
-        };
+            // Output basic bound information
+            Console.WriteLine($"[Draw] Type: {drawObject.Type}, Bounds: X={x}, Y={y}, W={width}, H={height}");
+            Console.WriteLine($"       SheetIndex={drawObject.SheetIndex}, Page={drawObject.CurrentPage}/{drawObject.TotalPages}");
 
-        // Render the worksheet – this triggers the DrawObject events
-        SheetRender renderer = new SheetRender(sheet, options);
-        renderer.ToImage(0, "RenderedOutput.png");
-
-        // After rendering, output the captured draw object information
-        foreach (var info in handler.CapturedObjects)
-        {
-            Console.WriteLine($"DrawObject Type: {info.DrawObject.Type}");
-            Console.WriteLine($"Bounds: X={info.X}, Y={info.Y}, Width={info.Width}, Height={info.Height}");
-
-            // Access cell information if available
-            if (info.DrawObject.Cell != null)
+            // If the object is associated with a cell, output cell details
+            if (drawObject.Cell != null)
             {
-                Console.WriteLine($"  Cell: {info.DrawObject.Cell.Name} = {info.DrawObject.Cell.Value}");
+                Console.WriteLine($"       Cell: {drawObject.Cell.Name}, Value: {drawObject.Cell.Value}");
             }
 
-            // Access shape information if available
-            if (info.DrawObject.Shape != null)
+            // If the object is a shape, output shape details
+            if (drawObject.Shape != null)
             {
-                Console.WriteLine($"  Shape: {info.DrawObject.Shape.Name}, Text=\"{info.DrawObject.Shape.Text}\"");
+                Console.WriteLine($"       Shape: {drawObject.Shape.Name}, Type={drawObject.Shape.Type}");
             }
-
-            Console.WriteLine();
         }
     }
 
-    // Simple container to hold a draw object and its bounds
-    class DrawInfo
+    class Program
     {
-        public DrawObject DrawObject { get; set; }
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
-    }
-
-    // Custom event handler that captures each draw object during rendering
-    class CaptureDrawObjectHandler : DrawObjectEventHandler
-    {
-        public List<DrawInfo> CapturedObjects { get; } = new List<DrawInfo>();
-
-        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
+        static void Main()
         {
-            // Store the draw object and its bounding rectangle for later processing
-            CapturedObjects.Add(new DrawInfo
+            // ---------- Create a workbook and populate data ----------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            sheet.Cells["A1"].PutValue("Aspose.Cells");
+            sheet.Cells["A2"].PutValue("DrawObject Demo");
+            sheet.Cells["B1"].Formula = "=A1 & \" \" & A2";
+
+            // Add a rectangle shape
+            Shape rect = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 120, 60);
+            rect.Text = "Sample Shape";
+
+            // ---------- Set up rendering options with the custom handler ----------
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                DrawObject = drawObject,
-                X = x,
-                Y = y,
-                Width = width,
-                Height = height
-            });
+                ImageType = ImageType.Png,
+                OnePagePerSheet = true,
+                DrawObjectEventHandler = new CustomDrawObjectEventHandler()
+            };
+
+            // Render the worksheet to an image (triggers the Draw callback)
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            renderer.ToImage(0, "DrawObjectDemo.png");
+
+            // ---------- Save workbook to PDF using PaginatedSaveOptions ----------
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                DrawObjectEventHandler = new CustomDrawObjectEventHandler()
+            };
+            workbook.Save("DrawObjectDemo.pdf", pdfOptions);
+
+            // ---------- Save the workbook in native Excel format ----------
+            workbook.Save("DrawObjectDemo.xlsx");
+
+            Console.WriteLine("Processing completed.");
         }
     }
 }

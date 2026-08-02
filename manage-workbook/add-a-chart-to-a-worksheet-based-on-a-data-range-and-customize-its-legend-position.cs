@@ -2,35 +2,51 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsChartExample
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 2; i <= 6; i++)
+        static void Main()
         {
-            sheet.Cells[$"A{i}"].PutValue("Item " + (i - 1));
-            sheet.Cells[$"B{i}"].PutValue((i - 1) * 10);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            // Column A: Categories, Column B: Values
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A5"].PutValue("D");
+            sheet.Cells["B5"].PutValue(40);
+
+            // Add a column chart to the worksheet.
+            // Parameters: chart type, data range, plot by column (true), top row, left column, bottom row, right column
+            int chartIndex = sheet.Charts.Add(
+                ChartType.Column,          // Chart type
+                "A1:B5",                   // Data range (including headers)
+                true,                      // Plot by column
+                7,                         // Top row position of the chart
+                1,                         // Left column position of the chart
+                25,                        // Bottom row position of the chart
+                10);                       // Right column position of the chart
+
+            // Retrieve the newly created chart
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Optionally, set the chart title
+            chart.Title.Text = "Sample Column Chart";
+
+            // Customize the legend position (e.g., place it at the bottom of the chart)
+            chart.Legend.Position = LegendPositionType.Bottom;
+
+            // Save the workbook to an XLSX file
+            workbook.Save("ChartWithCustomLegend.xlsx", SaveFormat.Xlsx);
         }
-
-        // Add a column chart (rows 8‑20, columns 1‑8)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 19, 7);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Set the data range for the chart (A1:B6) and plot by column
-        chart.SetChartDataRange("A1:B6", true);
-
-        // Customize the legend: place it at the bottom of the chart
-        chart.Legend.Position = LegendPositionType.Bottom;
-        chart.ShowLegend = true; // Ensure the legend is visible
-
-        // Save the workbook with the chart
-        workbook.Save("ChartWithBottomLegend.xlsx", SaveFormat.Xlsx);
     }
 }

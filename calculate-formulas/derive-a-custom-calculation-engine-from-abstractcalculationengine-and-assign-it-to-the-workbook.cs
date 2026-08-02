@@ -3,41 +3,48 @@ using Aspose.Cells;
 
 namespace CustomEngineDemo
 {
-    // Custom calculation engine that implements a simple DOUBLE function
+    // Custom calculation engine derived from AbstractCalculationEngine
     public class DoubleEngine : AbstractCalculationEngine
     {
-        // Override the Calculate method to handle custom functions
+        // Override Calculate to handle custom function "DOUBLE"
         public override void Calculate(CalculationData data)
         {
-            // Check if the function being calculated is our custom "DOUBLE"
-            if (data.FunctionName.Equals("DOUBLE", StringComparison.OrdinalIgnoreCase))
+            // Check if the function name matches our custom function (case‑insensitive)
+            if (string.Equals(data.FunctionName, "DOUBLE", StringComparison.OrdinalIgnoreCase))
             {
-                // Retrieve the first parameter value
-                object param = data.GetParamValue(0);
-
-                double number;
-
-                // The parameter may be a direct numeric value or a ReferredArea (range)
-                if (param is ReferredArea area)
+                // Expect a single numeric parameter
+                if (data.ParamCount == 1)
                 {
-                    // Get the value from the first cell of the range
-                    number = Convert.ToDouble(area.GetValue(0, 0));
+                    // Retrieve the parameter value; it may be a ReferredArea or a direct value
+                    object param = data.GetParamValue(0);
+                    double number;
+
+                    // If the parameter is a ReferredArea, get the first cell's value
+                    if (param is ReferredArea area)
+                    {
+                        number = Convert.ToDouble(area.GetValue(0, 0));
+                    }
+                    else
+                    {
+                        number = Convert.ToDouble(param);
+                    }
+
+                    // Set the calculated result (double the input)
+                    data.CalculatedValue = number * 2;
                 }
                 else
                 {
-                    // Assume it's a numeric value
-                    number = Convert.ToDouble(param);
+                    // Incorrect number of arguments – return Excel error
+                    data.CalculatedValue = "#VALUE!";
                 }
-
-                // Set the calculated result (double the input)
-                data.CalculatedValue = number * 2;
             }
+            // For all other functions, do nothing and let the default engine handle them
         }
 
-        // Ensure the custom function is recalculated for each cell (optional)
+        // Ensure the engine recalculates the function for each cell (optional)
         public override bool ForceRecalculate(string functionName)
         {
-            return functionName.Equals("DOUBLE", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(functionName, "DOUBLE", StringComparison.OrdinalIgnoreCase);
         }
     }
 
@@ -46,29 +53,30 @@ namespace CustomEngineDemo
         static void Main()
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
 
             // Put a sample value in A1
             sheet.Cells["A1"].PutValue(5);
 
-            // Use the custom function in cell B1
+            // Use the custom function in B1
             sheet.Cells["B1"].Formula = "=DOUBLE(A1)";
 
-            // Set calculation options with the custom engine
+            // Configure calculation options with the custom engine
             CalculationOptions options = new CalculationOptions
             {
                 CustomEngine = new DoubleEngine()
             };
 
             // Calculate formulas using the custom engine
-            workbook.CalculateFormula(options);
+            wb.CalculateFormula(options);
 
-            // Output the result
+            // Output the result to console
             Console.WriteLine("Result of DOUBLE(A1): " + sheet.Cells["B1"].Value);
 
-            // Save the workbook
-            workbook.Save("CustomEngineDemo.xlsx");
+            // Save the workbook (Excel and PDF formats)
+            wb.Save("CustomEngineResult.xlsx");
+            wb.Save("CustomEngineResult.pdf");
         }
     }
 }

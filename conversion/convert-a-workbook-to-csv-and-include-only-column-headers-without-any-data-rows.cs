@@ -1,60 +1,51 @@
+// Title: Create a Header‑Only CSV from an Excel Workbook using Aspose.Cells for .NET (C#)
+// Description: Loads an Excel file, extracts the first row (column headers) from the first worksheet, copies those cells to a new workbook, and saves it as a CSV file that contains only the header row—no data rows are written.
+// Keywords: Aspose.Cells | C# | CSV export | header only | Excel to CSV | extract column headers | save header row | convert workbook to CSV | Aspose.Cells CSV header | C# Excel header export
+// Common Searches: Aspose.Cells export only header row to CSV | C# save Excel column names as CSV | How to generate CSV with just column headers using Aspose.Cells | Create header‑only CSV from .xlsx in .NET | Extract first row from Excel to CSV C#
+// Developer Intent: Produce a CSV file that contains only the worksheet’s header row, omitting all data rows.
+// Use Cases: Provide a template CSV for bulk data import where only column names are required. | Supply a schema file for downstream systems that consume CSV headers. | Generate a header‑only file for documentation or API contracts. | Create a lightweight CSV for validating column order without loading data.
+// AI Prompts: Write C# code using Aspose.Cells to read an Excel file and save only the first row as a CSV. | Explain how to determine the last populated column in the header row with Aspose.Cells before exporting. | Give a step‑by‑step tutorial for creating a header‑only CSV from any workbook using Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
 namespace AsposeCellsHeaderOnlyCsv
 {
+    // Loads an Excel file, extracts the first row (column headers) from the first worksheet, copies those cells to a new workbook, and saves it as a CSV file that contains only the header row—no data rows are written.
     class Program
     {
         static void Main()
         {
-            try
+            // Path to the source workbook (any Excel format)
+            string sourcePath = "input.xlsx";
+
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+
+            // Access the first worksheet (assumed to contain the data)
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            Cells sourceCells = sourceSheet.Cells;
+
+            // Determine the last column that contains data in the header row (row 0)
+            int lastColumn = sourceCells.MaxDataColumn;
+
+            // Create a new workbook that will hold only the header row
+            Workbook headerOnlyWorkbook = new Workbook();
+            Worksheet headerSheet = headerOnlyWorkbook.Worksheets[0];
+            Cells headerCells = headerSheet.Cells;
+
+            // Copy each cell value from the header row of the source sheet to the new sheet
+            for (int col = 0; col <= lastColumn; col++)
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output_headers_only.csv";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(inputPath);
-                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-
-                // Determine the last used column in the first row (header row)
-                // Use MaxColumn which returns the zero‑based index of the last column that contains data
-                int lastHeaderColumn = sourceSheet.Cells.MaxColumn;
-
-                // Create a new workbook that will contain only the header row
-                Workbook headerOnlyWorkbook = new Workbook();
-                Worksheet headerSheet = headerOnlyWorkbook.Worksheets[0];
-
-                // Copy header values from the source sheet to the new workbook
-                for (int col = 0; col <= lastHeaderColumn; col++)
-                {
-                    string headerValue = sourceSheet.Cells[0, col].StringValue;
-                    headerSheet.Cells[0, col].PutValue(headerValue);
-                }
-
-                // Prepare CSV save options
-                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-                {
-                    ExportAllSheets = false,
-                    TrimLeadingBlankRowAndColumn = true
-                };
-
-                // Save the header‑only workbook as a CSV file
-                headerOnlyWorkbook.Save(outputPath, csvOptions);
-                Console.WriteLine($"Header‑only CSV saved to: {outputPath}");
+                // Preserve the original value (string, number, etc.)
+                headerCells[0, col].Value = sourceCells[0, col].Value;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the new workbook as CSV. Only the header row will be written.
+            string outputCsvPath = "headers_only.csv";
+            headerOnlyWorkbook.Save(outputCsvPath, SaveFormat.Csv);
+
+            Console.WriteLine($"Header-only CSV saved to: {outputCsvPath}");
         }
     }
 }

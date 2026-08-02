@@ -1,56 +1,48 @@
+// Title: Remove a Chart Shape from a Chart Sheet with ShapeCollection.RemoveAt in Aspose.Cells for .NET
+// Description: Creates a workbook, adds a chart sheet, inserts a column chart, accesses the sheet's Shapes collection, removes the chart shape using ShapeCollection.RemoveAt, and saves the file as ChartSheetWithoutChart.xlsx.
+// Keywords: Aspose.Cells remove chart shape | ShapeCollection.RemoveAt .NET | delete chart from worksheet Aspose.Cells | chart sheet shape removal C# | Aspose.Cells chart control deletion
+// Common Searches: how to delete a chart shape using Aspose.Cells | remove chart from chart sheet ShapeCollection.RemoveAt | Aspose.Cells .NET delete chart programmatically | remove first chart shape in worksheet C# | Aspose.Cells remove chart control example
+// Developer Intent: Remove the chart control from a chart sheet by deleting its shape from the worksheet's Shapes collection.
+// Use Cases: Clean up temporary charts before exporting a financial report workbook. | Generate a template workbook that contains only raw data by stripping out chart objects. | Convert a chart sheet to a data‑only sheet for downstream processing or analysis.
+// AI Prompts: Show how to confirm that a chart shape was removed after calling ShapeCollection.RemoveAt in Aspose.Cells. | Provide code to delete a chart by its name instead of using an index with Aspose.Cells for .NET. | Explain the impact of ShapeCollection.RemoveAt on the underlying Chart object and overall workbook size.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
+// Creates a workbook, adds a chart sheet, inserts a column chart, accesses the sheet's Shapes collection, removes the chart shape using ShapeCollection.RemoveAt, and saves the file as ChartSheetWithoutChart.xlsx.
 class RemoveChartFromChartSheet
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // Add a chart sheet (use SheetType.Chart) and give it a name
-            int chartSheetIdx = workbook.Worksheets.Add(SheetType.Chart);
-            Worksheet chartSheet = workbook.Worksheets[chartSheetIdx];
-            chartSheet.Name = "MyChartSheet";
+            // Add a regular worksheet (will host a chart) and get the worksheet reference.
+            Worksheet chartSheet = workbook.Worksheets.Add("MyChartSheet");
 
-            // Add a sample column chart to the chart sheet
-            int chartIdx = chartSheet.Charts.Add(ChartType.Column, 0, 0, 20, 10);
-            Chart chart = chartSheet.Charts[chartIdx];
+            // Add a chart to the worksheet.
+            // Parameters: upper left row, upper left column, lower right row, lower right column, chart type.
+            // Cast ChartType to int for compatibility with older Aspose.Cells versions.
+            int chartIndex = chartSheet.Charts.Add(0, 0, 10, 5, (int)ChartType.Column);
+            Chart chart = chartSheet.Charts[chartIndex];
 
-            // Populate data for the chart
-            chartSheet.Cells["A1"].PutValue("Category");
-            chartSheet.Cells["A2"].PutValue("A");
-            chartSheet.Cells["A3"].PutValue("B");
-            chartSheet.Cells["B1"].PutValue("Value");
-            chartSheet.Cells["B2"].PutValue(10);
-            chartSheet.Cells["B3"].PutValue(20);
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
+            // The chart is also represented as a shape in the sheet's Shapes collection.
+            ShapeCollection shapes = chartSheet.Shapes;
 
-            // The chart on a chart sheet is stored as a shape.
-            // Remove the chart shape (first shape in the collection).
-            if (chartSheet.Shapes.Count > 0)
+            // If there is at least one shape (the chart), remove it.
+            if (shapes.Count > 0)
             {
-                chartSheet.Shapes.RemoveAt(0);
+                shapes.RemoveAt(0); // Remove the chart control.
             }
 
-            // Define output file path
+            // Save the workbook to verify the chart has been removed.
             string outputPath = "ChartSheetWithoutChart.xlsx";
-
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

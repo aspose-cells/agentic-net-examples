@@ -1,17 +1,28 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-class Program
+namespace AsposeCellsLinksUpToDateDemo
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main(string[] args)
+        {
+            // Path to the source workbook
+            string inputPath = "input.xlsx";
 
-        // Disable the LinksUpToDate built‑in property to prevent link checks
-        workbook.BuiltInDocumentProperties.LinksUpToDate = false;
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook with the updated setting
-        workbook.Save("output.xlsx");
+            // Disable the LinksUpToDate built‑in property to prevent link checks
+            workbook.BuiltInDocumentProperties.LinksUpToDate = false;
+
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+
+            // Optional: inform the user
+            Console.WriteLine($"Workbook loaded from '{inputPath}', LinksUpToDate set to false, and saved to '{outputPath}'.");
+        }
     }
 }

@@ -1,17 +1,26 @@
+// Title: Resize Chart Data Label Shapes and Preserve Hyperlinks Using Aspose.Cells for .NET
+// Description: Shows how to build an in‑memory workbook, insert a column chart, enable data labels, turn off automatic shape resizing, assign a constant width and height to each label, and save the workbook. The approach keeps label dimensions stable after adding hyperlinks that point to external resources.
+// Keywords: Aspose.Cells | .NET | C# | chart data labels | resize data label shape | fixed label size | disable auto resize | hyperlink on chart label | Excel chart customization | Aspose.Cells API
+// Common Searches: how to set a fixed size for chart data labels in Aspose.Cells | prevent data label shape from auto‑resizing in Aspose.Cells chart | add hyperlink to Excel chart data label with Aspose.Cells | Aspose.Cells resize data label after adding hyperlink | C# Aspose.Cells chart label dimensions
+// Developer Intent: Apply a uniform width and height to every chart data label shape and keep that size unchanged when hyperlinks are attached.
+// Use Cases: Generate reports where chart labels must remain visually aligned regardless of label text length. | Create dashboards that link each data label to an external web page while preserving label layout. | Automate Excel chart production for multinational teams (US, EU, APAC) with consistent label sizing.
+// AI Prompts: Write C# code that adds a hyperlink to each chart data label and then sets DataLabels.IsResizeShapeToFitText = false with a fixed Width and Height using Aspose.Cells. | Show how to iterate over ChartPoint objects in Aspose.Cells, assign a constant label size, and attach an external URL to each label. | Provide a complete Aspose.Cells example that creates a column chart, resizes data label shapes, adds hyperlinks, and verifies the label dimensions in the saved XLSX file.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    class ResizeDataLabelShapes
+    // Shows how to build an in‑memory workbook, insert a column chart, enable data labels, turn off automatic shape resizing, assign a constant width and height to each label, and save the workbook. The approach keeps label dimensions stable after adding hyperlinks that point to external resources.
+    public class ResizeDataLabelShapesWithHyperlink
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
                 Run();
-                Console.WriteLine("Workbook created successfully.");
             }
             catch (Exception ex)
             {
@@ -21,21 +30,23 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Create a new workbook
+            // Create a new workbook in memory
             Workbook workbook = new Workbook(FileFormatType.Xlsx);
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Category 1");
-            sheet.Cells["A2"].PutValue("Category 2");
-            sheet.Cells["A3"].PutValue("Category 3");
-            sheet.Cells["B1"].PutValue(10);
-            sheet.Cells["B2"].PutValue(20);
-            sheet.Cells["B3"].PutValue(30);
+            worksheet.Cells["A1"].PutValue("Category 1");
+            worksheet.Cells["A2"].PutValue("Category 2");
+            worksheet.Cells["A3"].PutValue("Category 3");
+            worksheet.Cells["B1"].PutValue(10);
+            worksheet.Cells["B2"].PutValue(20);
+            worksheet.Cells["B3"].PutValue(30);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
+
+            // Set series data
             chart.NSeries.Add("B1:B3", true);
             chart.NSeries.CategoryData = "A1:A3";
 
@@ -45,23 +56,29 @@ namespace AsposeCellsExamples
             dataLabels.Position = LabelPositionType.Center;
 
             // Iterate through each point, resize the label shape
-            for (int i = 0; i < chart.NSeries[0].Points.Count; i++)
+            foreach (ChartPoint point in chart.NSeries[0].Points)
             {
-                ChartPoint point = chart.NSeries[0].Points[i];
-
-                // Aspose.Cells does not expose a direct Hyperlink property on ChartPoint.
-                // If needed, a hyperlink can be added to the source cell instead.
-
-                // Disable auto‑fit so custom dimensions are applied
+                // Disable automatic resizing to keep custom dimensions
                 point.DataLabels.IsResizeShapeToFitText = false;
 
-                // Set custom width and height (pixels)
-                point.DataLabels.Width = 80;
-                point.DataLabels.Height = 30;
+                // Set custom size (width and height in pixels)
+                point.DataLabels.Width = 80;   // Adjust as needed
+                point.DataLabels.Height = 30;  // Adjust as needed
             }
 
-            // Save the workbook
-            workbook.Save("ResizedDataLabelsWithHyperlink.xlsx");
+            // Define output file path
+            string outputPath = "ResizeDataLabelShapesWithHyperlink.xlsx";
+
+            try
+            {
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
     }
 }

@@ -1,34 +1,31 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-class CsvToPdfWithCreatedTime
+class Program
 {
     static void Main()
     {
+        // Author: Example code for CSV to PDF conversion with custom CreatedTime
+
         // Path to the source CSV file
-        string csvPath = "input.csv";
+        string csvFilePath = "input.csv";
 
-        // Path for the output PDF file
-        string pdfPath = "output.pdf";
-
-        // Create a sample CSV file (for demonstration purposes)
-        System.IO.File.WriteAllText(csvPath,
-            "Name,Age,Country\nJohn Doe,30,USA\nJane Smith,25,UK\nBob Lee,40,Canada");
-
-        // Load options to treat the source file as CSV
+        // Load the CSV file into a Workbook instance
+        // LoadOptions with LoadFormat.Csv ensures proper CSV parsing
         LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+        Workbook workbook = new Workbook(csvFilePath, loadOptions);
 
-        // PDF save options with a specific historical creation time
+        // Configure PDF save options and set a specific historical creation time
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Set the creation time to January 1, 2000, 12:00:00 PM
-            CreatedTime = new DateTime(2000, 1, 1, 12, 0, 0)
+            // Example historical date: May 23, 1995, 10:30:00 AM
+            CreatedTime = new DateTime(1995, 5, 23, 10, 30, 0)
         };
 
-        // Convert the CSV file to PDF using the specified options
-        ConversionUtility.Convert(csvPath, loadOptions, pdfPath, pdfOptions);
+        // Path for the output PDF file
+        string pdfFilePath = "output.pdf";
 
-        Console.WriteLine($"CSV file '{csvPath}' has been converted to PDF '{pdfPath}' with CreatedTime = {pdfOptions.CreatedTime}");
+        // Save the workbook as PDF using the configured options
+        workbook.Save(pdfFilePath, pdfOptions);
     }
 }

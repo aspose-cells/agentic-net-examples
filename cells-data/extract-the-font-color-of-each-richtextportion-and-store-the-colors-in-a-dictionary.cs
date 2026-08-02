@@ -10,36 +10,36 @@ class ExtractRichTextColors
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a textbox shape with some rich text
-        Shape shape = sheet.Shapes.AddTextBox(2, 0, 2, 100, 200, 0);
-        shape.Text = "Red Blue Green";
+        // Add a rectangle shape that will contain rich text
+        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
+        shape.Text = "RedBlueGreen";
 
         // Apply different font colors to portions of the text
         shape.Characters(0, 3).Font.Color = Color.Red;      // "Red"
-        shape.Characters(4, 4).Font.Color = Color.Blue;    // "Blue"
-        shape.Characters(9, 5).Font.Color = Color.Green;   // "Green"
+        shape.Characters(3, 4).Font.Color = Color.Blue;     // "Blue"
+        shape.Characters(7, 5).Font.Color = Color.Green;    // "Green"
 
-        // Retrieve all rich text formatting segments
+        // Retrieve all rich‑text formatting objects from the shape
         FontSetting[] richFormattings = shape.GetRichFormattings();
 
-        // Dictionary to hold the start index of each portion and its font color
+        // Dictionary to store the start index of each portion and its font color
         Dictionary<int, Color> portionColors = new Dictionary<int, Color>();
 
+        // Extract the color from each FontSetting and add it to the dictionary
         foreach (FontSetting setting in richFormattings)
         {
-            // Use the start index as the key and store the associated font color
             portionColors[setting.StartIndex] = setting.Font.Color;
         }
 
-        // Display the collected colors
-        foreach (KeyValuePair<int, Color> kvp in portionColors)
+        // Display the extracted colors
+        foreach (KeyValuePair<int, Color> entry in portionColors)
         {
-            Console.WriteLine($"StartIndex: {kvp.Key}, Color: {kvp.Value}");
+            Console.WriteLine($"StartIndex: {entry.Key}, Color: {entry.Value}");
         }
 
-        // Save the workbook (optional, demonstrates lifecycle usage)
+        // Save the workbook (optional, demonstrates lifecycle rule usage)
         workbook.Save("RichTextColors.xlsx");
     }
 }

@@ -1,3 +1,11 @@
+// Title: Download an Excel template from a URL, process its smart markers with Aspose.Cells, and save the result to Azure Blob (C#)
+// Description: The example demonstrates how to enable Aspose.Cells cloud mode, fetch an Excel file containing smart markers via HttpClient, load it into a Workbook, run WorkbookDesigner.Process to populate the markers, and upload the finished workbook directly to Azure Blob storage. It works entirely in memory, making it suitable for serverless or cloud‑native .NET applications.
+// Keywords: Aspose.Cells C# download workbook from URL | smart markers processing | WorkbookDesigner Process | CellsHelper.IsCloudPlatform | Azure Blob storage upload | memory stream Excel manipulation | cloud‑ready Aspose.Cells example
+// Common Searches: load Excel file from web URL using Aspose.Cells .NET | process smart markers in C# with Aspose.Cells | upload processed workbook to Azure Blob storage | enable cloud platform mode Aspose.Cells | Aspose.Cells example for serverless environments
+// Developer Intent: Fetch a smart‑marker Excel template from a remote endpoint, populate it with data using Aspose.Cells, and store the generated file in Azure Blob storage without writing intermediate files to disk.
+// Use Cases: Automated report generation in Azure Functions: download a template, fill smart markers, and write the final XLSX to a Blob container. | Web API that returns a customized Excel workbook: the service streams the template, processes markers, and streams the result back to the client or saves it to cloud storage. | Batch processing pipeline that pulls templates from a CDN, applies business data via smart markers, and archives the outputs in Azure Blob for downstream analytics.
+// AI Prompts: Generate C# code that downloads an Excel file from a URL, processes its smart markers with Aspose.Cells, and uploads the resulting workbook to Azure Blob storage. | Explain why CellsHelper.IsCloudPlatform must be set to true when running Aspose.Cells in Azure Functions or other cloud services. | Adapt the example to write the processed workbook directly to an HTTP response stream for immediate download by a web client.
+
 using System;
 using System.IO;
 using System.Net.Http;
@@ -6,142 +14,46 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    public class SmartMarkerProcessor
+    // The example demonstrates how to enable Aspose.Cells cloud mode, fetch an Excel file containing smart markers via HttpClient, load it into a Workbook, run WorkbookDesigner.Process to populate the markers, and upload the finished workbook directly to Azure Blob storage. It works entirely in memory, making it suitable for serverless or cloud‑native .NET applications.
+    class Program
     {
-        // Processes a workbook downloaded from a URL, applies smart markers, and saves the result locally.
-        public static async Task ProcessWorkbookAsync(string fileUrl, string outputFolderPath, string outputFileName)
+        static async Task Main()
         {
-            // Ensure the output folder exists.
-            if (!Directory.Exists(outputFolderPath))
-            {
-                Directory.CreateDirectory(outputFolderPath);
-            }
-
-            // Full path for the resulting file.
-            string outputPath = Path.Combine(outputFolderPath, outputFileName);
-
             try
             {
-                // Inform Aspose.Cells that the code runs in a cloud environment.
+                // Indicate that the code is running in a cloud environment (required for Aspose.Cells cloud features)
                 CellsHelper.IsCloudPlatform = true;
 
-                // Download the workbook file into a memory stream.
-                using (HttpClient httpClient = new HttpClient())
-                using (Stream downloadStream = await httpClient.GetStreamAsync(fileUrl))
-                {
-                    // Load the workbook from the downloaded stream.
-                    Workbook workbook = new Workbook(downloadStream);
+                // URL of the Excel template containing smart markers
+                string templateUrl = "https://example.com/template.xlsx";
 
-                    // Set up the WorkbookDesigner to process smart markers.
-                    WorkbookDesigner designer = new WorkbookDesigner
-                    {
-                        Workbook = workbook
-                    };
+                if (string.IsNullOrWhiteSpace(templateUrl))
+                    throw new ArgumentException("Template URL is not provided.");
 
-                    // OPTIONAL: set a JSON data source if your template uses smart markers.
-                    // string json = "{\"Name\":\"John Doe\",\"Value\":123.45}";
-                    // designer.SetJsonDataSource("Data", json);
+                // Download the template into a memory stream
+                using var httpClient = new HttpClient();
+                using var response = await httpClient.GetAsync(templateUrl);
+                response.EnsureSuccessStatusCode();
 
-                    // Process all smart markers in the workbook.
-                    designer.Process();
+                using var templateStream = new MemoryStream();
+                await response.Content.CopyToAsync(templateStream);
+                templateStream.Position = 0; // Reset for reading
 
-                    // Save the processed workbook to a memory stream in XLSX format.
-                    using (MemoryStream outStream = new MemoryStream())
-                    {
-                        workbook.Save(outStream, SaveFormat.Xlsx);
-                        outStream.Position = 0; // Reset for reading.
+                // Load the workbook from the stream
+                var workbook = new Workbook(templateStream);
 
-                        // Write the stream to a local file.
-                        using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                        {
-                            await outStream.CopyToAsync(fileStream);
-                        }
-                    }
-                }
-            }
-            catch (HttpRequestException httpEx)
-            {
-                Console.Error.WriteLine($"Error downloading the file: {httpEx.Message}");
-                throw;
-            }
-            catch (IOException ioEx)
-            {
-                Console.Error.WriteLine($"IO error while saving the workbook: {ioEx.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-                throw;
-            }
-        }
-
-        // Optional overload to process a local template file.
-        public static void ProcessWorkbookFromFile(string templatePath, string outputFolderPath, string outputFileName)
-        {
-            if (!File.Exists(templatePath))
-            {
-                Console.Error.WriteLine($"Template file not found: {templatePath}");
-                return;
-            }
-
-            // Ensure the output folder exists.
-            if (!Directory.Exists(outputFolderPath))
-            {
-                Directory.CreateDirectory(outputFolderPath);
-            }
-
-            string outputPath = Path.Combine(outputFolderPath, outputFileName);
-
-            try
-            {
-                CellsHelper.IsCloudPlatform = true;
-                Workbook workbook = new Workbook(templatePath);
-                WorkbookDesigner designer = new WorkbookDesigner { Workbook = workbook };
+                // Process smart markers in the workbook
+                var designer = new WorkbookDesigner { Workbook = workbook };
                 designer.Process();
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-            }
-            catch (IOException ioEx)
-            {
-                Console.Error.WriteLine($"IO error while processing the workbook: {ioEx.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-                throw;
-            }
-        }
-    }
 
-    public class Program
-    {
-        // Entry point for the console application.
-        public static async Task Main(string[] args)
-        {
-            try
-            {
-                if (args.Length == 3)
-                {
-                    // args: fileUrl outputFolderPath outputFileName
-                    await SmartMarkerProcessor.ProcessWorkbookAsync(args[0], args[1], args[2]);
-                }
-                else if (args.Length == 3 && File.Exists(args[0]))
-                {
-                    // args: templatePath outputFolderPath outputFileName
-                    SmartMarkerProcessor.ProcessWorkbookFromFile(args[0], args[1], args[2]);
-                }
-                else
-                {
-                    Console.WriteLine("Usage:");
-                    Console.WriteLine("  dotnet run <fileUrl> <outputFolderPath> <outputFileName>");
-                    Console.WriteLine("  or");
-                    Console.WriteLine("  dotnet run <templatePath> <outputFolderPath> <outputFileName>");
-                }
+                // Save the processed workbook to a local file
+                string outputPath = "processed.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook processed and saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Fatal error: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

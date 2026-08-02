@@ -8,23 +8,27 @@ class JapaneseEraPdfDemo
         // Create a new workbook
         Workbook wb = new Workbook();
 
-        // Set the workbook's regional settings to Japan (required for era formatting)
+        // Set the workbook's regional settings to Japan (enables Japanese era formatting)
         wb.Settings.Region = CountryCode.Japan;
 
-        // Insert a serial date value (e.g., 44089 corresponds to 2020-09-15)
-        Cell cell = wb.Worksheets[0].Cells[0, 0];
-        cell.PutValue(44089);
+        // Access the first worksheet
+        Worksheet ws = wb.Worksheets[0];
 
-        // Apply a custom format that displays the Japanese era (e.g., "令和2年9月15日")
+        // Insert a sample date (e.g., 2020-09-15)
+        Cell cell = ws.Cells["A1"];
+        cell.PutValue(new DateTime(2020, 9, 15));
+
+        // Apply a custom number format that displays the Japanese era
+        // Format: era name (ggge) year month day, e.g., "令和2年9月15日"
         Style style = cell.GetStyle();
-        style.Custom = "[$-F800]yyyy年m月d日";
+        style.Custom = "[$-ja-JP]ggge\"年\"m\"月\"d\"日\"";
         cell.SetStyle(style);
 
         // Configure PDF save options
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        // Use a Japanese font to ensure era symbols render correctly
+        // Use a Japanese font that contains era symbols
         pdfOptions.DefaultFont = "MS Gothic";
-        // Try to use the workbook's default font first
+        // Ensure the workbook's default font is considered (default is true)
         pdfOptions.CheckWorkbookDefaultFont = true;
 
         // Save the workbook as PDF

@@ -1,13 +1,23 @@
+// Title: Aspose.Cells for .NET – Expand Gantt‑style chart after adding task rows
+// Description: Shows how to build a workbook with a task table, create a stacked‑bar chart that emulates a Gantt chart, insert additional task rows, resize the ListObject, update the chart’s data and category ranges, recalculate, and save the workbook.
+// Keywords: Aspose.Cells | C# | Gantt chart | stacked bar chart | update chart range | resize ListObject | insert rows Excel | dynamic Excel chart | programmatic Excel automation | Excel workbook generation
+// Common Searches: how to extend a Gantt chart after adding rows with Aspose.Cells | C# resize ListObject and refresh chart data range | Aspose.Cells stacked bar chart category range update | programmatically grow Excel chart source range | add tasks to Gantt‑style chart using Aspose.Cells for .NET
+// Developer Intent: Refresh a Gantt‑style chart to include newly inserted task rows by resizing the source table and adjusting the chart’s data and category ranges.
+// Use Cases: Append project tasks to an existing Gantt chart without recreating the chart. | Automatically expand a ListObject and keep a linked stacked‑bar chart in sync. | Generate a schedule workbook where tasks can be added on‑the‑fly and the visualization updates.
+// AI Prompts: Write C# code with Aspose.Cells that inserts new task rows, resizes a ListObject, and updates a stacked‑bar Gantt‑style chart’s data range. | Show how to change the category range of a Gantt‑like chart after adding rows to the source table in Aspose.Cells for .NET.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Tables;
 
 namespace GanttChartUpdateDemo
 {
-    class Program
+    // Shows how to build a workbook with a task table, create a stacked‑bar chart that emulates a Gantt chart, insert additional task rows, resize the ListObject, update the chart’s data and category ranges, recalculate, and save the workbook.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
@@ -15,103 +25,78 @@ namespace GanttChartUpdateDemo
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // 1. Populate initial Gantt data (Task, Start, End)
-                // -------------------------------------------------
+                // ---------- 1. Populate initial task data ----------
+                // Headers
                 sheet.Cells["A1"].PutValue("Task");
                 sheet.Cells["B1"].PutValue("Start");
-                sheet.Cells["C1"].PutValue("End");
+                sheet.Cells["C1"].PutValue("Finish");
 
-                // Sample tasks
+                // Sample tasks (rows 2‑5)
                 sheet.Cells["A2"].PutValue("Task 1");
-                sheet.Cells["B2"].PutValue(DateTime.Today);
-                sheet.Cells["C2"].PutValue(DateTime.Today.AddDays(3));
+                sheet.Cells["B2"].PutValue(new DateTime(2023, 1, 1));
+                sheet.Cells["C2"].PutValue(new DateTime(2023, 1, 5));
 
                 sheet.Cells["A3"].PutValue("Task 2");
-                sheet.Cells["B3"].PutValue(DateTime.Today.AddDays(1));
-                sheet.Cells["C3"].PutValue(DateTime.Today.AddDays(4));
+                sheet.Cells["B3"].PutValue(new DateTime(2023, 1, 3));
+                sheet.Cells["C3"].PutValue(new DateTime(2023, 1, 8));
 
-                // -------------------------------------------------
-                // 2. Create a table (ListObject) for the data range
-                // -------------------------------------------------
-                int tableIdx = sheet.ListObjects.Add(0, 0, 2, 2, true);
-                ListObject table = sheet.ListObjects[tableIdx];
-                table.DisplayName = "GanttData";
-
-                // -------------------------------------------------
-                // 3. Add a Gantt chart based on the table data
-                // -------------------------------------------------
-                // Gantt chart is a stacked bar chart
-                int chartIdx = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 8);
-                Chart ganttChart = sheet.Charts[chartIdx];
-
-                // Helper column for Duration (End - Start)
-                sheet.Cells["D1"].PutValue("Duration");
-                for (int r = 2; r <= 3; r++)
-                {
-                    sheet.Cells[r - 1, 3].Formula = $"=C{r}-B{r}";
-                }
-
-                // Add series: Start (invisible) and Duration (visible)
-                ganttChart.NSeries.Add("B2:B3", true); // Start
-                ganttChart.NSeries[0].IsColorVaried = false; // keep start series invisible later
-                ganttChart.NSeries.Add("D2:D3", true); // Duration
-                ganttChart.NSeries[1].IsColorVaried = true;
-
-                // Set category (Task names)
-                ganttChart.NSeries.CategoryData = "A2:A3";
-
-                // -------------------------------------------------
-                // 4. Insert additional task rows
-                // -------------------------------------------------
-                sheet.Cells.InsertRows(3, 2); // insert after existing rows
-
-                // Populate new tasks
                 sheet.Cells["A4"].PutValue("Task 3");
-                sheet.Cells["B4"].PutValue(DateTime.Today.AddDays(2));
-                sheet.Cells["C4"].PutValue(DateTime.Today.AddDays(5));
-                sheet.Cells["D4"].Formula = "=C4-B4";
+                sheet.Cells["B4"].PutValue(new DateTime(2023, 1, 6));
+                sheet.Cells["C4"].PutValue(new DateTime(2023, 1, 10));
 
                 sheet.Cells["A5"].PutValue("Task 4");
-                sheet.Cells["B5"].PutValue(DateTime.Today.AddDays(3));
-                sheet.Cells["C5"].PutValue(DateTime.Today.AddDays(6));
-                sheet.Cells["D5"].Formula = "=C5-B5";
+                sheet.Cells["B5"].PutValue(new DateTime(2023, 1, 9));
+                sheet.Cells["C5"].PutValue(new DateTime(2023, 1, 12));
 
-                // -------------------------------------------------
-                // 5. Resize the table to include the new rows
-                // -------------------------------------------------
-                table.Resize(0, 0, sheet.Cells.MaxDataRow, 3, true);
+                // ---------- 2. Create a table (ListObject) for the data ----------
+                // Table covers A1:C5 (including headers)
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
+                ListObject taskTable = sheet.ListObjects[tableIndex];
+                taskTable.DisplayName = "TaskTable";
 
-                // -------------------------------------------------
-                // 6. Refresh chart data ranges to include new rows
-                // -------------------------------------------------
-                // Clear existing series and re‑add with updated ranges
-                ganttChart.NSeries.Clear();
+                // ---------- 3. Add a Gantt‑like chart linked to the table ----------
+                // Use a stacked bar chart to emulate a Gantt chart (ChartType.Gantt is not available in this version)
+                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 3, 19, 11);
+                Chart ganttChart = sheet.Charts[chartIndex];
 
-                string startRange = $"B2:B{sheet.Cells.MaxDataRow + 1}";
-                string durationRange = $"D2:D{sheet.Cells.MaxDataRow + 1}";
-                string categoryRange = $"A2:A{sheet.Cells.MaxDataRow + 1}";
+                // Initial data range (A1:C5). For Gantt‑like charts the series data is usually the start and finish columns.
+                // The first column (Task) is used for categories.
+                ganttChart.SetChartDataRange("A1:C5", true);
+                ganttChart.NSeries.CategoryData = "A2:A5";
 
-                ganttChart.NSeries.Add(startRange, true);      // Start
-                ganttChart.NSeries[0].IsColorVaried = false;   // keep invisible
-                ganttChart.NSeries.Add(durationRange, true);   // Duration
-                ganttChart.NSeries[1].IsColorVaried = true;
+                // ---------- 4. Insert additional task rows ----------
+                // Insert two new rows after the existing data (after row 5)
+                sheet.Cells.InsertRows(5, 2); // rows are zero‑based, so row index 5 is the 6th row
 
-                ganttChart.NSeries.CategoryData = categoryRange;
+                // Fill the newly inserted rows with task data
+                sheet.Cells["A6"].PutValue("Task 5");
+                sheet.Cells["B6"].PutValue(new DateTime(2023, 1, 11));
+                sheet.Cells["C6"].PutValue(new DateTime(2023, 1, 15));
 
-                // -------------------------------------------------
-                // 7. Recalculate the chart (ensures correct layout)
-                // -------------------------------------------------
+                sheet.Cells["A7"].PutValue("Task 6");
+                sheet.Cells["B7"].PutValue(new DateTime(2023, 1, 13));
+                sheet.Cells["C7"].PutValue(new DateTime(2023, 1, 18));
+
+                // ---------- 5. Resize the table to include the new rows ----------
+                // New end row index is 6 (zero‑based) because we now have rows 0‑6 with data (7 rows total)
+                taskTable.Resize(0, 0, 6, 2, true);
+
+                // ---------- 6. Update the chart data range ----------
+                // New range now spans A1:C7
+                ganttChart.SetChartDataRange("A1:C7", true);
+                ganttChart.NSeries.CategoryData = "A2:A7";
+
+                // Re‑calculate the chart to apply the changes
                 ganttChart.Calculate();
 
-                // -------------------------------------------------
-                // 8. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("UpdatedGanttChart.xlsx");
+                // ---------- 7. Save the workbook ----------
+                string outputPath = "UpdatedGanttChart.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

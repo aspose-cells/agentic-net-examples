@@ -1,7 +1,8 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+class CreateLineChart
 {
     static void Main()
     {
@@ -12,22 +13,21 @@ class Program
         // Fill cells A1 through A10 with sample numeric data
         for (int i = 0; i < 10; i++)
         {
-            // Row index i, column index 0 corresponds to column A
-            sheet.Cells[i, 0].PutValue(i + 1); // values 1,2,...,10
+            // Row index i (0‑based) corresponds to A{i+1}
+            sheet.Cells[i, 0].PutValue(i + 1);
         }
 
-        // Add a line chart to the worksheet
-        // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
+        // Add a line chart to the worksheet (positioned from rows 5‑20, columns 0‑5)
         int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 5);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data range for the chart (vertical series)
-        chart.SetChartDataRange("A1:A10", true);
+        // Set the data source for the chart series (A1:A10)
+        chart.NSeries.Add("=Sheet1!$A$1:$A$10", true);
 
         // Optional: set a chart title
-        chart.Title.Text = "Line Chart from A1:A10";
+        chart.Title.Text = "Sample Line Chart";
 
-        // Save the workbook to a file
+        // Save the workbook
         workbook.Save("LineChart.xlsx", SaveFormat.Xlsx);
     }
 }

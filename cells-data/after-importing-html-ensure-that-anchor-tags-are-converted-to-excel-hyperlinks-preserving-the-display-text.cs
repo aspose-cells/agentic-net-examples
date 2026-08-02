@@ -1,81 +1,49 @@
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImport
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the HTML file. HtmlLoadOptions can be customized if needed.
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+        // Example: treat any text starting with '=' as plain text, not a formula.
+        loadOptions.HasFormula = false;
+
+        // Replace "input.html" with the path to your HTML source.
+        Workbook workbook = new Workbook("input.html", loadOptions);
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Regular expression to match an anchor tag and capture href and inner text.
+        // Supports both single and double quotes.
+        Regex anchorRegex = new Regex(@"<a\s+[^>]*href\s*=\s*['""](?<url>[^'""]+)['""][^>]*>(?<text>.*?)</a>", RegexOptions.IgnoreCase);
+
+        // Iterate through all used cells.
+        foreach (Cell cell in sheet.Cells)
         {
-            try
+            string cellValue = cell.StringValue;
+            if (string.IsNullOrEmpty(cellValue))
+                continue;
+
+            Match match = anchorRegex.Match(cellValue);
+            if (match.Success)
             {
-                // Path to the source HTML file
-                string htmlPath = "input.html";
+                // Extract URL and display text.
+                string url = match.Groups["url"].Value;
+                string displayText = match.Groups["text"].Value;
 
-                // Verify that the HTML file exists
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine($"Error: File \"{htmlPath}\" not found.");
-                    return;
-                }
+                // Replace the cell content with the display text.
+                cell.PutValue(displayText);
 
-                // Load the HTML file into a workbook
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions
-                {
-                    // Treat any formula‑like text as plain text
-                    HasFormula = false
-                };
-                Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-                // Work with the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Regex to capture <a href="url">display text</a>
-                Regex anchorRegex = new Regex(
-                    @"<a\s+[^>]*href\s*=\s*['""](?<url>[^'""]+)['""][^>]*>(?<text>.*?)</a>",
-                    RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-                // Iterate through all used cells
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        string cellValue = cells[row, col].StringValue;
-                        if (string.IsNullOrEmpty(cellValue))
-                            continue;
-
-                        Match match = anchorRegex.Match(cellValue);
-                        if (match.Success)
-                        {
-                            // Extract URL and display text
-                            string url = match.Groups["url"].Value;
-                            string displayText = match.Groups["text"].Value;
-
-                            // Replace cell content with the display text
-                            cells[row, col].PutValue(displayText);
-
-                            // Add a hyperlink to the same cell (single‑cell range)
-                            // Using overload with 5 parameters (no screen tip) for compatibility
-                            sheet.Hyperlinks.Add(row, col, 1, 1, url);
-                        }
-                    }
-                }
-
-                // Save the workbook to Excel format
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved as {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Add a hyperlink to the cell.
+                int hyperlinkIndex = sheet.Hyperlinks.Add(cell.Name, 1, 1, url);
+                // Set the text to display (optional, as we already set cell value).
+                sheet.Hyperlinks[hyperlinkIndex].TextToDisplay = displayText;
             }
         }
+
+        // Save the workbook to Excel format (or any other supported format).
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

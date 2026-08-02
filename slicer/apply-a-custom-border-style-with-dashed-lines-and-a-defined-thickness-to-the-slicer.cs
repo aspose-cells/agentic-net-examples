@@ -8,59 +8,59 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsSlicerBorderDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
                 // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Fruit";
-                sheet.Cells["A2"].Value = "Apple";
-                sheet.Cells["A3"].Value = "Orange";
-                sheet.Cells["A4"].Value = "Banana";
+                worksheet.Cells["A1"].PutValue("Fruit");
+                worksheet.Cells["A2"].PutValue("Apple");
+                worksheet.Cells["A3"].PutValue("Orange");
+                worksheet.Cells["A4"].PutValue("Banana");
+                worksheet.Cells["B1"].PutValue("Quantity");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(15);
+                worksheet.Cells["B4"].PutValue(20);
 
-                sheet.Cells["B1"].Value = "Quantity";
-                sheet.Cells["B2"].Value = 10;
-                sheet.Cells["B3"].Value = 15;
-                sheet.Cells["B4"].Value = 20;
-
-                // Add a pivot table based on the data
-                int pivotIdx = sheet.PivotTables.Add("A1:B4", "E3", "FruitPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);
+                // Add a pivot table based on the sample data
+                int pivotIdx = worksheet.PivotTables.Add("A1:B4", "E3", "FruitPivot");
+                PivotTable pivotTable = worksheet.PivotTables[pivotIdx];
+                pivotTable.AddFieldToArea(PivotFieldType.Row, 0); // Add "Fruit" as row field
 
                 // Add a slicer linked to the pivot table
-                int slicerIdx = sheet.Slicers.Add(pivot, "G1", pivot.BaseFields[0]);
-                Slicer slicer = sheet.Slicers[slicerIdx];
+                int slicerIdx = worksheet.Slicers.Add(pivotTable, "A1", "FruitSlicer");
+                Slicer slicer = worksheet.Slicers[slicerIdx];
 
-                // Access the underlying shape of the slicer
+                // Optional: set a built‑in style for the slicer (keeps default appearance)
+                slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
+
+                // Access the underlying shape of the slicer to customize its border
                 Shape slicerShape = slicer.Shape;
 
-                // Ensure the slicer has a visible line (border)
+                // Ensure the shape has a visible line (border)
                 slicerShape.HasLine = true;
 
-                // Apply custom border: dashed line with defined thickness
-                slicerShape.Line.Weight = 2.0f;                           // Thickness (points)
-                slicerShape.Line.DashStyle = MsoLineDashStyle.Dash;       // Dashed style
+                // Set the line (border) weight and dash style
+                slicerShape.Line.Weight = 2.0;               // 2 points thickness
+                slicerShape.Line.DashStyle = MsoLineDashStyle.Dash;
 
-                // Optional: adjust slicer size and caption
-                slicer.Caption = "Fruit Selection";
-                slicer.Shape.WidthPt = 200;
-                slicer.Shape.HeightPt = 100;
+                // If the LineFormat exposes a Color property, you can set it as follows:
+                // slicerShape.Line.Color = Color.DarkBlue;
 
-                // Save the workbook
-                string outputPath = "SlicerCustomBorderDemo.xlsx";
+                // Save the workbook with the customized slicer
+                string outputPath = "SlicerWithCustomBorder.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }

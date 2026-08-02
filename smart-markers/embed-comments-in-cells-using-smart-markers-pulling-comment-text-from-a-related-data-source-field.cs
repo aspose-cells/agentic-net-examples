@@ -1,37 +1,42 @@
 using System;
 using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-class EmbedCommentsWithSmartMarkers
+namespace AsposeCellsSmartMarkerComments
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a sample value to the cell (optional, just to have visible content)
-        sheet.Cells["A1"].PutValue("Product A");
+            // Put a sample value in cell A1 (the cell that will have a comment)
+            sheet.Cells["A1"].PutValue("Product A");
 
-        // Add a comment to cell A1
-        int commentIdx = sheet.Comments.Add("A1");
-        Comment comment = sheet.Comments[commentIdx];
+            // Add a comment to cell A1
+            int commentIndex = sheet.Comments.Add("A1");
+            Comment comment = sheet.Comments[commentIndex];
 
-        // Use a smart marker in the comment text; it will be replaced by the data source field "CommentText"
-        comment.Note = "&=$CommentText";
+            // Set the comment text to a smart marker that will be replaced by data source field "CommentText"
+            comment.Note = "&=$CommentText";
 
-        // Prepare a data source (DataTable) with a column that matches the smart marker name
-        DataTable dt = new DataTable("Data");
-        dt.Columns.Add("CommentText", typeof(string));
-        dt.Rows.Add("This product is top‑seller for Q1.");
+            // Prepare a data source (DataTable) with a column that matches the smart marker name
+            DataTable dt = new DataTable("Data");
+            dt.Columns.Add("CommentText", typeof(string));
+            dt.Rows.Add("This is a dynamically generated comment for Product A.");
 
-        // Set up WorkbookDesigner, assign the data source, and process smart markers
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
-        designer.SetDataSource(dt);
-        designer.Process(); // replaces smart markers with actual data
+            // Initialize WorkbookDesigner, assign the workbook and set the data source
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            designer.SetDataSource(dt);
 
-        // Save the resulting workbook
-        workbook.Save("CommentsWithSmartMarkers.xlsx");
+            // Process the smart markers – this will replace the smart marker in the comment with the actual text
+            designer.Process();
+
+            // Save the resulting workbook
+            workbook.Save("SmartMarkerCommentsOutput.xlsx");
+        }
     }
 }

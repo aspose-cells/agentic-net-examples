@@ -12,9 +12,9 @@ namespace AsposeCellsPivotDateGrouping
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data with a Date column and a numeric value column
+            // Populate sample data with a Date column and a numeric Value column
             sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["B1"].PutValue("Value");
 
             // Sample dates spanning several months
             sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 15));
@@ -23,34 +23,37 @@ namespace AsposeCellsPivotDateGrouping
             sheet.Cells["A5"].PutValue(new DateTime(2023, 4, 20));
             sheet.Cells["A6"].PutValue(new DateTime(2023, 5, 25));
 
-            // Corresponding sales values
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["B3"].PutValue(1500);
-            sheet.Cells["B4"].PutValue(1800);
-            sheet.Cells["B5"].PutValue(2100);
-            sheet.Cells["B6"].PutValue(2400);
+            // Corresponding numeric values
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["B5"].PutValue(300);
+            sheet.Cells["B6"].PutValue(250);
 
             // Create a pivot table based on the data range
             int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add the Date field to the row area and Sales to the data area
+            // Add the Date field to the row area
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Add the Value field to the data area
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
             // Retrieve the PivotField representing the Date column
             PivotField dateField = pivotTable.RowFields[0];
 
-            // Define the grouping range (start and end dates)
+            // Define the start and end dates for grouping
             DateTime startDate = new DateTime(2023, 1, 1);
             DateTime endDate   = new DateTime(2023, 12, 31);
 
-            // Group by Months and Years with an interval of 1 (default)
+            // Group the date field by Months and Years
+            // Interval is set to 1 (default), and firstAsNewField = false (adds grouping to existing field)
             dateField.GroupBy(startDate, endDate,
                 new PivotGroupByType[] { PivotGroupByType.Months, PivotGroupByType.Years },
                 1, false);
 
-            // Refresh and calculate the pivot table to apply grouping
+            // Refresh the pivot table to apply grouping
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

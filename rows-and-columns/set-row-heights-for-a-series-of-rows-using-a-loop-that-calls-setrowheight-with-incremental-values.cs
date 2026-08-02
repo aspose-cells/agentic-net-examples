@@ -1,56 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsRowHeightDemo
 {
-    public class SetRowHeightsWithLoop
+    // Author: Example code for setting row heights with a loop
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Set row heights using a loop.
+            // Height starts at 15 points and increases by 5 points for each subsequent row.
+            for (int row = 0; row < 10; row++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Loop through rows 0 to 9 and set incremental heights
-                // Example: start at 15 points and increase by 2 points for each subsequent row
-                for (int rowIndex = 0; rowIndex < 10; rowIndex++)
-                {
-                    double height = 15.0 + (rowIndex * 2.0);
-                    cells.SetRowHeight(rowIndex, height);
-                }
-
-                // Define output file path
-                string outputPath = "RowHeightsLoopDemo.xlsx";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                double height = 15 + (row * 5); // Incremental height
+                cells.SetRowHeight(row, height); // Calls Cells.SetRowHeight(int, double)
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetRowHeightsWithLoop.Run();
+            // Save the workbook
+            workbook.Save("RowHeightsDemo.xlsx");
         }
     }
 }

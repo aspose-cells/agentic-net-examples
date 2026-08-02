@@ -1,68 +1,66 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCircularReferenceHighlight
+namespace CircularReferenceHighlighter
 {
-    // Custom monitor to capture circular reference cells and highlight them
-    public class CircularReferenceHighlighter : AbstractCalculationMonitor
+    // Custom monitor to capture circular reference cells
+    public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        private readonly Workbook _workbook;
+        private readonly Worksheet _worksheet;
+        private readonly List<Cell> _circularCells = new List<Cell>();
 
-        public CircularReferenceHighlighter(Workbook workbook)
+        public CircularReferenceMonitor(Worksheet worksheet)
         {
-            _workbook = workbook;
+            _worksheet = worksheet;
         }
 
-        // Called when the calculation engine detects a circular reference
+        // Called when a circular reference is detected
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected. Highlighting involved cells...");
-
+            // Collect all cells involved in the circular reference
             while (circularCellsData.MoveNext())
             {
-                try
+                // The enumerated object is a CalculationCell; its Cell property gives the actual Cell
+                // In many examples the object can be cast directly to Cell, so we handle both cases
+                var obj = circularCellsData.Current;
+                Cell cell = null;
+
+                // Try to get Cell from CalculationCell if possible
+                var type = obj.GetType();
+                var cellProp = type.GetProperty("Cell");
+                if (cellProp != null)
                 {
-                    var item = circularCellsData.Current;
-                    if (item == null) continue;
-
-                    Cell cell = null;
-
-                    // If the item is already a Cell instance, use it directly
-                    if (item is Cell directCell)
-                    {
-                        cell = directCell;
-                    }
-                    else
-                    {
-                        // Otherwise try to obtain sheet, row and column via dynamic members
-                        dynamic dyn = item;
-                        int sheetIdx = dyn.SheetIndex;
-                        int row = dyn.Row;
-                        int col = dyn.Column;
-
-                        cell = _workbook.Worksheets[sheetIdx].Cells[row, col];
-                    }
-
-                    // Apply a yellow background to indicate the problem
-                    Style style = cell.GetStyle();
-                    style.ForegroundColor = Color.Yellow;
-                    style.Pattern = BackgroundType.Solid;
-                    cell.SetStyle(style);
-
-                    Console.WriteLine($"Highlighted cell: {cell.Name}");
+                    cell = cellProp.GetValue(obj) as Cell;
                 }
-                catch (Exception ex)
+                else
                 {
-                    // Log and continue with next item
-                    Console.WriteLine($"Failed to highlight a circular cell: {ex.Message}");
+                    cell = obj as Cell;
+                }
+
+                if (cell != null)
+                {
+                    _circularCells.Add(cell);
                 }
             }
 
-            // Continue normal calculation after highlighting
+            // Return true to let the engine continue calculation (or false to stop)
             return true;
+        }
+
+        // After calculation finishes, highlight the collected cells
+        public void HighlightCircularCells()
+        {
+            foreach (var cell in _circularCells)
+            {
+                // Create a style with a yellow background
+                Style style = cell.GetStyle();
+                style.ForegroundColor = Color.Yellow;
+                style.Pattern = BackgroundType.Solid;
+                cell.SetStyle(style);
+            }
         }
     }
 
@@ -70,36 +68,36 @@ namespace AsposeCellsCircularReferenceHighlight
     {
         public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set up a circular reference scenario
+            sheet.Cells["A1"].Formula = "=B1+1";
+            sheet.Cells["B1"].Formula = "=A1+1";
+
+            // Optional: add more data to demonstrate normal cells
+            sheet.Cells["C1"].PutValue(10);
+            sheet.Cells["D1"].Formula = "=C1*2";
+
+            // Instantiate the custom monitor, passing the worksheet for later styling
+            var monitor = new CircularReferenceMonitor(sheet);
+
+            // Configure calculation options to use the monitor
+            CalculationOptions options = new CalculationOptions
             {
-                // Create a new workbook (could also be loaded from a file)
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                CalculationMonitor = monitor,
+                Recursive = true // default, but explicit for clarity
+            };
 
-                // Set up a simple circular reference: A1 -> B1 -> A1
-                cells["A1"].Formula = "=B1";
-                cells["B1"].Formula = "=A1";
+            // Perform formula calculation; circular references will be captured by the monitor
+            workbook.CalculateFormula(options);
 
-                // Prepare calculation options with our custom monitor
-                CalculationOptions options = new CalculationOptions
-                {
-                    CalculationMonitor = new CircularReferenceHighlighter(workbook),
-                    Recursive = true // keep default recursive behavior
-                };
+            // Highlight cells that participated in circular references
+            monitor.HighlightCircularCells();
 
-                // Perform calculation; the monitor will highlight circular cells
-                workbook.CalculateFormula(options);
-
-                // Save the workbook so the user can see highlighted cells
-                string outputPath = "CircularReferenceHighlighted.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved with highlighted circular reference cells: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook (the highlighted cells will be visible in the saved file)
+            workbook.Save("CircularReferenceHighlighted.xlsx");
         }
     }
 }

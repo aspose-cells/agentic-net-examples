@@ -1,37 +1,36 @@
 using System;
 using Aspose.Cells;
 
-class ProtectWorkbookStructureDemo
+namespace AsposeCellsWorkbookProtectionDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Add extra worksheets for demonstration
-        workbook.Worksheets.Add("Sheet2");
-        workbook.Worksheets.Add("Sheet3");
-
-        // Protect the workbook structure with a password
-        workbook.Protect(ProtectionType.Structure, "pwd123");
-
-        // Verify that the workbook structure is protected
-        Console.WriteLine("Workbook structure protected: " + workbook.Settings.IsProtected);
-        Console.WriteLine("Workbook protected with password: " + workbook.IsWorkbookProtectedWithPassword);
-
-        // Attempt to delete a worksheet (should be blocked)
-        try
+        static void Main()
         {
-            // Try to remove the second worksheet (index 1)
-            workbook.Worksheets.RemoveAt(1);
-            Console.WriteLine("Worksheet removed successfully (unexpected).");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to remove worksheet as expected: " + ex.Message);
-        }
+            // Create a new workbook (default has one worksheet named "Sheet1")
+            Workbook workbook = new Workbook();
 
-        // Save the workbook
-        workbook.Save("ProtectedStructureWorkbook.xlsx", SaveFormat.Xlsx);
+            // Protect the workbook structure with a password
+            // This prevents adding, removing, renaming, or moving worksheets
+            workbook.Protect(ProtectionType.Structure, "myPassword");
+
+            // Verify that the workbook is protected
+            Console.WriteLine("Workbook structure protected: " + workbook.Settings.IsProtected);
+            Console.WriteLine("Workbook protected with password: " + workbook.IsWorkbookProtectedWithPassword);
+
+            // Attempt to delete the first worksheet; should raise an exception
+            try
+            {
+                workbook.Worksheets.RemoveAt(0);
+                Console.WriteLine("Worksheet removed successfully (unexpected).");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to remove worksheet as expected: " + ex.Message);
+            }
+
+            // Save the workbook (protected)
+            workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

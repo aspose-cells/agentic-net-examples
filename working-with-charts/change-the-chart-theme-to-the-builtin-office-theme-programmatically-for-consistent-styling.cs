@@ -3,7 +3,7 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class ChangeChartThemeToOffice
+class ChangeChartToOfficeTheme
 {
     static void Main()
     {
@@ -11,7 +11,7 @@ class ChangeChartThemeToOffice
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data for the chart
+        // Populate some sample data for the chart
         sheet.Cells["A1"].PutValue("Category");
         sheet.Cells["B1"].PutValue("Value");
         sheet.Cells["A2"].PutValue("A");
@@ -21,33 +21,36 @@ class ChangeChartThemeToOffice
         sheet.Cells["A4"].PutValue("C");
         sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", false);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Define the built‑in "Office" theme colors (12 colors)
-        Color[] officeColors = new Color[]
+        // Define the 12 colors of the built‑in "Office" theme
+        Color[] officeThemeColors = new Color[]
         {
             Color.White,                     // Background1
             Color.Black,                     // Text1
             Color.White,                     // Background2
             Color.Black,                     // Text2
-            Color.FromArgb(0, 112, 192),     // Accent1 (Blue)
-            Color.FromArgb(255, 192, 0),     // Accent2 (Orange)
-            Color.FromArgb(112, 48, 160),    // Accent3 (Purple)
-            Color.FromArgb(0, 176, 80),      // Accent4 (Green)
-            Color.FromArgb(255, 0, 0),       // Accent5 (Red)
-            Color.FromArgb(255, 0, 255),     // Accent6 (Magenta)
-            Color.FromArgb(0, 0, 255),       // Hyperlink (Blue)
-            Color.FromArgb(128, 0, 128)      // Followed Hyperlink (Purple)
+            Color.FromArgb(0, 112, 192),     // Accent1 (blue)
+            Color.FromArgb(255, 192, 0),     // Accent2 (orange)
+            Color.FromArgb(112, 48, 160),    // Accent3 (purple)
+            Color.FromArgb(0, 176, 80),      // Accent4 (green)
+            Color.FromArgb(255, 0, 0),       // Accent5 (red)
+            Color.FromArgb(255, 0, 255),     // Accent6 (magenta)
+            Color.FromArgb(0, 0, 255),       // Hyperlink (blue)
+            Color.FromArgb(128, 0, 128)      // Followed Hyperlink (purple)
         };
 
-        // Apply the "Office" theme to the workbook (charts inherit the workbook theme)
-        workbook.CustomTheme("Office", officeColors);
+        // Apply the "Office" theme to the workbook
+        workbook.CustomTheme("Office", officeThemeColors);
 
-        // Save the workbook with the themed chart
+        // Add a column chart that will inherit the theme colors
+        int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
+        Chart chart = sheet.Charts[chartIdx];
+        chart.NSeries.Add("B2:B4", false);
+        chart.NSeries.CategoryData = "A2:A4";
+
+        // Optionally set a built‑in chart style (1‑48) – here we keep default
+        // chart.Style = 1;
+
+        // Save the workbook; the chart now uses the Office theme colors
         workbook.Save("ChartWithOfficeTheme.xlsx");
     }
 }

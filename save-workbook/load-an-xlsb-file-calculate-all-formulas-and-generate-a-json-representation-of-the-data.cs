@@ -3,67 +3,59 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-namespace AsposeCellsXlsbToJson
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for input XLSB file and output JSON file
+        string inputPath = "input.xlsb";
+        string outputPath = "output.json";
+
+        // Load the XLSB workbook with appropriate load options
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb);
+        Workbook workbook = new Workbook(inputPath, loadOptions);
+
+        // Calculate all formulas in the workbook
+        workbook.CalculateFormula();
+
+        // Prepare a structure to hold the workbook data
+        var workbookData = new Dictionary<string, object>();
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source XLSB file
-            string xlsbPath = "input.xlsb";
+            var rows = new List<List<object>>();
 
-            // Path where the generated JSON will be saved
-            string jsonOutputPath = "output.json";
+            // Determine the used range
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-            // ---------- Load the XLSB workbook ----------
-            // Create LoadOptions for XLSB format and ensure formulas are parsed on open
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb)
+            // Extract cell values row by row
+            for (int r = 0; r <= maxRow; r++)
             {
-                ParsingFormulaOnOpen = true
-            };
-
-            // Load the workbook using the provided constructor (Workbook(string, LoadOptions))
-            Workbook workbook = new Workbook(xlsbPath, loadOptions);
-
-            // ---------- Calculate all formulas ----------
-            // This uses the Workbook.CalculateFormula() method to evaluate every formula in the workbook
-            workbook.CalculateFormula();
-
-            // ---------- Convert workbook data to JSON ----------
-            // We'll represent each worksheet as an array of rows, where each row is an array of cell values
-            var workbookData = new Dictionary<string, object>();
-
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                var sheetData = new List<List<object>>();
-
-                // Determine the used range
-                int maxRow = sheet.Cells.MaxDataRow;
-                int maxCol = sheet.Cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
+                var rowData = new List<object>();
+                for (int c = 0; c <= maxCol; c++)
                 {
-                    var rowData = new List<object>();
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        // Retrieve the cell value; if the cell is empty, store null
-                        object value = sheet.Cells[row, col].Value;
-                        rowData.Add(value);
-                    }
-                    sheetData.Add(rowData);
+                    var cell = sheet.Cells[r, c];
+                    // Use the cell's value; if null, store null
+                    rowData.Add(cell.Value);
                 }
-
-                workbookData[sheet.Name] = sheetData;
+                rows.Add(rowData);
             }
 
-            // Serialize the dictionary to a formatted JSON string
-            string json = JsonSerializer.Serialize(workbookData, new JsonSerializerOptions { WriteIndented = true });
-
-            // Write the JSON string to the output file
-            File.WriteAllText(jsonOutputPath, json);
-
-            Console.WriteLine($"Workbook data has been exported to JSON file: {jsonOutputPath}");
+            // Add the sheet data to the overall dictionary
+            workbookData[sheet.Name] = rows;
         }
+
+        // Serialize the data to JSON with indentation for readability
+        var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(workbookData, jsonOptions);
+
+        // Write the JSON string to the output file
+        File.WriteAllText(outputPath, json);
+
+        Console.WriteLine($"Workbook data has been exported to JSON file: {outputPath}");
     }
 }

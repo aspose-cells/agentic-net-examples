@@ -3,69 +3,66 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-class CloneSlicerExample
+namespace AsposeCellsSlicerCloneDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // ---------- Create a workbook with sample data ----------
+            Workbook workbook = new Workbook();
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "DataSheet";
 
-        // -----------------------------------------------------------------
-        // Source worksheet: contains data, pivot table and the original slicer
-        // -----------------------------------------------------------------
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        sourceSheet.Name = "Source";
+            // Populate sample data
+            sheet1.Cells["A1"].PutValue("Fruit");
+            sheet1.Cells["B1"].PutValue("Quantity");
+            sheet1.Cells["A2"].PutValue("Apple");
+            sheet1.Cells["B2"].PutValue(10);
+            sheet1.Cells["A3"].PutValue("Orange");
+            sheet1.Cells["B3"].PutValue(20);
+            sheet1.Cells["A4"].PutValue("Banana");
+            sheet1.Cells["B4"].PutValue(15);
 
-        // Populate sample data
-        sourceSheet.Cells["A1"].PutValue("Fruit");
-        sourceSheet.Cells["B1"].PutValue("Sales");
-        sourceSheet.Cells["A2"].PutValue("Apple");
-        sourceSheet.Cells["B2"].PutValue(100);
-        sourceSheet.Cells["A3"].PutValue("Orange");
-        sourceSheet.Cells["B3"].PutValue(150);
-        sourceSheet.Cells["A4"].PutValue("Banana");
-        sourceSheet.Cells["B4"].PutValue(200);
+            // ---------- Create a pivot table ----------
+            int pivotIdx = sheet1.PivotTables.Add("A1:B4", "D1", "FruitPivot");
+            PivotTable pivot = sheet1.PivotTables[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-        // Create a pivot table based on the data
-        int pivotIndex = sourceSheet.PivotTables.Add("A1:B4", "D2", "Pivot1");
-        PivotTable pivot = sourceSheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-        pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-        pivot.RefreshData();
-        pivot.CalculateData();
+            // ---------- Add an original slicer on the first worksheet ----------
+            int slicerIdx = sheet1.Slicers.Add(pivot, "E2", "Fruit");
+            Slicer originalSlicer = sheet1.Slicers[slicerIdx];
 
-        // Add the original slicer on the source sheet
-        int originalSlicerIndex = sourceSheet.Slicers.Add(pivot, "F2", "Fruit");
-        Slicer originalSlicer = sourceSheet.Slicers[originalSlicerIndex];
-        originalSlicer.Caption = "Fruit Filter";
-        originalSlicer.StyleType = SlicerStyleType.SlicerStyleLight2;
-        originalSlicer.NumberOfColumns = 1;
-        originalSlicer.WidthPixel = 150;
-        originalSlicer.HeightPixel = 200;
+            // Set some visual properties on the original slicer
+            originalSlicer.Caption = "Fruit Filter";
+            originalSlicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+            originalSlicer.NumberOfColumns = 2;
+            originalSlicer.WidthPixel = 200;
+            originalSlicer.HeightPixel = 150;
+            originalSlicer.LockedPosition = false;
 
-        // ---------------------------------------------------------------
-        // Destination worksheet: will host the cloned slicer for parallel use
-        // ---------------------------------------------------------------
-        Worksheet destSheet = workbook.Worksheets.Add("Clone");
+            // ---------- Add a second worksheet where the slicer will be cloned ----------
+            Worksheet sheet2 = workbook.Worksheets.Add("CloneSheet");
 
-        // Add a slicer on the destination sheet using the same pivot table and field
-        int clonedSlicerIndex = destSheet.Slicers.Add(pivot, "F2", "Fruit");
-        Slicer clonedSlicer = destSheet.Slicers[clonedSlicerIndex];
+            // ---------- Clone the slicer ----------
+            // Add a new slicer on the second worksheet using the same pivot table and base field
+            int clonedSlicerIdx = sheet2.Slicers.Add(pivot, "E2", "Fruit");
+            Slicer clonedSlicer = sheet2.Slicers[clonedSlicerIdx];
 
-        // Copy visual and behavioral properties from the original slicer
-        clonedSlicer.Caption = originalSlicer.Caption;
-        clonedSlicer.StyleType = originalSlicer.StyleType;
-        clonedSlicer.NumberOfColumns = originalSlicer.NumberOfColumns;
-        clonedSlicer.WidthPixel = originalSlicer.WidthPixel;
-        clonedSlicer.HeightPixel = originalSlicer.HeightPixel;
-        clonedSlicer.LockedPosition = originalSlicer.LockedPosition;
-        clonedSlicer.ShowCaption = originalSlicer.ShowCaption;
+            // Copy visual properties from the original slicer to the cloned slicer
+            clonedSlicer.Caption = originalSlicer.Caption;
+            clonedSlicer.StyleType = originalSlicer.StyleType;
+            clonedSlicer.NumberOfColumns = originalSlicer.NumberOfColumns;
+            clonedSlicer.WidthPixel = originalSlicer.WidthPixel;
+            clonedSlicer.HeightPixel = originalSlicer.HeightPixel;
+            clonedSlicer.LockedPosition = originalSlicer.LockedPosition;
 
-        // Ensure the cloned slicer is synchronized with its pivot table
-        clonedSlicer.Refresh();
-
-        // Save the workbook
-        workbook.Save("ClonedSlicerDemo.xlsx");
+            // ---------- Save the workbook ----------
+            workbook.Save("SlicerCloneDemo.xlsx");
+        }
     }
 }

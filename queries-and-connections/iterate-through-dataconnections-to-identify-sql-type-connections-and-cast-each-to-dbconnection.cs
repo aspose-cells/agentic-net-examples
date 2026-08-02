@@ -1,39 +1,70 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class IdentifySqlConnections
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class IdentifySqlDbConnections
     {
-        // Load an existing workbook (replace the path with your file)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the collection of external data connections
-        ExternalConnectionCollection connections = workbook.DataConnections;
-
-        // Iterate through all connections in the workbook
-        for (int i = 0; i < connections.Count; i++)
+        // Entry point required for console application
+        public static void Main(string[] args)
         {
-            ExternalConnection conn = connections[i];
-
-            // Check whether the connection is a DBConnection (ODBC/OLE DB)
-            if (conn is DBConnection dbConn)
-            {
-                // DBConnection.CommandType == SqlStatement indicates a SQL‑based connection
-                if (dbConn.CommandType == OLEDBCommandType.SqlStatement)
-                {
-                    Console.WriteLine($"Connection #{i} ('{dbConn.Name}') is a SQL type connection.");
-                    Console.WriteLine($"  ConnectionString: {dbConn.ConnectionString}");
-                }
-                else
-                {
-                    Console.WriteLine($"Connection #{i} ('{dbConn.Name}') is a DBConnection but not a SQL statement (CommandType = {dbConn.CommandType}).");
-                }
-            }
+            Run();
         }
 
-        // Save the workbook (if any changes were made)
-        workbook.Save("output.xlsx");
+        public static void Run()
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
+
+                // Load the workbook that may contain external data connections
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the collection of external connections from the workbook
+                ExternalConnectionCollection connections = workbook.DataConnections;
+
+                // Iterate through each connection in the collection
+                for (int i = 0; i < connections.Count; i++)
+                {
+                    ExternalConnection conn = connections[i];
+
+                    // Process only DB connections (ODBC or OLE DB)
+                    if (conn is DBConnection dbConn)
+                    {
+                        // Determine if the DBConnection uses a SQL statement
+                        bool isSql = dbConn.CommandType == OLEDBCommandType.SqlStatement;
+
+                        // Output information about the connection
+                        Console.WriteLine($"Connection #{i + 1}:");
+                        Console.WriteLine($"  Name          : {dbConn.Name}");
+                        Console.WriteLine($"  ClassType     : {dbConn.ClassType}");
+                        Console.WriteLine($"  SourceType    : {dbConn.SourceType}");
+                        Console.WriteLine($"  CommandType   : {dbConn.CommandType}");
+                        Console.WriteLine($"  Is SQL Type   : {isSql}");
+                        Console.WriteLine($"  Command       : {dbConn.Command}");
+                        Console.WriteLine();
+                    }
+                }
+
+                // Save the workbook (even if unchanged) to illustrate a complete flow
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

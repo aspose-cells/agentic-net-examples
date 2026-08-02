@@ -7,21 +7,19 @@ namespace AsposeCellsSaveExample
     {
         static void Main()
         {
-            // Create a new workbook (original formatting is default)
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your source file path)
+            string sourcePath = "input.xlsx";
+            Workbook workbook = new Workbook(sourcePath);
 
-            // Access the first worksheet
+            // Example modification: change the value of cell A1 in the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Modified Value");
 
-            // Modify some data while keeping existing formatting
-            sheet.Cells["A1"].PutValue("Original Formatting Preserved");
-            sheet.Cells["B2"].PutValue(12345);
+            // Save the modified workbook to a new XLSX file while preserving all original formatting
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
 
-            // Save the workbook to XLSX format; this preserves all original formatting
-            workbook.Save("ModifiedWorkbook.xlsx", SaveFormat.Xlsx);
-
-            // Optional: inform the user
-            Console.WriteLine("Workbook saved as 'ModifiedWorkbook.xlsx' with original formatting.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
     }
 }

@@ -2,30 +2,30 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class Program
+class RetrieveFirstDbConnectionName
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load an existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the collection of external connections
+        // Access the collection of external data connections
         ExternalConnectionCollection connections = workbook.DataConnections;
 
+        // Ensure there is at least one connection
         if (connections.Count > 0)
         {
-            // Get the first connection in the collection
-            ExternalConnection connection = connections[0];
-
-            // If the connection is a DBConnection, read its Name property
-            if (connection is DBConnection dbConnection)
+            // Get the first connection (index 0) and cast it to DBConnection
+            ExternalConnection extConn = connections[0];
+            if (extConn is DBConnection dbConn)
             {
-                Console.WriteLine("First DBConnection Name: " + dbConnection.Name);
+                // Read the Name property of the DBConnection
+                string connectionName = dbConn.Name;
+                Console.WriteLine("First DBConnection Name: " + connectionName);
             }
             else
             {
-                // Fallback: display the name of the first connection regardless of its type
-                Console.WriteLine("First connection is not a DBConnection. Name: " + connection.Name);
+                Console.WriteLine("The first connection is not a DBConnection.");
             }
         }
         else
@@ -33,7 +33,7 @@ class Program
             Console.WriteLine("No external connections found in the workbook.");
         }
 
-        // Save the workbook (required lifecycle step, even if unchanged)
+        // Save the workbook (unchanged) to a new file
         workbook.Save("output.xlsx");
     }
 }

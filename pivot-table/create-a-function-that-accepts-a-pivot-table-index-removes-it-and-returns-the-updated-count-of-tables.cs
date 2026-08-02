@@ -4,34 +4,19 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotDemo
 {
-    public class PivotTableHelper
+    public static class PivotTableHelper
     {
         /// <summary>
-        /// Removes the pivot table at the specified index from the given worksheet
-        /// and returns the updated number of pivot tables on that worksheet.
+        /// Creates a workbook with sample data and three pivot tables,
+        /// removes the pivot table at the specified index,
+        /// and returns the updated count of pivot tables on the first worksheet.
         /// </summary>
-        /// <param name="worksheet">Worksheet containing the pivot tables.</param>
-        /// <param name="index">Zero‑based index of the pivot table to remove.</param>
-        /// <returns>Count of remaining pivot tables after removal.</returns>
-        public static int RemovePivotTableAtIndex(Worksheet worksheet, int index)
+        /// <param name="removeIndex">Zero‑based index of the pivot table to remove.</param>
+        /// <returns>Number of remaining pivot tables after removal.</returns>
+        public static int RemovePivotTableAtIndex(int removeIndex)
         {
-            // Validate the index against the current collection count.
-            if (index < 0 || index >= worksheet.PivotTables.Count)
-                throw new ArgumentOutOfRangeException(nameof(index), "Invalid pivot table index.");
-
-            // Use the documented RemoveAt(int) method of PivotTableCollection.
-            worksheet.PivotTables.RemoveAt(index);
-
-            // Return the new count.
-            return worksheet.PivotTables.Count;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Create a new workbook.
+            // ---------- Create ----------
+            // Initialize a new workbook and get the first worksheet.
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -45,18 +30,36 @@ namespace AsposeCellsPivotDemo
             sheet.Cells["B3"].PutValue(150);
             sheet.Cells["B4"].PutValue(200);
 
-            // Add three pivot tables.
+            // Add three pivot tables to the worksheet.
             sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
             sheet.PivotTables.Add("A1:B4", "D10", "PivotTable2");
             sheet.PivotTables.Add("A1:B4", "D20", "PivotTable3");
 
-            // Remove the second pivot table (index 1) and get the new count.
-            int remainingCount = PivotTableHelper.RemovePivotTableAtIndex(sheet, 1);
+            // ---------- Remove ----------
+            // Validate the index before attempting removal.
+            if (removeIndex < 0 || removeIndex >= sheet.PivotTables.Count)
+                throw new ArgumentOutOfRangeException(nameof(removeIndex), "Invalid pivot table index.");
 
-            Console.WriteLine("Remaining pivot tables count: " + remainingCount);
+            // Use the RemoveAt method from PivotTableCollection to delete the pivot table.
+            sheet.PivotTables.RemoveAt(removeIndex);
 
-            // Save the workbook (uses the standard Save method).
-            workbook.Save("PivotTableRemovalResult.xlsx");
+            // ---------- Return ----------
+            // Return the updated count of pivot tables.
+            int remainingCount = sheet.PivotTables.Count;
+
+            // ---------- Save (optional) ----------
+            // Save the workbook to verify the result if needed.
+            // workbook.Save("PivotTableRemovalResult.xlsx");
+
+            return remainingCount;
+        }
+
+        // Example usage
+        public static void Main()
+        {
+            int indexToRemove = 1; // remove the second pivot table (zero‑based)
+            int remaining = RemovePivotTableAtIndex(indexToRemove);
+            Console.WriteLine($"Remaining pivot tables after removal: {remaining}");
         }
     }
 }

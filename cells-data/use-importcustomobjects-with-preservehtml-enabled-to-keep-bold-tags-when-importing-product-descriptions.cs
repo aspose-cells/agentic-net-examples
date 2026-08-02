@@ -3,69 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsImportCustomObjectsHtmlDemo
+public class Product
 {
-    // Custom object representing a product with an HTML‑formatted description
-    public class Product
-    {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;   // May contain <b>...</b> tags
-        public decimal Price { get; set; }
-    }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public decimal Price { get; set; }
+}
 
-    class Program
+public class ImportCustomObjectsPreserveHtmlDemo
+{
+    public static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Sample product list with HTML bold tags in the description
+        List<Product> products = new List<Product>
         {
-            try
-            {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            new Product { Name = "Apple", Description = "<b>Fresh</b> and juicy", Price = 2.99m },
+            new Product { Name = "Orange", Description = "<b>Sweet</b> citrus fruit", Price = 1.99m }
+        };
 
-                // 2. Prepare sample data – descriptions contain bold HTML tags
-                List<Product> products = new List<Product>
-                {
-                    new Product
-                    {
-                        Name = "Apple",
-                        Description = "<b>Fresh</b> and juicy apples",
-                        Price = 2.99m
-                    },
-                    new Product
-                    {
-                        Name = "Orange",
-                        Description = "Citrus fruit with <b>rich</b> vitamin C",
-                        Price = 1.79m
-                    }
-                };
+        // Set import options to treat values as HTML strings
+        ImportTableOptions options = new ImportTableOptions
+        {
+            IsFieldNameShown = true,   // include property names as header row
+            TotalRows = products.Count,
+            InsertRows = true,
+            IsHtmlString = true        // preserve HTML tags during import
+        };
 
-                // 3. Configure import options to treat values as HTML strings
-                ImportTableOptions importOptions = new ImportTableOptions
-                {
-                    // Show property names in the first row (optional)
-                    IsFieldNameShown = true,
-                    // Preserve HTML tags instead of parsing them
-                    IsHtmlString = true,
-                    // Number of rows to import (same as the collection count)
-                    TotalRows = products.Count,
-                    // Insert rows if needed
-                    InsertRows = true
-                };
+        // Import the custom objects starting at cell A1 (row 0, column 0)
+        sheet.Cells.ImportCustomObjects((ICollection)products, 0, 0, options);
 
-                // 4. Import the custom objects starting at cell A1 (row 0, column 0)
-                worksheet.Cells.ImportCustomObjects((ICollection)products, 0, 0, importOptions);
+        // Save the workbook as an Excel file
+        workbook.Save("Products.xlsx", SaveFormat.Xlsx);
 
-                // 5. Save the workbook to an XLSX file
-                string outputPath = "ProductsWithHtml.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Import completed. Workbook saved as {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook as HTML while keeping the HTML tags in cells
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+        {
+            ParseHtmlTagInCell = false   // preserve HTML tags instead of parsing them
+        };
+        workbook.Save("Products.html", htmlOptions);
     }
 }

@@ -1,79 +1,76 @@
+// Title: Aspose.Cells C# – Remove All Data Fields from a PivotTable to Keep Only Row & Column Labels
+// Description: Shows how to build a PivotTable in a new workbook, iterate the DataFields collection in reverse, delete every data field, refresh and recalculate the pivot, and save the file so that only row and column headings remain.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable | remove data fields | clear pivot values | row column summary | delete data fields Aspose | Excel automation | Aspose.Cells API example | GitHub Aspose.Cells pivot
+// Common Searches: Aspose.Cells remove data fields from PivotTable C# | How to delete all values in a PivotTable using Aspose.Cells | Create PivotTable with only row and column labels in .NET | Aspose.Cells example to clear pivot data fields | C# code to keep pivot layout but hide values
+// Developer Intent: Delete every data field in a PivotTable so that the output contains only the row and column headings.
+// Use Cases: Produce a template that shows the hierarchical structure of categories without any numeric totals. | Generate documentation or screenshots of a pivot layout while omitting confidential data. | Create a lightweight summary report where only the row/column framework is needed for further processing.
+// AI Prompts: Write C# code with Aspose.Cells that removes all data fields from an existing PivotTable and updates the view. | Explain why iterating PivotTable.DataFields in reverse order prevents index errors when deleting fields. | Show how to modify the sample to retain a specific data field (e.g., "Amount") while removing all others.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// Shows how to build a PivotTable in a new workbook, iterate the DataFields collection in reverse, delete every data field, refresh and recalculate the pivot, and save the file so that only row and column headings remain.
+class RemoveDataFieldsFromPivot
 {
-    public class RemoveAllDataFieldsFromPivotTable
+    static void Main(string[] args)
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("Fruit");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("Fruit");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("Vegetable");
-                sheet.Cells["B4"].PutValue(15);
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Add a row field and a data field (initially)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // ------------------------------------------------------------
-                // Remove all data fields from the pivot table
-                // ------------------------------------------------------------
-                // Remove from last to first to avoid collection modification issues
-                for (int i = pivotTable.DataFields.Count - 1; i >= 0; i--)
-                {
-                    string fieldName = pivotTable.DataFields[i].Name;
-                    pivotTable.RemoveField(PivotFieldType.Data, fieldName);
-                }
-
-                // Refresh after removal
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Ensure output directory exists
-                string outputPath = "PivotTable_NoDataFields.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Runtime error: {ex.Message}");
-            }
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 
-    // Entry point for the application
-    public class Program
+    public static void Run()
     {
-        public static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("SubCategory");
+        worksheet.Cells["C1"].PutValue("Amount");
+        worksheet.Cells["A2"].PutValue("Fruit");
+        worksheet.Cells["B2"].PutValue("Apple");
+        worksheet.Cells["C2"].PutValue(10);
+        worksheet.Cells["A3"].PutValue("Fruit");
+        worksheet.Cells["B3"].PutValue("Banana");
+        worksheet.Cells["C3"].PutValue(20);
+        worksheet.Cells["A4"].PutValue("Vegetable");
+        worksheet.Cells["B4"].PutValue("Carrot");
+        worksheet.Cells["C4"].PutValue(15);
+
+        // Add a pivot table covering the data range and place it at E1
+        int pivotIndex = worksheet.PivotTables.Add("A1:C4", "E1", "PivotTable1");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+
+        // Add fields: Category as rows, SubCategory as columns, Amount as data
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+        // Build the initial pivot table
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Remove all data fields to leave only row/column summaries
+        for (int i = pivotTable.DataFields.Count - 1; i >= 0; i--)
         {
-            RemoveAllDataFieldsFromPivotTable.Run();
+            string fieldName = pivotTable.DataFields[i].Name;
+            pivotTable.RemoveField(PivotFieldType.Data, fieldName);
         }
+
+        // Recalculate after removal to update the view
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Save the workbook with the modified pivot table
+        workbook.Save("PivotWithoutDataFields.xlsx");
+        Console.WriteLine("Workbook saved as PivotWithoutDataFields.xlsx");
     }
 }

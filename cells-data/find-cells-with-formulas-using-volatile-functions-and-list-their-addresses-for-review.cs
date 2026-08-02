@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace VolatileFunctionFinder
+namespace AsposeCellsVolatileFunctionFinder
 {
     class Program
     {
@@ -11,43 +11,40 @@ namespace VolatileFunctionFinder
             // Load an existing workbook (replace with your file path)
             Workbook workbook = new Workbook("input.xlsx");
 
-            // Enable calculation chain to ensure formulas are evaluated correctly
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+            // Ensure formulas are calculated (optional, but required for some APIs)
             workbook.CalculateFormula();
 
-            // List of known volatile functions (case‑insensitive search)
-            string[] volatileFunctions = new[]
+            // List to hold addresses of cells that use volatile functions
+            List<string> volatileCells = new List<string>();
+
+            // Define a set of known volatile function names (case‑insensitive)
+            string[] volatileFunctions = new string[]
             {
-                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET(", "INDIRECT(", "INFO(", "CELL(", "NOW", "TODAY"
+                "NOW()", "TODAY()", "RAND()", "RANDBETWEEN()", "OFFSET()", "INDIRECT()", "INFO()", "CELL()", "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT", "INFO", "CELL"
             };
 
-            // Collect addresses of cells that contain volatile functions
-            List<string> volatileCellAddresses = new List<string>();
-
-            // Iterate through all worksheets and their used cells
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
-                // Use the maximum used row/column to limit the scan
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
 
-                for (int row = 0; row <= maxRow; row++)
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Process only formula cells
+                    if (cell.IsFormula)
                     {
-                        Cell cell = cells[row, col];
-                        if (cell.IsFormula)
+                        string formula = cell.Formula?.ToUpperInvariant() ?? string.Empty;
+
+                        // Check if the formula contains any volatile function
+                        foreach (string volFunc in volatileFunctions)
                         {
-                            string formula = cell.Formula;
-                            // Simple case‑insensitive check for any volatile function name
-                            foreach (string vf in volatileFunctions)
+                            // Simple containment check; more sophisticated parsing can be added if needed
+                            if (formula.Contains(volFunc))
                             {
-                                if (formula.IndexOf(vf, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    volatileCellAddresses.Add($"{sheet.Name}!{cell.Name}");
-                                    break; // No need to check other functions for this cell
-                                }
+                                // Record the full address including sheet name
+                                volatileCells.Add($"{sheet.Name}!{cell.Name}");
+                                break; // No need to check other functions for this cell
                             }
                         }
                     }
@@ -56,12 +53,12 @@ namespace VolatileFunctionFinder
 
             // Output the results
             Console.WriteLine("Cells containing volatile functions:");
-            foreach (string address in volatileCellAddresses)
+            foreach (string address in volatileCells)
             {
                 Console.WriteLine(address);
             }
 
-            // Save the workbook (optional – here we just save a copy)
+            // Save the workbook (unchanged, but required by lifecycle rule)
             workbook.Save("output.xlsx");
         }
     }

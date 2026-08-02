@@ -1,69 +1,35 @@
+// Title: Remove Excel workbook password using Aspose.Cells for .NET
+// Description: Load a password‑protected .xlsx file with LoadOptions.Password, call Workbook.Unprotect to clear the protection, and save the workbook as an unencrypted copy.
+// Keywords: Aspose.Cells remove password | unprotect Excel workbook C# | load protected workbook Aspose | Workbook.Unprotect method | save unencrypted Excel file | C# Excel password removal
+// Common Searches: how to remove password from Excel file using Aspose.Cells | Aspose.Cells C# unprotect workbook example | load protected .xlsx and save without password | programmatically delete Excel workbook password | Aspose.Cells remove workbook encryption
+// Developer Intent: Open a password‑protected Excel workbook, strip its protection, and write an unprotected version to a new location.
+// Use Cases: Batch conversion of secured reports to plain Excel files for downstream data pipelines. | Automating password removal before uploading workbooks to services that do not support Excel encryption. | Creating editable copies of protected workbooks for collaborators without sharing the original password.
+// AI Prompts: Write C# code with Aspose.Cells that opens a protected .xlsx, removes the password, and saves the file to a given path. | Show how to catch and handle an invalid password exception when calling Workbook.Unprotect in Aspose.Cells. | Demonstrate unprotecting a workbook while preserving all formulas, formatting, and charts using Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
+// Load a password‑protected .xlsx file with LoadOptions.Password, call Workbook.Unprotect to clear the protection, and save the workbook as an unencrypted copy.
 class RemoveWorkbookPassword
 {
     static void Main()
     {
-        try
-        {
-            // Path to the password‑protected workbook
-            string protectedPath = "protected_workbook.xlsx";
+        // Path to the password‑protected workbook
+        string inputPath = "protected.xlsx";
 
-            // Password used to protect the workbook
-            string password = "myPassword";
+        // Password used to protect the workbook
+        string password = "test";
 
-            // Verify that the source file exists
-            if (!File.Exists(protectedPath))
-            {
-                Console.WriteLine($"File not found: {protectedPath}");
-                return;
-            }
+        // Load the workbook with the password
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.Password = password;
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            Workbook workbook = null;
+        // Remove the workbook protection
+        workbook.Unprotect(password);
 
-            // Attempt to load the workbook with the supplied password (for encrypted files)
-            try
-            {
-                var loadOptions = new LoadOptions { Password = password };
-                workbook = new Workbook(protectedPath, loadOptions);
-            }
-            catch (Exception)
-            {
-                // If loading with a password fails (e.g., not encrypted), load without a password
-                workbook = new Workbook(protectedPath);
-            }
-
-            // Remove workbook protection (if any)
-            try
-            {
-                workbook.Unprotect(password);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unprotect failed: {ex.Message}");
-            }
-
-            // Remove encryption password before saving
-            workbook.Settings.Password = string.Empty;
-
-            // Save the unprotected workbook to a new file
-            string unprotectedPath = "unprotected_workbook.xlsx";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(unprotectedPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(unprotectedPath);
-            Console.WriteLine($"Workbook saved without password to: {unprotectedPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the unprotected workbook to a new file
+        string outputPath = "unprotected.xlsx";
+        workbook.Save(outputPath);
     }
 }

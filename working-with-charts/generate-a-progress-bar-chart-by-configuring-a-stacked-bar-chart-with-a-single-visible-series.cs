@@ -1,80 +1,58 @@
+// Title: Aspose.Cells C# – Build a Progress‑Bar Style Stacked Bar Chart
+// Description: Shows how to create an Excel workbook with a stacked bar chart that mimics a progress bar using Aspose.Cells for .NET. The sample adds task names and percentages, removes gaps (GapWidth = 0), fully overlaps bars (Overlap = 100), applies a green fill, and saves the file as .xlsx.
+// Keywords: Aspose.Cells | C# | stacked bar chart | progress bar visualization | GapWidth | Overlap | series fill color | Excel chart automation | .NET chart example | task completion percentage
+// Common Searches: Aspose.Cells progress bar chart C# | stacked bar without gaps Aspose | set overlap 100 Aspose.Cells | change series fill color Excel chart | export task progress to Excel using Aspose
+// Developer Intent: Generate an Excel file that displays task completion as a solid‑filled progress indicator via a single stacked bar series.
+// Use Cases: Automated status reports where each task’s completion percentage appears as a visual bar. | Dashboard worksheets that represent milestones with colored progress indicators. | Exporting KPI progress data to Excel for quick stakeholder review without manual formatting. | Creating printable project summaries that include compact progress visuals.
+// AI Prompts: Write C# code with Aspose.Cells to add a stacked bar chart that functions as a progress bar, setting GapWidth to 0 and Overlap to 100. | Explain how to apply a custom fill color to the visible series in an Aspose.Cells stacked bar chart for progress representation. | Provide step‑by‑step instructions to bind category labels and percentage values to a progress‑style chart using Aspose.Cells.
+
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-namespace AsposeCellsProgressBarDemo
+namespace ProgressBarChartDemo
 {
+    // Shows how to create an Excel workbook with a stacked bar chart that mimics a progress bar using Aspose.Cells for .NET. The sample adds task names and percentages, removes gaps (GapWidth = 0), fully overlaps bars (Overlap = 100), applies a green fill, and saves the file as .xlsx.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // Prepare data for a progress bar (stacked bar chart)
-                // Column A : Category (e.g., tasks)
-                // Column B : Full length (background) – set to a constant (e.g., 100)
-                // Column C : Actual progress value
-                // -------------------------------------------------
-                sheet.Cells["A1"].PutValue("Task");
-                sheet.Cells["B1"].PutValue("Full");
-                sheet.Cells["C1"].PutValue("Progress");
+            // ----- Sample data -----
+            // Column A – Category (Task name)
+            // Column B – Progress value (percentage)
+            sheet.Cells["A1"].PutValue("Task");
+            sheet.Cells["B1"].PutValue("Progress");
+            sheet.Cells["A2"].PutValue("Task 1");
+            sheet.Cells["B2"].PutValue(70);   // 70%
+            sheet.Cells["A3"].PutValue("Task 2");
+            sheet.Cells["B3"].PutValue(45);   // 45%
+            sheet.Cells["A4"].PutValue("Task 3");
+            sheet.Cells["B4"].PutValue(90);   // 90%
 
-                sheet.Cells["A2"].PutValue("Task 1");
-                sheet.Cells["A3"].PutValue("Task 2");
-                sheet.Cells["A4"].PutValue("Task 3");
-                sheet.Cells["A5"].PutValue("Task 4");
+            // ----- Add a stacked bar chart -----
+            // Use the Add method that takes (ChartType, topRow, leftColumn, bottomRow, rightColumn)
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 22, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-                // Full length – same for all rows (100%)
-                for (int row = 2; row <= 5; row++)
-                    sheet.Cells[row, 1].PutValue(100);
+            // Set the data range for the series (values) and categories
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-                // Sample progress values
-                sheet.Cells["C2"].PutValue(30);
-                sheet.Cells["C3"].PutValue(70);
-                sheet.Cells["C4"].PutValue(55);
-                sheet.Cells["C5"].PutValue(90);
+            // Configure the single visible series to look like a progress bar
+            Series series = chart.NSeries[0];
+            series.GapWidth = 0;       // Remove gaps between bars for a solid look
+            series.Overlap = 100;      // Ensure bars are fully stacked (no spacing)
 
-                // -------------------------------------------------
-                // Add a stacked bar chart
-                // -------------------------------------------------
-                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 7, 0, 25, 10);
-                Chart chart = sheet.Charts[chartIndex];
+            // Optional: set a distinct fill color for the progress bar
+            series.Area.ForegroundColor = Color.Green;
 
-                // Add the two series (background + progress). 
-                // The second argument 'false' indicates that data is in columns.
-                chart.NSeries.Add("B2:B5", false); // background series
-                chart.NSeries.Add("C2:C5", false); // progress series
-
-                // Set categories (tasks)
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // Hide the background series so only the progress part is visible
-                Series backgroundSeries = chart.NSeries[0];
-                backgroundSeries.IsFiltered = true; // makes the series invisible
-
-                // Customize the visible progress series (e.g., green fill)
-                Series progressSeries = chart.NSeries[1];
-                progressSeries.Area.ForegroundColor = Color.Green;
-
-                // Optional: Remove gap between bars for a tighter look
-                progressSeries.GapWidth = 0;
-
-                // Save the workbook
-                string outputPath = "ProgressBarChart.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook to an XLSX file
+            workbook.Save("ProgressBarChart.xlsx");
         }
     }
 }

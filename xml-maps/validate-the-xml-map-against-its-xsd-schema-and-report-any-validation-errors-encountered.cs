@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Xml.Schema;
 using Aspose.Cells;
 
-class ValidateXmlMap
+class Program
 {
+    // Alias to avoid ambiguity between Aspose.Cells.ValidationType and System.Xml.ValidationType
+    private static readonly Type XmlValidationType = typeof(System.Xml.ValidationType);
+
     static void Main()
     {
         try
@@ -29,7 +31,7 @@ class ValidateXmlMap
                             </xs:element>
                           </xs:schema>";
 
-            // Sample XML that will be validated against the XSD
+            // Sample XML to be validated (contains an intentional error)
             string xml = @"<Data>
                             <Item>
                                 <Name>Item1</Name>
@@ -41,54 +43,71 @@ class ValidateXmlMap
                             </Item>
                           </Data>";
 
-            // Create a new workbook (no external template file required)
+            // Create a workbook (no external template file used, but check if needed)
             Workbook workbook = new Workbook();
 
-            // Add the XML map using the XSD schema
+            // Add the XML map based on the XSD schema
             int mapIndex = workbook.Worksheets.XmlMaps.Add(xsd);
             XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
             xmlMap.Name = "DataMap";
 
-            // Prepare a schema set for validation
-            XmlSchemaSet schemaSet = new XmlSchemaSet();
-            using (XmlReader schemaReader = XmlReader.Create(new StringReader(xsd)))
-            {
-                schemaSet.Add(null, schemaReader);
-            }
+            // Collect validation error messages
+            List<string> validationErrors = new List<string>();
 
-            // Collect validation errors
-            List<string> errors = new List<string>();
+            // Configure XML reader settings for schema validation
             XmlReaderSettings settings = new XmlReaderSettings
             {
-                Schemas = schemaSet,
-                ValidationType = System.Xml.ValidationType.Schema // disambiguated
+                // Use fully qualified enum to avoid ambiguity
+                ValidationType = System.Xml.ValidationType.Schema
             };
-            settings.ValidationEventHandler += (sender, e) => errors.Add(e.Message);
 
-            // Perform validation
-            using (XmlReader xmlReader = XmlReader.Create(new StringReader(xml), settings))
+            // Load the XSD schema from the string
+            using (StringReader xsdReader = new StringReader(xsd))
             {
-                while (xmlReader.Read()) { }
+                settings.Schemas.Add(null, XmlReader.Create(xsdReader));
+            }
+
+            // Capture validation events
+            settings.ValidationEventHandler += (sender, args) =>
+            {
+                validationErrors.Add(args.Message);
+            };
+
+            // Validate the XML string against the XSD schema
+            using (StringReader xmlReader = new StringReader(xml))
+            using (XmlReader reader = XmlReader.Create(xmlReader, settings))
+            {
+                try
+                {
+                    while (reader.Read()) { }
+                }
+                catch (XmlException ex)
+                {
+                    validationErrors.Add("XML parsing error: " + ex.Message);
+                }
             }
 
             // Output validation results
-            if (errors.Count == 0)
+            if (validationErrors.Count == 0)
             {
                 Console.WriteLine("XML is valid against the XSD schema.");
             }
             else
             {
                 Console.WriteLine("Validation errors encountered:");
-                foreach (string err in errors)
+                foreach (string error in validationErrors)
                 {
-                    Console.WriteLine("- " + err);
+                    Console.WriteLine("- " + error);
                 }
             }
+
+            // Optional: export data to XML using the defined map (demonstration purpose)
+            // workbook.ExportXml(xmlMap.Name, "ExportedData.xml");
         }
         catch (Exception ex)
         {
-            // General exception handling to avoid runtime crashes
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // General exception handling to prevent runtime crashes
+            Console.WriteLine("An unexpected error occurred: " + ex.Message);
         }
     }
 }

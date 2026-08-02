@@ -1,42 +1,26 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizationSave
+namespace AsposeCellsSaveLocalizedWorkbook
 {
     class Program
     {
         static void Main()
         {
-            // Path to the source workbook that contains localized content,
-            // formatting, comments, and cell styles.
-            string sourcePath = "LocalizedInput.xlsx";
+            // Path to the source workbook (could be any localized Excel file)
+            string sourcePath = "input.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException.
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Error: Source file '{sourcePath}' not found.");
-                return;
-            }
+            // Path where the workbook will be saved preserving all formatting, comments, and styles
+            string destinationPath = "output.xlsx";
 
-            try
-            {
-                // Load the existing workbook. The constructor with a file path
-                // utilizes the built‑in load rule.
-                Workbook workbook = new Workbook(sourcePath);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(sourcePath);
 
-                // Save the workbook as XLSX while preserving all original
-                // formatting, comments, and styles.
-                string outputPath = "LocalizedOutput.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Save the workbook as XLSX. The Save method with SaveFormat preserves
+            // original formatting, comments, and cell styles automatically.
+            workbook.Save(destinationPath, SaveFormat.Xlsx);
 
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions (e.g., loading/saving errors) and display a message.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Workbook saved successfully to '{destinationPath}'.");
         }
     }
 }

@@ -1,71 +1,50 @@
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlSpaceComparison
+// Author: Aspose.Cells .NET example – compare HTML loading with and without redundant space deletion
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Sample HTML containing redundant spaces
+        string html = "<p>   This    text   has   redundant   spaces   </p>";
+
+        // Load the HTML without deleting redundant spaces (default behavior)
+        Workbook wbOriginal = LoadHtmlToWorkbook(html, deleteRedundantSpaces: false);
+
+        // Load the same HTML with redundant spaces removed
+        Workbook wbTrimmed = LoadHtmlToWorkbook(html, deleteRedundantSpaces: true);
+
+        // Retrieve the text from the first cell of each workbook
+        string originalText = wbOriginal.Worksheets[0].Cells["A1"].StringValue;
+        string trimmedText = wbTrimmed.Worksheets[0].Cells["A1"].StringValue;
+
+        // Output the results
+        Console.WriteLine("Original cell text: \"" + originalText + "\"");
+        Console.WriteLine("Trimmed cell text:  \"" + trimmedText + "\"");
+
+        // Simple comparison to show the effect of DeleteRedundantSpaces
+        if (originalText == trimmedText)
+            Console.WriteLine("No difference detected.");
+        else
+            Console.WriteLine("Difference detected.");
+    }
+
+    // Helper method to load HTML into a Workbook with the specified DeleteRedundantSpaces setting
+    static Workbook LoadHtmlToWorkbook(string htmlContent, bool deleteRedundantSpaces)
+    {
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions
         {
-            // Prepare a sample HTML string containing redundant spaces.
-            string htmlContent = "<p>   This    text   has   redundant   spaces   </p>";
+            DeleteRedundantSpaces = deleteRedundantSpaces
+        };
 
-            // Write the HTML to a temporary file for loading.
-            string inputPath = "sample_input.html";
-            File.WriteAllText(inputPath, htmlContent);
-
-            // -----------------------------------------------------------------
-            // 1. Load the HTML without deleting redundant spaces (default behavior).
-            // -----------------------------------------------------------------
-            // No HtmlLoadOptions are supplied, so DeleteRedundantSpaces remains false.
-            Workbook wbDefault = new Workbook(inputPath);
-
-            // Save the workbook back to HTML to observe the original spacing.
-            string outputDefaultPath = "output_default.html";
-            wbDefault.Save(outputDefaultPath, new HtmlSaveOptions());
-
-            // -----------------------------------------------------------------
-            // 2. Load the same HTML with DeleteRedundantSpaces enabled.
-            // -----------------------------------------------------------------
-            HtmlLoadOptions loadOpts = new HtmlLoadOptions();
-            loadOpts.DeleteRedundantSpaces = true; // Enable redundant space removal.
-            Workbook wbTrimmed = new Workbook(inputPath, loadOpts);
-
-            // Save the trimmed workbook to HTML.
-            string outputTrimmedPath = "output_trimmed.html";
-            wbTrimmed.Save(outputTrimmedPath, new HtmlSaveOptions());
-
-            // -----------------------------------------------------------------
-            // 3. Compare the two generated HTML files.
-            // -----------------------------------------------------------------
-            string defaultHtml = File.ReadAllText(outputDefaultPath);
-            string trimmedHtml = File.ReadAllText(outputTrimmedPath);
-
-            Console.WriteLine("=== Comparison Result ===");
-            Console.WriteLine($"Length before deletion : {defaultHtml.Length}");
-            Console.WriteLine($"Length after deletion  : {trimmedHtml.Length}");
-            Console.WriteLine();
-
-            if (defaultHtml == trimmedHtml)
-            {
-                Console.WriteLine("The HTML files are identical.");
-            }
-            else
-            {
-                Console.WriteLine("The HTML files differ.");
-                // Simple visual diff: show the cell text extracted from the workbook.
-                string cellTextDefault = wbDefault.Worksheets[0].Cells["A1"].StringValue;
-                string cellTextTrimmed = wbTrimmed.Worksheets[0].Cells["A1"].StringValue;
-
-                Console.WriteLine($"Cell A1 text (default) : \"{cellTextDefault}\"");
-                Console.WriteLine($"Cell A1 text (trimmed) : \"{cellTextTrimmed}\"");
-            }
-
-            // Clean up temporary files (optional).
-            // File.Delete(inputPath);
-            // File.Delete(outputDefaultPath);
-            // File.Delete(outputTrimmedPath);
+        byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+        using (MemoryStream stream = new MemoryStream(htmlBytes))
+        {
+            // Load the HTML stream into a workbook using the provided options
+            return new Workbook(stream, loadOptions);
         }
     }
 }

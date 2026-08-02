@@ -13,7 +13,7 @@ namespace AsposeCellsChartLockDemo
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add some sample data for the chart
+            // Populate some sample data for the chart
             worksheet.Cells["A1"].PutValue("Category");
             worksheet.Cells["B1"].PutValue("Value");
             worksheet.Cells["A2"].PutValue("A");
@@ -29,15 +29,17 @@ namespace AsposeCellsChartLockDemo
             chart.SetChartDataRange("A1:B4", true);
             chart.Title.Text = "Sample Chart";
 
-            // Obtain the ChartShape (the underlying shape of the chart)
-            ChartShape chartShape = chart.ChartObject;
+            // Lock the chart shape so it cannot be moved or resized when the sheet is protected
+            // ChartObject returns the underlying ChartShape (inherits from Shape)
+            chart.ChartObject.IsLocked = true;
 
-            // Lock the shape so it cannot be moved or resized when the sheet is protected
-            chartShape.IsLocked = true; // General lock
-            chartShape.SetLockedProperty(ShapeLockType.Move, true);    // Prevent moving
-            chartShape.SetLockedProperty(ShapeLockType.Resize, true);  // Prevent resizing
+            // Optionally, lock specific properties such as Move and Resize using SetLockedProperty
+            // This ensures the chart cannot be moved or resized even if IsLocked is somehow bypassed
+            chart.ChartObject.SetLockedProperty(ShapeLockType.Move, true);
+            chart.ChartObject.SetLockedProperty(ShapeLockType.Resize, true);
 
-            // Protect the worksheet (required for the lock to take effect)
+            // Protect the worksheet (all protection options enabled by default)
+            // The locked state of the chart takes effect only when the worksheet is protected
             worksheet.Protect(ProtectionType.All);
 
             // Save the workbook

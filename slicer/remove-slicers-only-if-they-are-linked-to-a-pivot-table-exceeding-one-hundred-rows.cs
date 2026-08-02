@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerRemovalDemo
+namespace AsposeCellsSlicerRemoval
 {
     class Program
     {
@@ -13,59 +14,57 @@ namespace SlicerRemovalDemo
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            Workbook workbook;
             try
             {
+                // Verify input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
                 // Load the workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
+                Workbook workbook = new Workbook(inputPath);
 
-            try
-            {
                 // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     SlicerCollection slicers = sheet.Slicers;
+                    List<Slicer> slicersToRemove = new List<Slicer>();
 
-                    // Iterate backwards to safely remove items
-                    for (int i = slicers.Count - 1; i >= 0; i--)
+                    // Examine each slicer
+                    foreach (Slicer slicer in slicers)
                     {
-                        Slicer slicer = slicers[i];
-                        bool shouldRemove = false;
-
                         // Check each pivot table on the same worksheet
                         foreach (PivotTable pivot in sheet.PivotTables)
                         {
                             try
                             {
-                                // Attempt to remove the connection; if successful, mark for removal
+                                // Attempt to remove the connection; if not connected, an exception is thrown
                                 slicer.RemovePivotConnection(pivot);
-                                shouldRemove = true;
-                                break;
+
+                                // Calculate row count of the pivot table using its TableRange2
+                                int rowCount = pivot.TableRange2.EndRow - pivot.TableRange2.StartRow + 1;
+
+                                // Mark slicer for removal if pivot has more than 100 rows
+                                if (rowCount > 100)
+                                {
+                                    slicersToRemove.Add(slicer);
+                                }
+
+                                // No need to re‑establish the connection if we plan to delete the slicer
                             }
                             catch
                             {
-                                // Not connected to this pivot; continue checking others
+                                // Slicer not connected to this pivot table; continue
                             }
                         }
+                    }
 
-                        // Remove slicer if it was connected to any pivot table
-                        if (shouldRemove)
-                        {
-                            slicers.RemoveAt(i);
-                        }
+                    // Remove identified slicers
+                    foreach (Slicer s in slicersToRemove)
+                    {
+                        slicers.Remove(s);
                     }
                 }
 
@@ -75,7 +74,7 @@ namespace SlicerRemovalDemo
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during processing: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

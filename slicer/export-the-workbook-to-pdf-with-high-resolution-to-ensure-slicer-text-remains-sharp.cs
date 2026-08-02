@@ -1,66 +1,43 @@
+// Title: Export a Workbook to High‑Resolution PDF with Sharp Slicer Text using Aspose.Cells (C#)
+// Description: Demonstrates how to set CellsHelper.DPI, configure PdfSaveOptions (Standard optimization, ExportDocumentStructure, image resample at 300 DPI, JPEG quality 100) and save a workbook as a PDF that preserves slicer label clarity.
+// Keywords: Aspose.Cells PDF export C# | high DPI PDF Aspose | slicer text sharpness | PdfSaveOptions image resample | ExportDocumentStructure PDF | 300 DPI workbook export | high quality PDF generation | Aspose.Cells rendering settings
+// Common Searches: Aspose.Cells export PDF 300 DPI | keep slicer labels clear in PDF | PdfSaveOptions high resolution example | how to set DPI for Aspose.Cells PDF | sharp slicer text Aspose.Cells C#
+// Developer Intent: Generate a PDF from an Aspose.Cells workbook that retains crisp slicer labels by using high‑resolution rendering settings.
+// Use Cases: Producing printable reports with slicers that meet corporate branding standards. | Creating dashboard PDFs for client presentations where label legibility is critical. | Archiving spreadsheets as PDFs for regulatory compliance while preserving visual fidelity of slicer controls.
+// AI Prompts: Write C# code to export an Aspose.Cells workbook to a 600 DPI PDF while maintaining slicer formatting. | Explain the impact of ExportDocumentStructure on text rendering quality for slicers in a PDF. | Suggest a balance between file size and slicer sharpness by tweaking PdfSaveOptions optimization and image resample values.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHighResPdfExport
+// Demonstrates how to set CellsHelper.DPI, configure PdfSaveOptions (Standard optimization, ExportDocumentStructure, image resample at 300 DPI, JPEG quality 100) and save a workbook as a PDF that preserves slicer label clarity.
+class ExportWorkbookToPdfHighRes
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Set the DPI to a high value (e.g., 300) to improve rendering quality of slicer text.
+        CellsHelper.DPI = 300;
+
+        // Create a new workbook (or load an existing one).
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample Data");
+        // Add additional data / slicers as needed here.
+
+        // Configure PDF save options for high‑resolution output.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            try
-            {
-                // Set a high DPI for rendering to improve image and shape quality.
-                CellsHelper.DPI = 300;
+            // Use the standard optimization for maximum print quality.
+            OptimizationType = PdfOptimizationType.Standard,
+            // Export document structure (helps retain text clarity in PDF viewers).
+            ExportDocumentStructure = true
+        };
 
-                // Create a new workbook and obtain the first worksheet.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Resample images to 300 DPI with maximum JPEG quality (100).
+        // This also influences the overall rendering DPI.
+        pdfOptions.SetImageResample(300, 100);
 
-                // Populate sample data.
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Fruits");
-                sheet.Cells["A3"].PutValue("Vegetables");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(50);
-                sheet.Cells["B3"].PutValue(30);
-
-                // Add a simple column chart.
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B3", true);
-                chart.NSeries.CategoryData = "A2:A3";
-                chart.Title.Text = "Sample Chart";
-
-                // Configure PDF save options for high quality.
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    OptimizationType = PdfOptimizationType.Standard,
-                    ExportDocumentStructure = true,
-                    DefaultFont = "Arial",
-                    EmbedStandardWindowsFonts = true
-                };
-                pdfOptions.SetImageResample(300, 90); // Resample images to 300 DPI with JPEG quality 90.
-
-                // Define output path and ensure its directory exists.
-                string outputPath = "HighResolutionOutput.pdf";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a PDF.
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully saved to PDF with high resolution at: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook as a high‑resolution PDF.
+        workbook.Save("HighResOutput.pdf", pdfOptions);
     }
 }

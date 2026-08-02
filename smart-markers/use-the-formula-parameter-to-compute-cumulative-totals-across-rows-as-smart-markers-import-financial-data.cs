@@ -2,57 +2,53 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-class Program
+class CumulativeTotalsSmartMarkers
 {
     static void Main()
     {
-        // ---------- 1. Prepare sample financial data ----------
-        DataTable financialData = new DataTable("Financial");
-        financialData.Columns.Add("Date", typeof(DateTime));
-        financialData.Columns.Add("Amount", typeof(double));
-
-        financialData.Rows.Add(new DateTime(2023, 1, 1), 1200.0);
-        financialData.Rows.Add(new DateTime(2023, 2, 1), 1500.0);
-        financialData.Rows.Add(new DateTime(2023, 3, 1), 1800.0);
-        financialData.Rows.Add(new DateTime(2023, 4, 1), 2100.0);
-        financialData.Rows.Add(new DateTime(2023, 5, 1), 2400.0);
-
-        // ---------- 2. Create a workbook and design the template ----------
-        Workbook workbook = new Workbook();                     // create workbook
+        // 1. Create a new workbook (lifecycle: create)
+        Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Header row
+        // 2. Set up the template header
         cells["A1"].PutValue("Date");
-        cells["B1"].PutValue("Amount");
-        cells["C1"].PutValue("Cumulative Total");
+        cells["B1"].PutValue("Description");
+        cells["C1"].PutValue("Amount");
+        cells["D1"].PutValue("Cumulative");
 
-        // Row 2 contains smart markers for data import
-        // &=$Date and &=$Amount will be replaced by the data source values
+        // 3. Insert smart markers for data rows (starting at row 2)
+        //    &=$ColumnName tells Aspose.Cells to replace the cell with data from the DataTable.
         cells["A2"].PutValue("&=$Date");
-        cells["B2"].PutValue("&=$Amount");
-        // Formula that will be repeated for each data row to calculate cumulative sum
-        // $B$2 is the absolute start of the Amount column, B2 is relative to the current row
-        cells["C2"].Formula = "=SUM($B$2:B2)";
+        cells["B2"].PutValue("&=$Description");
+        cells["C2"].PutValue("&=$Amount");
 
-        // ---------- 3. Process smart markers ----------
+        // 4. Formula to compute cumulative total across rows.
+        //    $C$2 is an absolute reference to the first amount cell.
+        //    C2 is a relative reference that expands as the formula is copied down.
+        cells["D2"].Formula = "=SUM($C$2:C2)";
+
+        // 5. Prepare sample financial data in a DataTable.
+        DataTable dt = new DataTable("Financial");
+        dt.Columns.Add("Date", typeof(DateTime));
+        dt.Columns.Add("Description", typeof(string));
+        dt.Columns.Add("Amount", typeof(double));
+
+        dt.Rows.Add(new DateTime(2023, 1, 1), "Opening Balance", 1000.0);
+        dt.Rows.Add(new DateTime(2023, 1, 5), "Revenue", 2500.0);
+        dt.Rows.Add(new DateTime(2023, 1, 10), "Expense", -800.0);
+        dt.Rows.Add(new DateTime(2023, 1, 15), "Revenue", 1200.0);
+        dt.Rows.Add(new DateTime(2023, 1, 20), "Expense", -500.0);
+
+        // 6. Use WorkbookDesigner to process smart markers.
         WorkbookDesigner designer = new WorkbookDesigner(workbook);
-        designer.RepeatFormulasWithSubtotal = true;            // repeat the formula for each generated row
-        designer.SetDataSource(financialData);
-        designer.Process();                                    // import data and repeat the formula
+        designer.SetDataSource(dt);
+        designer.Process();
 
-        // ---------- 4. Ensure formulas are calculated ----------
-        workbook.CalculateFormula();                           // calculate all formulas
+        // 7. Calculate all formulas so that cumulative totals are evaluated.
+        workbook.CalculateFormula();
 
-        // ---------- 5. (Optional) Verify cumulative totals ----------
-        int lastDataRow = cells.MaxDataRow;                    // last row that contains data
-        for (int row = 2; row <= lastDataRow; row++)          // rows are 0‑based; row 2 = Excel row 3
-        {
-            Cell cumCell = cells[row, 2];                     // column C (index 2)
-            Console.WriteLine($"Row {row + 1} cumulative total: {cumCell.Value}");
-        }
-
-        // ---------- 6. Save the result ----------
-        workbook.Save("FinancialCumulative.xlsx");             // save workbook
+        // 8. Save the result (lifecycle: save)
+        workbook.Save("CumulativeTotals.xlsx");
     }
 }

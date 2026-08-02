@@ -7,57 +7,60 @@ namespace AsposeCellsSubtotalAfterSort
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate sample data (including header)
-            // Column A: Category, Column B: Amount
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
+            // 2. Populate sample data (including header) in columns A‑C
+            // Header
+            cells["A1"].PutValue("Region");
+            cells["B1"].PutValue("Product");
+            cells["C1"].PutValue("Sales");
 
+            // Data rows (unsorted on purpose)
             object[,] data = new object[,]
             {
-                { "B", 200 },
-                { "A", 100 },
-                { "C", 300 },
-                { "B", 150 },
-                { "A", 250 },
-                { "C", 350 }
+                { "West",  "Widget", 4500 },
+                { "North", "Gadget", 3000 },
+                { "South", "Widget", 6000 },
+                { "North", "Widget", 5000 },
+                { "South", "Gadget", 4000 }
             };
 
             for (int r = 0; r < data.GetLength(0); r++)
             {
-                cells[r + 1, 0].PutValue(data[r, 0]); // Category
-                cells[r + 1, 1].PutValue(data[r, 1]); // Amount
+                for (int c = 0; c < data.GetLength(1); c++)
+                {
+                    cells[r + 1, c].PutValue(data[r, c]);
+                }
             }
 
-            // Define the range that contains the data (including header)
-            CellArea dataArea = CellArea.CreateCellArea("A1", $"B{data.GetLength(0) + 1}");
+            // 3. Define the range that contains the data (including header)
+            // A1:C6  -> rows 0‑5, columns 0‑2
+            CellArea area = CellArea.CreateCellArea(0, 0, 5, 2);
 
-            // Sort the data by the first column (Category) in ascending order
+            // 4. Sort the range by the first column (Region) in ascending order
             DataSorter sorter = workbook.DataSorter;
-            sorter.HasHeaders = true;               // First row is a header
-            sorter.Key1 = 0;                         // Sort by column A (index 0)
-            sorter.Order1 = SortOrder.Ascending;     // Ascending order
-            sorter.Sort(cells, dataArea);            // Perform the sort
+            sorter.HasHeaders = true;                 // first row is a header
+            sorter.Key1 = 0;                           // column A (zero‑based)
+            sorter.Order1 = SortOrder.Ascending;       // ascending
+            sorter.Sort(worksheet.Cells, area);        // perform the sort
 
-            // Apply subtotals:
-            // - Group by the first column (Category) -> groupBy = 0
-            // - Use SUM function on the second column (Amount) -> totalList = new int[] { 1 }
-            // - Replace existing subtotals, add page breaks, place summary below data
+            // 5. Apply subtotals after sorting
+            // Group by column A (Region), sum the Sales column (index 2)
+            // Replace existing subtotals, add page breaks, place summary below data
             cells.Subtotal(
-                dataArea,
-                0,                                 // Group by column A
-                ConsolidationFunction.Sum,         // Sum function
-                new int[] { 1 },                   // Subtotal on column B
-                true,                              // Replace existing subtotals
-                true,                              // Add page breaks between groups
-                true                               // Summary below data
+                area,
+                0,                                 // groupBy column index (Region)
+                ConsolidationFunction.Sum,         // subtotal function
+                new int[] { 2 },                   // columns to subtotal (Sales)
+                true,                              // replace existing subtotals
+                true,                              // add page breaks between groups
+                true                               // place summary below data
             );
 
-            // Save the workbook
+            // 6. Save the workbook
             workbook.Save("SubtotalAfterSort.xlsx");
         }
     }

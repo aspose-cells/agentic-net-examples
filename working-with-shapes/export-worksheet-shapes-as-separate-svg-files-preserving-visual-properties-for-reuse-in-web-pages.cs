@@ -1,55 +1,48 @@
-// Export each shape in a worksheet to an individual SVG file.
-// The code loads an existing workbook, iterates through all shapes on the first worksheet,
-// and saves each shape as an SVG image using the Shape.ToImage method.
-// Note: Aspose.Cells currently supports SVG export for whole worksheets via SvgSaveOptions.
-// For individual shapes, the ToImage method can be used with ImageType.Svg if the enum
-// includes it; otherwise, you may need to export to another format (e.g., PNG) and
-// convert to SVG externally.
+// Title: Export Worksheet Shapes to Individual SVG Files with Aspose.Cells for .NET
+// Description: This C# example loads an Excel workbook, iterates through each worksheet’s Shape collection, and saves every shape as a separate SVG file using Shape.ToImage(ImageType.Svg). File names combine the workbook name, sheet name, and shape identifier, producing ready‑to‑use graphics for web pages.
+// Keywords: Aspose.Cells | C# | export shape to SVG | Shape.ToImage | Excel shapes SVG | worksheet shape extraction | SVG web graphics | C# Excel SVG conversion | Aspose.Cells .NET | batch export Excel shapes
+// Common Searches: Aspose.Cells export shape as SVG C# | How to save Excel drawing objects to SVG with .NET | Convert worksheet shapes to SVG files using Aspose.Cells | C# code to extract Excel shapes to SVG | Batch export Excel charts to SVG
+// Developer Intent: Generate separate SVG files for all shapes in every worksheet of an Excel workbook while keeping their visual attributes intact.
+// Use Cases: Create scalable icons from Excel diagrams for responsive web dashboards. | Produce high‑quality SVG assets of charts and drawings for documentation or presentations. | Automate bulk conversion of workbook graphics for content‑management systems. | Integrate SVG exports into CI pipelines for design‑asset generation.
+// AI Prompts: Write a C# method that receives a workbook path and an output directory, then iterates through all worksheets and saves each shape as an SVG file with a name based on workbook, sheet, and shape name. | Explain how Shape.ToImage preserves dimensions, colors, and text when converting an Excel shape to SVG with Aspose.Cells. | Provide error‑handling code for unnamed shapes and unsupported shape types during SVG export in Aspose.Cells. | Show how to filter only chart shapes before exporting to SVG using Aspose.Cells.
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;   // For ImageType enum
 
-class ExportShapesToSvg
+// This C# example loads an Excel workbook, iterates through each worksheet’s Shape collection, and saves every shape as a separate SVG file using Shape.ToImage(ImageType.Svg). File names combine the workbook name, sheet name, and shape identifier, producing ready‑to‑use graphics for web pages.
+class ExportWorksheetShapesToSvg
 {
     static void Main()
     {
         // Load the workbook (replace with your actual file path)
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (you can change the index as needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Directory where SVG files will be saved
-        string outputDir = "ExportedShapes";
-        if (!Directory.Exists(outputDir))
-            Directory.CreateDirectory(outputDir);
-
-        // Iterate through all shapes in the worksheet
-        ShapeCollection shapes = sheet.Shapes;
-        for (int i = 0; i < shapes.Count; i++)
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Shape shape = shapes[i];
+            // Get the collection of shapes on the current worksheet
+            ShapeCollection shapes = sheet.Shapes;
 
-            // Build a file name for the shape (using its name or index)
-            string shapeName = string.IsNullOrEmpty(shape.Name) ? $"Shape_{i}" : shape.Name;
-            string svgPath = Path.Combine(outputDir, $"{shapeName}.svg");
-
-            // Export the shape to SVG.
-            // If ImageType.Svg is not available in the current version,
-            // you can use ImageType.Png and later convert the PNG to SVG externally.
-            using (FileStream fs = new FileStream(svgPath, FileMode.Create, FileAccess.Write))
+            // Export each shape as an individual SVG file
+            for (int i = 0; i < shapes.Count; i++)
             {
-                // Attempt to export directly as SVG
-                // ImageType enum includes common raster formats; SVG may be added in newer releases.
-                // Replace ImageType.Png with ImageType.Svg if supported.
-                shape.ToImage(fs, ImageType.Png);
-            }
+                Shape shape = shapes[i];
 
-            Console.WriteLine($"Exported shape '{shapeName}' to '{svgPath}'.");
+                // Determine a file name for the SVG (use shape name if available)
+                string shapeName = string.IsNullOrEmpty(shape.Name) ? $"Shape_{i}" : shape.Name;
+                string svgFileName = $"{Path.GetFileNameWithoutExtension(workbook.FileName)}_{sheet.Name}_{shapeName}.svg";
+
+                // Export the shape to SVG using the ToImage method with ImageType.Svg
+                using (MemoryStream svgStream = new MemoryStream())
+                {
+                    shape.ToImage(svgStream, ImageType.Svg);   // Export to SVG format
+                    File.WriteAllBytes(svgFileName, svgStream.ToArray());
+                }
+
+                Console.WriteLine($"Exported shape '{shapeName}' to '{svgFileName}'.");
+            }
         }
     }
 }

@@ -3,45 +3,42 @@ using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-class ExportCsvExample
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // OPTIONAL: Populate some sample data for demonstration
-        for (int row = 0; row < 60; row++)          // more than 50 rows
+        // Populate sample data in rows 1‑50 and columns A‑D (indices 0‑49, 0‑3)
+        for (int row = 0; row < 50; row++)
         {
-            for (int col = 0; col < 6; col++)       // more than 4 columns
+            for (int col = 0; col < 4; col++)
             {
                 cells[row, col].PutValue($"R{row + 1}C{col + 1}");
             }
         }
 
-        // Define the export area: rows 1‑50 (0‑49) and columns A‑D (0‑3)
-        CellArea exportArea = new CellArea
-        {
-            StartRow = 0,
-            EndRow = 49,
-            StartColumn = 0,
-            EndColumn = 3
-        };
-
-        // Configure TxtSaveOptions for CSV output
+        // Configure TxtSaveOptions to export only the desired area (A1:D50)
         TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
-        saveOptions.Separator = ',';          // CSV delimiter
-        saveOptions.ExportArea = exportArea;   // limit export to the defined range
-
-        // Save the selected range to a memory stream
-        using (MemoryStream ms = new MemoryStream())
+        saveOptions.ExportArea = new CellArea
         {
-            workbook.Save(ms, saveOptions);
+            StartRow = 0,      // Row 1 (zero‑based)
+            EndRow = 49,       // Row 50
+            StartColumn = 0,   // Column A
+            EndColumn = 3      // Column D
+        };
+        // Optional: set the CSV separator (default is comma)
+        saveOptions.Separator = ',';
 
-            // Convert the memory stream to a CSV string
-            string csvString = Encoding.UTF8.GetString(ms.ToArray());
+        // Save the selected range to a memory stream in CSV format
+        using (MemoryStream stream = new MemoryStream())
+        {
+            workbook.Save(stream, saveOptions);
+            // Convert the stream content to a CSV string
+            string csvString = Encoding.UTF8.GetString(stream.ToArray());
 
             // Output the CSV string
             Console.WriteLine(csvString);

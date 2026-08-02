@@ -1,66 +1,55 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+class RemoveCalculatedFieldDemo
 {
-    public class RemoveCalculatedFieldDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main()
-        {
-            Run();
-        }
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            try
-            {
-                const string inputFile = "PivotTableWithCalculatedField.xlsx";
-                const string outputFile = "PivotTable_CalculatedFieldRemoved.xlsx";
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["C1"].PutValue("Quantity");
 
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(100);
+        sheet.Cells["C2"].PutValue(5);
 
-                // Load the workbook containing the pivot table with a calculated field
-                Workbook workbook = new Workbook(inputFile);
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(150);
+        sheet.Cells["C3"].PutValue(8);
 
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
+        sheet.Cells["A4"].PutValue("Orange");
+        sheet.Cells["B4"].PutValue(200);
+        sheet.Cells["C4"].PutValue(10);
 
-                // Get the first pivot table in the worksheet
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
+        // Add a pivot table covering the data range and place it at E3
+        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                PivotTable pivotTable = worksheet.PivotTables[0];
+        // Add fields to the pivot table: Product as row, Sales and Quantity as data
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
-                // Name of the calculated field to be removed (must match the name used when adding it)
-                string calculatedFieldName = "Profit";
+        // Add a calculated field named "Total" (Sales * Quantity) and drag it to the data area
+        pivotTable.AddCalculatedField("Total", "=Sales*Quantity", true);
 
-                // Remove the calculated field from the Data area.
-                // This operation does not affect other fields in the pivot table.
-                pivotTable.RemoveField(PivotFieldType.Data, calculatedFieldName);
+        // Refresh and calculate to populate the pivot table with the calculated field
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-                // Recalculate the pivot table to reflect the removal
-                pivotTable.CalculateData();
+        // Remove the calculated field "Total" from the Data area without affecting other fields
+        pivotTable.RemoveField(PivotFieldType.Data, "Total");
 
-                // Save the modified workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully: {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Recalculate after removal to update the pivot view
+        pivotTable.CalculateData();
+
+        // Save the workbook
+        workbook.Save("RemovedCalculatedField.xlsx");
     }
 }

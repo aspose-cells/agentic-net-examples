@@ -1,38 +1,29 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // for PdfSaveOptions
 
-namespace AsposeCellsTsvToPdf
+// Author: Aspose.Cells .NET example – converts a TSV workbook to PDF,
+// one page per sheet, and omits completely blank pages.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the TSV file into a workbook.
+        // LoadOptions with LoadFormat.Tsv tells Aspose.Cells to treat the file as tab‑separated values.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
+        Workbook workbook = new Workbook("input.tsv", loadOptions);
+
+        // Configure PDF save options.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Path to the source TSV file
-            string tsvPath = "input.tsv";
+            // Ensure each worksheet is rendered on a single page.
+            OnePagePerSheet = true,
 
-            // Load the TSV workbook
-            // Aspose.Cells automatically detects the format based on the file extension
-            Workbook workbook = new Workbook(tsvPath);
+            // Do not generate a blank page when a sheet has no printable content.
+            OutputBlankPageWhenNothingToPrint = false
+        };
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Ensure each worksheet is rendered on a single page
-                OnePagePerSheet = true,
-
-                // Omit pages that contain only blank cells
-                PrintingPageType = PrintingPageType.IgnoreBlank,
-
-                // Do not generate a blank page when a sheet has nothing to print
-                OutputBlankPageWhenNothingToPrint = false
-            };
-
-            // Save the workbook as PDF
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, pdfOptions);
-
-            Console.WriteLine($"TSV workbook converted to PDF successfully: {pdfPath}");
-        }
+        // Save the workbook as a PDF file using the configured options.
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

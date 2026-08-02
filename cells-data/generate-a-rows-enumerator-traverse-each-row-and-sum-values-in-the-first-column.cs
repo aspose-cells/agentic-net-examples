@@ -2,44 +2,51 @@ using System;
 using System.Collections;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsRowsSumDemo
 {
-    static void Main()
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample numeric data in the first column (A)
-        for (int i = 0; i < 10; i++)
+        public static void Main()
         {
-            // Cells[row, column] – column index 0 corresponds to column A
-            worksheet.Cells[i, 0].PutValue(i + 1); // values 1,2,...,10
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Obtain an enumerator for the rows collection
-        IEnumerator rowsEnumerator = worksheet.Cells.Rows.GetEnumerator();
+            // Populate some sample numeric data in the first column (A)
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].PutValue(30);
+            cells["A5"].PutValue(40); // Note: row 4 is empty
 
-        double sum = 0;
+            // Get the rows collection
+            RowCollection rows = cells.Rows;
 
-        // Iterate through each row
-        while (rowsEnumerator.MoveNext())
-        {
-            Row row = (Row)rowsEnumerator.Current;
+            // Obtain an enumerator for the rows collection
+            IEnumerator rowEnumerator = rows.GetEnumerator();
 
-            // Access the cell in the first column of the current row
-            Cell cell = row[0]; // equivalent to worksheet.Cells[row.Index, 0]
+            double sum = 0;
 
-            // Ensure the cell contains a numeric value before adding
-            if (cell != null && cell.Value != null && double.TryParse(cell.Value.ToString(), out double value))
+            // Iterate through each row
+            while (rowEnumerator.MoveNext())
             {
-                sum += value;
+                // Cast the current element to Row
+                Row row = (Row)rowEnumerator.Current;
+
+                // Get the first cell in the row (column index 0)
+                Cell firstCell = row.GetCellOrNull(0);
+
+                // If the cell exists and contains a numeric value, add it to the sum
+                if (firstCell != null && firstCell.Value != null && double.TryParse(firstCell.Value.ToString(), out double val))
+                {
+                    sum += val;
+                }
             }
+
+            Console.WriteLine($"Sum of values in the first column: {sum}");
+
+            // Save the workbook (optional, just to demonstrate saving)
+            workbook.Save("RowsSumDemo.xlsx");
         }
-
-        Console.WriteLine($"Sum of values in the first column: {sum}");
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("RowsSumDemo.xlsx");
     }
 }

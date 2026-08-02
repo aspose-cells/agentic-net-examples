@@ -1,49 +1,52 @@
 using System;
 using Aspose.Cells;
 
-class WorkbookEncryptionDemo
+class WorkbookEncryptionAndProtectionDemo
 {
     static void Main()
     {
-        // Create a new workbook and add initial data
+        // ---------- Create a new workbook ----------
         Workbook wb = new Workbook();
         Worksheet ws = wb.Worksheets[0];
-        ws.Cells["A1"].PutValue("Original Value");
+        ws.Cells["A1"].PutValue("Original");
 
-        // Protect the worksheet with a password
-        ws.Protect(ProtectionType.All, "sheetPwd", null);
-
-        // Encrypt the workbook with a password
+        // ---------- Encrypt the workbook with a password ----------
         wb.Settings.Password = "filePwd";
         wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-        // Save the encrypted and protected workbook
+        // ---------- Define an editable range for cell A1 ----------
+        // Add a protected range covering A1
+        int rangeIndex = ws.AllowEditRanges.Add("EditableA1", 0, 0, 0, 0);
+        ProtectedRange range = ws.AllowEditRanges[rangeIndex];
+        // Set a password for this range
+        range.Password = "rangePwd";
+
+        // ---------- Protect the worksheet (all protection types) ----------
+        ws.Protect(ProtectionType.All);
+
+        // ---------- Save the encrypted and protected workbook ----------
         string filePath = "EncryptedProtectedWorkbook.xlsx";
         wb.Save(filePath, SaveFormat.Xlsx);
-        wb.Dispose();
 
-        // Load the workbook using the encryption password
+        // ---------- Load the workbook using the file password ----------
         LoadOptions loadOptions = new LoadOptions();
         loadOptions.Password = "filePwd";
         Workbook loadedWb = new Workbook(filePath, loadOptions);
         Worksheet loadedWs = loadedWb.Worksheets[0];
 
-        // Verify encryption and worksheet protection status
-        Console.WriteLine("Workbook IsEncrypted: " + loadedWb.Settings.IsEncrypted);
-        Console.WriteLine("Worksheet IsProtected: " + loadedWs.IsProtected);
+        // ---------- Attempt to modify the protected cell without providing the range password ----------
+        try
+        {
+            loadedWs.Cells["A1"].PutValue("Modified without password");
+            Console.WriteLine("Cell modified successfully (unexpected).");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Modification blocked as expected: " + ex.Message);
+        }
 
-        // Attempt to modify a protected cell without unprotecting
-        string before = loadedWs.Cells["A1"].Value?.ToString();
-        loadedWs.Cells["A1"].PutValue("Attempted Change");
-        string after = loadedWs.Cells["A1"].Value?.ToString();
-
-        // Display the result of the modification attempt
-        Console.WriteLine($"Cell A1 before attempt: {before}");
-        Console.WriteLine($"Cell A1 after attempt: {after}");
-        Console.WriteLine("If the values are identical, the protection prevented the edit.");
-
-        // Save the workbook (no changes will be persisted if protection blocked the edit)
-        loadedWb.Save("ResultWorkbook.xlsx", SaveFormat.Xlsx);
+        // Cleanup
+        wb.Dispose();
         loadedWb.Dispose();
     }
 }

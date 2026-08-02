@@ -1,57 +1,60 @@
+// Title: Aspose.Cells .NET: Load Excel from MemoryStream and Export to 300 DPI PNG
+// Description: Shows how to read an Excel file into a byte array, create a Workbook from a MemoryStream, set ImageOrPrintOptions for PNG at 300 DPI, render each sheet as a single page, and write the resulting images to files or streams.
+// Keywords: Aspose.Cells | C# | MemoryStream | Excel to PNG | 300 DPI | ImageOrPrintOptions | WorkbookRender | .NET image conversion | high‑resolution Excel export | render worksheet as image
+// Common Searches: Aspose.Cells export Excel to PNG 300 DPI | C# convert workbook to high resolution PNG | load Excel from byte array Aspose.Cells | render Excel sheet as image .NET | save Excel as PNG without creating a file | Aspose.Cells MemoryStream example
+// Developer Intent: Create 300 DPI PNG images from an Excel workbook that is loaded directly from a memory stream.
+// Use Cases: Generate printable, high‑resolution PNGs of financial dashboards stored as byte arrays. | Provide instant PNG previews of uploaded Excel reports in web applications. | Batch‑process multiple worksheets into separate high‑DPI PNG files for archival or publishing.
+// AI Prompts: Write C# code using Aspose.Cells to load an Excel file from a byte array and save each worksheet as a 300 DPI PNG. | Explain how to adjust ImageOrPrintOptions to change DPI, image format, and page layout when rendering a workbook. | Show how to stream the generated PNG directly to an ASP.NET Core response without writing to disk.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// Shows how to read an Excel file into a byte array, create a Workbook from a MemoryStream, set ImageOrPrintOptions for PNG at 300 DPI, render each sheet as a single page, and write the resulting images to files or streams.
+class WorkbookToPngWithDpi
 {
-    class WorkbookToPng
+    static void Main()
     {
-        static void Main()
+        // Example Excel file bytes (replace with actual data)
+        byte[] excelBytes = File.ReadAllBytes("input.xlsx");
+
+        // Load workbook from a memory stream
+        using (MemoryStream inputStream = new MemoryStream(excelBytes))
         {
-            // ------------------------------------------------------------
-            // Step 1: Create a sample workbook and save it into a memory stream
-            // ------------------------------------------------------------
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet ws = sourceWorkbook.Worksheets[0];
-            ws.Cells["A1"].PutValue("Hello Aspose.Cells");
-            ws.Cells["B2"].PutValue(12345);
+            Workbook workbook = new Workbook(inputStream);
 
-            // Save the workbook to a memory stream (XLSX format)
-            using (MemoryStream sourceStream = new MemoryStream())
+            // Configure image rendering options for PNG at 300 DPI
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                sourceWorkbook.Save(sourceStream, SaveFormat.Xlsx);
+                ImageType = ImageType.Png,
+                HorizontalResolution = 300,
+                VerticalResolution = 300,
+                OnePagePerSheet = true // render each sheet as a single page
+            };
 
-                // Reset the stream position before reading
-                sourceStream.Position = 0;
+            // Create a renderer for the workbook
+            WorkbookRender renderer = new WorkbookRender(workbook, options);
 
-                // ------------------------------------------------------------
-                // Step 2: Load the workbook from the memory stream
-                // ------------------------------------------------------------
-                Workbook loadedWorkbook = new Workbook(sourceStream);
-
-                // ------------------------------------------------------------
-                // Step 3: Configure image rendering options (PNG, 300 DPI)
-                // ------------------------------------------------------------
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Render each page of the workbook to a PNG image
+            for (int pageIndex = 0; pageIndex < renderer.PageCount; pageIndex++)
+            {
+                using (MemoryStream imageStream = new MemoryStream())
                 {
-                    ImageType = ImageType.Png,          // Output format
-                    HorizontalResolution = 300,         // 300 DPI horizontally
-                    VerticalResolution = 300,           // 300 DPI vertically
-                    OnePagePerSheet = true              // Render each sheet as a single page
-                };
+                    // Render the current page to the memory stream (PNG format)
+                    renderer.ToImage(pageIndex, imageStream);
 
-                // ------------------------------------------------------------
-                // Step 4: Render the whole workbook to a PNG image file
-                // ------------------------------------------------------------
-                // The WorkbookRender.ToImage(string) method renders the entire workbook.
-                // It respects the ImageOrPrintOptions set above.
-                WorkbookRender renderer = new WorkbookRender(loadedWorkbook, imgOptions);
-                string outputPath = "WorkbookImage.png";
-                renderer.ToImage(outputPath);
+                    // Save the image stream to a file
+                    string outputPath = $"output_page_{pageIndex}.png";
+                    imageStream.Position = 0; // reset stream position before copying
+                    using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        imageStream.CopyTo(fileStream);
+                    }
 
-                Console.WriteLine($"Workbook rendered to PNG with 300 DPI at: {outputPath}");
+                    Console.WriteLine($"Page {pageIndex} saved as PNG to {outputPath}");
+                }
             }
         }
     }

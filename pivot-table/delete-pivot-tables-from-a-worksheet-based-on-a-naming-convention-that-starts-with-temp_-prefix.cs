@@ -2,37 +2,33 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRemoval
+class DeleteTempPivotTables
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your source file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Loop through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load the workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            PivotTableCollection pivotTables = sheet.PivotTables;
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Iterate backwards so that removal does not affect the loop index
+            for (int i = pivotTables.Count - 1; i >= 0; i--)
             {
-                // Get the collection of pivot tables on the current worksheet
-                PivotTableCollection pivots = sheet.PivotTables;
+                PivotTable pivot = pivotTables[i];
 
-                // Loop backwards so that removal does not affect the index order
-                for (int i = pivots.Count - 1; i >= 0; i--)
+                // Check if the pivot table name starts with the "Temp_" prefix
+                if (!string.IsNullOrEmpty(pivot.Name) && pivot.Name.StartsWith("Temp_"))
                 {
-                    PivotTable pt = pivots[i];
-
-                    // Check if the pivot table name starts with the required prefix
-                    if (pt.Name != null && pt.Name.StartsWith("Temp_"))
-                    {
-                        // Remove the pivot table and its data
-                        pivots.Remove(pt);
-                    }
+                    // Remove the pivot table and its data
+                    pivotTables.RemoveAt(i);
                 }
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

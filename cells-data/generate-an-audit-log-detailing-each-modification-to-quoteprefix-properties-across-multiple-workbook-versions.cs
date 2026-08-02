@@ -6,47 +6,43 @@ class QuotePrefixAudit
 {
     static void Main()
     {
-        // Create a shared workbook and enable QuotePrefixToStyle
+        // ---------- Create initial workbook ----------
         Workbook wb = new Workbook();
-        wb.Settings.Shared = true;
-        wb.Settings.QuotePrefixToStyle = true;
+        wb.Settings.Shared = true;                     // enable revision tracking
+        wb.Settings.QuotePrefixToStyle = true;         // apply QuotePrefix style for leading '
+        wb.Worksheets[0].Cells["A1"].PutValue("'First"); // cell with leading quote
+        string filePath = "QuotePrefixAudit.xlsx";
+        wb.Save(filePath, SaveFormat.Xlsx);            // save version 1
 
-        // Insert a value that starts with an apostrophe
-        wb.Worksheets[0].Cells["A1"].PutValue("'First");
-        // Save the first version
-        wb.Save("QuotePrefix_v1.xlsx");
+        // ---------- Load workbook and modify ----------
+        Workbook wb2 = new Workbook(filePath);
+        wb2.Settings.QuotePrefixToStyle = false;       // disable automatic QuotePrefix styling
+        wb2.Worksheets[0].Cells["A1"].PutValue("'Second"); // modify same cell
+        wb2.Save(filePath, SaveFormat.Xlsx);           // save version 2 (overwrites)
 
-        // Load the first version, change the setting, and modify another cell
-        Workbook wb2 = new Workbook("QuotePrefix_v1.xlsx");
-        wb2.Settings.QuotePrefixToStyle = false;
-        wb2.Worksheets[0].Cells["A2"].PutValue("'Second");
-        // Save the second version
-        wb2.Save("QuotePrefix_v2.xlsx");
-
-        // Load the final workbook and generate an audit log of QuotePrefix changes
-        Workbook finalWb = new Workbook("QuotePrefix_v2.xlsx");
-
+        // ---------- Load final workbook and audit ----------
+        Workbook finalWb = new Workbook(filePath);
         if (!finalWb.HasRevisions)
         {
-            Console.WriteLine("No revisions found in the workbook.");
+            Console.WriteLine("No revisions found.");
             return;
         }
 
-        Console.WriteLine("Audit Log of QuotePrefix modifications:");
+        // Iterate through all revision logs
         foreach (RevisionLog log in finalWb.Worksheets.RevisionLogs)
         {
             foreach (Revision rev in log.Revisions)
             {
+                // We're interested only in cell changes
                 if (rev is RevisionCellChange cellChange)
                 {
-                    bool oldQuotePrefix = cellChange.OldStyle?.QuotePrefix ?? false;
-                    bool newQuotePrefix = cellChange.NewStyle?.QuotePrefix ?? false;
+                    bool oldQuote = cellChange.OldStyle?.QuotePrefix ?? false;
+                    bool newQuote = cellChange.NewStyle?.QuotePrefix ?? false;
 
-                    if (oldQuotePrefix != newQuotePrefix)
+                    // Log only when QuotePrefix property changed
+                    if (oldQuote != newQuote)
                     {
-                        Console.WriteLine($"Cell {cellChange.CellName}: QuotePrefix changed from {oldQuotePrefix} to {newQuotePrefix}");
-                        Console.WriteLine($"  Revision ID: {cellChange.Id}");
-                        Console.WriteLine($"  Worksheet: {cellChange.Worksheet.Name}");
+                        Console.WriteLine($"Cell {cellChange.CellName} QuotePrefix changed from {oldQuote} to {newQuote} (Revision ID: {cellChange.Id})");
                     }
                 }
             }

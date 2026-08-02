@@ -10,39 +10,44 @@ class HidePivotItemsDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data (Product and Sales)
+        // Populate sample data (Product | Sales)
         sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["A2"].PutValue("Confidential");
-        sheet.Cells["A3"].PutValue("Public");
-        sheet.Cells["A4"].PutValue("Confidential");
-        sheet.Cells["A5"].PutValue("Public");
-
         sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(1000);
-        sheet.Cells["B3"].PutValue(2000);
-        sheet.Cells["B4"].PutValue(1500);
-        sheet.Cells["B5"].PutValue(3000);
+
+        string[] products = { "Public1", "ConfidentialA", "Public2", "ConfidentialB", "Public3" };
+        int[] sales = { 1000, 2000, 1500, 3000, 1200 };
+
+        for (int i = 0; i < products.Length; i++)
+        {
+            sheet.Cells[i + 2, 0].PutValue(products[i]); // Column A
+            sheet.Cells[i + 2, 1].PutValue(sales[i]);   // Column B
+        }
 
         // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+        int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
         PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add the Product field to the row area and Sales to the data area
+        // Add row field (Product) and data field (Sales) to the pivot table
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-        // Retrieve the row field (Product) to manipulate its items
+        // Get the row pivot field that contains product names
         PivotField productField = pivotTable.RowFields[0];
 
-        // Hide all items with the value "Confidential"
-        // Using the HideItem(string, bool) overload as per the documentation
-        productField.HideItem("Confidential", true);
+        // Define confidential items that must be hidden from the report view
+        string[] confidentialItems = { "ConfidentialA", "ConfidentialB" };
 
-        // Refresh the pivot table to apply changes and recalculate data
+        // Hide each confidential item using the HideItem(string, bool) method
+        foreach (string item in confidentialItems)
+        {
+            productField.HideItem(item, true);
+        }
+
+        // Refresh and calculate the pivot table to apply changes
         pivotTable.RefreshData();
         pivotTable.CalculateData();
 
-        // Save the workbook with the hidden pivot items
+        // Save the workbook with hidden pivot items
         workbook.Save("HiddenPivotItemsDemo.xlsx");
     }
 }

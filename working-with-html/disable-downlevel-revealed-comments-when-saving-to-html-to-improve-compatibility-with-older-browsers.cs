@@ -8,15 +8,23 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Add some sample data to the first worksheet
+        // Add sample data (optional)
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+        sheet.Cells["A1"].PutValue("Hello World");
 
-        // Configure HTML save options to disable downlevel-revealed conditional comments
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.DisableDownlevelRevealedComments = true;
+        // Add a comment to demonstrate comment export (optional)
+        Comment comment = sheet.Comments[sheet.Comments.Add("A1")];
+        comment.Note = "Sample comment";
 
-        // Save the workbook as an HTML file using the configured options
+        // Configure HTML save options to disable downlevel‑revealed conditional comments
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        {
+            DisableDownlevelRevealedComments = true
+        };
+
+        // Save the workbook as HTML with the specified options
         workbook.Save("output.html", htmlOptions);
     }
 }
+
+// Author: Example showing how to disable downlevel‑revealed comments for older browsers.

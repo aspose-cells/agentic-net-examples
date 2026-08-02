@@ -1,28 +1,33 @@
 using System;
 using Aspose.Cells;
 
-class AutoFitAllRows
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Sample data (optional, demonstrates the effect)
-        sheet.Cells["A1"].PutValue("First row with a long text that should cause auto‑fit.");
-        sheet.Cells["A2"].PutValue("Second row");
-        sheet.Cells["A3"].PutValue("Third row with even longer text that will wrap and increase row height.");
+        // Populate some sample data (optional)
+        for (int i = 0; i < 10; i++)
+        {
+            cells[i, 0].Value = $"Row {i} with some long text to test auto‑fit.";
+        }
 
-        // Determine the last row that contains data (zero‑based index)
-        int maxRow = sheet.Cells.MaxDataRow;
+        // Determine the last row index that contains data
+        int maxRow = cells.MaxDataRow; // Returns -1 if the sheet is empty
 
-        // Auto‑fit all rows from the first row (0) to the last data row
-        sheet.AutoFitRows(0, maxRow);
+        if (maxRow >= 0)
+        {
+            // Auto‑fit all rows from the first row (0) to the last data row
+            sheet.AutoFitRows(0, maxRow);
+        }
 
-        // Save the workbook
-        workbook.Save("AutoFitAllRows.xlsx");
+        // Save the workbook (adjust the path as needed)
+        workbook.Save("AutoFitRowsDemo.xlsx");
     }
 }
+
+// Author: Aspose.Cells .NET example – auto‑fit rows from start to max row.

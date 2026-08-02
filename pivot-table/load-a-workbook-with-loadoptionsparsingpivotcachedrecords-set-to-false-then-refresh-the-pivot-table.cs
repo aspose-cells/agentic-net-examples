@@ -1,28 +1,22 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the source workbook that contains pivot tables
-            string inputPath = "input.xlsx";
+        // Prepare load options and disable parsing of pivot cached records
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.ParsingPivotCachedRecords = false;   // default is false, set explicitly as required
 
-            // Create LoadOptions and disable parsing of pivot cached records
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            loadOptions.ParsingPivotCachedRecords = false;
+        // Load the workbook with the specified options
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+        // Refresh all pivot tables in the workbook (ensures they reflect the current source data)
+        workbook.Worksheets.RefreshPivotTables();
 
-            // Refresh all pivot tables in the workbook
-            workbook.Worksheets.RefreshPivotTables();
-
-            // Save the updated workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-        }
+        // Save the updated workbook
+        workbook.Save("output.xlsx");
     }
 }

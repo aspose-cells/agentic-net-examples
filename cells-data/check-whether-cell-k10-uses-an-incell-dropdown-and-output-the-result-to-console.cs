@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsInCellDropdownCheck
@@ -8,36 +7,23 @@ namespace AsposeCellsInCellDropdownCheck
     {
         static void Main()
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: File \"{inputPath}\" not found.");
-                    return;
-                }
+            // Access the first worksheet (or specify the required one)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Get the cell K10
+            Cell cell = worksheet.Cells["K10"];
 
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Retrieve the validation applied to the cell
+            Validation validation = cell.GetValidation();
 
-                // Retrieve validation applied to cell K10
-                Validation validation = worksheet.Cells["K10"].GetValidation();
+            // Determine if the validation exists and if it shows an in‑cell dropdown
+            bool hasInCellDropdown = validation != null && validation.InCellDropDown;
 
-                // Check if validation exists before accessing its properties
-                bool hasInCellDropdown = validation != null && validation.InCellDropDown;
-
-                Console.WriteLine($"Cell K10 in‑cell dropdown enabled: {hasInCellDropdown}");
-            }
-            catch (Exception ex)
-            {
-                // Log unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Output the result to the console
+            Console.WriteLine($"Cell K10 uses an in‑cell dropdown: {hasInCellDropdown}");
         }
     }
 }

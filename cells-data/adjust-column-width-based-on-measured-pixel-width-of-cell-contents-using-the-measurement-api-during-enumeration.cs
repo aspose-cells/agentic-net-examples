@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsColumnWidthAdjustment
+namespace AdjustColumnWidthDemo
 {
     class Program
     {
@@ -9,55 +9,56 @@ namespace AsposeCellsColumnWidthAdjustment
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Sample data with varying lengths
-            cells["A1"].PutValue("Short");
-            cells["A2"].PutValue("A much longer piece of text that should expand the column");
-            cells["B1"].PutValue(12345);
-            cells["B2"].PutValue("Medium length");
-            cells["C1"].PutValue("Tiny");
-            cells["C2"].PutValue("Another very long text entry to test column width calculation");
+            // Sample data with varying text lengths
+            string[] sampleData = {
+                "Short",
+                "A longer piece of text",
+                "Very very long text that needs more column width to be fully visible"
+            };
 
-            // Determine the range to evaluate (all used rows and columns)
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
-
-            // Array to hold the maximum pixel width per column
-            int[] maxPixelWidthPerColumn = new int[maxColumn + 1];
-
-            // Enumerate each cell, measure its value width in pixels, and track the maximum per column
-            for (int row = 0; row <= maxRow; row++)
+            // Populate column A (index 0) with the sample data
+            for (int i = 0; i < sampleData.Length; i++)
             {
-                for (int col = 0; col <= maxColumn; col++)
+                cells[i, 0].PutValue(sampleData[i]);
+            }
+
+            // Determine the range that contains data
+            int maxColumn = cells.MaxColumn; // last column index that has data
+            int maxRow = cells.MaxRow;       // last row index that has data
+
+            // Iterate through each column in the used range
+            for (int col = 0; col <= maxColumn; col++)
+            {
+                int maxPixelWidth = 0;
+
+                // Find the maximum pixel width of cell values in this column
+                for (int row = 0; row <= maxRow; row++)
                 {
                     Cell cell = cells[row, col];
                     if (cell != null && cell.Type != CellValueType.IsNull)
                     {
-                        // Get the pixel width of the cell's displayed value
-                        int pixelWidth = cell.GetWidthOfValue();
-
-                        // Update the maximum width for this column if necessary
-                        if (pixelWidth > maxPixelWidthPerColumn[col])
+                        int pixelWidth = cell.GetWidthOfValue(); // width of the cell's value in pixels
+                        if (pixelWidth > maxPixelWidth)
                         {
-                            maxPixelWidthPerColumn[col] = pixelWidth;
+                            maxPixelWidth = pixelWidth;
                         }
                     }
                 }
+
+                // If the column contains any data, set its width based on the measured pixel width
+                if (maxPixelWidth > 0)
+                {
+                    // Add a small padding (e.g., 5 pixels) to avoid clipping
+                    int paddedWidth = maxPixelWidth + 5;
+                    cells.SetColumnWidthPixel(col, paddedWidth);
+                }
             }
 
-            // Apply the measured widths to the columns (add a small padding for visual comfort)
-            const int paddingPixels = 5;
-            for (int col = 0; col <= maxColumn; col++)
-            {
-                int finalWidth = maxPixelWidthPerColumn[col] + paddingPixels;
-                // Set column width in normal view using pixel units
-                cells.SetColumnWidthPixel(col, finalWidth);
-            }
-
-            // Save the workbook
-            workbook.Save("AdjustedColumnWidths.xlsx");
+            // Save the workbook with adjusted column widths
+            workbook.Save("AdjustedColumnWidth.xlsx");
         }
     }
 }

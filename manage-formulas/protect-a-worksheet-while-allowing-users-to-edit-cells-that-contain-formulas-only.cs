@@ -1,64 +1,64 @@
+// Title: C# – Protect an Aspose.Cells worksheet while allowing only formula cells to be edited
+// Description: Creates a workbook, unlocks cells that contain formulas, locks all other cells, applies worksheet protection with a password, and saves the file so only formula cells remain editable using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells protect worksheet C# | unlock formula cells Aspose.Cells | lock non‑formula cells .NET | worksheet protection password Aspose.Cells | IsFormula style.IsLocked | Excel sheet security C#
+// Common Searches: protect worksheet but allow editing of formula cells Aspose.Cells | unlock only formula cells in Excel using Aspose.Cells C# | C# code to lock all cells except those with formulas | Aspose.Cells worksheet protection example
+// Developer Intent: The developer needs to secure a spreadsheet so that users can modify only the cells that contain formulas while all other cells stay read‑only.
+// Use Cases: Distribute a financial model where analysts can update calculation results but cannot alter input data or static text. | Create a reporting template that locks headings and constants, leaving only dynamic formula cells editable for end users. | Share a collaborative workbook where formula logic can be refined without risking accidental changes to raw values.
+// AI Prompts: Generate C# code that protects an Aspose.Cells worksheet and unlocks only cells where IsFormula is true. | Explain how to iterate through a worksheet's used range, set Style.IsLocked based on Cell.IsFormula, and apply password protection. | Show an Aspose.Cells example that saves a workbook after protecting it so that only formula cells are editable.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a workbook, unlocks cells that contain formulas, locks all other cells, applies worksheet protection with a password, and saves the file so only formula cells remain editable using Aspose.Cells for .NET.
+class ProtectFormulaOnly
 {
-    public class ProtectWorksheetAllowFormulaEdit
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate some sample data and formulas
+        cells["A1"].PutValue(10);
+        cells["A2"].PutValue(20);
+        cells["A3"].Formula = "=A1+A2";          // formula cell
+        cells["B1"].PutValue("Sample Text");
+        cells["B2"].Formula = "=NOW()";          // formula cell
+
+        // Determine the used range of the worksheet
+        int maxRow = cells.MaxDataRow;
+        int maxCol = cells.MaxDataColumn;
+
+        // Iterate through all used cells
+        for (int row = 0; row <= maxRow; row++)
         {
-            try
+            for (int col = 0; col <= maxCol; col++)
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                Cell cell = cells[row, col];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+                // Create a new style for the cell
+                Style style = workbook.CreateStyle();
 
-            // Sample data: some cells with values, some with formulas
-            cells["A1"].PutValue(10);
-            cells["A2"].Formula = "=A1*2";
-            cells["B1"].PutValue(5);
-            cells["B2"].Formula = "=B1+3";
-            cells["C1"].PutValue("Text");
-            cells["C2"].Formula = "=CONCATENATE(A1,B1)";
-
-            // Unlock only the cells that contain formulas
-            int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxColumn; col++)
+                if (cell.IsFormula)               // Allow editing of formula cells
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.IsFormula)
-                    {
-                        // Get the current style, set IsLocked = false, and apply it back
-                        Style style = cell.GetStyle();
-                        style.IsLocked = false;
-                        cell.SetStyle(style);
-                    }
+                    style.IsLocked = false;       // Unlock formula cells
                 }
+                else
+                {
+                    style.IsLocked = true;        // Keep other cells locked
+                }
+
+                // Apply the style to the cell
+                cell.SetStyle(style);
             }
-
-            // Protect the worksheet (all protection types) with a password
-            // Locked cells cannot be edited, but unlocked formula cells can be edited
-            sheet.Protect(ProtectionType.All, "securePassword", null);
-
-            // Save the workbook
-            string outputPath = "ProtectedAllowFormulaEdit.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
+
+        // Protect the worksheet (all protection types) with a password.
+        // Only unlocked cells (the formula cells) can be edited.
+        worksheet.Protect(ProtectionType.All, "myPassword", null);
+
+        // Save the workbook
+        workbook.Save("FormulaEditable.xlsx");
     }
 }

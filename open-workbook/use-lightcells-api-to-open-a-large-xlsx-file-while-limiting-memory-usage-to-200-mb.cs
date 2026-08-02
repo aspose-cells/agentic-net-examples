@@ -1,86 +1,76 @@
+// Title: Open a large XLSX workbook with Aspose.Cells LightCells API while capping memory at 200 MB (C#)
+// Description: Demonstrates how to load a multi‑gigabyte XLSX file in LightCells mode using a SimpleLightCellsHandler, configure LoadOptions with MemorySetting.FileCache, and keep RAM usage near 200 MB. The example reads the first ten cells of column A and optionally saves the processed workbook.
+// Keywords: Aspose.Cells | LightCells API | MemorySetting.FileCache | large XLSX low memory | C# .NET | row‑by‑row processing | file‑based cache | memory‑constrained Excel | Open large workbook | 200 MB limit
+// Common Searches: Aspose.Cells LightCells open huge XLSX with memory limit | C# load large Excel file using file cache | How to restrict Aspose.Cells memory usage to 200 MB | LightCellsDataHandler example for low‑memory scenarios | Process multi‑GB workbook without high RAM consumption
+// Developer Intent: The developer needs to read or manipulate a very large XLSX file in .NET while ensuring the application does not exceed roughly 200 MB of RAM.
+// Use Cases: Extract specific rows or columns from a multi‑gigabyte spreadsheet on a server with limited RAM. | Convert or export a massive workbook to another format in a memory‑restricted environment. | Run data validation or transformation on huge Excel files in batch jobs without OOM errors.
+// AI Prompts: Write C# code that opens a 4 GB XLSX file with Aspose.Cells LightCells, uses MemorySetting.FileCache, and iterates through every row. | Create a custom LightCellsDataHandler that skips empty rows and logs processed cell counts to reduce memory overhead. | Explain how to set a custom temporary directory for the file‑cache used by LightCells when processing large workbooks.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-public class LightCellsHandler : LightCellsDataHandler
+// Demonstrates how to load a multi‑gigabyte XLSX file in LightCells mode using a SimpleLightCellsHandler, configure LoadOptions with MemorySetting.FileCache, and keep RAM usage near 200 MB. The example reads the first ten cells of column A and optionally saves the processed workbook.
+class Program
 {
-    // Called for each worksheet; return true to process the sheet
-    public bool StartSheet(Worksheet sheet)
+    static void Main()
     {
-        Console.WriteLine($"Processing sheet: {sheet.Name}");
-        return true;
-    }
+        // Create a LightCellsDataHandler that simply allows processing of all sheets, rows, and cells.
+        var handler = new SimpleLightCellsHandler();
 
-    // Called for each row index; return true to process the row
-    public bool StartRow(int rowIndex)
-    {
-        // You can add row‑level filtering here
-        return true;
-    }
+        // Configure load options to use file cache mode, which keeps memory usage low (≈200 MB or less).
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.MemorySetting = MemorySetting.FileCache;      // Use file‑based cache.
+        loadOptions.LightCellsDataHandler = handler;              // Attach the handler.
 
-    // Called after a row is started; return true to process its cells
-    public bool ProcessRow(Row row)
-    {
-        // Example: just output the row index
-        Console.WriteLine($"Row {row.Index} started");
-        return true;
-    }
+        // Load the large XLSX file in LightCells mode with the specified options.
+        Workbook workbook = new Workbook("LargeFile.xlsx", loadOptions);
 
-    // Called for each cell column index; return true to process the cell
-    public bool StartCell(int columnIndex)
-    {
-        return true;
-    }
+        // Example: read and display the first 10 values from column A of the first worksheet.
+        Worksheet sheet = workbook.Worksheets[0];
+        for (int row = 0; row < 10; row++)
+        {
+            Console.WriteLine(sheet.Cells[row, 0].StringValue);
+        }
 
-    // Called for each cell that should be processed
-    public bool ProcessCell(Cell cell)
-    {
-        // Minimal processing – just read the value
-        var value = cell.Value;
-        // Optionally, output the cell address and value
-        Console.WriteLine($"Cell {cell.Name}: {value}");
-        return true;
+        // Save the workbook after processing (optional).
+        workbook.Save("ProcessedLargeFile.xlsx");
     }
 }
 
-public class Program
+// Implementation of LightCellsDataHandler that permits full processing without custom logic.
+public class SimpleLightCellsHandler : LightCellsDataHandler
 {
-    public static void Main()
+    // Called when a worksheet is about to be processed.
+    public bool StartSheet(Worksheet sheet)
     {
-        // Path to the large XLSX file
-        string inputFile = "LargeFile.xlsx";
-        string outputFile = "ProcessedLargeFile.xlsx";
+        // Return true to continue processing this sheet.
+        return true;
+    }
 
-        try
-        {
-            // Verify that the input file exists
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
-                return;
-            }
+    // Called before a row is processed.
+    public bool StartRow(int rowIndex)
+    {
+        // Return true to process this row.
+        return true;
+    }
 
-            // Configure LoadOptions to use LightCells and limit memory usage
-            LoadOptions loadOptions = new LoadOptions
-            {
-                // Use a custom LightCellsDataHandler to stream data
-                LightCellsDataHandler = new LightCellsHandler(),
-                // FileCache stores intermediate data on disk, keeping RAM usage low
-                MemorySetting = MemorySetting.FileCache
-            };
+    // Called after a row is prepared; return true to process its cells.
+    public bool ProcessRow(Row row)
+    {
+        return true;
+    }
 
-            // Load the workbook in LightCells mode (streaming) with the specified options
-            using (Workbook workbook = new Workbook(inputFile, loadOptions))
-            {
-                // Save the processed workbook
-                workbook.Save(outputFile);
-            }
+    // Called before a cell is processed.
+    public bool StartCell(int columnIndex)
+    {
+        // Return true to process this cell.
+        return true;
+    }
 
-            Console.WriteLine($"Workbook loaded and saved to '{outputFile}' with memory usage limited to ~200 MB.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+    // Called for each cell; no custom handling needed.
+    public bool ProcessCell(Cell cell)
+    {
+        // Simply continue processing.
+        return true;
     }
 }

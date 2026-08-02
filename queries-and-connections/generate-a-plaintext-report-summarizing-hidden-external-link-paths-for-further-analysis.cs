@@ -3,58 +3,52 @@ using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsExternalLinkReport
+namespace ExternalLinkReportGenerator
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the workbook that needs to be analyzed
-            string workbookPath = "InputWorkbook.xlsx";
+            // Input workbook path (first argument) or default
+            string workbookPath = args.Length > 0 ? args[0] : "input.xlsx";
 
-            // Load the workbook (load rule)
+            // Output report path (second argument) or default
+            string reportPath = args.Length > 1 ? args[1] : "HiddenExternalLinksReport.txt";
+
+            // Load the workbook (create/load rule)
             Workbook workbook = new Workbook(workbookPath);
 
-            // Get the collection of external links from the workbook
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-            // Prepare a StringBuilder to compose the plain‑text report
+            // Prepare a StringBuilder for the plain‑text report
             StringBuilder reportBuilder = new StringBuilder();
 
             reportBuilder.AppendLine("Hidden External Links Report");
             reportBuilder.AppendLine($"Workbook: {workbookPath}");
-            reportBuilder.AppendLine($"Total External Links: {externalLinks.Count}");
+            reportBuilder.AppendLine($"Generated: {DateTime.Now}");
             reportBuilder.AppendLine();
 
-            // Iterate through each external link and collect those that are not visible (hidden)
-            for (int i = 0; i < externalLinks.Count; i++)
-            {
-                ExternalLink link = externalLinks[i];
+            bool foundHidden = false;
 
-                // IsVisible property indicates whether the link is visible in Excel.
-                // Hidden links have IsVisible == false.
+            // Iterate through all external links and collect those that are not visible
+            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
+            {
+                // IsVisible == false indicates a hidden external link
                 if (!link.IsVisible)
                 {
-                    // DataSource holds the path of the external link.
-                    reportBuilder.AppendLine($"Hidden Link #{i + 1}: {link.DataSource}");
+                    foundHidden = true;
+                    reportBuilder.AppendLine($"- DataSource          : {link.DataSource}");
+                    reportBuilder.AppendLine($"  OriginalDataSource  : {link.OriginalDataSource}");
+                    reportBuilder.AppendLine($"  PathType            : {link.PathType}");
+                    reportBuilder.AppendLine();
                 }
             }
 
-            // If no hidden links were found, note that in the report
-            if (reportBuilder.ToString().Contains("Hidden Link #") == false)
+            if (!foundHidden)
             {
-                reportBuilder.AppendLine("No hidden external links were found.");
+                reportBuilder.AppendLine("No hidden external links were found in the workbook.");
             }
 
-            // Define the output report file path
-            string reportPath = "HiddenExternalLinksReport.txt";
-
-            // Write the report to a plain‑text file
+            // Write the report to a plain‑text file (save rule)
             File.WriteAllText(reportPath, reportBuilder.ToString());
-
-            // Optionally, save the workbook (save rule) if any modifications were made.
-            // In this scenario we only read data, so saving is not required.
-            // workbook.Save("ModifiedWorkbook.xlsx");
 
             Console.WriteLine($"Report generated at: {reportPath}");
         }

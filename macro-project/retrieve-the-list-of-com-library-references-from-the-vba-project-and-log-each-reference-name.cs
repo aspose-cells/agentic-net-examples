@@ -2,29 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class RetrieveVbaReferences
+namespace AsposeCellsVbaReferenceLogger
 {
-    static void Main()
+    class Program
     {
-        // Load a macro-enabled workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsm");
-
-        // Check if the workbook contains a VBA project
-        if (workbook.VbaProject != null)
+        static void Main(string[] args)
         {
-            // Get the collection of VBA references
-            VbaProjectReferenceCollection references = workbook.VbaProject.References;
+            // Load an existing macro-enabled workbook (or create a new one if needed)
+            // Replace "input.xlsm" with the path to your workbook that contains a VBA project.
+            Workbook workbook = new Workbook("input.xlsm");
 
-            // Iterate through each reference and log its name
-            for (int i = 0; i < references.Count; i++)
+            // Ensure the workbook has a VBA project before accessing references
+            if (workbook.VbaProject != null)
             {
-                VbaProjectReference reference = references[i];
-                Console.WriteLine($"Reference {i + 1}: {reference.Name}");
+                // Get the collection of VBA project references
+                VbaProjectReferenceCollection references = workbook.VbaProject.References;
+
+                // Log each reference name
+                for (int i = 0; i < references.Count; i++)
+                {
+                    VbaProjectReference reference = references[i];
+                    Console.WriteLine($"Reference {i + 1}: {reference.Name}");
+                }
             }
-        }
-        else
-        {
-            Console.WriteLine("The workbook does not contain a VBA project.");
+            else
+            {
+                Console.WriteLine("The workbook does not contain a VBA project.");
+            }
+
+            // Save the workbook if any modifications were made (optional)
+            workbook.Save("output.xlsm", SaveFormat.Xlsm);
         }
     }
 }

@@ -1,60 +1,62 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace StackedColumnChartExample
+class StackedColumnChartExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Add headers for quarters and products
+        sheet.Cells["A1"].PutValue("Quarter");
+        sheet.Cells["B1"].PutValue("Product A");
+        sheet.Cells["C1"].PutValue("Product B");
+        sheet.Cells["D1"].PutValue("Product C");
+
+        // Populate sales data for each quarter
+        string[] quarters = { "Q1", "Q2", "Q3", "Q4" };
+        int[,] sales = {
+            { 120, 150, 100 },
+            { 130, 160, 110 },
+            { 140, 170, 120 },
+            { 150, 180, 130 }
+        };
+
+        for (int i = 0; i < quarters.Length; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample sales data for four quarters
-            // Row 0: headers
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Q1");
-            sheet.Cells["C1"].PutValue("Q2");
-            sheet.Cells["D1"].PutValue("Q3");
-            sheet.Cells["E1"].PutValue("Q4");
-
-            // Row 1: Product A
-            sheet.Cells["A2"].PutValue("Product A");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["C2"].PutValue(150);
-            sheet.Cells["D2"].PutValue(130);
-            sheet.Cells["E2"].PutValue(170);
-
-            // Row 2: Product B
-            sheet.Cells["A3"].PutValue("Product B");
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["C3"].PutValue(90);
-            sheet.Cells["D3"].PutValue(100);
-            sheet.Cells["E3"].PutValue(110);
-
-            // Row 3: Product C
-            sheet.Cells["A4"].PutValue("Product C");
-            sheet.Cells["B4"].PutValue(60);
-            sheet.Cells["C4"].PutValue(70);
-            sheet.Cells["D4"].PutValue(65);
-            sheet.Cells["E4"].PutValue(75);
-
-            // Add a stacked column chart to visualize cumulative sales
-            // Parameters: chart type, top row, left column, bottom row, right column
-            int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 6, 0, 25, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Define the data range for the series (sales values) and categories (products)
-            chart.NSeries.Add("B2:E4", true);          // Series data (by column)
-            chart.NSeries.CategoryData = "A2:A4";      // Category labels (product names)
-
-            // Set a descriptive title
-            chart.Title.Text = "Cumulative Quarterly Sales";
-
-            // Save the workbook with the chart
-            workbook.Save("StackedColumnSales.xlsx", SaveFormat.Xlsx);
+            sheet.Cells[i + 1, 0].PutValue(quarters[i]);          // Quarter label
+            sheet.Cells[i + 1, 1].PutValue(sales[i, 0]);        // Product A
+            sheet.Cells[i + 1, 2].PutValue(sales[i, 1]);        // Product B
+            sheet.Cells[i + 1, 3].PutValue(sales[i, 2]);        // Product C
         }
+
+        // Add a stacked column chart (ChartType.ColumnStacked)
+        int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 6, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
+
+        // Define series for each product
+        chart.NSeries.Add("B2:B5", true);          // Series for Product A
+        chart.NSeries[0].Name = "Product A";
+
+        chart.NSeries.Add("C2:C5", true);          // Series for Product B
+        chart.NSeries[1].Name = "Product B";
+
+        chart.NSeries.Add("D2:D5", true);          // Series for Product C
+        chart.NSeries[2].Name = "Product C";
+
+        // Set category (quarters) for the X‑axis
+        chart.NSeries.CategoryData = "A2:A5";
+
+        // Ensure the chart type is stacked column (redundant but explicit)
+        chart.Type = ChartType.ColumnStacked;
+
+        // Add a descriptive title
+        chart.Title.Text = "Cumulative Sales by Quarter";
+
+        // Save the workbook with the chart
+        workbook.Save("StackedColumnChart.xlsx", SaveFormat.Xlsx);
     }
 }

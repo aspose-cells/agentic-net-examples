@@ -1,8 +1,7 @@
 using System;
-using System.Text;
 using Aspose.Cells;
 
-namespace MergedCellsSummary
+namespace MergedCellsConcatenationDemo
 {
     class Program
     {
@@ -11,54 +10,52 @@ namespace MergedCellsSummary
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // ------------------------------------------------------------
-            // Sample data: create a couple of merged ranges with string values
-            // ------------------------------------------------------------
-            // Merge A1:B2 and put a string in the merged cell
-            sheet.Cells.Merge(0, 0, 2, 2);               // A1:B2
-            sheet.Cells["A1"].PutValue("FirstPart");
+            // ----- Sample data: create some merged cells with string values -----
+            // Merge A1:B1 and put a value
+            cells.Merge(0, 0, 1, 2);
+            cells[0, 0].PutValue("First Part");
 
-            // Merge A4:B5 and put another string
-            sheet.Cells.Merge(3, 0, 2, 2);               // A4:B5
-            sheet.Cells["A4"].PutValue("SecondPart");
+            // Merge C2:D3 (2 rows x 2 columns) and put a value
+            cells.Merge(1, 2, 2, 2);
+            cells[1, 2].PutValue("Second Part");
 
-            // ------------------------------------------------------------
-            // Retrieve raw string values from all merged cells,
-            // concatenate them, and write the result to a summary cell (C1)
-            // ------------------------------------------------------------
-            StringBuilder concatenated = new StringBuilder();
+            // Merge E5 (single cell, not merged) – should be ignored in merged processing
+            cells[4, 4].PutValue("Standalone");
 
+            // ----- Retrieve raw string values from all merged cells -----
             // Get all merged areas in the worksheet
-            CellArea[] mergedAreas = sheet.Cells.GetMergedAreas();
+            CellArea[] mergedAreas = cells.GetMergedAreas();
+
+            // StringBuilder for efficient concatenation
+            System.Text.StringBuilder concatenated = new System.Text.StringBuilder();
 
             foreach (CellArea area in mergedAreas)
             {
-                // Iterate through each cell inside the merged area
+                // Iterate through each cell in the merged area
                 for (int row = area.StartRow; row <= area.EndRow; row++)
                 {
                     for (int col = area.StartColumn; col <= area.EndColumn; col++)
                     {
-                        Cell cell = sheet.Cells[row, col];
+                        // Get the raw string value (unformatted) of the cell
+                        string rawValue = cells[row, col].StringValue ?? string.Empty;
 
-                        // Check if the cell contains a string value
-                        if (cell.Type == CellValueType.IsString)
+                        // Append the value if it's not empty
+                        if (!string.IsNullOrEmpty(rawValue))
                         {
-                            string value = cell.StringValue;
-                            if (!string.IsNullOrEmpty(value))
-                            {
-                                concatenated.Append(value);
-                                concatenated.Append(" "); // separator
-                            }
+                            if (concatenated.Length > 0)
+                                concatenated.Append(" "); // separator between values
+                            concatenated.Append(rawValue);
                         }
                     }
                 }
             }
 
-            // Trim the trailing space and store the result in cell C1 (row 0, column 2)
-            sheet.Cells[0, 2].PutValue(concatenated.ToString().Trim());
+            // ----- Store the concatenated result in a summary cell (e.g., G1) -----
+            cells["G1"].PutValue(concatenated.ToString());
 
-            // Save the workbook to a file
+            // Save the workbook
             workbook.Save("MergedCellsSummary.xlsx");
         }
     }

@@ -1,51 +1,54 @@
 using System;
 using Aspose.Cells;
+using System.Globalization;
 
-// Custom globalization settings derived from GlobalizationSettings
-class CustomGlobalizationSettings : GlobalizationSettings
+namespace AsposeCellsCustomGlobalizationDemo
 {
-    // Override boolean display strings
-    public override string GetBooleanValueString(bool value)
+    // Custom globalization settings – override methods as needed
+    public class MyGlobalizationSettings : GlobalizationSettings
     {
-        return value ? "ИСТИНА" : "ЛОЖЬ";
-    }
-
-    // Override error value strings
-    public override string GetErrorValueString(string error)
-    {
-        return error switch
+        // Example: change boolean display strings
+        public override string GetBooleanValueString(bool value)
         {
-            "#NAME?"   => "#ИМЯ?",
-            "#DIV/0!" => "#ДЕЛ/0!",
-            "#REF!"   => "#ССЫЛКА!",
-            "#VALUE!" => "#ЗНАЧ!",
-            "#N/A"    => "#Н/Д",
-            "#NUM!"   => "#ЧИСЛО!",
-            "#NULL!"  => "#ПУСТО!",
-            _         => base.GetErrorValueString(error)
-        };
+            return value ? "YES_CUSTOM" : "NO_CUSTOM";
+        }
+
+        // Example: change error value strings
+        public override string GetErrorValueString(string err)
+        {
+            // Map a few common errors to custom text
+            return err switch
+            {
+                "#DIV/0!" => "#DIV/0!_CUSTOM",
+                "#N/A" => "#N/A_CUSTOM",
+                _ => base.GetErrorValueString(err)
+            };
+        }
     }
-}
 
-class Program
-{
-    static void Main()
+    class Program
     {
-        // Create LoadOptions (no special options needed for this example)
-        LoadOptions loadOptions = new LoadOptions();
+        static void Main()
+        {
+            // 1. Create a new workbook (no worksheets are accessed yet)
+            Workbook wb = new Workbook();
 
-        // Load the workbook; at this point no worksheet has been accessed yet
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            // 2. Assign the custom globalization settings BEFORE any worksheet operations
+            wb.Settings.GlobalizationSettings = new MyGlobalizationSettings();
 
-        // Assign the custom globalization settings BEFORE any worksheet is accessed
-        workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+            // 3. Now it is safe to work with worksheets – the settings will affect them
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Now worksheets can be used safely with the custom settings applied
-        Worksheet sheet = workbook.Worksheets[0];
-        Cell cell = sheet.Cells["A1"];
-        Console.WriteLine($"Cell[0,0] value: {cell.StringValue}");
+            // Populate some sample data to demonstrate the custom settings
+            cells[0, 0].PutValue(true);                     // Boolean – will use custom string
+            cells[0, 1].PutValue(false);                    // Boolean – will use custom string
+            cells[0, 2].PutValue("#DIV/0!");                // Error – custom text
+            cells[0, 3].PutValue("#N/A");                   // Error – custom text
+            cells[0, 4].PutValue(1234.56);                  // Numeric – unaffected
 
-        // Save the workbook if needed
-        workbook.Save("output.xlsx");
+            // 4. Save the workbook to verify the result
+            wb.Save("CustomGlobalizationDemo.xlsx");
+        }
     }
 }

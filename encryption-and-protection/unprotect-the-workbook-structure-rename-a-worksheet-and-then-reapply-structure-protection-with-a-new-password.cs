@@ -1,62 +1,39 @@
+// Title: Aspose.Cells for .NET – Unprotect Workbook Structure, Rename Worksheet, and Re‑protect with a New Password
+// Description: Shows how to create a workbook, apply structure protection, remove it with the original password, rename the first sheet, and then protect the structure again using a different password before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | workbook structure protection | unprotect workbook | rename worksheet | change protection password | Workbook.Protect | Workbook.Unprotect | ProtectionType.Structure | Aspose.Cells example
+// Common Searches: Aspose.Cells change workbook structure password | rename sheet after unprotecting workbook in C# | re‑apply structure protection with new password Aspose.Cells | how to unprotect and protect workbook structure programmatically | C# example for workbook structure protection rotation
+// Developer Intent: Remove existing structure protection, rename a worksheet, and protect the workbook structure again using a new password.
+// Use Cases: Update sheet names in a protected workbook without exposing the old password. | Automate periodic password rotation for workbook structure protection. | Prepare a template for distribution by unlocking, renaming sheets, and relocking the structure.
+// AI Prompts: Generate a C# snippet that unprotects a workbook's structure, renames multiple worksheets, and then re‑protects it with a new password using Aspose.Cells. | Explain how to change the structure protection password while keeping other protections intact in Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    class WorkbookStructureProtectionDemo
+    // Shows how to create a workbook, apply structure protection, remove it with the original password, rename the first sheet, and then protect the structure again using a different password before saving the file.
+    public class WorkbookStructureProtectionDemo
     {
-        static void Main()
+        public static void Main()
         {
-            // Paths
-            string inputPath = "ProtectedWorkbook.xlsx";
-            string outputPath = "WorkbookStructureRenamed.xlsx";
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
 
-            // Passwords
-            string oldPassword = "oldPassword123";
-            string newPassword = "newPassword456";
+            // Protect the workbook structure with an initial password
+            workbook.Protect(ProtectionType.Structure, "oldPassword");
 
-            try
-            {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Unprotect the workbook structure using the same password
+            workbook.Unprotect("oldPassword");
 
-                // Load workbook inside using to ensure disposal
-                using (Workbook workbook = new Workbook(inputPath))
-                {
-                    // Attempt to unprotect workbook structure with the old password
-                    try
-                    {
-                        workbook.Unprotect(oldPassword);
-                    }
-                    catch (Exception ex)
-                    {
-                        // If the password is invalid, Aspose.Cells throws a generic exception.
-                        // We simply log and continue without aborting.
-                        Console.WriteLine($"Unprotect failed (likely invalid password): {ex.Message}");
-                    }
+            // Rename the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "RenamedSheet";
 
-                    // Rename first worksheet
-                    Worksheet sheet = workbook.Worksheets[0];
-                    sheet.Name = "RenamedSheet";
+            // Re‑apply structure protection with a new password
+            workbook.Protect(ProtectionType.Structure, "newPassword");
 
-                    // Apply structure protection with new password
-                    workbook.Protect(ProtectionType.Structure, newPassword);
-
-                    // Save the modified workbook
-                    workbook.Save(outputPath, SaveFormat.Xlsx);
-                }
-
-                Console.WriteLine($"Workbook saved to '{outputPath}' with new structure password.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook (lifecycle: save)
+            workbook.Save("WorkbookStructureProtectionDemo.xlsx");
         }
     }
 }

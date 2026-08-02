@@ -1,42 +1,69 @@
+// Title: C# – Extract Gear6 & Gear9 SmartArt Text with Aspose.Cells
+// Description: Loads an Excel workbook, walks through each worksheet and shape, converts SmartArt objects to GroupShape, then reads the Text property of every child shape whose AutoShapeType is Gear6 or Gear9.
+// Keywords: Aspose.Cells | C# | SmartArt extraction | Gear6 | Gear9 | AutoShapeType | grouped shapes | Excel text retrieval | shape text read
+// Common Searches: how to read gear shape text in smartart using aspose.cells | c# extract smartart child shapes text | convert smartart to groupshape aspnet | retrieve gear6 gear9 labels from excel
+// Developer Intent: Read the Text property of each Gear6 or Gear9 child shape inside SmartArt objects in an Excel file.
+// Use Cases: Generate a list of gear labels from a process‑flow SmartArt for documentation. | Validate that every gear icon in a maintenance diagram contains required annotation before publishing. | Create a summary report of equipment identifiers by collecting gear shape text.
+// AI Prompts: Write C# code with Aspose.Cells that returns a dictionary of Gear6 and Gear9 shape texts from all SmartArt in a workbook. | Add comprehensive error handling to the SmartArt extraction sample for missing files, empty groups, and null text values. | Show how to modify the extracted gear text and write the updated values back to the same shapes using Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class Program
+// Loads an Excel workbook, walks through each worksheet and shape, converts SmartArt objects to GroupShape, then reads the Text property of every child shape whose AutoShapeType is Gear6 or Gear9.
+class ExtractGearSmartArt
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        string filePath = "SmartArt.xlsx";
 
-        // Access the first worksheet (or iterate through all worksheets as needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Iterate through all shapes in the worksheet
-        foreach (Shape shape in worksheet.Shapes)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Check if the shape is a SmartArt object
-            if (shape.IsSmartArt)
+            Console.WriteLine($"File not found: {Path.GetFullPath(filePath)}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook that contains the SmartArt
+            Workbook workbook = new Workbook(filePath);
+
+            // Loop through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Convert the SmartArt to a grouped shape
-                GroupShape groupShape = shape.GetResultOfSmartArt();
-
-                if (groupShape != null)
+                // Loop through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    // Iterate through each child shape within the grouped SmartArt
-                    foreach (Shape childShape in groupShape.GetGroupedShapes())
+                    // Process only SmartArt shapes
+                    if (shape.IsSmartArt)
                     {
-                        // Read the Text property of the child shape
-                        string childText = childShape.Text;
-
-                        // Output the extracted text (you can process it further as needed)
-                        Console.WriteLine($"Child Shape ID: {childShape.Id}, Text: {childText}");
+                        // Convert the SmartArt to a GroupShape
+                        GroupShape group = shape.GetResultOfSmartArt();
+                        if (group != null)
+                        {
+                            // Iterate over the child shapes inside the group
+                            foreach (Shape child in group.GetGroupedShapes())
+                            {
+                                // Identify gear shapes (Gear6 or Gear9)
+                                if (child.AutoShapeType == AutoShapeType.Gear6 ||
+                                    child.AutoShapeType == AutoShapeType.Gear9)
+                                {
+                                    // Output the text of the gear shape
+                                    string gearText = child.Text;
+                                    Console.WriteLine($"Gear ({child.AutoShapeType}) text: {gearText}");
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-
-        // Save the workbook (optional, if you need to persist any changes)
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

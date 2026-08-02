@@ -1,72 +1,40 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;   // For PivotTable and PivotFieldType enums
 
-public class DetailLinkDemo
+class DetailLinkDemo
 {
-    public static void Main()
+    static void Main()
     {
-        try
-        {
-            Run();
-            Console.WriteLine("Workbook created successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet (master sheet)
+        // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Master worksheet
         Worksheet masterSheet = workbook.Worksheets[0];
         masterSheet.Name = "Master";
 
-        // Populate master sheet with sample data for a pivot table
-        masterSheet.Cells["A1"].PutValue("Category");
-        masterSheet.Cells["B1"].PutValue("Amount");
-        masterSheet.Cells["A2"].PutValue("A");
-        masterSheet.Cells["B2"].PutValue(100);
-        masterSheet.Cells["A3"].PutValue("B");
-        masterSheet.Cells["B3"].PutValue(200);
-        masterSheet.Cells["A4"].PutValue("A");
-        masterSheet.Cells["B4"].PutValue(150);
-        masterSheet.Cells["A5"].PutValue("B");
-        masterSheet.Cells["B5"].PutValue(250);
+        // Populate master data
+        masterSheet.Cells["A1"].PutValue("ID");
+        masterSheet.Cells["B1"].PutValue("Name");
+        masterSheet.Cells["A2"].PutValue(1);
+        masterSheet.Cells["B2"].PutValue("Item1");
+        masterSheet.Cells["A3"].PutValue(2);
+        masterSheet.Cells["B3"].PutValue("Item2");
 
-        // Add a pivot table to the master sheet
-        int pivotIndex = masterSheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-        PivotTable pivot = masterSheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-        // Create a detail worksheet that will receive drill‑down data
+        // Detail worksheet
         Worksheet detailSheet = workbook.Worksheets.Add("Detail");
+        detailSheet.Cells["A1"].PutValue("Detail for Item1");
+        detailSheet.Cells["A2"].PutValue("Detail for Item2");
 
-        // Enable the built‑in property indicating that hyperlinks are up‑to‑date
-        workbook.BuiltInDocumentProperties.LinksUpToDate = true;
+        // Add hyperlinks from master rows to corresponding detail rows
+        // Link from master row 2 (A2) to Detail!A1
+        masterSheet.Hyperlinks.Add("A2", 1, 1, "Detail!A1");
+        masterSheet.Hyperlinks[0].TextToDisplay = "View Detail 1";
 
-        // Add hyperlinks from each pivot row (master) to the detail sheet.
-        // Internal hyperlink format uses a leading '#'.
-        masterSheet.Hyperlinks.Add("D4", 1, 1, "#Detail!A1");   // Link from first data row
-        masterSheet.Hyperlinks.Add("D5", 1, 1, "#Detail!A10"); // Link from second data row
-
-        // Optionally, set display text for the hyperlinks
-        masterSheet.Hyperlinks[0].TextToDisplay = "View Detail A";
-        masterSheet.Hyperlinks[1].TextToDisplay = "View Detail B";
-
-        // Define output path and ensure the directory exists
-        string outputPath = "DetailLinkDemo.xlsx";
-        string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        if (!Directory.Exists(outputDir))
-        {
-            Directory.CreateDirectory(outputDir);
-        }
+        // Link from master row 3 (A3) to Detail!A2
+        masterSheet.Hyperlinks.Add("A3", 1, 1, "Detail!A2");
+        masterSheet.Hyperlinks[1].TextToDisplay = "View Detail 2";
 
         // Save the workbook
-        workbook.Save(outputPath);
+        workbook.Save("DetailLinkDemo.xlsx");
     }
 }

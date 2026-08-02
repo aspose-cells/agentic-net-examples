@@ -14,34 +14,48 @@ namespace AsposeCellsPivotCustomSort
             Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
+            // Column A – Category, Column B – Value
             cells["A1"].Value = "Category";
-            cells["B1"].Value = "Amount";
+            cells["B1"].Value = "Value";
             cells["A2"].Value = "B";
             cells["A3"].Value = "A";
             cells["A4"].Value = "C";
-            cells["B2"].Value = 200;
-            cells["B3"].Value = 100;
-            cells["B4"].Value = 300;
+            cells["A5"].Value = "D";
+            cells["B2"].Value = 40;
+            cells["B3"].Value = 10;
+            cells["B4"].Value = 30;
+            cells["B5"].Value = 20;
 
-            // Add a pivot table based on the data range
-            int ptIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+            // Add a pivot table based on the data range A1:B5
+            int ptIndex = sheet.PivotTables.Add("A1:B5", "E3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
-            // Add the "Category" field as a row field
+            // Add the Category field as a row field and the Value field as a data field
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-            // Add the "Amount" field as a data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Retrieve the row field we just added
+            // ------------------------------------------------------------
+            // Apply an ascending custom sort order to the row field
+            // ------------------------------------------------------------
+            // Get the row field (Category)
             PivotField rowField = pivotTable.RowFields[0];
 
-            // Enable automatic sorting and set it to ascending order
-            rowField.IsAutoSort = true;          // Turn on auto‑sort
-            rowField.IsAscendSort = true;        // Ascending sort
-            rowField.AutoSortField = -1;         // Sort by the field's own labels
+            // Enable automatic sorting
+            rowField.IsAutoSort = true;
 
-            // Refresh the pivot table data and calculate the results
+            // Set the sort direction to ascending
+            rowField.IsAscendSort = true;
+
+            // AutoSortField = -1 means the field is sorted by its own labels
+            // (i.e., the Category values themselves)
+            rowField.AutoSortField = -1;
+
+            // Optional: let the pivot table respect built‑in custom list sorting
+            // (e.g., a user‑defined order like A, B, C, D). This does not create
+            // a custom list but enables the feature if such a list exists.
+            pivotTable.CustomListSort = true;
+
+            // Refresh the pivot cache and calculate the pivot table
             pivotTable.RefreshDataFlag = true;
             pivotTable.CalculateData();
 

@@ -1,94 +1,78 @@
+// Title: C# – Catch and Log CSV Parsing Errors with a Custom ICustomParser in Aspose.Cells
+// Description: Shows how to configure TxtLoadOptions with a custom ICustomParser, load CSV data, catch CellsException (InvalidData) and other exceptions, log the problem, and save the workbook only when the import succeeds.
+// Keywords: Aspose.Cells CSV custom parser | ICustomParser error handling | TxtLoadOptions parsing exception | CellsException InvalidData C# | log CSV import errors Aspose | load CSV with try‑catch Aspose.Cells | C# CSV to XLSX conversion error handling
+// Common Searches: Aspose.Cells catch parsing errors CSV | C# custom parser for CSV with Aspose | how to log CellsException InvalidData | try‑catch workbook load Aspose.Cells | handle format exception during CSV import
+// Developer Intent: Add robust try‑catch logic around Workbook loading to capture and record parsing failures when a custom ICustomParser encounters invalid data.
+// Use Cases: Identify and log rows that contain prohibited tokens while importing CSV files. | Prevent workbook creation when the CSV contains format errors, ensuring data integrity. | Continue processing after logging a parsing error by skipping the problematic row.
+// AI Prompts: Generate C# code that wraps Aspose.Cells Workbook loading with TxtLoadOptions in a try‑catch block, logs CellsException InvalidData to a file, and proceeds with the next row. | Create an ICustomParser that validates numeric ranges, throws a FormatException on out‑of‑range values, and demonstrate handling those exceptions during CSV import.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvParsingDemo
+// Shows how to configure TxtLoadOptions with a custom ICustomParser, load CSV data, catch CellsException (InvalidData) and other exceptions, log the problem, and save the workbook only when the import succeeds.
+class CsvLoaderWithErrorHandling
 {
-    // Custom parser that attempts to parse a string to double.
-    // If parsing fails, it returns false to indicate failure.
-    // This parser does not throw, but we will simulate an exception
-    // in the loading process by using an invalid parser implementation.
-    public class SafeNumberParser : ICustomParser
+    // Custom parser implementing ICustomParser
+    private class SafeStringParser : ICustomParser
     {
         public bool Parse(string value, out object result)
         {
-            // Try to parse numeric value; if it fails, treat as string.
-            if (double.TryParse(value, out double num))
-            {
-                result = num;
-                return true;
-            }
-
+            // Not used in this scenario; always succeed
             result = value;
-            return true; // Always succeed, returning original string.
+            return true;
         }
 
         public object ParseObject(string value)
         {
-            // This method is used by Aspose.Cells during loading.
-            // Throw an exception for a specific sentinel value to demonstrate error handling.
-            if (value == "##ERROR##")
-                throw new InvalidOperationException("Custom parsing error for sentinel value.");
-
-            if (double.TryParse(value, out double num))
-                return num;
-
+            // Simulate a parsing error for a specific token
+            if (value == "ERROR")
+                throw new FormatException("Invalid value encountered during parsing.");
             return value;
         }
 
         public string GetFormat()
         {
-            return "General";
+            return "String";
         }
     }
 
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Sample CSV data containing a deliberately bad value to trigger an exception
+        string csvData = "\"Good\",123\n\"ERROR\",456";
+
+        // Load CSV data into a memory stream
+        using (MemoryStream csvStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csvData)))
         {
-            // Sample CSV data containing a value that will trigger a parsing exception.
-            string csvData = "Name,Score\nAlice,85\nBob,##ERROR##\nCharlie,92";
+            // Configure TxtLoadOptions with a custom parser for the first column
+            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv);
+            loadOptions.PreferredParsers = new ICustomParser[] { new SafeStringParser(), null };
+            loadOptions.ConvertNumericData = true; // Allow numeric conversion for other columns
 
-            // Prepare a memory stream from the CSV string.
-            using (MemoryStream csvStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csvData)))
+            Workbook workbook = null;
+            try
             {
-                // Configure TxtLoadOptions for CSV loading.
-                TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
-                {
-                    // Use the custom parser for the second column (Score).
-                    PreferredParsers = new ICustomParser[] { null, new SafeNumberParser() }
-                };
+                // Attempt to load the CSV using the custom options
+                workbook = new Workbook(csvStream, loadOptions);
+                Console.WriteLine("CSV loaded successfully.");
+            }
+            catch (CellsException ex) when (ex.Code == ExceptionType.InvalidData)
+            {
+                // Handle parsing-specific errors
+                Console.WriteLine($"Parsing error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any other loading errors
+                Console.WriteLine($"Error loading CSV: {ex.Message}");
+            }
 
-                Workbook workbook = null;
-
-                try
-                {
-                    // Attempt to load the CSV with the custom parsers.
-                    workbook = new Workbook(csvStream, loadOptions);
-                    Console.WriteLine("CSV loaded successfully.");
-                }
-                catch (Exception ex)
-                {
-                    // Catch any parsing exceptions and log details.
-                    Console.WriteLine($"Error while parsing CSV: {ex.Message}");
-                }
-
-                if (workbook != null)
-                {
-                    // Access the first worksheet to demonstrate that data was loaded.
-                    Worksheet sheet = workbook.Worksheets[0];
-                    Cells cells = sheet.Cells;
-
-                    // Output the loaded values.
-                    Console.WriteLine($"A2 (Name): {cells["A2"].StringValue}");
-                    Console.WriteLine($"B2 (Score): {cells["B2"].StringValue}");
-                    Console.WriteLine($"A3 (Name): {cells["A3"].StringValue}");
-                    Console.WriteLine($"B3 (Score): {cells["B3"].StringValue}");
-
-                    // Save the workbook to an Excel file.
-                    workbook.Save("ParsedCsvOutput.xlsx", SaveFormat.Xlsx);
-                    Console.WriteLine("Workbook saved as ParsedCsvOutput.xlsx");
-                }
+            // If loading succeeded, save the workbook
+            if (workbook != null)
+            {
+                workbook.Save("LoadedCsv.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved as LoadedCsv.xlsx");
             }
         }
     }

@@ -3,7 +3,7 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Ods;
 
-class SavePivotTableAsOds
+class SavePivotAsOds
 {
     static void Main()
     {
@@ -26,14 +26,14 @@ class SavePivotTableAsOds
         PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
         pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
         pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
-        pivotTable.SaveData = true; // Ensure pivot data is saved with the file
 
-        // Configure ODS save options
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        saveOptions.GeneratorType = OdsGeneratorType.LibreOffice; // Set generator (optional)
-        saveOptions.IgnorePivotTables = false; // Include pivot tables in the ODS file
+        // Configure ODS save options (optional: set generator type)
+        OdsSaveOptions saveOptions = new OdsSaveOptions
+        {
+            GeneratorType = OdsGeneratorType.LibreOffice
+        };
 
-        // Save the workbook as an ODS file using the specified options
-        workbook.Save("PivotTableOutput.ods", saveOptions);
+        // Save the workbook containing the pivot table as an ODS file
+        workbook.Save("SalesPivot.ods", saveOptions);
     }
 }

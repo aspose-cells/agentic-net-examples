@@ -1,36 +1,48 @@
+// Title: Link a rectangle shape to a multi‑line cell with wrapping using Aspose.Cells for .NET
+// Description: Shows how to add a rectangle shape, bind it to a cell that contains line‑feed characters, enable text wrapping, and automatically resize the shape to fit the wrapped content with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | .NET | shape linked to cell | multiline cell text | text wrapping in shape | fit shape to text | SetLinkedCell method | UpdateSelectedValue | Shape.FitToTextSize | rectangle shape in Excel
+// Common Searches: Aspose.Cells link shape to cell with newline | wrap text in linked shape Aspose.Cells | auto resize shape to cell text .NET | C# rectangle shape bound to cell | display multi‑line cell value in shape
+// Developer Intent: Bind a rectangle shape to a cell that includes line breaks and have the shape render the text with proper wrapping.
+// Use Cases: Dynamic dashboards where shape titles update automatically from cells containing bullet points or paragraphs. | Report generators that need wrapped notes inside shapes to stay synchronized with source cells. | Printable forms that show multi‑line instructions inside linked shapes for consistent layout.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape linked to a cell containing newline characters and enables text wrapping. | Explain the role of the two Boolean parameters in SetLinkedCell and how they affect automatic updates of shape text. | Provide step‑by‑step instructions to fit a linked shape to its multi‑line content using Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-class ShapeLinkedToMultilineCell
+namespace AsposeCellsShapeLinkExample
 {
-    static void Main()
+    // Shows how to add a rectangle shape, bind it to a cell that contains line‑feed characters, enable text wrapping, and automatically resize the shape to fit the wrapped content with Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put multi-line text into cell A1 (use \n for line break)
-        Cell cell = sheet.Cells["A1"];
-        cell.PutValue("First line\nSecond line\nThird line");
+            // Put multi‑line text into cell A1 (use line‑feed character for line break)
+            worksheet.Cells["A1"].PutValue("First line\nSecond line\nThird line");
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, height, width
-        Shape shape = sheet.Shapes.AddRectangle(2, 0, 1, 1, 200, 100);
+            // Add a rectangle shape that will display the linked text
+            // Parameters: upper left row, upper left column, row offset, column offset, width, height
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 200, 100);
 
-        // Link the shape to the cell containing the multi-line text
-        // The two boolean parameters are: isRowAbsolute, isColumnAbsolute
-        shape.SetLinkedCell("A1", false, false);
+            // Link the shape to cell A1 (true, true = set as linked and update automatically)
+            shape.SetLinkedCell("A1", true, true);
 
-        // Ensure the shape wraps text so line breaks are displayed
-        ShapeTextAlignment alignment = shape.TextBody.TextAlignment;
-        alignment.IsTextWrapped = true;
+            // Ensure the shape reflects the current cell value
+            shape.UpdateSelectedValue();
 
-        // Optionally adjust the shape size to fit the text
-        shape.FitToTextSize();
+            // Enable text wrapping so line breaks are shown correctly
+            shape.TextBody.TextAlignment.IsTextWrapped = true;
 
-        // Save the workbook
-        workbook.Save("ShapeLinkedMultiline.xlsx");
+            // Adjust the shape size to fit the wrapped text
+            shape.FitToTextSize();
+
+            // Save the workbook
+            workbook.Save("ShapeLinkedToMultilineCell.xlsx");
+        }
     }
 }

@@ -1,41 +1,40 @@
+// Title: Convert HTML with Nested Tables to Excel – Separate Worksheets per Level (C# Aspose.Cells)
+// Description: Shows how to load an HTML file that contains nested tables using Aspose.Cells, automatically generate a worksheet for each table, rename the sheets to indicate nesting depth (Level1, Level2, …), and save the workbook as an XLSX file.
+// Keywords: Aspose.Cells | HTML to Excel | nested tables | separate worksheets | C# conversion | HtmlLoadOptions | worksheet naming | XLSX export
+// Common Searches: Aspose.Cells convert HTML nested tables to Excel | C# create separate worksheets for each HTML table | load HTML with Aspose.Cells and rename sheets | HTML to XLSX with nested tables Aspose | how to handle nested tables in Aspose.Cells HTML import
+// Developer Intent: Generate an Excel workbook from an HTML document where every table—including nested ones—appears on its own worksheet, then rename the sheets to reflect their hierarchy level.
+// Use Cases: Convert a complex web report with multiple nested tables into a clean, multi‑sheet Excel workbook for business analysis. | Automate the extraction of scraped HTML data, preserving table structure by placing each table on a separate sheet. | Create a navigable Excel file where sheet names (Level1, Level2, …) convey the original HTML table hierarchy.
+// AI Prompts: Write C# code using Aspose.Cells to load an HTML file, generate a separate worksheet for each nested table, and name the sheets Level1, Level2, etc. | Explain how HtmlLoadOptions processes nested tables during HTML‑to‑Excel conversion and how to customize worksheet names afterward. | Suggest a way to use original HTML table captions as worksheet names instead of generic LevelX labels.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace HtmlToExcelNestedTables
+// Shows how to load an HTML file that contains nested tables using Aspose.Cells, automatically generate a worksheet for each table, rename the sheets to indicate nesting depth (Level1, Level2, …), and save the workbook as an XLSX file.
+class HtmlToExcelConverter
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for the source HTML file and the destination Excel file
+        string htmlFilePath = "input.html";
+        string excelFilePath = "output.xlsx";
+
+        // Load the HTML file. Aspose.Cells automatically creates a separate worksheet
+        // for each HTML table, including nested tables.
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+
+        // Create a workbook from the HTML source using the load options
+        Workbook workbook = new Workbook(htmlFilePath, loadOptions);
+
+        // Rename worksheets to reflect their nesting level (Level1, Level2, ...)
+        for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            // Path to the source HTML file that contains nested tables
-            string htmlFilePath = "input.html";
-
-            // Path for the generated Excel workbook
-            string excelFilePath = "output.xlsx";
-
-            // Create HtmlLoadOptions to control how HTML tables are imported
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-            // --------------------------------------------------------------
-            // Map each HTML table (including nested ones) to a separate worksheet.
-            // Table indexes are zero‑based and correspond to the order in which
-            // Aspose.Cells encounters <table> elements while parsing the HTML.
-            // The target sheet index specifies the worksheet that will receive the
-            // table data. Here we map table 0 → sheet 0, table 1 → sheet 1, etc.
-            // --------------------------------------------------------------
-            loadOptions.TableLoadOptions.Add(0, 0); // First (outer) table → Sheet0
-            loadOptions.TableLoadOptions.Add(1, 1); // First nested table → Sheet1
-            loadOptions.TableLoadOptions.Add(2, 2); // Second nested table (if any) → Sheet2
-            // Add more mappings as required for additional tables.
-
-            // Load the HTML file into a Workbook using the configured options.
-            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
-
-            // Save the workbook as an Excel file.
-            workbook.Save(excelFilePath, SaveFormat.Xlsx);
-
-            Console.WriteLine("HTML has been converted to Excel with each table on a separate worksheet.");
+            workbook.Worksheets[i].Name = $"Level{i + 1}";
         }
+
+        // Save the workbook as an Excel file (XLSX format)
+        workbook.Save(excelFilePath, SaveFormat.Xlsx);
+
+        Console.WriteLine($"HTML has been converted to Excel. Output saved at: {excelFilePath}");
     }
 }

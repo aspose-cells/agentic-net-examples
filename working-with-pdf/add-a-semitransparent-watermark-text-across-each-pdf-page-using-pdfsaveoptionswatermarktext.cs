@@ -3,44 +3,45 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkDemo
+namespace WatermarkPdfDemo
 {
+    // Author: Aspose.Cells example – adds a semi‑transparent text watermark to each PDF page
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and add some sample data
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data for PDF with watermark");
-            sheet.Cells["B2"].PutValue("Another cell");
 
-            // Define the font for the watermark text
-            RenderingFont watermarkFont = new RenderingFont("Arial", 72)
-            {
-                Bold = true,
-                Color = Color.Gray   // Light gray for a subtle appearance
-            };
+            // Optionally add some content to demonstrate multiple pages
+            workbook.Worksheets[0].Cells["A1"].PutValue("First Page");
+            int sheetIndex = workbook.Worksheets.Add();
+            workbook.Worksheets[sheetIndex].Cells["A1"].PutValue("Second Page");
+            sheetIndex = workbook.Worksheets.Add();
+            workbook.Worksheets[sheetIndex].Cells["A1"].PutValue("Third Page");
 
-            // Create a text watermark with the desired properties
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", watermarkFont)
-            {
-                HAlignment = TextAlignmentType.Center,   // Center horizontally
-                VAlignment = TextAlignmentType.Center,   // Center vertically
-                Rotation = 45f,                          // Diagonal orientation
-                Opacity = 0.3f,                          // Semi‑transparent
-                ScaleToPagePercent = 75,                 // Scale relative to page size
-                IsBackground = true                      // Place behind page contents
-            };
+            // Create a rendering font for the watermark text
+            RenderingFont watermarkFont = new RenderingFont("Arial", 36);
+            watermarkFont.Bold = true;
+            watermarkFont.Color = Color.Gray; // Light gray for subtle appearance
 
-            // Configure PDF save options and assign the watermark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
+            // Initialize the watermark with text and the font
+            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", watermarkFont);
+
+            // Configure watermark appearance
+            watermark.Rotation = 45f;               // Diagonal across the page
+            watermark.Opacity = 0.3f;               // Semi‑transparent
+            watermark.IsBackground = true;         // Render behind the sheet content
+            watermark.HAlignment = TextAlignmentType.Center;
+            watermark.VAlignment = TextAlignmentType.Center;
+            watermark.ScaleToPagePercent = 150;     // Slightly larger than page size
+
+            // Set the watermark in PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            pdfOptions.Watermark = watermark;
 
             // Save the workbook as a PDF with the watermark applied
-            workbook.Save("output_watermark.pdf", pdfOptions);
+            workbook.Save("Workbook_With_Watermark.pdf", pdfOptions);
         }
     }
 }

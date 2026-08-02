@@ -1,53 +1,39 @@
-using System;
-using System.Drawing;
 using Aspose.Cells;
+
+// Author: Aspose.Cells .NET example – copy only formatting from source rows
 
 class Program
 {
     static void Main()
     {
-        // Create source workbook and add some data with formatting
-        Workbook sourceWorkbook = new Workbook();
+        // Load the source workbook containing the rows to copy
+        Workbook sourceWorkbook = new Workbook("source.xlsx");
         Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
 
-        // Header row with bold font
-        sourceSheet.Cells["A1"].PutValue("Header");
-        Style headerStyle = sourceWorkbook.CreateStyle();
-        headerStyle.Font.IsBold = true;
-        sourceSheet.Cells["A1"].SetStyle(headerStyle);
-
-        // Data row with background color
-        sourceSheet.Cells["A2"].PutValue(123);
-        Style dataStyle = sourceWorkbook.CreateStyle();
-        dataStyle.ForegroundColor = Color.Yellow;
-        dataStyle.Pattern = BackgroundType.Solid;
-        sourceSheet.Cells["A2"].SetStyle(dataStyle);
-
-        // Create destination workbook
+        // Create (or load) the destination workbook where rows will be pasted
         Workbook destinationWorkbook = new Workbook();
         Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
 
-        // CopyOptions (default settings)
+        // Default copy options – no special behavior required
         CopyOptions copyOptions = new CopyOptions();
 
-        // PasteOptions configured to copy only formats
+        // Paste options configured to copy only formats (no values or formulas)
         PasteOptions pasteOptions = new PasteOptions
         {
-            PasteType = PasteType.Formats
+            PasteType = PasteType.Formats   // Formats only
         };
 
-        // Copy the rows from source to destination using the overload that accepts both CopyOptions and PasteOptions
-        // Here we copy all rows that contain data in the source sheet
-        int rowsToCopy = sourceSheet.Cells.MaxDisplayRange.RowCount;
-        destinationSheet.Cells.CopyRows(
-            sourceSheet.Cells,
-            0,                 // source start row index
-            0,                 // destination start row index
-            rowsToCopy,        // number of rows to copy
+        // Example: copy 5 rows starting from row 0 of the source sheet
+        // and paste them beginning at row 10 of the destination sheet
+        sourceSheet.Cells.CopyRows(
+            sourceSheet.Cells,   // source cells
+            0,                   // source row index (zero‑based)
+            10,                  // destination row index (zero‑based)
+            5,                   // number of rows to copy
             copyOptions,
             pasteOptions);
 
-        // Save the result workbook
-        destinationWorkbook.Save("FormattedRowsOnly.xlsx");
+        // Save the resulting workbook
+        destinationWorkbook.Save("result.xlsx");
     }
 }

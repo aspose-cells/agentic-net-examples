@@ -1,97 +1,72 @@
 using System;
-using System.Data;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-class SmartMarkerIgnoreErrorDemo
+namespace AsposeCellsSmartMarkerIgnoreErrorsDemo
 {
-    static void Main()
+    // Demonstrates how to process smart markers while ignoring errors.
+    // Unrecognized or problematic smart markers are preserved instead of causing an exception.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Load template workbook if it exists; otherwise create a simple one.
-            Workbook workbook;
-            const string templatePath = "Template.xlsx";
-            if (File.Exists(templatePath))
+            // -------------------------------------------------
+            // 1. Create a new workbook and add smart markers.
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Smart markers that reference a data source named "Employees".
+            // The second marker refers to a non‑existent column "Salary" to simulate an error.
+            sheet.Cells["A1"].PutValue("&=Employees.Name");
+            sheet.Cells["B1"].PutValue("&=Employees.Salary"); // will cause an error
+
+            // Define the range that contains smart markers.
+            // When LineByLine is false, the designer processes only this named range.
+            sheet.Cells.CreateRange("A1:B1").Name = "_CellsSmartMarkers";
+
+            // -------------------------------------------------
+            // 2. Prepare a data source with missing "Salary" column.
+            // -------------------------------------------------
+            var employees = new List<Employee>
             {
-                workbook = new Workbook(templatePath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Name = "Sheet1";
-                // Sample smart markers
-                ws.Cells["A1"].PutValue("&=Employees.Name");
-                ws.Cells["B1"].PutValue("&=Employees.Age");
-            }
+                new Employee { Name = "John Doe" },
+                new Employee { Name = "Jane Smith" }
+            };
 
-            // ------------------------------------------------------------
-            // Prepare a data source that intentionally contains missing/invalid data
-            // ------------------------------------------------------------
-            DataTable employees = new DataTable("Employees");
-            employees.Columns.Add("Name", typeof(string));
-            // Use string type for Age to allow invalid values without DataTable throwing.
-            employees.Columns.Add("Age", typeof(string));
-
-            // First row is valid
-            employees.Rows.Add("John Doe", "30");
-            // Second row has a missing Name (null) – this will cause a smart‑marker error
-            employees.Rows.Add(DBNull.Value, "25");
-            // Third row has an invalid Age (non‑numeric string) – another error scenario
-            employees.Rows.Add("Jane Smith", "InvalidAge");
-
-            // ------------------------------------------------------------
-            // Set up the WorkbookDesigner with the workbook and the data source.
-            // ------------------------------------------------------------
+            // -------------------------------------------------
+            // 3. Configure the WorkbookDesigner.
+            // -------------------------------------------------
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook,
-                CallBack = new IgnoreErrorCallback() // custom callback to swallow errors
+                // Setting LineByLine to false tells the designer to use the named range.
+                LineByLine = false
             };
-            designer.SetDataSource(employees);
 
-            // Process smart markers. Errors are handled by the callback.
-            designer.Process(true);
+            // Register the data source.
+            designer.SetDataSource("Employees", employees);
 
-            // ------------------------------------------------------------
-            // Optionally, ignore formula calculation errors that might arise after
-            // smart‑marker insertion.
-            // ------------------------------------------------------------
-            CalculationOptions calcOptions = new CalculationOptions { IgnoreError = true };
-            workbook.CalculateFormula(calcOptions);
+            // -------------------------------------------------
+            // 4. Process smart markers while preserving unrecognized markers.
+            //    The boolean parameter 'true' means: preserve markers that cannot be resolved.
+            //    This effectively ignores errors and allows partial data insertion.
+            // -------------------------------------------------
+            designer.Process(isPreserved: true);
 
-            // ------------------------------------------------------------
-            // Save the resulting workbook.
-            // ------------------------------------------------------------
-            const string resultPath = "Result.xlsx";
-            workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+            // -------------------------------------------------
+            // 5. Save the resulting workbook.
+            // -------------------------------------------------
+            workbook.Save("SmartMarkers_IgnoredErrors.xlsx");
+
+            Console.WriteLine("Workbook saved. Unresolved smart markers were preserved.");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-        }
-    }
 
-    // ------------------------------------------------------------------------
-    // Callback implementation that catches and ignores any errors that occur
-    // during smart‑marker processing.
-    // ------------------------------------------------------------------------
-    class IgnoreErrorCallback : ISmartMarkerCallBack
-    {
-        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+        // Simple data class used as the data source.
+        public class Employee
         {
-            try
-            {
-                // No custom logic required; the try/catch ensures any exception
-                // thrown by the Aspose engine while processing a smart marker is suppressed.
-            }
-            catch
-            {
-                // Swallow the exception to continue processing remaining markers.
-            }
+            public string Name { get; set; }
+            // Note: No Salary property – this will trigger an error that gets ignored.
         }
     }
 }

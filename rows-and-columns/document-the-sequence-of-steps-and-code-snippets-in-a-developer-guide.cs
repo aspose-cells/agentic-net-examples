@@ -1,132 +1,69 @@
+// Title: Aspose.Cells for .NET – Add and Modify Shape Adjustment Guides with VBA Support
+// Description: Step‑by‑step guide that creates a workbook, inserts a RightArrowCallout auto shape, works with ShapeGuideCollection to add and change guide values, optionally embeds a VBA class module, and saves the file as XLSX and XLSM using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells shape guides | C# auto shape adjustment | ShapeGuideCollection example | add VBA module Aspose.Cells | save workbook as XLSM | RightArrowCallout geometry | Aspose.Cells .NET tutorial | modify shape geometry C#
+// Common Searches: how to set shape adjustment guides in Aspose.Cells C# | add RightArrowCallout auto shape Aspose.Cells | update shape guide values programmatically | embed VBA macro in Aspose.Cells workbook | save Aspose.Cells workbook with macros
+// Developer Intent: Add an auto shape, configure its adjustment guides, optionally attach VBA code, and export the workbook in both XLSX and macro‑enabled XLSM formats.
+// Use Cases: Create a callout shape and define custom adj1‑adj4 values to control arrow dimensions. | Programmatically change all guide values to resize the shape uniformly and verify changes via console output. | Insert a VBA class module containing a simple macro and generate an XLSM file that preserves the macro.
+// AI Prompts: Generate C# code that adds a RoundedRectangle auto shape, defines four custom adjustment guides, and saves the workbook as XLSX using Aspose.Cells. | Show how to read existing shape guide values from a workbook, modify them based on user input, and persist the changes. | Provide an example of adding a standard VBA module with a macro to a workbook and saving it as an XLSM file with Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Vba;
 
-public class ShapeGuideDeveloperGuide
+namespace AsposeCellsGuide
 {
-    // Demonstrates creating a shape and accessing its BaseShapeGuide via Geometry.
-    public static void BaseShapeGuideDemo()
+    // Step‑by‑step guide that creates a workbook, inserts a RightArrowCallout auto shape, works with ShapeGuideCollection to add and change guide values, optionally embeds a VBA class module, and saves the file as XLSX and XLSM using Aspose.Cells for .NET.
+    public class ShapeGuideDeveloperGuide
     {
-        // Create a new workbook and get the first worksheet.
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add a rectangle shape.
-        Shape shape = sheet.Shapes.AddRectangle(1, 0, 0, 100, 100, 100);
-
-        // BaseShapeGuide has no public constructor; we work with ShapeGuide derived from it.
-        Console.WriteLine($"Created shape of type: {shape.GetType().Name}");
-
-        // Save the workbook.
-        workbook.Save("BaseShapeGuideDemo.xlsx");
-    }
-
-    // Demonstrates adding and retrieving shape guides using ShapeGuideCollection.
-    public static void ShapeGuideCollectionDemo()
-    {
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add a shape that supports adjustment guides.
-        Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.RightArrowCallout, 2, 0, 2, 0, 200, 150);
-
-        // Get the collection of guides.
-        ShapeGuideCollection guides = shape.Geometry.ShapeAdjustValues;
-
-        // Add guides with names and values.
-        guides.Add("adj1", 25.5);
-        guides.Add("adj2", 30);
-        guides.Add("adj3", 25.5);
-        guides.Add("adj4", 35);
-
-        // Read and display guide values.
-        for (int i = 0; i < guides.Count; i++)
+        public static void Main()
         {
-            Console.WriteLine($"Guide {i} value: {guides[i].Value}");
+            // Step 1: Create a new workbook and obtain the first worksheet.
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Step 2: Add an auto shape that supports adjustment guides (e.g., RightArrowCallout).
+            Shape shape = worksheet.Shapes.AddAutoShape(AutoShapeType.RightArrowCallout, 2, 0, 2, 0, 200, 150);
+
+            // Step 3: Retrieve the ShapeGuideCollection from the shape's geometry adjustments.
+            ShapeGuideCollection guides = shape.Geometry.ShapeAdjustValues;
+
+            // Step 4: Add adjustment guides using the Add(string name, double value) method.
+            guides.Add("adj1", 25.5);
+            guides.Add("adj2", 30.0);
+            guides.Add("adj3", 25.5);
+            guides.Add("adj4", 35.0);
+
+            // Step 5: Read and display the initial guide values via the indexer.
+            Console.WriteLine("Initial guide values:");
+            for (int i = 0; i < guides.Count; i++)
+            {
+                Console.WriteLine($"Guide {i + 1}: {guides[i].Value}");
+            }
+
+            // Step 6: Modify the guide values.
+            guides[0].Value = 20.0;
+            guides[1].Value = 20.0;
+            guides[2].Value = 20.0;
+            guides[3].Value = 20.0;
+
+            // Step 7: Verify and display the updated guide values.
+            Console.WriteLine("Updated guide values:");
+            for (int i = 0; i < guides.Count; i++)
+            {
+                Console.WriteLine($"Guide {i + 1}: {guides[i].Value}");
+            }
+
+            // Optional Step: Add a VBA module to demonstrate VbaModuleType usage.
+            VbaProject vbaProject = workbook.VbaProject;
+            int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "DemoModule");
+            VbaModule vbaModule = vbaProject.Modules[moduleIndex];
+            vbaModule.Codes = "Sub ShowMessage()\r\n    MsgBox \"Aspose.Cells guide executed\"\r\nEnd Sub";
+
+            // Step 8: Save the workbook.
+            // Save as XLSX (shape only) and XLSM (including VBA).
+            workbook.Save("ShapeGuideDeveloperGuide.xlsx");
+            workbook.Save("ShapeGuideDeveloperGuide_WithVba.xlsm", SaveFormat.Xlsm);
         }
-
-        // Modify a guide value.
-        guides[0].Value = 20.0;
-
-        // Save the workbook.
-        workbook.Save("ShapeGuideCollectionDemo.xlsx");
-    }
-
-    // Demonstrates creating a ShapeGuide via Add method and accessing its Value property.
-    public static void ShapeGuideDemo()
-    {
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add an auto shape.
-        Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.RoundedRectangle, 0, 0, 100, 100, 100, 100);
-
-        // Add a guide and obtain its index.
-        int index = shape.Geometry.ShapeAdjustValues.Add("Guide1", 0.2);
-        ShapeGuide guide = shape.Geometry.ShapeAdjustValues[index];
-
-        Console.WriteLine($"Created ShapeGuide with initial value: {guide.Value}");
-
-        // Update the guide value.
-        guide.Value = 0.5;
-        Console.WriteLine($"Updated ShapeGuide value: {guide.Value}");
-
-        // Save the workbook.
-        workbook.Save("ShapeGuideDemo.xlsx");
-    }
-
-    // Demonstrates using ShapePath to create a custom freeform shape.
-    public static void ShapePathDemo()
-    {
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Create a ShapePath instance and define a rectangle.
-        ShapePath path = new ShapePath();
-        path.MoveTo(100, 100);
-        path.LineTo(200, 100);
-        path.LineTo(200, 200);
-        path.LineTo(100, 200);
-        path.Close();
-
-        // Add the freeform shape using the defined path.
-        sheet.Shapes.AddFreeform(1, 0, 1, 0, 200, 200, new ShapePath[] { path });
-
-        // Save the workbook.
-        workbook.Save("ShapePathDemo.xlsx");
-    }
-
-    // Demonstrates adding a VBA module and setting its code.
-    public static void VbaModuleDemo()
-    {
-        Workbook workbook = new Workbook();
-        VbaProject vbaProject = workbook.VbaProject;
-
-        // Add a class module named "MyClass".
-        int idx = vbaProject.Modules.Add(VbaModuleType.Class, "MyClass");
-        VbaModule module = vbaProject.Modules[idx];
-        module.Codes = "Sub ShowMessage()\r\nMsgBox \"Hello from VBA\"\r\nEnd Sub";
-
-        // Save the workbook with VBA project.
-        workbook.Save("VbaModuleDemo.xlsm");
-    }
-
-    // Runs all demonstration methods sequentially.
-    public static void RunAll()
-    {
-        BaseShapeGuideDemo();
-        ShapeGuideCollectionDemo();
-        ShapeGuideDemo();
-        ShapePathDemo();
-        VbaModuleDemo();
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        ShapeGuideDeveloperGuide.RunAll();
     }
 }

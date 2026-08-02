@@ -1,51 +1,22 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class ApplyPageBreakPreviewToAllSheets
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook (replace with Load if needed)
+        Workbook workbook = new Workbook();
+
+        // Enable Page Break Preview for every worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            sheet.IsPageBreakPreview = true; // Show sheet in Page Break Preview mode
         }
 
-        public static void Run()
-        {
-            // Input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "Output_WithPageBreakPreview.xlsx";
-
-            Workbook workbook;
-
-            // Load existing workbook if it exists; otherwise create a new one
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a default workbook with one sheet
-            }
-
-            // Enable Page Break Preview for each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.IsPageBreakPreview = true;
-                // Optional: sheet.ViewType = ViewType.PageBreakPreview;
-            }
-
-            // Save the updated workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
+        // Save the workbook to a file
+        workbook.Save("PageBreakPreview_Output.xlsx");
     }
 }
+
+// Author: Aspose.Cells .NET example – applies page break preview to all worksheets.

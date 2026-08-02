@@ -1,3 +1,11 @@
+// Title: Add Background Image to All Worksheets and Export Each Sheet as PDF with Aspose.Cells (C#)
+// Description: A C# example that loads an Excel file, sets a JPEG as the background image for every worksheet, creates a temporary workbook for each sheet, and converts each sheet to a separate PDF using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells background image C# | export worksheet to PDF Aspose.Cells | add watermark to Excel sheets | convert each Excel sheet to PDF | temporary workbook PDF conversion | C# Excel to PDF with background | Aspose.Cells SaveOptions PDF
+// Common Searches: set background picture for all worksheets Aspose.Cells | export each Excel sheet as individual PDF C# | Aspose.Cells add watermark and convert to PDF | C# code to apply background image to Excel workbook | how to use ConversionUtility for PDF export
+// Developer Intent: Load an Excel workbook, apply a single background image to all worksheets, and generate a separate PDF file for each sheet.
+// Use Cases: Brand every worksheet with a company logo before sharing PDFs with clients. | Create department‑specific PDF reports while preserving a watermark background. | Automate batch processing to add a background image and archive each sheet as an individual PDF.
+// AI Prompts: Write C# code that adds a background image to all worksheets and saves each sheet directly to PDF without intermediate files using Aspose.Cells. | Show how to use PdfSaveOptions with Aspose.Cells to export worksheets to PDF while keeping the background image. | Explain performance‑friendly techniques for handling large workbooks when adding background images and converting each sheet to PDF.
+
 using System;
 using System.IO;
 using Aspose.Cells;
@@ -5,92 +13,86 @@ using Aspose.Cells.Utility;
 
 namespace AsposeCellsBackgroundPdfExport
 {
+    // A C# example that loads an Excel file, sets a JPEG as the background image for every worksheet, creates a temporary workbook for each sheet, and converts each sheet to a separate PDF using Aspose.Cells for .NET.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Paths to the source Excel file and background image
-                string sourceExcelPath = "input.xlsx";
-                string backgroundImagePath = "background.jpg";
+                // Paths for the source Excel file and the background image
+                string excelPath = "input.xlsx";
+                string imagePath = "background.jpg";
 
                 // Verify that the required files exist
-                if (!File.Exists(sourceExcelPath))
+                if (!File.Exists(excelPath))
                 {
-                    Console.WriteLine($"Source Excel file not found: {sourceExcelPath}");
+                    Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
                     return;
                 }
 
-                if (!File.Exists(backgroundImagePath))
+                if (!File.Exists(imagePath))
                 {
-                    Console.WriteLine($"Background image file not found: {backgroundImagePath}");
+                    Console.WriteLine($"Error: Image file not found at '{imagePath}'.");
                     return;
                 }
 
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(sourceExcelPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
 
                 // Read the background image into a byte array
-                byte[] backgroundImageData = File.ReadAllBytes(backgroundImagePath);
+                byte[] backgroundData = File.ReadAllBytes(imagePath);
 
-                // Process each worksheet
-                for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
+                // Apply the background image to every worksheet
+                foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    try
+                    ws.BackgroundImage = backgroundData;
+                }
+
+                // Directories for temporary files and final PDFs
+                string tempDir = "temp";
+                string outputDir = "output";
+                Directory.CreateDirectory(tempDir);
+                Directory.CreateDirectory(outputDir);
+
+                // Export each worksheet to a separate PDF file
+                for (int i = 0; i < workbook.Worksheets.Count; i++)
+                {
+                    // Create a temporary workbook containing only the current sheet
+                    Workbook tempWb = new Workbook();
+
+                    // Ensure the temporary workbook has at least one worksheet
+                    Worksheet targetSheet = tempWb.Worksheets[0];
+
+                    // Copy the current worksheet into the temporary workbook
+                    workbook.Worksheets[i].Copy(targetSheet);
+
+                    // If more than one sheet exists (unlikely), remove extras
+                    while (tempWb.Worksheets.Count > 1)
                     {
-                        Worksheet sheet = sourceWorkbook.Worksheets[i];
-
-                        // Apply the background image to the worksheet
-                        sheet.BackgroundImage = backgroundImageData;
-
-                        // Create a temporary workbook containing only this worksheet
-                        Workbook tempWorkbook = new Workbook();
-                        tempWorkbook.Worksheets.Clear(); // Remove the default sheet
-
-                        // Copy the current worksheet into the temporary workbook
-                        // AddCopy expects the source sheet name, not the Worksheet object
-                        tempWorkbook.Worksheets.AddCopy(sheet.Name);
-
-                        // Define temporary file paths
-                        string tempExcelPath = Path.Combine(Path.GetTempPath(), $"temp_sheet_{i}.xlsx");
-                        string outputPdfPath = $"Sheet_{i + 1}.pdf";
-
-                        // Save the temporary workbook (required for ConversionUtility)
-                        tempWorkbook.Save(tempExcelPath);
-
-                        // Convert the temporary Excel file to PDF
-                        ConversionUtility.Convert(tempExcelPath, outputPdfPath);
-
-                        Console.WriteLine($"Worksheet '{sheet.Name}' exported to PDF: {outputPdfPath}");
+                        tempWb.Worksheets.RemoveAt(1);
                     }
-                    catch (Exception ex)
+
+                    // Save the temporary workbook to an intermediate Excel file
+                    string tempExcelPath = Path.Combine(tempDir, $"Sheet_{i + 1}.xlsx");
+                    tempWb.Save(tempExcelPath);
+
+                    // Convert the intermediate Excel file to PDF
+                    string pdfPath = Path.Combine(outputDir, $"Sheet_{i + 1}.pdf");
+                    ConversionUtility.Convert(tempExcelPath, pdfPath);
+
+                    // Clean up the intermediate file
+                    if (File.Exists(tempExcelPath))
                     {
-                        Console.WriteLine($"Error processing worksheet index {i}: {ex.Message}");
-                    }
-                    finally
-                    {
-                        // Clean up the temporary Excel file if it exists
-                        string tempExcelPath = Path.Combine(Path.GetTempPath(), $"temp_sheet_{i}.xlsx");
-                        if (File.Exists(tempExcelPath))
-                        {
-                            try
-                            {
-                                File.Delete(tempExcelPath);
-                            }
-                            catch (Exception delEx)
-                            {
-                                Console.WriteLine($"Failed to delete temporary file '{tempExcelPath}': {delEx.Message}");
-                            }
-                        }
+                        File.Delete(tempExcelPath);
                     }
                 }
 
-                Console.WriteLine("All worksheets have been processed.");
+                Console.WriteLine("All sheets have been exported to PDFs with background images.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

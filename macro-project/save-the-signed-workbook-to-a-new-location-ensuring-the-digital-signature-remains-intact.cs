@@ -1,33 +1,33 @@
 using System;
 using Aspose.Cells;
 
-class SaveSignedWorkbook
+namespace AsposeCellsDigitalSignatureDemo
 {
-    static void Main()
+    class Program
     {
-        // Path to the existing digitally signed workbook
-        string sourcePath = "SignedWorkbook.xlsx";
-
-        // Path where the copy will be saved
-        string destinationPath = "SignedWorkbookCopy.xlsx";
-
-        // Load the signed workbook from disk
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Optional: check if the workbook is digitally signed
-        if (workbook.IsDigitallySigned)
+        static void Main()
         {
-            Console.WriteLine("The workbook is digitally signed. Proceeding to save a copy.");
-        }
-        else
-        {
-            Console.WriteLine("Warning: The workbook does not contain a digital signature.");
-        }
+            // Path to the existing digitally signed workbook
+            string sourcePath = "SignedWorkbook.xlsx";
 
-        // Save the workbook to a new location.
-        // The digital signature is preserved automatically during the save operation.
-        workbook.Save(destinationPath);
+            // Path where the copy will be saved
+            string destinationPath = "SignedCopy.xlsx";
 
-        Console.WriteLine($"Workbook successfully saved to: {destinationPath}");
+            // Load the signed workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Verify that the workbook is digitally signed
+            if (workbook.IsDigitallySigned)
+            {
+                // Save the workbook to a new location.
+                // The digital signature is preserved automatically.
+                workbook.Save(destinationPath);
+                Console.WriteLine($"Workbook saved to '{destinationPath}' with digital signature intact.");
+            }
+            else
+            {
+                Console.WriteLine("The source workbook is not digitally signed. No signature will be preserved.");
+            }
+        }
     }
 }

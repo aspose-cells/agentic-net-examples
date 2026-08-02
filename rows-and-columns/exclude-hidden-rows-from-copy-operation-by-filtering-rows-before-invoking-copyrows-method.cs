@@ -1,61 +1,54 @@
+// Title: Copy Only Visible Rows with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to hide specific rows, detect hidden rows using IsRowHidden, and copy only the visible rows from a source worksheet to a new workbook with the CopyRows method, then save the result as VisibleRowsCopy.xlsx.
+// Keywords: Aspose.Cells copy visible rows | exclude hidden rows Aspose.Cells | CopyRows filter hidden rows | IsRowHidden C# example | Aspose.Cells .NET row visibility | copy rows without hidden rows
+// Common Searches: Aspose.Cells copy only visible rows C# | How to skip hidden rows when using CopyRows | Exclude hidden rows in Aspose.Cells .NET | Copy rows from one worksheet to another ignoring hidden rows | Aspose.Cells IsRowHidden usage
+// Developer Intent: Copy rows that are not hidden from a source worksheet to a destination worksheet.
+// Use Cases: Create a report that includes only rows the user left visible after filtering or manual hiding. | Export a clean data set to a new file while preserving the original workbook's hidden rows. | Share a worksheet's visible content with collaborators without exposing hidden information.
+// AI Prompts: Generate C# code using Aspose.Cells that copies only visible rows from one worksheet to another, keeping formatting intact. | Explain how to filter out hidden rows before invoking CopyRows in Aspose.Cells for .NET. | Show a step‑by‑step example of using IsRowHidden with CopyRows to skip hidden rows during a copy operation.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to hide specific rows, detect hidden rows using IsRowHidden, and copy only the visible rows from a source worksheet to a new workbook with the CopyRows method, then save the result as VisibleRowsCopy.xlsx.
+class ExcludeHiddenRowsCopy
 {
-    public class CopyVisibleRowsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Create source workbook and add sample data
+        Workbook sourceWb = new Workbook();
+        Worksheet srcSheet = sourceWb.Worksheets[0];
+        Cells srcCells = srcSheet.Cells;
+
+        for (int i = 0; i < 10; i++)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            srcCells[i, 0].PutValue($"Row {i + 1}");
         }
 
-        public static void Run()
+        // Hide some rows (zero‑based indexes 1, 3, 5)
+        srcCells.HideRow(1);
+        srcCells.HideRow(3);
+        srcCells.HideRow(5);
+
+        // Create destination workbook
+        Workbook destWb = new Workbook();
+        Worksheet destSheet = destWb.Worksheets[0];
+        Cells destCells = destSheet.Cells;
+
+        int destRowIndex = 0;
+
+        // Iterate through source rows, copy only visible rows
+        for (int srcRowIndex = 0; srcRowIndex <= srcCells.MaxDataRow; srcRowIndex++)
         {
-            const string sourcePath = "source.xlsx";
-            const string outputPath = "output.xlsx";
+            // Skip hidden rows
+            if (srcCells.IsRowHidden(srcRowIndex))
+                continue;
 
-            // Ensure the source file exists before loading
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            // Load the source workbook
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cells sourceCells = sourceSheet.Cells;
-
-            // Create a new workbook for the destination
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-            Cells destinationCells = destinationSheet.Cells;
-
-            int destRowIndex = 0;
-            int totalRows = sourceCells.MaxDataRow + 1; // MaxDataRow is zero‑based
-
-            // Copy only visible rows
-            for (int srcRowIndex = 0; srcRowIndex < totalRows; srcRowIndex++)
-            {
-                if (sourceCells.IsRowHidden(srcRowIndex))
-                    continue;
-
-                destinationCells.CopyRows(sourceCells, srcRowIndex, destRowIndex, 1);
-                destRowIndex++;
-            }
-
-            // Save the result
-            destinationWorkbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Copy a single visible row from source to destination
+            destCells.CopyRows(srcCells, srcRowIndex, destRowIndex, 1);
+            destRowIndex++;
         }
+
+        // Save the destination workbook
+        destWb.Save("VisibleRowsCopy.xlsx");
     }
 }

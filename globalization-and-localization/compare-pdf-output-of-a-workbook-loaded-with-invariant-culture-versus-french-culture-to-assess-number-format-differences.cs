@@ -1,67 +1,64 @@
 using System;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCulturePdfComparison
+namespace AsposeCellsCultureComparison
 {
     class Program
     {
         static void Main()
         {
-            // Step 1: Create a sample workbook with numeric data and a custom number format.
-            Workbook sampleWorkbook = new Workbook();
-            Worksheet sheet = sampleWorkbook.Worksheets[0];
-            // Populate some numbers.
-            sheet.Cells["A1"].PutValue(1234.56);
-            sheet.Cells["A2"].PutValue(7890.12);
-            sheet.Cells["A3"].PutValue(3456.78);
-            // Apply a number format that uses group and decimal separators.
-            Style numberStyle = sampleWorkbook.CreateStyle();
-            numberStyle.Custom = "#,##0.00";
-            sheet.Cells["A1"].SetStyle(numberStyle);
-            sheet.Cells["A2"].SetStyle(numberStyle);
-            sheet.Cells["A3"].SetStyle(numberStyle);
+            // Step 1: Create a sample workbook with numeric data
+            Workbook sourceWb = new Workbook();
+            Worksheet sheet = sourceWb.Worksheets[0];
+            // Put a number that will be formatted differently in French culture
+            sheet.Cells["A1"].PutValue(1234567.89);
+            // Apply a number format with two decimal places
+            Style style = sourceWb.CreateStyle();
+            style.Custom = "#,##0.00";
+            sheet.Cells["A1"].SetStyle(style);
+            // Save the source workbook (XLSX) – this is the template for both loads
+            sourceWb.Save("sample.xlsx", SaveFormat.Xlsx);
 
-            // Save the workbook to a temporary XLSX file (used as the source for both loads).
-            string sourcePath = "sample.xlsx";
-            sampleWorkbook.Save(sourcePath, SaveFormat.Xlsx);
-
-            // Step 2: Load the workbook with InvariantCulture and export to PDF.
+            // -----------------------------------------------------------------
+            // Step 2: Load with InvariantCulture and export to PDF
             LoadOptions invariantOptions = new LoadOptions(LoadFormat.Xlsx);
-            invariantOptions.CultureInfo = CultureInfo.InvariantCulture;
-            Workbook wbInvariant = new Workbook(sourcePath, invariantOptions);
-            string pdfInvariantPath = "output_invariant.pdf";
-            wbInvariant.Save(pdfInvariantPath, SaveFormat.Pdf);
+            invariantOptions.CultureInfo = CultureInfo.InvariantCulture; // invariant culture
+            Workbook invariantWb = new Workbook("sample.xlsx", invariantOptions);
+            // Export to PDF
+            invariantWb.Save("output_invariant.pdf", SaveFormat.Pdf);
+            // Capture the formatted string of the cell for later comparison
+            string invariantFormatted = invariantWb.Worksheets[0].Cells["A1"].StringValue;
 
-            // Step 3: Load the workbook with French culture (fr-FR) and export to PDF.
+            // -----------------------------------------------------------------
+            // Step 3: Load with French culture and export to PDF
             LoadOptions frenchOptions = new LoadOptions(LoadFormat.Xlsx);
-            frenchOptions.CultureInfo = new CultureInfo("fr-FR");
-            Workbook wbFrench = new Workbook(sourcePath, frenchOptions);
-            string pdfFrenchPath = "output_french.pdf";
-            wbFrench.Save(pdfFrenchPath, SaveFormat.Pdf);
+            frenchOptions.CultureInfo = new CultureInfo("fr-FR"); // French (France) culture
+            Workbook frenchWb = new Workbook("sample.xlsx", frenchOptions);
+            // Export to PDF
+            frenchWb.Save("output_french.pdf", SaveFormat.Pdf);
+            // Capture the formatted string of the cell for later comparison
+            string frenchFormatted = frenchWb.Worksheets[0].Cells["A1"].StringValue;
 
-            // Step 4: Compare the two PDF files byte‑by‑byte.
-            byte[] pdfInvariantBytes = File.ReadAllBytes(pdfInvariantPath);
-            byte[] pdfFrenchBytes = File.ReadAllBytes(pdfFrenchPath);
-            bool pdfsAreIdentical = pdfInvariantBytes.SequenceEqual(pdfFrenchBytes);
+            // -----------------------------------------------------------------
+            // Step 4: Compare the formatted values and output the differences
+            Console.WriteLine("Formatted value with InvariantCulture: " + invariantFormatted);
+            Console.WriteLine("Formatted value with French culture:    " + frenchFormatted);
 
-            Console.WriteLine($"PDFs are {(pdfsAreIdentical ? "identical" : "different")}.");
-
-            // Optional: Show a simple metric of difference (number of differing bytes).
-            if (!pdfsAreIdentical)
+            if (invariantFormatted == frenchFormatted)
             {
-                int diffCount = pdfInvariantBytes.Zip(pdfFrenchBytes, (b1, b2) => b1 == b2 ? 0 : 1).Sum();
-                // Account for length differences.
-                diffCount += Math.Abs(pdfInvariantBytes.Length - pdfFrenchBytes.Length);
-                Console.WriteLine($"Number of differing bytes: {diffCount}");
+                Console.WriteLine("No difference in number formatting between the two cultures.");
+            }
+            else
+            {
+                Console.WriteLine("Difference detected:");
+                Console.WriteLine($" - Invariant uses: '{invariantFormatted}'");
+                Console.WriteLine($" - French uses:    '{frenchFormatted}'");
             }
 
-            // Cleanup temporary files (optional).
-            // File.Delete(sourcePath);
-            // File.Delete(pdfInvariantPath);
-            // File.Delete(pdfFrenchPath);
+            // Note: The generated PDFs (output_invariant.pdf and output_french.pdf)
+            // can be manually inspected to see the visual differences in number formatting.
         }
     }
 }

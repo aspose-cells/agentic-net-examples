@@ -1,45 +1,59 @@
 using System;
 using Aspose.Cells;
 
-class VerifyWorkbookRibbon
+namespace RibbonWorkbookVerification
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (uses the Workbook() constructor rule)
+            Workbook workbook = new Workbook();
 
-        // Define custom ribbon XML
-        string ribbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab id=\"customTab\" label=\"My Tab\">" +
-            "        <group id=\"customGroup\" label=\"My Group\">" +
-            "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
+            // Define custom Ribbon XML
+            string ribbonXml =
+                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                "  <ribbon>" +
+                "    <tabs>" +
+                "      <tab id=\"customTab\" label=\"My Tab\">" +
+                "        <group id=\"customGroup\" label=\"My Group\">" +
+                "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
+                "        </group>" +
+                "      </tab>" +
+                "    </tabs>" +
+                "  </ribbon>" +
+                "</customUI>";
 
-        // Apply the ribbon XML to the workbook
-        workbook.RibbonXml = ribbonXml;
+            // Apply the custom Ribbon XML to the workbook (RibbonXml property)
+            workbook.RibbonXml = ribbonXml;
 
-        // Change the absolute path where the workbook will be saved
-        workbook.AbsolutePath = @"C:\Temp\CustomRibbonWorkbook.xlsm";
+            // Save the workbook to a temporary file (uses the Save(string) method rule)
+            string tempPath = "TempRibbonWorkbook.xlsm";
+            workbook.Save(tempPath, SaveFormat.Xlsm);
 
-        // Save the workbook (using the lifecycle save rule)
-        workbook.Save(workbook.AbsolutePath, SaveFormat.Xlsm);
+            // Attempt to load the saved workbook to verify it opens without errors
+            try
+            {
+                // Load the workbook from the saved path (uses the Workbook(string) constructor rule)
+                Workbook loadedWorkbook = new Workbook(tempPath);
 
-        // Load the saved workbook to verify it opens without errors (using the lifecycle load rule)
-        Workbook loadedWorkbook = new Workbook(workbook.AbsolutePath);
+                // If we reach this point, the workbook opened successfully
+                Console.WriteLine("Workbook loaded successfully. RibbonXml is set: " +
+                                  (loadedWorkbook.RibbonXml != null));
 
-        // Verify that the RibbonXml property is retained after loading
-        bool ribbonRetained = loadedWorkbook.RibbonXml != null && loadedWorkbook.RibbonXml.Contains("customTab");
-        Console.WriteLine("RibbonXml retained after load: " + ribbonRetained);
-
-        // Dispose resources
-        workbook.Dispose();
-        loadedWorkbook.Dispose();
+                // Optional: clean up
+                loadedWorkbook.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // If an exception occurs, report the failure
+                Console.WriteLine("Failed to load workbook: " + ex.Message);
+            }
+            finally
+            {
+                // Dispose the original workbook
+                workbook.Dispose();
+            }
+        }
     }
 }

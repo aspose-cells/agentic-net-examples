@@ -3,67 +3,74 @@ using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapQueryDemo
+class RetrieveMappedCellAddress
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Sample XML containing the /Invoice/Total element
+            string xml = @"<Invoice><Total>123</Total></Invoice>";
+
+            // Import the XML into the worksheet to create an XML map
+            workbook.ImportXml(xml, "Sheet1", 0, 0);
+
+            // Retrieve the created XML map using reflection (avoids compile‑time dependency on XmlMaps property)
+            object xmlMapsObj = workbook.GetType().GetProperty("XmlMaps")?.GetValue(workbook);
+            if (xmlMapsObj is IList xmlMaps && xmlMaps.Count > 0)
             {
-                const string inputPath = "input.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
+                // Cast the first map to XmlMap
+                XmlMap xmlMap = xmlMaps[0] as XmlMap;
+                if (xmlMap != null)
                 {
-                    Console.WriteLine($"Error: File \"{inputPath}\" not found.");
-                    return;
-                }
+                    // Query the worksheet for cell areas mapped to the specified XML path
+                    ArrayList mappedAreas = worksheet.XmlMapQuery("/Invoice/Total", xmlMap);
 
-                // Load the workbook that (potentially) contains an XML map
-                Workbook workbook = new Workbook(inputPath);
+                    if (mappedAreas.Count > 0)
+                    {
+                        // Get the first mapped area
+                        CellArea firstArea = (CellArea)mappedAreas[0];
 
-                // Ensure the workbook has at least one worksheet
-                if (workbook.Worksheets.Count == 0)
-                {
-                    Console.WriteLine("Error: The workbook does not contain any worksheets.");
-                    return;
-                }
+                        // Obtain the first cell in that area
+                        Cell firstMappedCell = worksheet.Cells[firstArea.StartRow, firstArea.StartColumn];
 
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Verify that at least one XML map is defined
-                if (workbook.Worksheets.XmlMaps.Count == 0)
-                {
-                    Console.WriteLine("Error: No XML maps are defined in the workbook.");
-                    return;
-                }
-
-                // Retrieve the first XML map
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
-
-                // Query cells mapped to the specified XML element
-                ArrayList cellAreas = worksheet.XmlMapQuery("/Invoice/Total", xmlMap);
-
-                if (cellAreas.Count > 0)
-                {
-                    // The first CellArea corresponds to the first mapped range
-                    CellArea area = (CellArea)cellAreas[0];
-                    Cell firstMappedCell = worksheet.Cells[area.StartRow, area.StartColumn];
-                    Console.WriteLine("First cell mapped to /Invoice/Total: " + firstMappedCell.Name);
+                        // Output the address of the first mapped cell
+                        Console.WriteLine("First cell mapped to /Invoice/Total: " + firstMappedCell.Name);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No cells are mapped to /Invoice/Total.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("No cells are mapped to /Invoice/Total.");
+                    Console.WriteLine("Failed to cast XML map.");
                 }
-
-                // Optional: save modifications
-                // workbook.Save("output.xlsx");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine("No XML maps were created.");
             }
+
+            // Save the workbook (optional) – ensure the directory exists
+            string outputPath = "MappedCellDemo.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine("Failed to save workbook: " + saveEx.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

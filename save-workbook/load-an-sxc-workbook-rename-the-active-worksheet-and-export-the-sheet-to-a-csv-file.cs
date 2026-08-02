@@ -7,10 +7,10 @@ namespace AsposeCellsSxcToCsv
     {
         static void Main()
         {
-            // Path to the source SXC workbook
+            // Path to the source SXC file
             string sourcePath = "input.sxc";
 
-            // Load the SXC workbook (uses Workbook(string) constructor)
+            // Load the SXC workbook using the string constructor
             Workbook workbook = new Workbook(sourcePath);
 
             // Get the active worksheet (the one currently selected)
@@ -19,12 +19,12 @@ namespace AsposeCellsSxcToCsv
             // Rename the active worksheet
             activeSheet.Name = "RenamedSheet";
 
-            // Export the entire workbook (or the active sheet) to CSV format
-            // Save method with SaveFormat.Csv follows the provided Save(string, SaveFormat) rule
-            string csvPath = "output.csv";
-            workbook.Save(csvPath, SaveFormat.Csv);
+            // Export the workbook (first worksheet) to CSV format
+            // Save method with file name and SaveFormat enum is used as per the provided rules
+            workbook.Save("output.csv", SaveFormat.Csv);
 
-            Console.WriteLine($"Workbook loaded from '{sourcePath}', sheet renamed, and saved as CSV to '{csvPath}'.");
+            // Optional: inform the user
+            Console.WriteLine("Workbook loaded, worksheet renamed, and exported to CSV successfully.");
         }
     }
 }

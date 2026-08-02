@@ -17,19 +17,21 @@ namespace AsposeCellsDateStyleDemo
             cells["A2"].PutValue(new DateTime(2023, 2, 15));
             cells["A3"].PutValue(new DateTime(2023, 3, 20));
 
-            // Create a style and set a built‑in date number format (14 = "m/d/yyyy")
+            // Create a style that defines a date number format (built‑in format 14 = "m/d/yyyy")
             Style dateStyle = workbook.CreateStyle();
             dateStyle.Number = 14; // built‑in date format
 
-            // Create a StyleFlag to apply only the number format
+            // Prepare a StyleFlag to apply only the number format
             StyleFlag flag = new StyleFlag();
             flag.NumberFormat = true;
 
             // Apply the style to the entire first column (column A)
             cells.ApplyColumnStyle(0, dateStyle, flag);
+            // Alternatively, you could use:
+            // sheet.Cells.Columns[0].ApplyStyle(dateStyle, flag);
 
             // Save the workbook
-            workbook.Save("DateStyleApplied.xlsx");
+            workbook.Save("DateColumnStyled.xlsx");
         }
     }
 }

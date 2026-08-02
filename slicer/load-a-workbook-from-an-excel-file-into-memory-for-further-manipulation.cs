@@ -5,24 +5,22 @@ namespace AsposeCellsLoadExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Path to the Excel file to be loaded
             string excelFilePath = "input.xlsx";
 
-            // Load the workbook into memory using the Workbook(string) constructor
+            // Load the workbook into memory using the string constructor
             Workbook workbook = new Workbook(excelFilePath);
 
-            // The workbook is now in memory and can be manipulated.
-            // Example: read the value of cell A1 from the first worksheet
+            // Access the first worksheet for further manipulation
             Worksheet firstSheet = workbook.Worksheets[0];
+
+            // Example manipulation: read a cell value
             string cellValue = firstSheet.Cells["A1"].StringValue;
-            Console.WriteLine($"Value of A1: {cellValue}");
+            Console.WriteLine($"Value in A1: {cellValue}");
 
-            // Additional manipulation can be performed here...
-
-            // (Optional) Save the workbook after modifications
-            // workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // The workbook is now loaded in memory and can be used for additional operations
         }
     }
 }

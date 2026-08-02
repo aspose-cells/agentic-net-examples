@@ -7,22 +7,29 @@ class Program
 {
     static void Main()
     {
-        // Sample HTML containing line breaks (<br>) and redundant spaces after them
-        string html = "<p>Line1<br>   Line2<br>   Line3</p>";
+        // Sample HTML containing <br> tags with extra spaces after line breaks
+        string html = "<p>Line1<br>   Line2<br>    Line3</p>";
 
-        // Create HtmlLoadOptions and enable whitespace trimming
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-        loadOptions.DeleteRedundantSpaces = true; // eliminates extra spaces after <br> tags
+        // Enable whitespace trimming after line breaks
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions
+        {
+            DeleteRedundantSpaces = true
+        };
 
-        // Convert the HTML string to a memory stream for loading
+        // Load the HTML into a workbook using the configured options
         byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
         using (MemoryStream stream = new MemoryStream(htmlBytes))
         {
-            // Load the workbook using the specified options
             Workbook workbook = new Workbook(stream, loadOptions);
 
-            // Save the resulting workbook (the cells will contain trimmed text)
+            // Demonstrate that redundant spaces have been removed
+            Console.WriteLine("Cell A1 content after trimming: " +
+                workbook.Worksheets[0].Cells["A1"].StringValue);
+
+            // Save the workbook (optional)
             workbook.Save("TrimmedOutput.xlsx");
         }
     }
 }
+
+// Author: Aspose.Cells .NET example

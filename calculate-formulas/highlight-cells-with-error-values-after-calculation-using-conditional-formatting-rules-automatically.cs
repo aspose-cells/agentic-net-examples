@@ -8,45 +8,42 @@ namespace AsposeCellsErrorHighlightDemo
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Insert formulas that will generate errors
-            cells["A1"].Formula = "=1/0";                     // Division by zero error
-            cells["B1"].Formula = "=SUM(A1,5)";               // Propagates error from A1
-            cells["C1"].Formula = "=UNKNOWNFUNC()";           // Unsupported function error
+            // Sample data with formulas that will produce errors
+            cells["A1"].PutValue(10);
+            cells["A2"].Formula = "=A1/0";               // #DIV/0! error
+            cells["A3"].Formula = "=UNKNOWNFUNC(1)";    // #NAME? error
+            cells["A4"].Formula = "=INDIRECT(\"Z1000\")"; // #REF! error
 
-            // Calculate all formulas so that error values are materialized
+            // Calculate all formulas so error values are materialized
             workbook.CalculateFormula();
 
-            // Determine the used range to apply conditional formatting
-            int lastRow = cells.MaxDataRow;
-            int lastColumn = cells.MaxDataColumn;
-            CellArea usedRange = new CellArea
+            // Add a conditional formatting rule that highlights cells containing errors
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+
+            // Define the range to which the rule applies (entire used range)
+            CellArea area = new CellArea
             {
                 StartRow = 0,
                 StartColumn = 0,
-                EndRow = lastRow,
-                EndColumn = lastColumn
+                EndRow = cells.MaxDataRow,
+                EndColumn = cells.MaxDataColumn
             };
+            cfCollection.AddArea(area);
 
-            // Add a new conditional formatting collection
-            int cfIndex = worksheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = worksheet.ConditionalFormattings[cfIndex];
-
-            // Apply the range to the conditional formatting
-            cfCollection.AddArea(usedRange);
-
-            // Add a condition that highlights cells containing errors
+            // Add the "ContainsErrors" condition
             int conditionIndex = cfCollection.AddCondition(FormatConditionType.ContainsErrors);
             FormatCondition condition = cfCollection[conditionIndex];
 
-            // Set the highlight style (background color)
-            condition.Style.BackgroundColor = Color.LightPink;
+            // Set the highlight style (e.g., yellow background)
+            condition.Style.BackgroundColor = Color.Yellow;
 
-            // Save the workbook
+            // Save the workbook (lifecycle: save)
             workbook.Save("ErrorHighlighted.xlsx");
         }
     }

@@ -1,44 +1,38 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define the validation area for column V (index 21) from row 0 to row 1000
+        CellArea area = new CellArea
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            StartRow = 0,
+            EndRow = 1000,
+            StartColumn = 21, // Column V
+            EndColumn = 21
+        };
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Add a validation to the defined area
+        int validationIndex = sheet.Validations.Add(area);
+        Validation validation = sheet.Validations[validationIndex];
 
-            // Define the validation area for column V (index 21) from row 0 to row 999
-            // Adjust the end row as needed for your data range
-            CellArea area = new CellArea
-            {
-                StartRow = 0,
-                EndRow = 999,
-                StartColumn = 21, // Column V
-                EndColumn = 21
-            };
+        // Configure validation to disallow blank entries
+        validation.Type = ValidationType.AnyValue;      // Accept any value
+        validation.IgnoreBlank = false;                // Do NOT ignore blanks (i.e., blanks are invalid)
 
-            // Add a new validation to the worksheet for the defined area
-            Validation validation = sheet.Validations[sheet.Validations.Add(area)];
+        // Set error alert properties
+        validation.AlertStyle = ValidationAlertType.Stop; // Show a Stop alert
+        validation.ErrorTitle = "Invalid Input";
+        validation.ErrorMessage = "Blank entries are not allowed in column V.";
+        validation.ShowError = true;                     // Display the error message when validation fails
 
-            // Use AnyValue type and set IgnoreBlank to false to disallow blank entries
-            validation.Type = ValidationType.AnyValue;
-            validation.IgnoreBlank = false;
-
-            // Configure the error alert that will be shown when a blank is entered
-            validation.AlertStyle = ValidationAlertType.Stop; // Show a stop alert
-            validation.ErrorTitle = "Invalid Entry";
-            validation.ErrorMessage = "Blank values are not allowed in column V.";
-            validation.ShowError = true;   // Ensure the error message is displayed
-            validation.ShowInput = false;  // No input message needed
-
-            // Save the workbook to a file
-            workbook.Save("ColumnV_NoBlank_Validation.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("ColumnV_NoBlank_Validation.xlsx");
     }
 }

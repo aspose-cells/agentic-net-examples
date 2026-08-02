@@ -1,39 +1,48 @@
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-class MergeJsonDataSourceDemo
+namespace AsposeCellsJsonMergeDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // 1. Create a new workbook and add a smart marker that will consume the merged JSON data.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            // Smart marker expects a collection named "Employees" with fields "Name" and "Age".
+            sheet.Cells["A1"].PutValue("&=$Employees.Name");
+            sheet.Cells["B1"].PutValue("&=$Employees.Age");
 
-        // Add a smart marker that will consume the merged JSON collection
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("&=$Employees.Name");
+            // 2. Prepare multiple JSON arrays that need to be merged.
+            string jsonArray1 = @"[
+                { ""Name"": ""John Doe"", ""Age"": 30 },
+                { ""Name"": ""Jane Smith"", ""Age"": 25 }
+            ]";
 
-        // Two separate JSON arrays that we want to merge
-        string jsonArray1 = "[{\"Name\":\"John\"},{\"Name\":\"Jane\"}]";
-        string jsonArray2 = "[{\"Name\":\"Bob\"},{\"Name\":\"Alice\"}]";
+            string jsonArray2 = @"[
+                { ""Name"": ""Mike Johnson"", ""Age"": 40 },
+                { ""Name"": ""Emily Davis"", ""Age"": 35 }
+            ]";
 
-        // Merge the arrays into a single JSON array string
-        // Remove the outer brackets from each array and concatenate with a comma
-        string mergedJson = "[" +
-            jsonArray1.TrimStart('[').TrimEnd(']') + "," +
-            jsonArray2.TrimStart('[').TrimEnd(']') +
-            "]";
+            // 3. Merge the arrays into a single JSON array.
+            // Remove the surrounding brackets and concatenate the inner objects with commas.
+            string mergedJson = "[" +
+                jsonArray1.Trim().TrimStart('[').TrimEnd(']') + "," +
+                jsonArray2.Trim().TrimStart('[').TrimEnd(']') +
+                "]";
 
-        // Set up the WorkbookDesigner and assign the workbook
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = workbook;
+            // 4. Set up the WorkbookDesigner, assign the merged JSON as a data source,
+            //    and process the smart markers.
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            // The data source name must match the smart marker prefix ("Employees").
+            designer.SetJsonDataSource("Employees", mergedJson);
+            designer.Process();
 
-        // Register the merged JSON as a data source named "Employees"
-        designer.SetJsonDataSource("Employees", mergedJson);
-
-        // Process the smart markers to populate the data
-        designer.Process();
-
-        // Save the resulting workbook
-        workbook.Save("MergedJsonSmartMarker.xlsx");
+            // 5. Save the result.
+            workbook.Save("MergedJsonSmartMarkers.xlsx");
+        }
     }
 }

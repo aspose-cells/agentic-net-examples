@@ -3,31 +3,34 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-class ExportChartsToSvg
+namespace ExportChartsToSvg
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook from a file (replace with your actual path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Loop through each worksheet in the workbook
-        for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
+        static void Main()
         {
-            Worksheet sheet = workbook.Worksheets[sheetIndex];
+            // Load the workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Loop through each chart on the current worksheet
-            for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
+            // Iterate through all worksheets
+            for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
             {
-                Chart chart = sheet.Charts[chartIndex];
+                Worksheet sheet = workbook.Worksheets[sheetIdx];
 
-                // Create a unique file name for each chart
-                string svgFileName = $"Chart_Sheet{sheetIndex}_Chart{chartIndex}.svg";
+                // Iterate through all charts in the current worksheet
+                for (int chartIdx = 0; chartIdx < sheet.Charts.Count; chartIdx++)
+                {
+                    Chart chart = sheet.Charts[chartIdx];
 
-                // Export the chart to SVG using the built‑in overload that accepts ImageType
-                chart.ToImage(svgFileName, ImageType.Svg);
+                    // Build a unique file name for each chart
+                    string svgFileName = $"Chart_Sheet{sheetIdx}_Chart{chartIdx}.svg";
+
+                    // Export the chart to SVG using the ToImage method with ImageType.Svg
+                    chart.ToImage(svgFileName, ImageType.Svg);
+                }
             }
-        }
 
-        Console.WriteLine("All charts have been exported as separate SVG files.");
+            Console.WriteLine("All charts have been exported as SVG files.");
+        }
     }
 }

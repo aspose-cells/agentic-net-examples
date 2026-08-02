@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsArraySlicerDemo
+namespace AsposeCellsArrayImportDemo
 {
     class Program
     {
@@ -12,41 +12,31 @@ namespace AsposeCellsArraySlicerDemo
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Define a two‑dimensional array of values to populate (3 rows x 3 columns)
-            object[][] values = new object[3][];
-            values[0] = new object[] { 10, 20, 30 };
-            values[1] = new object[] { 40, 50, 60 };
-            values[2] = new object[] { 70, 80, 90 };
+            // Two‑dimensional data that we want to place into the sheet
+            // Each inner array represents a row
+            object[][] data = new object[3][];
+            data[0] = new object[] { 10, 20, 30 };
+            data[1] = new object[] { 40, 50, 60 };
+            data[2] = new object[] { 70, 80, 90 };
 
-            // Choose a target cell where the array formula will be placed.
-            // The formula will spill into a rectangular block of the same size as the values array.
-            Cell targetCell = cells["A1"];
+            // Target cell where the array will start (B2 in this example)
+            Cell targetCell = cells["B2"];
 
-            // Set an array formula with the specified dimensions and pre‑calculated values.
-            // The dummy formula "=SEQUENCE(3,3)" generates a 3x3 array; the provided 'values'
-            // array overrides the calculated result, effectively populating the block.
+            // Set an array formula with pre‑calculated values.
+            // The formula itself is not important because we supply the values directly.
+            // RowCount = 3, ColumnCount = 3 to match the dimensions of 'data'.
             targetCell.SetArrayFormula(
-                "=SEQUENCE(3,3)",          // array formula expression
-                rowNumber: 3,               // number of rows to populate
-                columnNumber: 3,            // number of columns to populate
+                "=TRANSPOSE({1,2,3;4,5,6;7,8,9})", // dummy formula; values will be used instead
+                rowNumber: 3,
+                columnNumber: 3,
                 options: new FormulaParseOptions(),
-                values: values);            // pre‑calculated values for the spill range
+                values: data);
 
-            // Calculate the workbook to ensure any dependent formulas are refreshed
+            // Calculate the workbook so that any dependent formulas are refreshed
             workbook.CalculateFormula();
 
-            // (Optional) Display the populated values in the console for verification
-            for (int row = 0; row < 3; row++)
-            {
-                for (int col = 0; col < 3; col++)
-                {
-                    Console.Write(cells[row, col].Value + "\t");
-                }
-                Console.WriteLine();
-            }
-
-            // Save the workbook with the populated rectangular block
-            workbook.Save("ArraySlicerResult.xlsx");
+            // Save the result
+            workbook.Save("ArrayImportResult.xlsx");
         }
     }
 }

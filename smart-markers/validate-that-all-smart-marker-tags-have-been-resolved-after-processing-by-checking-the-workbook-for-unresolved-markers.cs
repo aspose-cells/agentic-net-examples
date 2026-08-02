@@ -1,64 +1,39 @@
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
 namespace SmartMarkerValidationDemo
 {
-    public class SmartMarkerValidator
+    public class Program
     {
         public static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            const string templatePath = "TemplateWithSmartMarkers.xlsx";
-            const string outputPath = "ProcessedOutput.xlsx";
-
-            // Verify that the template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
-            {
-                Console.WriteLine($"Template file not found: {templatePath}");
-                return;
-            }
-
             // Load the template workbook that contains smart markers
-            Workbook templateWorkbook = new Workbook(templatePath);
+            Workbook templateWorkbook = new Workbook("SmartMarkerTemplate.xlsx");
 
             // Initialize the WorkbookDesigner with the loaded workbook
             WorkbookDesigner designer = new WorkbookDesigner(templateWorkbook);
 
-            // ----- Set up a sample data source -----
-            // In a real scenario replace this with your actual data source
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(int));
-            dt.Rows.Add("John Doe", 30);
-            dt.Rows.Add("Jane Smith", 28);
-            designer.SetDataSource("Employees", dt);
-            // ---------------------------------------
+            // -------------------------------------------------
+            // Prepare a sample data source (replace with real data)
+            // -------------------------------------------------
+            DataTable dataTable = new DataTable("Employees");
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Age", typeof(int));
+            dataTable.Rows.Add("John Doe", 30);
+            dataTable.Rows.Add("Jane Smith", 28);
+
+            // Bind the data source to the designer
+            designer.SetDataSource("Employees", dataTable);
 
             // Process the smart markers – this should replace all markers with data
             designer.Process();
 
-            // After processing, retrieve any remaining smart markers
+            // After processing, retrieve any remaining (unresolved) smart markers
             string[] unresolvedMarkers = designer.GetSmartMarkers();
 
-            // Validate that no unresolved markers remain
-            if (unresolvedMarkers.Length == 0)
-            {
-                Console.WriteLine("All smart markers have been successfully resolved.");
-            }
-            else
+            // Check if any markers are still present
+            if (unresolvedMarkers.Length > 0)
             {
                 Console.WriteLine("Unresolved smart markers found:");
                 foreach (string marker in unresolvedMarkers)
@@ -66,17 +41,13 @@ namespace SmartMarkerValidationDemo
                     Console.WriteLine($"- {marker}");
                 }
             }
+            else
+            {
+                Console.WriteLine("All smart markers have been successfully resolved.");
+            }
 
-            // Save the processed workbook (optional)
-            try
-            {
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Processed workbook saved to: {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save the workbook: {saveEx.Message}");
-            }
+            // Save the processed workbook
+            designer.Workbook.Save("SmartMarkerResult.xlsx");
         }
     }
 }

@@ -1,41 +1,36 @@
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-class SmartMarkerExport
+namespace SmartMarkerExportDemo
 {
-    static void Main()
+    class Program
     {
-        // Load the template workbook that contains smart markers
-        Workbook workbook = new Workbook("template.xlsx");
-
-        // Initialize the designer with the loaded workbook
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-        // Prepare a sample data source
-        List<Person> persons = new List<Person>
+        static void Main()
         {
-            new Person { Name = "John Doe", Age = 30 },
-            new Person { Name = "Jane Smith", Age = 28 }
-        };
+            // Load the template workbook that contains smart markers
+            Workbook workbook = new Workbook("template.xlsx");
 
-        // Bind the data source to a smart‑marker name
-        designer.SetDataSource("Persons", persons);
+            // Initialize the WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
 
-        // Process the smart markers; preserve any unrecognized markers
-        designer.Process(true);
+            // Example: set a JSON data source for smart markers
+            string jsonData = @"{""Name"":""Sample Product"",""Price"":123.45}";
+            designer.SetJsonDataSource("Data", jsonData);
 
-        // Keep formulas editable by disabling automatic calculation on save
-        workbook.Settings.FormulaSettings.CalculateOnSave = false;
+            // Process all smart markers in the workbook
+            designer.Process();
 
-        // Save the processed workbook as XLSX; formulas remain editable
-        workbook.Save("Result.xlsx", SaveFormat.Xlsx);
-    }
+            // Ensure formulas are not forced to calculate on save
+            // (formulas will stay as editable expressions in the output file)
+            workbook.Settings.FormulaSettings.CalculateOnSave = false;
 
-    // Simple POCO class used as a data source for the smart markers
-    public class Person
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
+            // Save the processed workbook to XLSX format
+            // The Save(string) overload infers the format from the file extension
+            workbook.Save("output.xlsx");
+        }
     }
 }

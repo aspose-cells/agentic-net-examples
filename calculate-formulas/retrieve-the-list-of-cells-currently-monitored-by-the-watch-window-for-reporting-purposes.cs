@@ -1,35 +1,32 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsWatchWindowReport
+namespace WatchWindowReport
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook (or load an existing one if needed)
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add some sample cell watches for demonstration
+            // Example: add some watches for demonstration purposes
             sheet.CellWatches.Add("B2");
             sheet.CellWatches.Add("C3");
             sheet.CellWatches.Add("D4");
 
-            // Retrieve the collection of watched cells
-            CellWatchCollection watches = sheet.CellWatches;
-
-            // Report each watched cell's details
-            Console.WriteLine("Watched Cells:");
-            foreach (CellWatch watch in watches)
+            // Retrieve and report all cells being watched
+            Console.WriteLine("Cells monitored by the Watch Window:");
+            foreach (CellWatch watch in sheet.CellWatches)
             {
                 // Row and Column are zero‑based indices
                 Console.WriteLine($"Name: {watch.CellName}, Row: {watch.Row}, Column: {watch.Column}");
             }
 
-            // Save the workbook (optional, just to keep the watch window data)
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
             workbook.Save("WatchWindowReport.xlsx");
         }
     }

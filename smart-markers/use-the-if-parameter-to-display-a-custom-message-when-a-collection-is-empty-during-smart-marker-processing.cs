@@ -1,35 +1,47 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-class SmartMarkerIfDemo
+namespace AsposeCellsIfSmartMarkerDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Insert a smart marker that uses the IF parameter.
-        // If the collection "Products" is empty, the text "No products available" will be displayed.
-        sheet.Cells["A1"].PutValue("&=$Products.Name?if=IsEmpty?then=No products available");
-
-        // Prepare an empty data source named "Products"
-        DataTable productsTable = new DataTable("Products");
-        productsTable.Columns.Add("Name", typeof(string));
-        // No rows are added – the collection is empty
-
-        // Set up the WorkbookDesigner with the workbook and the empty data source
-        WorkbookDesigner designer = new WorkbookDesigner
+        static void Main()
         {
-            Workbook = workbook
-        };
-        designer.SetDataSource(productsTable);
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
-        // Process the smart markers; the custom message will appear because the collection is empty
-        designer.Process();
+            // Smart marker with IF parameter:
+            // If the collection "Employees" is empty, display a custom message.
+            // Otherwise, the message is an empty string and the data rows will be populated.
+            cells["A1"].PutValue("&IF=Employees?\"No employee data available\":\"\"");
 
-        // Save the resulting workbook
-        workbook.Save("SmartMarkerIfDemo.xlsx");
+            // Data rows (will be filled only when the collection has items)
+            cells["A2"].PutValue("&=$Employees.Name");
+            cells["B2"].PutValue("&=$Employees.Age");
+
+            // Create an empty data source (no employees)
+            List<Employee> employees = new List<Employee>(); // empty collection
+
+            // Set up the WorkbookDesigner with the workbook and data source
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = wb;
+            designer.SetDataSource("Employees", employees);
+
+            // Process the smart markers
+            designer.Process();
+
+            // Save the resulting workbook
+            wb.Save("IfSmartMarkerOutput.xlsx");
+        }
+    }
+
+    // Simple POCO class representing an employee
+    public class Employee
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 }

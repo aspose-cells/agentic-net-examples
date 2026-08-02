@@ -9,55 +9,58 @@ namespace AsposeCellsMetadataDemo
     {
         static void Main()
         {
-            // -----------------------------------------------------------------
-            // Step 1: Create a new workbook and set initial properties
-            // -----------------------------------------------------------------
-            string initialFile = "InitialWorkbook.xlsx";
-            Workbook wb = new Workbook(); // create a new workbook
-            // Set some built‑in properties directly on the workbook
-            wb.BuiltInDocumentProperties.Author = "Original Author";
-            wb.BuiltInDocumentProperties.Title = "Original Title";
-            // Add a custom property
-            wb.CustomDocumentProperties.Add("InitialCustom", "Value1");
-            // Save the workbook to disk
-            wb.Save(initialFile);
+            // Define file paths
+            string originalPath = "OriginalWorkbook.xlsx";
+            string updatedPath = "UpdatedWorkbook.xlsx";
 
-            // -----------------------------------------------------------------
-            // Step 2: Load workbook metadata with DocumentProperties option
-            // -----------------------------------------------------------------
+            // -------------------------------------------------
+            // 1. Create a new workbook and save it (lifecycle: create & save)
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();                     // create workbook
+            workbook.Worksheets[0].Cells["A1"].PutValue("Demo");   // add sample data
+            workbook.Save(originalPath);                            // save workbook
+
+            // -------------------------------------------------
+            // 2. Load workbook metadata for document properties (lifecycle: load)
+            // -------------------------------------------------
             MetadataOptions options = new MetadataOptions(MetadataType.DocumentProperties);
-            WorkbookMetadata metadata = new WorkbookMetadata(initialFile, options); // load metadata
+            WorkbookMetadata metadata = new WorkbookMetadata(originalPath, options); // load metadata
 
-            // -----------------------------------------------------------------
-            // Step 3: Modify built‑in and custom properties via metadata API
-            // -----------------------------------------------------------------
-            // Built‑in properties are read‑write
+            // -------------------------------------------------
+            // 3. Modify built‑in and custom document properties
+            // -------------------------------------------------
+            // Built‑in properties (read/write)
             metadata.BuiltInDocumentProperties.Author = "Aspose Developer";
-            metadata.BuiltInDocumentProperties.Title = "Metadata Updated Title";
+            metadata.BuiltInDocumentProperties.Title = "Metadata Demo";
 
-            // Add or update custom properties
-            metadata.CustomDocumentProperties.Add("UpdatedCustom", "NewValue");
-            // (If the property already exists, you could also modify its Value)
+            // Custom properties (add new)
+            metadata.CustomDocumentProperties.Add("Project", "WorkbookMetadataDemo");
+            metadata.CustomDocumentProperties.Add("Version", 1);
 
-            // -----------------------------------------------------------------
-            // Step 4: Save the modified metadata back to the file
-            // -----------------------------------------------------------------
-            metadata.Save(initialFile); // overwrite the same file with updated metadata
+            // -------------------------------------------------
+            // 4. Save the modified metadata back to a new file (lifecycle: save)
+            // -------------------------------------------------
+            metadata.Save(updatedPath);
 
-            // -----------------------------------------------------------------
-            // Step 5: Reload the workbook and verify that properties were saved
-            // -----------------------------------------------------------------
-            Workbook verifiedWb = new Workbook(initialFile);
+            // -------------------------------------------------
+            // 5. Load the updated workbook and verify properties
+            // -------------------------------------------------
+            Workbook updatedWorkbook = new Workbook(updatedPath);
 
             // Verify built‑in properties
-            Console.WriteLine("Verified Author: " + verifiedWb.BuiltInDocumentProperties.Author);
-            Console.WriteLine("Verified Title: " + verifiedWb.BuiltInDocumentProperties.Title);
+            string author = updatedWorkbook.BuiltInDocumentProperties["Author"].Value.ToString();
+            string title = updatedWorkbook.BuiltInDocumentProperties["Title"].Value.ToString();
 
             // Verify custom properties
-            Console.WriteLine("Verified Custom Property 'InitialCustom': " +
-                verifiedWb.CustomDocumentProperties["InitialCustom"].Value);
-            Console.WriteLine("Verified Custom Property 'UpdatedCustom': " +
-                verifiedWb.CustomDocumentProperties["UpdatedCustom"].Value);
+            string project = updatedWorkbook.CustomDocumentProperties["Project"].Value.ToString();
+            string version = updatedWorkbook.CustomDocumentProperties["Version"].Value.ToString();
+
+            // Output verification results
+            Console.WriteLine("Verification of saved metadata:");
+            Console.WriteLine($"Author (built‑in): {author}");
+            Console.WriteLine($"Title (built‑in): {title}");
+            Console.WriteLine($"Project (custom): {project}");
+            Console.WriteLine($"Version (custom): {version}");
         }
     }
 }

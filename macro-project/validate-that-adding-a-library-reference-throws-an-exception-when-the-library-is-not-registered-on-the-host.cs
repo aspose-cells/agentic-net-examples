@@ -2,45 +2,40 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class ValidateUnregisteredLibraryReference
+namespace AsposeCellsVbaReferenceValidation
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the VBA project
-        VbaProject vbaProject = workbook.VbaProject;
-
-        // Define a library name and libid that are not registered on the host
-        string libName = "NonExistentLib";
-        string libId = "*\\G{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}#0.0#0#C:\\InvalidPath\\nonexistent.tlb#Invalid";
-
-        bool exceptionThrown = false;
-
-        try
+        static void Main()
         {
-            // Attempt to add the unregistered reference; this should raise an exception
-            vbaProject.References.AddRegisteredReference(libName, libId);
-        }
-        catch (Exception ex)
-        {
-            // Expected exception caught
-            exceptionThrown = true;
-            Console.WriteLine("Expected exception caught: " + ex.Message);
-        }
+            // Create a new workbook (lifecycle create)
+            Workbook workbook = new Workbook();
 
-        // Verify that the exception was indeed thrown
-        if (!exceptionThrown)
-        {
-            Console.WriteLine("Error: No exception was thrown for an unregistered library reference.");
-        }
-        else
-        {
-            Console.WriteLine("Validation succeeded: exception was thrown as expected.");
-        }
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
 
-        // Save the workbook (optional, will contain no references)
-        workbook.Save("ValidationResult.xlsm");
+            // Define a non‑registered library name and libid
+            string invalidName = "NonExistentLib";
+            string invalidLibId = "*\\G{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}#0.0#0#C:\\InvalidPath\\nonexistent.tlb#Invalid";
+
+            try
+            {
+                // Attempt to add the unregistered reference (operation under test)
+                // This should throw an exception because the library is not registered on the host
+                vbaProject.References.AddRegisteredReference(invalidName, invalidLibId);
+
+                // If no exception is thrown, the test has failed
+                Console.WriteLine("Test Failed: No exception was thrown when adding an unregistered library reference.");
+            }
+            catch (Exception ex)
+            {
+                // Expected path: an exception is thrown
+                Console.WriteLine("Test Passed: Exception caught as expected.");
+                Console.WriteLine("Exception Message: " + ex.Message);
+            }
+
+            // Save the workbook (lifecycle save) – optional, just to complete the flow
+            workbook.Save("VbaReferenceValidationResult.xlsm");
+        }
     }
 }

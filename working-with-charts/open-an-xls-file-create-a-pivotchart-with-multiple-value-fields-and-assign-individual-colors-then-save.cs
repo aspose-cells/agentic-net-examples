@@ -1,97 +1,78 @@
+// Title: Create a PivotChart with Multiple Value Fields and Custom Series Colors in C# using Aspose.Cells
+// Description: Loads an XLS workbook, builds a PivotTable with two data fields, adds a column PivotChart linked to the table, assigns red and blue colors to the first two series, refreshes the chart data, and saves the file as XLSX.
+// Keywords: Aspose.Cells PivotChart C# | custom series colors Aspose.Cells | multiple value fields PivotTable | convert XLS to XLSX with chart | chart series foreground color .NET | programmatic PivotChart creation | Aspose.Cells chart customization
+// Common Searches: how to set series colors in a PivotChart using Aspose.Cells | create PivotTable with two data fields C# Aspose.Cells | add a colored PivotChart to an existing XLS workbook | convert legacy XLS to XLSX and keep charts | Aspose.Cells change chart series foreground color
+// Developer Intent: Generate a PivotChart from an existing XLS file, include two value fields, apply distinct colors to each series, and output the workbook as XLSX.
+// Use Cases: Build a sales dashboard where Sales and Quantity appear as separate colored columns in a PivotChart. | Automate migration of old XLS reports to modern XLSX files while adding visually distinct PivotCharts for executive review. | Programmatically enrich a legacy workbook with a PivotChart that uses custom series colors for clearer data presentation.
+// AI Prompts: Write C# code with Aspose.Cells to create a PivotTable with three data fields and assign each series a specific RGB color. | Explain how to refresh a PivotChart after updating its source data using Aspose.Cells for .NET. | Show how to change the chart type of a PivotChart and customize markers and series colors in Aspose.Cells.
+
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
+// Loads an XLS workbook, builds a PivotTable with two data fields, adds a column PivotChart linked to the table, assigns red and blue colors to the first two series, refreshes the chart data, and saves the file as XLSX.
 class PivotChartWithColors
 {
     static void Main()
     {
-        try
+        // Load the existing XLS workbook
+        Workbook workbook = new Workbook("input.xls");
+
+        // Use the first worksheet (adjust if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // -------------------------------------------------
+        // Create a PivotTable with multiple value fields
+        // -------------------------------------------------
+        // Define the source data range (adjust to match your file)
+        string sourceRange = "A1:E20";
+
+        // Add the PivotTable at cell E3 with the name "PivotTable1"
+        int pivotIndex = sheet.PivotTables.Add(sourceRange, "E3", "PivotTable1");
+        PivotTable pivot = sheet.PivotTables[pivotIndex];
+
+        // Add fields:
+        //   Row field – first column (e.g., Category)
+        //   Data fields – third and fourth columns (e.g., Sales and Quantity)
+        pivot.AddFieldToArea(PivotFieldType.Row, 0);          // Column A as Row
+        pivot.AddFieldToArea(PivotFieldType.Data, 2);         // Column C as first Value
+        pivot.AddFieldToArea(PivotFieldType.Data, 3);         // Column D as second Value
+
+        // Populate the PivotTable
+        pivot.CalculateData();
+
+        // -------------------------------------------------
+        // Create a PivotChart based on the PivotTable
+        // -------------------------------------------------
+        // Add a column chart (you can choose any ChartType)
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 15);
+        Chart chart = sheet.Charts[chartIndex];
+
+        // Link the chart to the PivotTable – this makes it a PivotChart
+        chart.PivotSource = "PivotTable1";
+
+        // Refresh chart data from the PivotTable
+        chart.RefreshPivotData();
+
+        // -------------------------------------------------
+        // Assign individual colors to each data series
+        // -------------------------------------------------
+        // Ensure the series exist (one series per value field)
+        if (chart.NSeries.Count > 0)
         {
-            const string inputPath = "input.xls";
-            const string outputPath = "output.xlsx";
+            // First value field – red
+            chart.NSeries[0].Area.ForegroundColor = Color.Red;
 
-            // Ensure the input file exists; if not, create a simple workbook with sample data
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue("Product");
-                ws.Cells["B1"].PutValue("Quantity");
-                ws.Cells["C1"].PutValue("Revenue");
-                ws.Cells["A2"].PutValue("A");
-                ws.Cells["B2"].PutValue(10);
-                ws.Cells["C2"].PutValue(100);
-                ws.Cells["A3"].PutValue("B");
-                ws.Cells["B3"].PutValue(20);
-                ws.Cells["C3"].PutValue(200);
-                ws.Cells["A4"].PutValue("C");
-                ws.Cells["B4"].PutValue(30);
-                ws.Cells["C4"].PutValue(300);
-                ws.Cells["A5"].PutValue("D");
-                ws.Cells["B5"].PutValue(40);
-                ws.Cells["C5"].PutValue(400);
-                ws.Cells["A6"].PutValue("E");
-                ws.Cells["B6"].PutValue(50);
-                ws.Cells["C6"].PutValue(500);
-                workbook.Save(inputPath, SaveFormat.Excel97To2003);
-            }
-
-            // Access the first worksheet (assumed to contain source data)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the source data range for the pivot table
-            string sourceRange = "A1:C6";
-
-            // Add a new PivotTable at cell E3 with the name "SalesPivot"
-            int pivotIndex = sheet.PivotTables.Add(sourceRange, "E3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-            // Configure the PivotTable fields
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);          // Product
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);         // Quantity
-            pivot.AddFieldToArea(PivotFieldType.Data, 2);         // Revenue
-
-            // Refresh and calculate pivot data
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Add a column chart that will become a PivotChart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Link the chart to the pivot table using the correct pivot name
-            chart.PivotSource = pivot.Name;
-            chart.RefreshPivotData();
-
-            // Assign colors to each data series if they exist
-            if (chart.NSeries.Count > 0 && chart.NSeries[0] != null)
-                chart.NSeries[0].Area.ForegroundColor = Color.Green;
-            if (chart.NSeries.Count > 1 && chart.NSeries[1] != null)
-                chart.NSeries[1].Area.ForegroundColor = Color.Orange;
-
-            // Optional: customize pivot controls on the chart
-            PivotOptions pivOpts = chart.PivotOptions;
-            pivOpts.DropZonesVisible = true;
-            pivOpts.DropZoneData = true;
-            pivOpts.DropZoneCategories = true;
-            pivOpts.DropZoneSeries = true;
-            pivOpts.DropZoneFilter = true;
-
-            // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Second value field – blue (if present)
+            if (chart.NSeries.Count > 1)
+                chart.NSeries[1].Area.ForegroundColor = Color.Blue;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        // -------------------------------------------------
+        // Save the modified workbook
+        // -------------------------------------------------
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

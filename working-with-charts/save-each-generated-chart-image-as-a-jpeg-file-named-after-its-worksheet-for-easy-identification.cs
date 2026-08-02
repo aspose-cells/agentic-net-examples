@@ -3,71 +3,64 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartExport
+class SaveChartsAsJpeg
 {
-    public class ExportChartsAsJpeg
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // ----- First worksheet with a column chart -----
+        Worksheet ws1 = workbook.Worksheets[0];
+        ws1.Cells["A1"].PutValue("Category");
+        ws1.Cells["A2"].PutValue("Apple");
+        ws1.Cells["A3"].PutValue("Orange");
+        ws1.Cells["A4"].PutValue("Banana");
+        ws1.Cells["B1"].PutValue("Value");
+        ws1.Cells["B2"].PutValue(10);
+        ws1.Cells["B3"].PutValue(15);
+        ws1.Cells["B4"].PutValue(7);
+
+        int chartIdx1 = ws1.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart1 = ws1.Charts[chartIdx1];
+        chart1.NSeries.Add("B2:B4", true);
+        chart1.NSeries.CategoryData = "A2:A4";
+
+        // ----- Second worksheet with a pie chart (optional) -----
+        Worksheet ws2 = workbook.Worksheets.Add("Sheet2");
+        ws2.Cells["A1"].PutValue("Category");
+        ws2.Cells["A2"].PutValue("X");
+        ws2.Cells["A3"].PutValue("Y");
+        ws2.Cells["B1"].PutValue("Value");
+        ws2.Cells["B2"].PutValue(20);
+        ws2.Cells["B3"].PutValue(30);
+
+        int chartIdx2 = ws2.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
+        Chart chart2 = ws2.Charts[chartIdx2];
+        chart2.NSeries.Add("B2:B3", true);
+        chart2.NSeries.CategoryData = "A2:A3";
+
+        // ----- Save each chart as a JPEG named after its worksheet -----
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            for (int i = 0; i < sheet.Charts.Count; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                Chart c = sheet.Charts[i];
 
-                // Populate worksheets with sample data and charts
-                for (int i = 0; i < 3; i++)
+                // Build file name: WorksheetName.jpg (or WorksheetName_ChartN.jpg if multiple charts)
+                string fileName = sheet.Name;
+                if (sheet.Charts.Count > 1)
                 {
-                    Worksheet sheet = workbook.Worksheets[i];
-                    sheet.Name = $"Sheet{i + 1}";
-
-                    // Sample data
-                    sheet.Cells["A1"].PutValue("Category");
-                    sheet.Cells["A2"].PutValue("Apple");
-                    sheet.Cells["A3"].PutValue("Orange");
-                    sheet.Cells["A4"].PutValue("Banana");
-
-                    sheet.Cells["B1"].PutValue("Value");
-                    sheet.Cells["B2"].PutValue(10 + i * 5);
-                    sheet.Cells["B3"].PutValue(15 + i * 5);
-                    sheet.Cells["B4"].PutValue(7 + i * 5);
-
-                    // Add a column chart
-                    int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                    Chart chart = sheet.Charts[chartIndex];
-                    chart.NSeries.Add("B2:B4", true);
-                    chart.NSeries.CategoryData = "A2:A4";
+                    fileName += $"_Chart{i + 1}";
                 }
+                fileName += ".jpg";
 
-                // Export each chart as a JPEG file named after its worksheet
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    foreach (Chart chart in ws.Charts)
-                    {
-                        try
-                        {
-                            string imagePath = $"{ws.Name}.jpg";
-                            chart.ToImage(imagePath, ImageType.Jpeg);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error exporting chart from worksheet '{ws.Name}': {ex.Message}");
-                        }
-                    }
-                }
-
-                // Save the workbook
-                workbook.Save("WorkbookWithCharts.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // Save chart image as JPEG
+                c.ToImage(fileName, ImageType.Jpeg);
             }
         }
 
-        // Entry point required for console application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Optionally save the workbook itself
+        workbook.Save("ChartsWorkbook.xlsx");
     }
 }

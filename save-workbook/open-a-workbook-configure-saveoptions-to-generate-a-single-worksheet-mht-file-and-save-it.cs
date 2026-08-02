@@ -1,32 +1,33 @@
 using System;
 using Aspose.Cells;
 
-class GenerateMhtSingleWorksheet
+namespace AsposeCellsMhtExample
 {
-    static void Main()
+    class Program
     {
-        // Path to the source Excel file
-        string inputPath = "input.xlsx";
+        static void Main()
+        {
+            // Path to the source Excel file to be opened
+            string sourcePath = "input.xlsx";
 
-        // Path for the resulting MHT file (single worksheet)
-        string outputPath = "single_sheet.mht";
+            // Open the existing workbook
+            Workbook workbook = new Workbook(sourcePath);
 
-        // Load the workbook from the existing file
-        Workbook workbook = new Workbook(inputPath);
+            // Create HtmlSaveOptions for MHTML format
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.MHtml);
 
-        // Ensure the first worksheet is the active one (optional)
-        workbook.Worksheets.ActiveSheetIndex = 0;
+            // Configure options to generate a single‑worksheet MHT file
+            saveOptions.SaveAsSingleFile = true;               // Save as a single file
+            saveOptions.ExportActiveWorksheetOnly = true;      // Export only the active worksheet
 
-        // Create HtmlSaveOptions for MHTML format
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.MHtml);
+            // Optionally set the active sheet index if a specific sheet is required
+            // workbook.Worksheets.ActiveSheetIndex = 0; // default is the first sheet
 
-        // Export only the active worksheet to the MHT file
-        saveOptions.ExportActiveWorksheetOnly = true;
+            // Save the workbook as MHTML using the configured options
+            string outputPath = "output.mht";
+            workbook.Save(outputPath, saveOptions);
 
-        // Save as a single file (MHTML is inherently single, but set for completeness)
-        saveOptions.SaveAsSingleFile = true;
-
-        // Save the workbook using the configured options
-        workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook saved as single‑worksheet MHT file: {outputPath}");
+        }
     }
 }

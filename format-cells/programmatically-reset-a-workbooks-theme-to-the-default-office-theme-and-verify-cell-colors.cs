@@ -2,30 +2,60 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-class ResetThemeDemo
+namespace AsposeCellsThemeResetDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a workbook and apply a custom theme color (Accent1 = Red)
-        Workbook workbook = new Workbook();
-        workbook.SetThemeColor(ThemeColorType.Accent1, Color.Red);
-        workbook.Save("CustomTheme.xlsx"); // optional: save before reset
+        static void Main()
+        {
+            // ------------------------------------------------------------
+            // 1. Create a new workbook (default Office theme is applied)
+            // ------------------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a workbook that has the default Office theme
-        Workbook defaultWorkbook = new Workbook(); // default theme is applied automatically
+            // ------------------------------------------------------------
+            // 2. Apply a custom theme color (e.g., change Accent1 to Red)
+            // ------------------------------------------------------------
+            workbook.SetThemeColor(ThemeColorType.Accent1, Color.Red);
 
-        // Reset the original workbook's theme by copying the default theme
-        workbook.CopyTheme(defaultWorkbook);
+            // Create a style that uses the Accent1 theme color
+            Style customStyle = workbook.CreateStyle();
+            customStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+            customStyle.Font.Size = 12;
+            customStyle.Font.IsBold = true;
+            customStyle.Pattern = BackgroundType.Solid;
+            customStyle.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+            sheet.Cells["A1"].PutValue("Custom Theme Cell");
+            sheet.Cells["A1"].SetStyle(customStyle);
 
-        // Verify that the theme colors have been restored to the defaults
-        Color currentAccent1 = workbook.GetThemeColor(ThemeColorType.Accent1);
-        Color defaultAccent1 = defaultWorkbook.GetThemeColor(ThemeColorType.Accent1);
+            // Save the workbook with the custom theme
+            workbook.Save("CustomTheme.xlsx");
 
-        Console.WriteLine($"Accent1 after reset: A={currentAccent1.A}, R={currentAccent1.R}, G={currentAccent1.G}, B={currentAccent1.B}");
-        Console.WriteLine($"Default Accent1:      A={defaultAccent1.A}, R={defaultAccent1.R}, G={defaultAccent1.G}, B={defaultAccent1.B}");
-        Console.WriteLine($"Reset successful: {currentAccent1.ToArgb() == defaultAccent1.ToArgb()}");
+            // ------------------------------------------------------------
+            // 3. Reset the workbook's theme to the default Office theme
+            //    by copying the theme from a freshly created workbook.
+            // ------------------------------------------------------------
+            Workbook defaultThemeWorkbook = new Workbook(); // contains the default theme
+            workbook.CopyTheme(defaultThemeWorkbook);      // reset theme
 
-        // Save the workbook with the restored default theme
-        workbook.Save("ResetToDefaultTheme.xlsx");
+            // ------------------------------------------------------------
+            // 4. Verify that the theme color has been restored to the default
+            //    (compare Accent1 color before and after reset)
+            // ------------------------------------------------------------
+            Color defaultAccent1 = defaultThemeWorkbook.GetThemeColor(ThemeColorType.Accent1);
+            Color currentAccent1 = workbook.GetThemeColor(ThemeColorType.Accent1);
+
+            Console.WriteLine($"Default Accent1 Color:  A={defaultAccent1.A}, R={defaultAccent1.R}, G={defaultAccent1.G}, B={defaultAccent1.B}");
+            Console.WriteLine($"Current Accent1 Color:  A={currentAccent1.A}, R={currentAccent1.R}, G={currentAccent1.G}, B={currentAccent1.B}");
+
+            bool isReset = defaultAccent1.ToArgb() == currentAccent1.ToArgb();
+            Console.WriteLine($"Theme reset successful: {isReset}");
+
+            // ------------------------------------------------------------
+            // 5. Save the workbook after resetting the theme
+            // ------------------------------------------------------------
+            workbook.Save("ResetTheme.xlsx");
+        }
     }
 }

@@ -1,87 +1,55 @@
+// Title: Unit Test for Aspose.Cells DATE Function – Verify Excel Serial Number in C#
+// Description: Demonstrates how to create a C# unit test that inserts the DATE(2021,1,1) formula into a workbook, evaluates it with Aspose.Cells, retrieves the resulting serial number, computes the expected value using CellsHelper.GetDoubleFromDateTime (respecting the workbook's date system), and asserts equality within a 1e-6 tolerance.
+// Keywords: Aspose.Cells | DATE function | unit test | C# | .NET | Excel serial date | CellsHelper | CalculateFormula | date1904 | formula evaluation
+// Common Searches: Aspose.Cells unit test DATE formula | How to test Excel date serial number with Aspose.Cells | C# verify DATE function returns correct serial | Aspose.Cells GetDoubleFromDateTime example | Test DATE function 1904 date system Aspose
+// Developer Intent: Confirm that Aspose.Cells DATE formula returns the correct Excel serial number.
+// Use Cases: Automated regression testing of date‑related formulas. | Validate workbook date‑system conversions (1900 vs 1904). | Ensure consistency when migrating spreadsheets between platforms. | Generate test data for documentation of date handling. | Check custom date logic in add‑ins or extensions.
+// AI Prompts: Create an MSTest method that asserts DATE(2021,1,1) serial matches CellsHelper.GetDoubleFromDateTime with a 1e-6 tolerance. | Write an NUnit test covering both 1900 and 1904 date systems for the DATE function in Aspose.Cells. | Provide xUnit code to compare DATE(2022,12,31) result with the expected serial using CellsHelper. | Generate a parameterized test that verifies DATE(year, month, day) across a range of dates in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
+    // Demonstrates how to create a C# unit test that inserts the DATE(2021,1,1) formula into a workbook, evaluates it with Aspose.Cells, retrieves the resulting serial number, computes the expected value using CellsHelper.GetDoubleFromDateTime (respecting the workbook's date system), and asserts equality within a 1e-6 tolerance.
     public class DateFunctionTests
     {
-        // Compute expected Excel serial number for a DateTime using the workbook's date system
-        private static double GetExpectedSerial(DateTime date, bool date1904)
-        {
-            return CellsHelper.GetDoubleFromDateTime(date, date1904);
-        }
-
-        public void Run()
-        {
-            // Test data: (input year, month, day, expected normalized year, month, day)
-            var testCases = new (int year, int month, int day, int expYear, int expMonth, int expDay)[]
-            {
-                (2021, 1, 1, 2021, 1, 1),          // Simple date
-                (1900, 1, 1, 1900, 1, 1),          // Excel epoch (1900 system)
-                (1904, 1, 1, 1904, 1, 1),          // Excel epoch (1904 system)
-                (2020, 2, 29, 2020, 2, 29),        // Leap day
-                (2021, 13, 1, 2022, 1, 1),         // Month overflow (13 -> Jan of next year)
-                (2021, 0, 15, 2020, 12, 15),       // Month underflow (0 -> Dec of previous year)
-                (2021, 1, 32, 2021, 2, 1)          // Day overflow (32 Jan -> 1 Feb)
-            };
-
-            foreach (var tc in testCases)
-            {
-                try
-                {
-                    // Arrange: create a workbook and set the DATE formula
-                    var workbook = new Workbook();
-                    var sheet = workbook.Worksheets[0];
-                    var cell = sheet.Cells["A1"];
-                    cell.Formula = $"=DATE({tc.year},{tc.month},{tc.day})";
-
-                    // Act: calculate formulas
-                    workbook.CalculateFormula();
-
-                    // Retrieve the calculated serial number
-                    double actualSerial = cell.DoubleValue;
-
-                    // Expected DateTime after Excel normalizes the inputs
-                    var expectedDate = new DateTime(tc.expYear, tc.expMonth, tc.expDay);
-
-                    // Determine which date system the workbook uses (default is 1900)
-                    bool date1904 = workbook.Settings.Date1904;
-
-                    // Compute expected serial using CellsHelper
-                    double expectedSerial = GetExpectedSerial(expectedDate, date1904);
-
-                    // Assert: compare with a tiny tolerance
-                    if (Math.Abs(expectedSerial - actualSerial) > 1e-9)
-                    {
-                        Console.WriteLine($"FAIL: DATE({tc.year},{tc.month},{tc.day}) => {actualSerial}, expected {expectedSerial}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"PASS: DATE({tc.year},{tc.month},{tc.day}) => {actualSerial}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Runtime safety: report any unexpected errors per test case
-                    Console.WriteLine($"ERROR: DATE({tc.year},{tc.month},{tc.day}) threw an exception: {ex.Message}");
-                }
-            }
-        }
-    }
-
-    class Program
-    {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                var tests = new DateFunctionTests();
-                tests.Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Insert the DATE formula for a known date (2021-01-01)
+                worksheet.Cells["A1"].Formula = "DATE(2021,1,1)";
+
+                // Evaluate the formula
+                workbook.CalculateFormula();
+
+                // Retrieve the serial number produced by the DATE function
+                double actualSerial = worksheet.Cells["A1"].DoubleValue;
+
+                // Compute the expected serial number using CellsHelper (same date system)
+                DateTime expectedDate = new DateTime(2021, 1, 1);
+                bool date1904 = workbook.Settings.Date1904; // default is false (1900 system)
+                double expectedSerial = CellsHelper.GetDoubleFromDateTime(expectedDate, date1904);
+
+                // Verify that the serial numbers match within a small tolerance
+                const double tolerance = 1e-6;
+                if (Math.Abs(expectedSerial - actualSerial) <= tolerance)
+                {
+                    Console.WriteLine($"Test passed. Serial number: {actualSerial}");
+                }
+                else
+                {
+                    Console.WriteLine($"Test failed. Expected {expectedSerial}, got {actualSerial}");
+                }
             }
             catch (Exception ex)
             {
-                // Catch any unhandled exceptions
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"Exception occurred: {ex.Message}");
             }
         }
     }

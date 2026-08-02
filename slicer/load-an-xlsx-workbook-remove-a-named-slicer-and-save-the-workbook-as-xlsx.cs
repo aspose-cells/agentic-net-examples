@@ -2,37 +2,40 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-class RemoveSlicerDemo
+namespace AsposeCellsSlicerRemoval
 {
-    static void Main()
+    class Program
     {
-        // Load the existing XLSX workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // The name of the slicer that should be removed
-        string slicerNameToRemove = "FruitSlicer1";
-
-        // Search each worksheet for the slicer with the specified name
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            SlicerCollection slicers = sheet.Slicers;
+            // Load the existing XLSX workbook
+            Workbook workbook = new Workbook("input.xlsx");
 
-            for (int i = 0; i < slicers.Count; i++)
+            // Specify the name of the slicer to remove
+            string slicerNameToRemove = "MySlicer";
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Slicer slicer = slicers[i];
+                // Get the slicer collection for the current worksheet
+                SlicerCollection slicers = sheet.Slicers;
 
-                // Slicer.Name holds the slicer's name
-                if (slicer.Name == slicerNameToRemove)
+                // Find the slicer with the specified name
+                for (int i = 0; i < slicers.Count; i++)
                 {
-                    // Remove the slicer from the collection
-                    slicers.Remove(slicer);
-                    // Exit the loops after removal
-                    break;
+                    Slicer slicer = slicers[i];
+                    if (slicer.Name == slicerNameToRemove)
+                    {
+                        // Remove the slicer from the collection
+                        slicers.Remove(slicer);
+                        // Exit loops after removal
+                        break;
+                    }
                 }
             }
-        }
 
-        // Save the modified workbook as XLSX
-        workbook.Save("output.xlsx");
+            // Save the modified workbook as XLSX
+            workbook.Save("output.xlsx");
+        }
     }
 }

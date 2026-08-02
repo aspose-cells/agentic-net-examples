@@ -1,54 +1,60 @@
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsTitleValidation
 {
-    public class ValidateTitleBeforeExport
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook instance
+                // Create a new workbook (lifecycle create rule)
                 Workbook workbook = new Workbook();
 
-                // Access the built‑in document properties collection
-                BuiltInDocumentPropertyCollection props = workbook.BuiltInDocumentProperties;
+                // Example: set some data
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample Data");
 
-                // Example: set the Title property (comment out to test validation failure)
-                // props.Title = "Sample Document Title";
+                // OPTIONAL: Uncomment to set a title manually
+                // workbook.BuiltInDocumentProperties.Title = "My Document Title";
 
-                // Validate that the Title property is not null or empty before exporting
-                string title = props.Title;
+                // Ensure the Title property is not empty before exporting
+                string title = workbook.BuiltInDocumentProperties.Title;
                 if (string.IsNullOrWhiteSpace(title))
                 {
-                    throw new InvalidOperationException("The workbook's Title property must be set before exporting.");
+                    // Set a default title if none was provided
+                    title = "Untitled Document";
+                    workbook.BuiltInDocumentProperties.Title = title;
                 }
 
-                // Export the workbook to PDF
+                // Export to PDF (lifecycle save rule)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    // Display the document title in the PDF window title bar
+                    // Ensure the document title appears in the PDF window title bar
                     DisplayDocTitle = true
                 };
+                workbook.Save("ExportedDocument.pdf", pdfOptions);
 
-                // Save the workbook
-                workbook.Save("ValidatedTitleExport.pdf", pdfOptions);
+                // Export to HTML (another example of export)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Use the workbook title as the HTML page title
+                    PageTitle = title,
+                    ExportWorkbookProperties = true
+                };
+                workbook.Save("ExportedDocument.html", htmlOptions);
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.Error.WriteLine($"File not found: {fnfEx.FileName}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ValidateTitleBeforeExport.Run();
         }
     }
 }

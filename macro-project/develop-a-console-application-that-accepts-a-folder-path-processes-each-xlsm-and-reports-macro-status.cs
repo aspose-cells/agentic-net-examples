@@ -2,56 +2,57 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace MacroStatusReporter
+namespace MacroChecker
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Verify that a folder path was provided
+            // Verify that a folder path was supplied
             if (args.Length == 0)
             {
-                Console.WriteLine("Please provide a folder path as the first argument.");
+                Console.WriteLine("Usage: MacroChecker <folderPath>");
                 return;
             }
 
             string folderPath = args[0];
 
-            // Check if the folder exists
+            // Ensure the folder exists
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"The folder \"{folderPath}\" does not exist.");
+                Console.WriteLine($"Folder not found: {folderPath}");
                 return;
             }
 
-            // Get all .xlsm files in the folder (non‑recursive)
-            string[] xlsmFiles = Directory.GetFiles(folderPath, "*.xlsm", SearchOption.TopDirectoryOnly);
+            // Retrieve all .xlsm files in the specified folder
+            string[] macroFiles = Directory.GetFiles(folderPath, "*.xlsm");
 
-            if (xlsmFiles.Length == 0)
+            if (macroFiles.Length == 0)
             {
-                Console.WriteLine("No macro‑enabled Excel files (*.xlsm) were found in the specified folder.");
+                Console.WriteLine("No macro-enabled Excel files (*.xlsm) found in the folder.");
                 return;
             }
 
-            Console.WriteLine($"Processing {xlsmFiles.Length} file(s) in \"{folderPath}\":");
-
-            foreach (string filePath in xlsmFiles)
+            // Process each file
+            foreach (string filePath in macroFiles)
             {
                 try
                 {
-                    // Load the workbook (uses the Workbook(string) constructor rule)
+                    // Load the workbook (uses Aspose.Cells load rule)
                     Workbook workbook = new Workbook(filePath);
 
-                    // Check if the workbook contains macros (uses the HasMacro property rule)
+                    // Determine if the workbook contains macros
                     bool hasMacro = workbook.HasMacro;
 
-                    // Report the result
+                    // Output the result
                     Console.WriteLine($"{Path.GetFileName(filePath)} : HasMacro = {hasMacro}");
+
+                    // Release resources
+                    workbook.Dispose();
                 }
                 catch (Exception ex)
                 {
-                    // Report any errors encountered while processing the file
-                    Console.WriteLine($"{Path.GetFileName(filePath)} : Error - {ex.Message}");
+                    Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
                 }
             }
         }

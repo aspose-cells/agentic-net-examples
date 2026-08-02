@@ -1,59 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – set default font for Unicode characters when saving to PDF
+class Program
 {
-    public class UnicodeFontPdfDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("PDF generated successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Sample Unicode text that may not have a proper font in the cell style
+        sheet.Cells["A1"].PutValue("漢字テスト"); // Japanese characters
+        sheet.Cells["A2"].PutValue("Пример текста"); // Cyrillic characters
 
-            // Add Unicode text that may not be supported by the default system font
-            sheet.Cells["A1"].PutValue("This text uses the default font");
-            sheet.Cells["A2"].PutValue("如果默认字体支持中文，这将显示正确"); // Chinese characters
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Set a font that supports the required Unicode characters (e.g., SimSun)
-                DefaultFont = "SimSun",
-                // Try to use the workbook's default font first
-                CheckWorkbookDefaultFont = true,
-                // Ensure font compatibility checking is enabled (default true)
-                CheckFontCompatibility = true
-            };
+        // Set a font that supports the required Unicode ranges (e.g., MS Gothic, MingLiu)
+        pdfOptions.DefaultFont = "MS Gothic";
 
-            // Define output file path
-            string outputPath = "UnicodeFontOutput.pdf";
+        // Try to use the workbook's default font first, then fall back to DefaultFont
+        pdfOptions.CheckWorkbookDefaultFont = true;
 
-            // Ensure we can write to the output location
-            try
-            {
-                workbook.Save(outputPath, pdfOptions);
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
-                throw;
-            }
-        }
+        // Save the workbook as PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

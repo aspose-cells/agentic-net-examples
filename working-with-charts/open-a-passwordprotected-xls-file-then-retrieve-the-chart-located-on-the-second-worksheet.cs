@@ -7,48 +7,40 @@ class Program
 {
     static void Main()
     {
-        // Path to the password‑protected XLS file
-        string filePath = "protected.xls";
-
-        // Password used to protect the workbook
-        string password = "yourPassword";
-
         try
         {
+            // Path to the password‑protected XLS file
+            string filePath = "protected.xls";
+
             // Verify that the file exists to avoid FileNotFoundException
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {Path.GetFullPath(filePath)}");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
-            // Load options with the password
+            // Password required to open the workbook
+            string password = "myPassword";
+
+            // Load the workbook with the specified password
             LoadOptions loadOptions = new LoadOptions
             {
                 Password = password
             };
-
-            // Open the workbook using the load options
             Workbook workbook = new Workbook(filePath, loadOptions);
-
-            // Ensure the workbook has at least two worksheets
-            if (workbook.Worksheets.Count <= 1)
-            {
-                Console.WriteLine("The workbook does not contain a second worksheet.");
-                return;
-            }
 
             // Access the second worksheet (index 1)
             Worksheet secondWorksheet = workbook.Worksheets[1];
 
-            // Retrieve the first chart on the second worksheet, if any
+            // Check if the worksheet contains any charts
             if (secondWorksheet.Charts.Count > 0)
             {
+                // Retrieve the first chart on the second worksheet
                 Chart chart = secondWorksheet.Charts[0];
 
-                // Display chart type and its worksheet name
+                // Example usage: display chart type and its parent worksheet name
                 Console.WriteLine($"Chart Type: {chart.Type}");
-                Console.WriteLine($"Chart resides on worksheet: {chart.Worksheet.Name}");
+                Console.WriteLine($"Chart is located in worksheet: {chart.Worksheet.Name}");
             }
             else
             {
@@ -57,8 +49,8 @@ class Program
         }
         catch (Exception ex)
         {
-            // Handle unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

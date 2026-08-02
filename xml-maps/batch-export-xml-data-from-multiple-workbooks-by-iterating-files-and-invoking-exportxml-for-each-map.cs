@@ -2,41 +2,100 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchXmlExport
+namespace AsposeCellsBatchExport
 {
-    class Program
+    public class XmlBatchExporter
     {
-        static void Main()
+        // Entry point for the batch export process
+        public static void Run(string inputFolder, string outputFolder)
         {
-            // Folder containing the source Excel workbooks
-            string inputFolder = @"C:\InputWorkbooks";
-
-            // Folder where the exported XML files will be saved
-            string outputFolder = @"C:\ExportedXml";
-
             // Ensure the output directory exists
             if (!Directory.Exists(outputFolder))
                 Directory.CreateDirectory(outputFolder);
 
-            // Iterate over all Excel files in the input folder
-            foreach (string workbookPath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Get all Excel files in the input folder (non‑recursive)
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            foreach (string filePath in excelFiles)
             {
-                // Load the workbook (uses the Workbook(string) constructor)
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Iterate through each XML map defined in the workbook
-                foreach (XmlMap xmlMap in workbook.Worksheets.XmlMaps)
+                // Guard against missing files (should not happen, but safe)
+                if (!File.Exists(filePath))
                 {
-                    // Build a unique output file name using workbook name and map name
-                    string outputFileName = $"{Path.GetFileNameWithoutExtension(workbookPath)}_{xmlMap.Name}.xml";
-                    string outputPath = Path.Combine(outputFolder, outputFileName);
+                    Console.WriteLine($"File not found: {filePath}. Skipping.");
+                    continue;
+                }
 
-                    // Export the XML data for the current map to the specified file
-                    workbook.ExportXml(xmlMap.Name, outputPath);
+                try
+                {
+                    // Load the workbook from the file
+                    Workbook workbook = new Workbook(filePath);
+
+                    // If the workbook contains no XML maps, skip it
+                    if (workbook.Worksheets.XmlMaps.Count == 0)
+                    {
+                        Console.WriteLine($"No XmlMap found in '{Path.GetFileName(filePath)}'. Skipping.");
+                        continue;
+                    }
+
+                    // Iterate through each XmlMap in the workbook
+                    for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
+                    {
+                        XmlMap xmlMap = workbook.Worksheets.XmlMaps[i];
+
+                        // Build a unique output file name: <WorkbookName>_<MapName>.xml
+                        string workbookName = Path.GetFileNameWithoutExtension(filePath);
+                        string safeMapName = MakeFileSystemSafe(xmlMap.Name);
+                        string outputFile = Path.Combine(outputFolder, $"{workbookName}_{safeMapName}.xml");
+
+                        // Export the XML data using the map's name
+                        workbook.ExportXml(xmlMap.Name, outputFile);
+                        Console.WriteLine($"Exported XML map '{xmlMap.Name}' from '{workbookName}' to '{outputFile}'.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
                 }
             }
+        }
 
-            Console.WriteLine("Batch XML export completed.");
+        // Helper to replace invalid filename characters
+        private static string MakeFileSystemSafe(string name)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+                name = name.Replace(c, '_');
+            return name;
+        }
+    }
+
+    // Console entry point required by the project
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            try
+            {
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Usage: AsposeCellsBatchExport <inputFolder> <outputFolder>");
+                    return;
+                }
+
+                string inputFolder = args[0];
+                string outputFolder = args[1];
+
+                if (!Directory.Exists(inputFolder))
+                {
+                    Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                    return;
+                }
+
+                XmlBatchExporter.Run(inputFolder, outputFolder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

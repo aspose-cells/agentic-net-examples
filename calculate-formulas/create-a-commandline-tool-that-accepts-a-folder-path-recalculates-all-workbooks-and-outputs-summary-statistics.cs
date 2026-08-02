@@ -1,76 +1,71 @@
 using System;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 
-class Program
+namespace RecalculateWorkbooks
 {
-    static void Main(string[] args)
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
             // Verify that a folder path was provided
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: RecalcTool <folderPath>");
+                Console.WriteLine("Usage: RecalculateWorkbooks <folderPath>");
                 return;
             }
 
             string folderPath = args[0];
 
-            // Ensure the folder exists
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Folder not found: {folderPath}");
+                Console.WriteLine($"Folder does not exist: {folderPath}");
                 return;
             }
 
-            // Find Excel files in the folder (common extensions)
-            var excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".xlsb", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            // Supported Excel file extensions
+            string[] extensions = new[] { "*.xls", "*.xlsx", "*.xlsm", "*.xlsb" };
+            var files = new System.Collections.Generic.List<string>();
+
+            foreach (var ext in extensions)
+            {
+                files.AddRange(Directory.GetFiles(folderPath, ext, SearchOption.AllDirectories));
+            }
 
             int totalWorkbooks = 0;
             int totalWorksheets = 0;
 
-            foreach (string filePath in excelFiles)
+            foreach (var file in files)
             {
-                // Verify the file still exists before loading
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
-                    continue;
-                }
-
                 try
                 {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
+                    // Load the workbook (create rule)
+                    Workbook workbook = new Workbook(file);
 
                     // Recalculate all formulas in the workbook
                     workbook.CalculateFormula();
 
-                    // Save the workbook back to the same file
-                    workbook.Save(filePath);
+                    // Save the workbook back to the same file (save rule)
+                    workbook.Save(file);
 
+                    // Gather simple statistics
+                    int sheetCount = workbook.Worksheets.Count;
                     totalWorkbooks++;
-                    totalWorksheets += workbook.Worksheets.Count;
+                    totalWorksheets += sheetCount;
+
+                    Console.WriteLine($"Processed: {Path.GetFileName(file)} | Worksheets: {sheetCount}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{file}': {ex.Message}");
                 }
             }
 
-            // Output overall statistics
-            Console.WriteLine($"Processed {totalWorkbooks} workbook(s) containing a total of {totalWorksheets} worksheet(s).");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Output summary statistics
+            Console.WriteLine();
+            Console.WriteLine("=== Summary ===");
+            Console.WriteLine($"Total workbooks processed: {totalWorkbooks}");
+            Console.WriteLine($"Total worksheets across all workbooks: {totalWorksheets}");
         }
     }
 }

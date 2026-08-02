@@ -6,7 +6,7 @@ class Program
 {
     static void Main()
     {
-        // Load an existing workbook
+        // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
         // Access the first worksheet (adjust index if needed)
@@ -18,7 +18,7 @@ class Program
             // Get the first chart in the worksheet
             Chart chart = worksheet.Charts[0];
 
-            // Set the tick‑label direction of the category (X) axis to horizontal
+            // Set tick‑label direction to horizontal for the category (X) axis
             chart.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Horizontal;
 
             // Optionally, also set the value (Y) axis tick‑label direction to horizontal

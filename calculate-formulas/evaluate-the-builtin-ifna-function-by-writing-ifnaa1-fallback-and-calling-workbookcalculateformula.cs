@@ -1,42 +1,25 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsIFNADemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-                // Example 1: A1 has a valid value, IFNA should return that value
-                cells["A1"].PutValue(42);
-                cells["B1"].Formula = "=IFNA(A1, \"fallback\")";
+        // Put a numeric value in A1
+        cells["A1"].PutValue(10);
 
-                // Calculate all formulas in the workbook
-                workbook.CalculateFormula();
+        // Set the IFNA formula in B1: if A1 is not an error, return its value; otherwise return "fallback"
+        cells["B1"].Formula = "=IFNA(A1, \"fallback\")";
 
-                // Display the result of IFNA when A1 is not an error
-                Console.WriteLine("B1 (A1 = 42) => " + cells["B1"].StringValue); // Expected: 42
+        // Calculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-                // Example 2: Clear A1 so the formula evaluates to an error (empty cell is treated as #N/A)
-                cells["A1"].PutValue(string.Empty); // Clear contents
-
-                // Recalculate formulas
-                workbook.CalculateFormula();
-
-                // Display the result of IFNA when A1 is empty (fallback should be used)
-                Console.WriteLine("B1 (A1 empty) => " + cells["B1"].StringValue); // Expected: fallback
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Display the result of the IFNA formula
+        Console.WriteLine("B1 result: " + cells["B1"].StringValue);
     }
 }

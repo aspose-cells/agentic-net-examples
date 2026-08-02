@@ -4,7 +4,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotDemo
 {
-    class ResetPivotLayout
+    class Program
     {
         static void Main()
         {
@@ -39,7 +39,7 @@ namespace AsposeCellsPivotDemo
             // Add a new worksheet to host the pivot table
             Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-            // Create the pivot table
+            // Create the pivot table (range A1:C5 on source sheet, placed at A3 on pivot sheet)
             int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A3", "PivotTable1");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
@@ -48,15 +48,15 @@ namespace AsposeCellsPivotDemo
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Reset to the default report layout (compact form)
+            // Reset to the default report layout (compact form) by invoking ShowInCompactForm
             pivotTable.ShowInCompactForm();
 
-            // Refresh and calculate the pivot data
+            // Refresh data and calculate the pivot table
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
             // Save the workbook
-            workbook.Save("PivotTable_DefaultLayout.xlsx");
+            workbook.Save("PivotTableDefaultLayout.xlsx");
         }
     }
 }

@@ -1,18 +1,25 @@
+// Title: Resize Chart Data Labels After Adding Superscript in Aspose.Cells for .NET
+// Description: This example shows how to create a column chart, add data labels, apply a superscript character to part of each label, and force the label shape to resize by toggling the IsResizeShapeToFitText property. The workbook is then saved as an Excel file.
+// Keywords: Aspose.Cells chart data label resize | superscript formatting chart label C# | IsResizeShapeToFitText toggle | ChartPoint DataLabels font style | adjust label shape after text change
+// Common Searches: Aspose.Cells resize data label after superscript | C# chart label superscript shape fit | force chart data label to auto‑size Aspose.Cells | how to apply superscript to chart data label .NET | chart data label size issue after font change
+// Developer Intent: Automatically adjust the size of a chart data label after applying superscript formatting to part of its text.
+// Use Cases: Display numeric values with a superscript sign (e.g., 10⁺) while keeping the label box correctly sized. | Create mixed‑format data labels (regular and superscript) that adapt to content length. | Generate Excel reports where special characters require font style changes without manual label resizing.
+// AI Prompts: Give C# code that resizes a chart data label after setting a superscript character using Aspose.Cells. | Explain why toggling IsResizeShapeToFitText from false to true updates the label size after font changes. | Show how to apply superscript to the last character of a data label and then recalculate the label shape dimensions.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
 namespace AsposeCellsExamples
 {
+    // This example shows how to create a column chart, add data labels, apply a superscript character to part of each label, and force the label shape to resize by toggling the IsResizeShapeToFitText property. The workbook is then saved as an Excel file.
     public class ResizeDataLabelAfterSuperscript
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
@@ -28,10 +35,10 @@ namespace AsposeCellsExamples
                 sheet.Cells["B4"].PutValue(30);
 
                 // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
                 Chart chart = sheet.Charts[chartIdx];
 
-                // Set the data range for the series
+                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
@@ -43,29 +50,22 @@ namespace AsposeCellsExamples
                 // Iterate through each point to customize its data label
                 foreach (ChartPoint point in series.Points)
                 {
-                    // Access the data label of the current point
-                    DataLabels dl = point.DataLabels;
+                    // Example label: "10⁺" where the plus sign is superscript
+                    point.DataLabels.Text = $"{point.YValue}+";
 
-                    // Set the full text first (e.g., "10 (x10ⁿ)")
-                    dl.Text = $"{point.YValue} (x10)";
+                    // Apply superscript style to the last character ('+')
+                    int superscriptStart = point.DataLabels.Text.Length - 1;
+                    point.DataLabels.Characters(superscriptStart, 1).Font.IsSuperscript = true;
 
-                    // Apply superscript to the last character "n"
-                    int start = dl.Text.Length - 1;
-                    dl.Characters(start, 1).Font.IsSuperscript = true;
-
-                    // Ensure the shape resizes to fit the modified text
-                    dl.IsResizeShapeToFitText = true;
-
-                    // Apply the font changes to all child nodes of the data label
-                    dl.ApplyFont();
+                    // Force shape resize to fit modified text
+                    point.DataLabels.IsResizeShapeToFitText = false;
+                    point.DataLabels.IsResizeShapeToFitText = true;
                 }
 
-                // Define output file path
-                string outputPath = "ResizeDataLabelAfterSuperscript.xlsx";
-
                 // Save the workbook
+                string outputPath = "ResizeDataLabelAfterSuperscript.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
@@ -74,19 +74,12 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for the application
+    // Entry point for the console application
     public class Program
     {
         public static void Main(string[] args)
         {
-            try
-            {
-                ResizeDataLabelAfterSuperscript.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            ResizeDataLabelAfterSuperscript.Run();
         }
     }
 }

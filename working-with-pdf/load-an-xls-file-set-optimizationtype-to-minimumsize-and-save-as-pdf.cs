@@ -1,19 +1,28 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Utility;
 
 class Program
 {
     static void Main()
     {
-        // Load the existing XLS file
-        Workbook workbook = new Workbook("input.xls");
+        // Author: Aspose.Cells .NET example – load XLS, set PDF optimization, save as PDF
 
-        // Create PDF save options and set the optimization type to MinimumSize
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+        // Define source and destination file paths
+        string sourceFile = "input.xls";
+        string destinationFile = "output.pdf";
 
-        // Save the workbook as a PDF using the specified options
-        workbook.Save("output.pdf", pdfOptions);
+        // Create load options (default settings)
+        LoadOptions loadOptions = new LoadOptions();
+
+        // Configure PDF save options with MinimumSize optimization
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            OptimizationType = PdfOptimizationType.MinimumSize
+        };
+
+        // Convert the XLS workbook to PDF using the provided ConversionUtility rule
+        ConversionUtility.Convert(sourceFile, loadOptions, destinationFile, pdfOptions);
     }
 }

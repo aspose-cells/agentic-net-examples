@@ -1,10 +1,19 @@
+// Title: Preserve Quote Prefix and Add Whole‑Number Validation with StyleFlag in Aspose.Cells for .NET
+// Description: Demonstrates how to keep a leading single‑quote display on cells, apply only the QuotePrefix attribute using a StyleFlag, and attach a whole‑number (1‑100) data‑validation rule via a CellArea overload. The workbook is saved as an Excel file.
+// Keywords: Aspose.Cells | C# | QuotePrefix | StyleFlag | data validation | CellArea | whole number validation | Excel single quote | preserve leading apostrophe | apply style to range
+// Common Searches: Aspose.Cells keep leading single quote | apply QuotePrefix with StyleFlag | add numeric validation to range Aspose.Cells | CellArea validation example C# | preserve text format while adding validation
+// Developer Intent: Retain the visible leading single‑quote on cell values while applying a style and enforcing a whole‑number validation rule on the same range.
+// Use Cases: Create templates where IDs start with a quote but users must enter numbers within a defined range. | Export data that includes quoted strings as text and still require input validation for numeric edits. | Generate workbooks that display quoted strings correctly and prevent out‑of‑range entries in the same cells.
+// AI Prompts: Generate C# code using Aspose.Cells to apply a QuotePrefix style to A1:A5 with a StyleFlag and then add a whole‑number validation (1‑100) using CellArea. | Explain why StyleFlag is needed to isolate the QuotePrefix property when styling cells that also have data validation. | Provide a step‑by‑step tutorial for preserving leading single quotes while adding numeric validation in an Aspose.Cells workbook.
+
 using System;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;   // Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsQuotePrefixValidationDemo
 {
+    // Demonstrates how to keep a leading single‑quote display on cells, apply only the QuotePrefix attribute using a StyleFlag, and attach a whole‑number (1‑100) data‑validation rule via a CellArea overload. The workbook is saved as an Excel file.
     class Program
     {
         static void Main()
@@ -14,60 +23,44 @@ namespace AsposeCellsQuotePrefixValidationDemo
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Define the range where we want to preserve quote prefixes and apply validation (A1:A5)
-                string startCell = "A1";
-                string endCell = "A5";
-                AsposeRange targetRange = cells.CreateRange(startCell, endCell);
-
-                // Populate the range with values that start with a single quote (treated as text)
+                // Populate cells A1:A5 with values that start with a single quote.
+                // The single quote forces Excel to treat the content as text.
                 for (int row = 0; row < 5; row++)
                 {
-                    // The leading single quote makes Excel treat the value as text
-                    cells[row, 0].PutValue("'12345");
+                    sheet.Cells[row, 0].PutValue("'12345");
                 }
 
-                // Create a style and enable QuotePrefix
+                // Create a style that has QuotePrefix enabled.
                 Style quoteStyle = workbook.CreateStyle();
-                quoteStyle.QuotePrefix = true; // Mark that the cell value starts with a quote
+                quoteStyle.QuotePrefix = true;
 
-                // Create a StyleFlag and enable the QuotePrefix flag
-                StyleFlag flag = new StyleFlag
-                {
-                    QuotePrefix = true // Apply only the QuotePrefix property
-                };
+                // Create a StyleFlag that indicates only the QuotePrefix property should be applied.
+                StyleFlag flag = new StyleFlag();
+                flag.QuotePrefix = true;
 
-                // Apply the style to the target range using the flag
-                targetRange.ApplyStyle(quoteStyle, flag);
+                // Apply the style with the flag to the range A1:A5.
+                AsposeRange dataRange = sheet.Cells.CreateRange("A1:A5");
+                dataRange.ApplyStyle(quoteStyle, flag);
 
-                // Define the cell area for validation (same as targetRange)
-                CellArea area = new CellArea
-                {
-                    StartRow = targetRange.FirstRow,
-                    EndRow = targetRange.FirstRow + targetRange.RowCount - 1,
-                    StartColumn = targetRange.FirstColumn,
-                    EndColumn = targetRange.FirstColumn + targetRange.ColumnCount - 1
-                };
-
-                // Add a data validation rule to the same range (whole number between 10 and 20)
-                // In some Aspose.Cells versions Add returns the index of the new validation
+                // Add a data validation rule to the same range (whole numbers between 1 and 100).
+                // Use the newer overload that accepts a CellArea.
+                CellArea area = CellArea.CreateCellArea(0, 0, 4, 0); // rows 0-4, column 0
                 int validationIndex = sheet.Validations.Add(area);
                 Validation validation = sheet.Validations[validationIndex];
                 validation.Type = ValidationType.WholeNumber;
                 validation.Operator = OperatorType.Between;
-                validation.Formula1 = "10";
-                validation.Formula2 = "20";
+                validation.Formula1 = "1";
+                validation.Formula2 = "100";
 
-                // Save the workbook
-                string outputPath = "QuotePrefixValidationDemo.xlsx";
+                // Save the workbook.
+                string outputPath = "QuotePrefixWithValidation.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

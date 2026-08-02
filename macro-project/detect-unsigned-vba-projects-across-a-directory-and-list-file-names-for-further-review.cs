@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
 namespace AsposeCellsVbaAudit
 {
@@ -10,34 +10,31 @@ namespace AsposeCellsVbaAudit
     {
         static void Main(string[] args)
         {
-            // Directory to scan – change as needed
-            string folderPath = @"C:\ExcelFiles";
+            // Directory to scan – use first argument or current directory if none provided
+            string targetDirectory = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
 
-            // Collect files with unsigned VBA projects
+            // Collection to hold file paths of unsigned VBA projects
             List<string> unsignedVbaFiles = new List<string>();
 
-            // Supported Excel extensions (including macro-enabled)
-            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".xls2003", ".xls2007" };
+            // Define file extensions that may contain VBA macros
+            string[] macroExtensions = new[] { ".xlsm", ".xlsb", ".xls" };
 
-            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories))
+            // Enumerate all files with the specified extensions recursively
+            IEnumerable<string> files = Directory.EnumerateFiles(targetDirectory, "*.*", SearchOption.AllDirectories)
+                                                .Where(f => macroExtensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase));
+
+            foreach (string filePath in files)
             {
-                // Skip files that are not Excel based on extension
-                if (Array.IndexOf(extensions, Path.GetExtension(filePath).ToLower()) < 0)
-                    continue;
-
                 try
                 {
-                    // Load the workbook (read‑only is sufficient for inspection)
+                    // Load the workbook (uses Aspose.Cells load rule)
                     Workbook workbook = new Workbook(filePath);
 
-                    // If the workbook contains VBA/macros
+                    // Check if the workbook actually contains a macro/VBA project
                     if (workbook.HasMacro)
                     {
-                        // Check if the VBA project is signed
-                        bool isSigned = workbook.VbaProject.IsSigned;
-
-                        // If not signed, add to the result list
-                        if (!isSigned)
+                        // Determine whether the VBA project is signed
+                        if (!workbook.VbaProject.IsSigned)
                         {
                             unsignedVbaFiles.Add(filePath);
                         }
@@ -45,16 +42,16 @@ namespace AsposeCellsVbaAudit
                 }
                 catch (Exception ex)
                 {
-                    // Log or ignore files that cannot be processed as Excel workbooks
+                    // Log any errors (e.g., corrupted files) and continue processing
                     Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
                 }
             }
 
-            // Output the list of files with unsigned VBA projects
-            Console.WriteLine("Files with unsigned VBA projects:");
-            foreach (string file in unsignedVbaFiles)
+            // Output the results
+            Console.WriteLine("Unsigned VBA projects found:");
+            foreach (string unsignedFile in unsignedVbaFiles)
             {
-                Console.WriteLine(file);
+                Console.WriteLine(unsignedFile);
             }
         }
     }

@@ -1,100 +1,59 @@
+// Title: C# utility to detect cells with QuotePrefix = true using Aspose.Cells
+// Description: Loads an Excel workbook with Aspose.Cells, scans each worksheet's used range, checks the QuotePrefix flag in cell styles, collects the addresses of cells where the flag is true, and prints the list to the console.
+// Keywords: Aspose.Cells QuotePrefix detection | C# scan Excel cells QuotePrefix | find cells with leading apostrophe Aspose | list cells QuotePrefix true .NET | Excel style QuotePrefix check
+// Common Searches: how to find cells with QuotePrefix set in Aspose.Cells | C# code to list Excel cells where QuotePrefix is true | Aspose.Cells iterate used range and check QuotePrefix flag | detect unintended leading apostrophe in Excel with Aspose
+// Developer Intent: Locate every cell in a workbook that has the QuotePrefix property enabled.
+// Use Cases: Validate imported spreadsheets to ensure no accidental leading‑apostrophe formatting. | Generate a report of cells that may display a leading apostrophe for quality control. | Programmatically clear the QuotePrefix flag on identified cells before further processing.
+// AI Prompts: Create a method that returns a list of cell addresses with QuotePrefix = true using Aspose.Cells for .NET. | Optimize the scanner to reduce style object creation while checking QuotePrefix. | Show how to reset the QuotePrefix flag for the detected cells and save the workbook.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUtilities
+// Loads an Excel workbook with Aspose.Cells, scans each worksheet's used range, checks the QuotePrefix flag in cell styles, collects the addresses of cells where the flag is true, and prints the list to the console.
+class QuotePrefixScanner
 {
-    /// <summary>
-    /// Scans a workbook and reports cells that have the QuotePrefix style flag set to true.
-    /// </summary>
-    public static class QuotePrefixScanner
+    static void Main(string[] args)
     {
-        /// <summary>
-        /// Loads the workbook from the specified file, scans all worksheets and cells,
-        /// and writes the addresses of cells with QuotePrefix = true to the console.
-        /// </summary>
-        /// <param name="filePath">Path to the workbook to be scanned.</param>
-        public static void Scan(string filePath)
+        // Path to the workbook to be scanned
+        string workbookPath = "input.xlsx";
+
+        // Load the workbook (uses Aspose.Cells built‑in load logic)
+        Workbook workbook = new Workbook(workbookPath);
+
+        // List to hold addresses of cells where QuotePrefix is true
+        List<string> cellsWithQuotePrefix = new List<string>();
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            if (!File.Exists(filePath))
+            Cells cells = sheet.Cells;
+
+            // Scan only the used range to improve performance
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
             {
-                Console.WriteLine($"Error: File not found – \"{filePath}\"");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // List to hold addresses of cells with QuotePrefix set
-                List<string> cellsWithQuotePrefix = new List<string>();
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Cells cells = sheet.Cells;
+                    Cell cell = cells[row, col];
 
-                    // Iterate through all used cells in the worksheet
-                    for (int row = 0; row <= cells.MaxDataRow; row++)
+                    // Get the cell's style and check the QuotePrefix flag
+                    if (cell != null && cell.GetStyle().QuotePrefix)
                     {
-                        for (int col = 0; col <= cells.MaxDataColumn; col++)
-                        {
-                            Cell cell = cells[row, col];
-                            Style style = cell.GetStyle();
-
-                            // Record cells where QuotePrefix is true
-                            if (style.QuotePrefix)
-                            {
-                                string address = $"{sheet.Name}!{cell.Name}";
-                                cellsWithQuotePrefix.Add(address);
-                            }
-                        }
+                        // Record the cell address with sheet name (e.g., Sheet1!B2)
+                        cellsWithQuotePrefix.Add($"{sheet.Name}!{cell.Name}");
                     }
                 }
-
-                // Output the results
-                Console.WriteLine("Cells with QuotePrefix = true:");
-                if (cellsWithQuotePrefix.Count == 0)
-                {
-                    Console.WriteLine("None found.");
-                }
-                else
-                {
-                    foreach (string addr in cellsWithQuotePrefix)
-                    {
-                        Console.WriteLine(addr);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while scanning the workbook: {ex.Message}");
             }
         }
-    }
 
-    /// <summary>
-    /// Entry point for the console application.
-    /// </summary>
-    public static class Program
-    {
-        public static void Main(string[] args)
+        // Output the results
+        Console.WriteLine("Cells with QuotePrefix set to true:");
+        foreach (string address in cellsWithQuotePrefix)
         {
-            string filePath;
-
-            if (args.Length > 0)
-            {
-                filePath = args[0];
-            }
-            else
-            {
-                Console.Write("Enter the path to the workbook to scan: ");
-                filePath = Console.ReadLine();
-            }
-
-            QuotePrefixScanner.Scan(filePath);
+            Console.WriteLine(address);
         }
     }
 }

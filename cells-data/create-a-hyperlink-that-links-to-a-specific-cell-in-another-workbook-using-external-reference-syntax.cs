@@ -1,32 +1,33 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHyperlinkExternalReference
+class HyperlinkExternalCellDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the external reference address.
-            // Format: [FileName]SheetName!CellAddress
-            // Example links to cell B2 in Sheet1 of ExternalWorkbook.xlsx
-            string externalAddress = "[ExternalWorkbook.xlsx]Sheet1!B2";
+        // Define the external workbook file name, sheet and cell to link to
+        string externalFileName = "ExternalWorkbook.xlsx";
+        string externalSheetName = "Sheet1";
+        string externalCellAddress = "B2";
 
-            // Add a hyperlink to cell A1 that points to the external cell.
-            // Parameters: start cell name, rows, columns, address.
-            sheet.Hyperlinks.Add("A1", 1, 1, externalAddress);
+        // Build the external reference address in the format:
+        // '[ExternalWorkbook.xlsx]Sheet1'!B2
+        string hyperlinkAddress = $"'[${externalFileName}]${externalSheetName}'!{externalCellAddress}";
 
-            // Optionally set the display text for the hyperlink
-            sheet.Cells["A1"].PutValue("Go to External B2");
+        // Add a hyperlink to cell A1 that points to the external cell
+        // Parameters: start cell name, rows, columns, address
+        worksheet.Hyperlinks.Add("A1", 1, 1, hyperlinkAddress);
 
-            // Save the workbook
-            workbook.Save("HyperlinkToExternalCell.xlsx");
-        }
+        // Set the display text for the hyperlink
+        worksheet.Cells["A1"].PutValue("Link to external cell");
+
+        // Save the workbook
+        workbook.Save("HyperlinkExternalCellDemo.xlsx");
     }
 }

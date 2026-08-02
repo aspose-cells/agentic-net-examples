@@ -1,10 +1,18 @@
+// Title: Macro‑style row‑wise SUM using Aspose.Cells SetSharedFormula in C#
+// Description: Creates a new workbook, fills columns A and B with sample data, applies a shared row‑relative SUM formula ("=SUM(A1:B1)") to column C for a defined number of rows, recalculates the sheet, prints each row's values, and saves the file as RowSumFormulas.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | SetSharedFormula | shared formula | row‑wise SUM | apply formula to range | programmatic Excel calculation | save workbook with formulas | Excel automation
+// Common Searches: Aspose.Cells apply same SUM formula to multiple rows | C# SetSharedFormula example | how to insert row‑relative formulas with Aspose.Cells | programmatically calculate Excel formulas in .NET | bulk add SUM formulas to a column using Aspose
+// Developer Intent: Implement a macro‑like routine that iterates over a range and inserts a row‑relative SUM formula into each row with a single shared‑formula call.
+// Use Cases: Generate a financial ledger where each row automatically totals adjacent columns. | Create a data‑entry template that sums two input columns for every new record without manual entry. | Speed up large worksheet processing by applying one shared SUM formula instead of setting formulas cell‑by‑cell.
+// AI Prompts: Modify the code to sum columns A‑C instead of A‑B using SetSharedFormula. | Explain why SetSharedFormula is faster than assigning a formula to each cell individually. | Show how to read the existing row count from a worksheet and apply the shared SUM formula dynamically.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsMacroLikeSum
 {
-    public class SumFormulaMacro
+    // Creates a new workbook, fills columns A and B with sample data, applies a shared row‑relative SUM formula ("=SUM(A1:B1)") to column C for a defined number of rows, recalculates the sheet, prints each row's values, and saves the file as RowSumFormulas.xlsx.
+    public class InsertRowSumFormulas
     {
         public static void Run()
         {
@@ -15,46 +23,46 @@ namespace AsposeCellsExamples
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Sample data: fill columns A‑D (0‑3) with some numbers
-                int totalRows = 5;
-                int dataColumns = 4;
+                // Number of rows to process
+                int totalRows = 10;
+
+                // Populate sample data in columns A and B (0‑based indexes 0 and 1)
                 for (int row = 0; row < totalRows; row++)
                 {
-                    for (int col = 0; col < dataColumns; col++)
-                    {
-                        cells[row, col].PutValue(row * dataColumns + col + 1);
-                    }
+                    cells[row, 0].PutValue(row + 1);          // A column: 1,2,3,...
+                    cells[row, 1].PutValue((row + 1) * 10);   // B column: 10,20,30,...
                 }
 
-                // Insert a SUM formula in each row that adds the values of A‑D, result in column E
-                int targetColumnIndex = 4; // column E
-                Cell firstTargetCell = cells[0, targetColumnIndex];
-                string sharedFormula = "=SUM(A1:D1)";
+                // Target cell where the shared SUM formula will start (column C, index 2)
+                Cell targetCell = cells[0, 2]; // C1
 
-                // Apply shared formula using FormulaParseOptions (newer API)
-                FormulaParseOptions options = new FormulaParseOptions();
-                firstTargetCell.SetSharedFormula(sharedFormula, totalRows, 1, options);
+                // Apply the same row‑relative SUM formula to the whole column C
+                targetCell.SetSharedFormula("=SUM(A1:B1)", totalRows, 1);
 
-                // Recalculate formulas
+                // Recalculate the workbook so that all formulas are evaluated
                 workbook.CalculateFormula();
 
-                // Save the workbook
-                string outputPath = "SumRows.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Output the results to the console for verification
+                for (int row = 0; row < totalRows; row++)
+                {
+                    Console.WriteLine($"Row {row + 1}: A={cells[row, 0].Value}, B={cells[row, 1].Value}, C (SUM)={cells[row, 2].Value}");
+                }
+
+                // Save the workbook (lifecycle rule: create → save)
+                workbook.Save("RowSumFormulas.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            SumFormulaMacro.Run();
+            InsertRowSumFormulas.Run();
         }
     }
 }

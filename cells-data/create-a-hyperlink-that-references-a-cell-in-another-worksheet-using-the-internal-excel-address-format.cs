@@ -1,32 +1,34 @@
 using System;
 using Aspose.Cells;
 
-class HyperlinkToAnotherWorksheet
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Add a second worksheet and name it "Sheet2"
-        int sheet2Index = workbook.Worksheets.Add();
-        Worksheet sheet2 = workbook.Worksheets[sheet2Index];
-        sheet2.Name = "Sheet2";
+        // Get the default first worksheet and rename it
+        Worksheet mainSheet = workbook.Worksheets[0];
+        mainSheet.Name = "Main";
 
-        // Put a value in the target cell on Sheet2
-        sheet2.Cells["A1"].PutValue("Target Cell");
+        // Add a second worksheet and rename it
+        int targetSheetIndex = workbook.Worksheets.Add();
+        Worksheet targetSheet = workbook.Worksheets[targetSheetIndex];
+        targetSheet.Name = "Target";
 
-        // Get the first worksheet (default name "Sheet1")
-        Worksheet sheet1 = workbook.Worksheets[0];
+        // Put a sample value in the target cell (A1 of the second sheet)
+        targetSheet.Cells["A1"].PutValue("Hello from Target!");
 
-        // Add a hyperlink in cell A1 of Sheet1 that points to Sheet2!A1
-        // Using the internal Excel address format "Sheet2!A1"
-        sheet1.Hyperlinks.Add("A1", 1, 1, "Sheet2!A1");
+        // Add a hyperlink in Main!B2 that points to Target!A1 using internal Excel address format
+        // The Add method parameters: start cell, rows, columns, address
+        mainSheet.Hyperlinks.Add("B2", 1, 1, "Target!A1");
 
-        // Optionally set the display text for the hyperlink
-        sheet1.Hyperlinks[0].TextToDisplay = "Go to Sheet2 A1";
+        // Optionally set the display text of the hyperlink
+        Hyperlink hyperlink = mainSheet.Hyperlinks[0];
+        hyperlink.TextToDisplay = "Go to Target A1";
 
         // Save the workbook
-        workbook.Save("HyperlinkToAnotherWorksheet.xlsx");
+        workbook.Save("HyperlinkToOtherSheet.xlsx");
     }
 }

@@ -2,55 +2,59 @@ using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
-using AsposeRange = Aspose.Cells.Range;
 
-class ExportRangeToJsonDemo
+namespace AsposeCellsJsonExport
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data in the worksheet
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["C1"].PutValue("City");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["C2"].PutValue("New York");
-            sheet.Cells["A3"].PutValue("Alice");
-            sheet.Cells["B3"].PutValue(25);
-            sheet.Cells["C3"].PutValue("London");
-
-            // Define the range that will be exported (A1:C3)
-            AsposeRange range = sheet.Cells.CreateRange("A1:C3");
-
-            // Set up export options
-            ExportRangeToJsonOptions options = new ExportRangeToJsonOptions
+            try
             {
-                HasHeaderRow = true,      // First row contains column headers
-                ExportAsString = true,    // Export all cell values as strings
-                ExportEmptyCells = true,  // Include empty cells as null in JSON
-                Indent = "    "           // Pretty‑print JSON with 4‑space indentation
-            };
+                // Create a new workbook in memory
+                Workbook workbook = new Workbook();
 
-            // Export the defined range to a JSON string
-            string json = JsonUtility.ExportRangeToJson(range, options);
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Output the JSON string to the console
-            Console.WriteLine(json);
+                // Populate sample data (including a header row)
+                worksheet.Cells["A1"].PutValue("Name");
+                worksheet.Cells["B1"].PutValue("Age");
+                worksheet.Cells["A2"].PutValue("John");
+                worksheet.Cells["B2"].PutValue(30);
+                worksheet.Cells["A3"].PutValue("Alice");
+                worksheet.Cells["B3"].PutValue(25);
 
-            // Optionally write the JSON to a file
-            string outputPath = "ExportedRange.json";
-            File.WriteAllText(outputPath, json);
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.Error.WriteLine($"Error: {ex.Message}");
+                // Define the range to export (A1:B3)
+                // Use fully qualified type to avoid ambiguity with System.Range
+                Aspose.Cells.Range exportRange = worksheet.Cells.CreateRange("A1:B3");
+
+                // Configure export options
+                ExportRangeToJsonOptions jsonOptions = new ExportRangeToJsonOptions
+                {
+                    HasHeaderRow = true,      // Treat first row as header
+                    ExportAsString = true,    // Export cell values as strings
+                    ExportEmptyCells = false, // Do not include empty cells
+                    Indent = "    "           // 4‑space indentation for pretty JSON
+                };
+
+                // Export the range to a JSON string
+                string jsonResult = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
+
+                // Output JSON to console
+                Console.WriteLine("Exported JSON:");
+                Console.WriteLine(jsonResult);
+
+                // Write JSON to a file (ensure the directory exists)
+                string outputPath = Path.Combine(Environment.CurrentDirectory, "ExportedRange.json");
+                File.WriteAllText(outputPath, jsonResult);
+                Console.WriteLine($"\nJSON saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

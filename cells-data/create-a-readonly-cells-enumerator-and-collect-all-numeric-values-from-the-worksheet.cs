@@ -14,37 +14,36 @@ namespace AsposeCellsReadOnlyEnumerator
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Populate sample data (mixed types)
-            cells["A1"].PutValue("Text");
-            cells["B1"].PutValue(123);               // numeric
-            cells["C1"].PutValue(45.67);              // numeric
-            cells["D1"].PutValue(DateTime.Now);       // numeric (datetime)
-            cells["E1"].PutValue(true);               // non‑numeric
-            cells["F1"].PutValue("789");              // string that can be converted
+            // Populate sample data (numeric and non‑numeric)
+            cells["A1"].PutValue(10);          // numeric
+            cells["B1"].PutValue("Text");      // non‑numeric
+            cells["C1"].PutValue(25.5);        // numeric
+            cells["A2"].PutValue(DateTime.Now); // date (numeric type)
+            cells["B2"].PutValue(true);        // non‑numeric
+            cells["C2"].PutValue("123");       // string that can be converted, but still a string
 
-            // Convert convertible strings to numeric values (optional)
-            cells.ConvertStringToNumericValue();
-
-            // Get a read‑only enumerator for all instantiated cells
+            // Get a read‑only enumerator for all cells in the worksheet
             IEnumerator enumerator = cells.GetEnumerator();
 
-            // List to hold numeric values found in the worksheet
-            List<object> numericValues = new List<object>();
+            // List to collect numeric values
+            List<double> numericValues = new List<double>();
 
             // Iterate through cells without modifying the collection
             while (enumerator.MoveNext())
             {
                 Cell cell = (Cell)enumerator.Current;
-                // Check if the cell contains a numeric value (int, double, DateTime)
-                if (cell.IsNumericValue && cell.Value != null)
+
+                // Check if the cell contains a numeric value (int, double, DateTime, etc.)
+                if (cell != null && cell.IsNumericValue)
                 {
-                    numericValues.Add(cell.Value);
+                    // For numeric cells, DoubleValue provides a double representation
+                    numericValues.Add(cell.DoubleValue);
                 }
             }
 
             // Output the collected numeric values
             Console.WriteLine("Numeric values found in the worksheet:");
-            foreach (var val in numericValues)
+            foreach (double val in numericValues)
             {
                 Console.WriteLine(val);
             }

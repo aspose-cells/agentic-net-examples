@@ -1,31 +1,41 @@
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsHtmlCleanup
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Sample HTML containing <br> tags with redundant spaces
+            string html = "<p>Line1<br>   <br>Line2<br>   </p>";
 
-        // Add a cell value that contains a line break.
-        // When saved to HTML Aspose.Cells converts the line break to a <br> tag.
-        worksheet.Cells["A1"].PutValue("First line\n   Second line with spaces");
+            // Configure load options to delete redundant spaces after <br> tags
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions
+            {
+                DeleteRedundantSpaces = true // Removes unnecessary spaces around <br>
+            };
 
-        // Save the workbook to HTML using default HtmlSaveOptions.
-        string htmlFilePath = "output.html";
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        workbook.Save(htmlFilePath, htmlOptions);
+            // Load the HTML into a workbook using the configured options
+            byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+            using (MemoryStream stream = new MemoryStream(htmlBytes))
+            {
+                Workbook workbook = new Workbook(stream, loadOptions);
 
-        // Load the generated HTML, remove any spaces (or other whitespace) that appear
-        // directly after a <br> tag, and overwrite the file.
-        string htmlContent = File.ReadAllText(htmlFilePath);
-        string cleanedHtml = Regex.Replace(htmlContent, @"<br>\s+", "<br>");
-        File.WriteAllText(htmlFilePath, cleanedHtml);
+                // Optionally, manipulate the workbook here
 
-        Console.WriteLine("HTML file saved and redundant spaces after <br> tags removed.");
+                // Save the workbook back to HTML; default save options preserve the cleaned text
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+
+                // Output file path
+                string outputPath = "cleaned_output.html";
+                workbook.Save(outputPath, saveOptions);
+
+                Console.WriteLine($"HTML saved without redundant spaces after <br> tags to: {outputPath}");
+            }
+        }
     }
 }

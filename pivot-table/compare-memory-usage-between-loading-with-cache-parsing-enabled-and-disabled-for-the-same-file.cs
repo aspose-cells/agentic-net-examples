@@ -1,92 +1,50 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryComparison
+class CompareMemoryUsage
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the Excel file to be loaded for comparison
-            string filePath = "sample.xlsx";
+        // Path to the workbook to be loaded for comparison
+        string filePath = "sample.xlsx";
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
-                return;
-            }
+        // -------------------------------------------------
+        // Load with cache parsing (KeepUnparsedData = true)
+        // -------------------------------------------------
+        LoadOptions optionsWithCache = new LoadOptions();
+        optionsWithCache.KeepUnparsedData = true; // cache parsing enabled
 
-            try
-            {
-                // ------------------------------------------------------------
-                // 1. Load workbook without using access cache (cache parsing disabled)
-                // ------------------------------------------------------------
-                long memoryBeforeNoCache = Process.GetCurrentProcess().PrivateMemorySize64;
+        // Ensure a clean memory state before measurement
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
 
-                Workbook wbNoCache = null;
-                try
-                {
-                    wbNoCache = new Workbook(filePath);
-                    long memoryAfterNoCache = Process.GetCurrentProcess().PrivateMemorySize64;
-                    long memoryUsedNoCache = memoryAfterNoCache - memoryBeforeNoCache;
+        long memBeforeCache = GC.GetTotalMemory(true);
+        Workbook wbWithCache = new Workbook(filePath, optionsWithCache);
+        long memAfterCache = GC.GetTotalMemory(true);
+        long usedWithCache = memAfterCache - memBeforeCache;
 
-                    // Store result for later output
-                    Console.WriteLine("Memory usage without Access Cache: {0:N0} bytes", memoryUsedNoCache);
-                }
-                finally
-                {
-                    wbNoCache?.Dispose();
-                    wbNoCache = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
+        // -------------------------------------------------
+        // Load without cache parsing (KeepUnparsedData = false)
+        // -------------------------------------------------
+        LoadOptions optionsWithoutCache = new LoadOptions();
+        optionsWithoutCache.KeepUnparsedData = false; // cache parsing disabled
 
-                // ------------------------------------------------------------
-                // 2. Load workbook and enable access cache (cache parsing enabled)
-                // ------------------------------------------------------------
-                long memoryBeforeCache = Process.GetCurrentProcess().PrivateMemorySize64;
+        // Clean memory again before second measurement
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
 
-                Workbook wbCache = null;
-                long memoryUsedCache = 0;
-                try
-                {
-                    wbCache = new Workbook(filePath);
-                    // Start access cache for all possible optimizations
-                    wbCache.StartAccessCache(AccessCacheOptions.All);
+        long memBeforeNoCache = GC.GetTotalMemory(true);
+        Workbook wbWithoutCache = new Workbook(filePath, optionsWithoutCache);
+        long memAfterNoCache = GC.GetTotalMemory(true);
+        long usedWithoutCache = memAfterNoCache - memBeforeNoCache;
 
-                    long memoryAfterCache = Process.GetCurrentProcess().PrivateMemorySize64;
-                    memoryUsedCache = memoryAfterCache - memoryBeforeCache;
-                }
-                finally
-                {
-                    // Close the cache and clean up
-                    wbCache?.CloseAccessCache(AccessCacheOptions.All);
-                    wbCache?.Dispose();
-                    wbCache = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
+        // Output the memory usage comparison
+        Console.WriteLine($"Memory used with KeepUnparsedData = true : {usedWithCache} bytes");
+        Console.WriteLine($"Memory used with KeepUnparsedData = false: {usedWithoutCache} bytes");
 
-                // ------------------------------------------------------------
-                // 3. Output the comparison results
-                // ------------------------------------------------------------
-                Console.WriteLine("Memory usage comparison for loading \"{0}\":", filePath);
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Without Access Cache (cache parsing disabled): {0:N0} bytes", 
-                    Process.GetCurrentProcess().PrivateMemorySize64 - memoryBeforeNoCache);
-                Console.WriteLine("With Access Cache (cache parsing enabled)   : {0:N0} bytes", memoryUsedCache);
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Difference (Cache - NoCache)                : {0:N0} bytes", 
-                    memoryUsedCache - (Process.GetCurrentProcess().PrivateMemorySize64 - memoryBeforeNoCache));
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Dispose workbooks if needed
+        wbWithCache.Dispose();
+        wbWithoutCache.Dispose();
     }
 }

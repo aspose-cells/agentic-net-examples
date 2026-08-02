@@ -1,41 +1,65 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsCustomFunctionDemo
 {
-    // Demonstrates how to register a custom function (implemented as an add‑in) with a workbook
-    // and then use that function in cell formulas.
-    class Program
+    // Custom calculation engine that implements a user‑defined function named MYFUNC
+    public class MyCustomFunctionEngine : AbstractCalculationEngine
     {
-        static void Main()
+        // This method is called for every function encountered during calculation
+        public override void Calculate(CalculationData data)
         {
-            // 1. Create a new workbook (uses the standard create rule)
-            Workbook workbook = new Workbook();
+            // Check if the function name matches our custom function (case‑insensitive)
+            if (string.Equals(data.FunctionName, "MYFUNC", StringComparison.OrdinalIgnoreCase))
+            {
+                // Expecting exactly two parameters; retrieve their values
+                // GetParamValue returns the evaluated value of the parameter
+                object param0 = data.GetParamValue(0);
+                object param1 = data.GetParamValue(1);
 
-            // 2. Register the custom function.
-            //    The function is assumed to be defined in an Excel add‑in file (XLA/XLAM).
-            //    The third parameter indicates that the path is relative to the workbook,
-            //    not to the Aspose.Cells add‑in library.
-            string addInPath = Path.Combine("AddIns", "MyCustomFunctions.xlam"); // adjust as needed
-            string functionName = "MY_UDF"; // the name of the function defined in the add‑in
-            workbook.Worksheets.RegisterAddInFunction(addInPath, functionName, false);
+                // Convert parameters to double (handle possible nulls)
+                double val0 = param0 != null ? Convert.ToDouble(param0) : 0.0;
+                double val1 = param1 != null ? Convert.ToDouble(param1) : 0.0;
 
-            // 3. Use the registered function in a cell formula.
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["B1"].Formula = $"={functionName}(A1, A2)";
+                // Example logic: return the sum of the two parameters multiplied by 2
+                data.CalculatedValue = (val0 + val1) * 2;
+            }
+            // For any other function, do nothing – the default engine will handle it
+        }
+    }
 
-            // 4. Calculate the workbook so the custom function is evaluated.
-            //    If the add‑in implements the function correctly, the result will appear in B1.
-            workbook.CalculateFormula();
+    public class Program
+    {
+        public static void Main()
+        {
+            // Create a new workbook (lifecycle rule: use provided creation method)
+            Workbook wb = new Workbook();
 
-            // 5. Output the result to the console (optional verification).
-            Console.WriteLine($"Result of {functionName}(A1, A2): {sheet.Cells["B1"].Value}");
+            // Access the first worksheet
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // 6. Save the workbook (uses the standard save rule)
-            workbook.Save("CustomFunctionDemo.xlsx", SaveFormat.Xlsx);
+            // Populate some sample data that the custom function will use
+            cells["A1"].PutValue(5);
+            cells["A2"].PutValue(7);
+
+            // Set a formula that uses the custom function MYFUNC
+            cells["A3"].Formula = "=MYFUNC(A1, A2)";
+
+            // Configure calculation options to use our custom engine
+            CalculationOptions options = new CalculationOptions
+            {
+                CustomEngine = new MyCustomFunctionEngine()
+            };
+
+            // Calculate all formulas in the workbook using the custom engine
+            wb.CalculateFormula(options);
+
+            // Output the result of the custom function
+            Console.WriteLine("Result of MYFUNC(A1, A2): " + cells["A3"].Value);
+
+            // Save the workbook (lifecycle rule: use provided save method)
+            wb.Save("CustomFunctionDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

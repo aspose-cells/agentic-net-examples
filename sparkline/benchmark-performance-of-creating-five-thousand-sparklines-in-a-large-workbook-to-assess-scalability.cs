@@ -1,68 +1,48 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace SparklineBenchmark
+class SparklineBenchmark
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        int sparklineCount = 5000;   // Number of sparklines to create
+        int dataPoints = 10;         // Number of data points per sparkline
+
+        // Populate sample data for each sparkline (rows 0..sparklineCount-1, columns 0..dataPoints-1)
+        for (int row = 0; row < sparklineCount; row++)
         {
-            try
+            for (int col = 0; col < dataPoints; col++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate source data for the sparklines (same range for all sparklines)
-                // Fill cells A1:D1 with sample values
-                sheet.Cells["A1"].PutValue(5);
-                sheet.Cells["B1"].PutValue(2);
-                sheet.Cells["C1"].PutValue(1);
-                sheet.Cells["D1"].PutValue(3);
-
-                // Define the location of the first sparkline (single cell)
-                // Subsequent sparklines will be added row‑by‑row
-                CellArea firstLocation = new CellArea
-                {
-                    StartRow = 0,   // Row 1 (zero‑based)
-                    EndRow = 0,
-                    StartColumn = 5, // Column F (zero‑based)
-                    EndColumn = 5
-                };
-
-                // Add a sparkline group with a valid single‑cell location
-                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, firstLocation);
-                SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-                // Benchmark the creation of 5,000 sparklines
-                Stopwatch sw = Stopwatch.StartNew();
-
-                for (int i = 0; i < 5000; i++)
-                {
-                    // Add a sparkline for each row; data range is the same for all
-                    // Location varies by row (column F, rows 1‑5000)
-                    group.Sparklines.Add("A1:D1", i, 5);
-                }
-
-                sw.Stop();
-                Console.WriteLine($"Time to create 5,000 sparklines: {sw.ElapsedMilliseconds} ms");
-
-                // Save the workbook (ensure the directory exists)
-                string outputPath = "SparklineBenchmark.xlsx";
-                if (File.Exists(outputPath))
-                {
-                    File.Delete(outputPath);
-                }
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                worksheet.Cells[row, col].PutValue(col + 1); // simple incremental data
             }
         }
+
+        // Add an empty SparklineGroup of type Line
+        int groupIndex = worksheet.SparklineGroups.Add(SparklineType.Line);
+        SparklineGroup sparklineGroup = worksheet.SparklineGroups[groupIndex];
+
+        // Benchmark the creation of sparklines
+        Stopwatch sw = Stopwatch.StartNew();
+
+        for (int i = 0; i < sparklineCount; i++)
+        {
+            // Define the data range for the current row, e.g., "A1:J1", "A2:J2", ...
+            string dataRange = $"A{i + 1}:J{i + 1}";
+
+            // Add a sparkline at column K (index dataPoints) of the same row
+            sparklineGroup.Sparklines.Add(dataRange, i, dataPoints);
+        }
+
+        sw.Stop();
+        Console.WriteLine($"Created {sparklineCount} sparklines in {sw.ElapsedMilliseconds} ms.");
+
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        workbook.Save("SparklineBenchmark.xlsx");
     }
 }

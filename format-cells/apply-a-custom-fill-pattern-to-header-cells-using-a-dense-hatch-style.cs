@@ -1,66 +1,46 @@
-using System;
+// Title: Apply a Dense Hatch Fill Pattern to Header Cells with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, write header values, define a style that uses the ThickDiagonalCrosshatch pattern with LightGray foreground and DarkGray background, enable cell shading, apply the style to the first‑row range, and save the file as HeaderPattern.xlsx using Aspose.Cells in C#.
+// Keywords: Aspose.Cells | C# | .NET | Excel fill pattern | ThickDiagonalCrosshatch | header cell style | cell shading | BackgroundType | foreground color | background color | custom pattern
+// Common Searches: Aspose.Cells set hatch pattern for cells | C# apply ThickDiagonalCrosshatch to a range | how to use BackgroundType in Aspose.Cells | custom header style Excel Aspose | cell shading with foreground and background colors
+// Developer Intent: Add a dense hatch background to a header row in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Create printable reports where header rows stand out with a distinctive hatch pattern. | Separate worksheet sections visually by applying custom patterns to specific ranges. | Automate Excel generation with styled headers that improve readability and hierarchy.
+// AI Prompts: Generate C# code that applies a ThickDiagonalCrosshatch pattern with LightGray foreground and DarkGray background to a specified range using Aspose.Cells. | Show how to switch the hatch style and colors of a header row style in Aspose.Cells for .NET. | Provide an example that applies the same dense hatch pattern to header rows across multiple worksheets in a single workbook. | Write a function that receives a range address and pattern colors, then applies a custom fill pattern with Aspose.Cells.
+
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// Shows how to create a workbook, write header values, define a style that uses the ThickDiagonalCrosshatch pattern with LightGray foreground and DarkGray background, enable cell shading, apply the style to the first‑row range, and save the file as HeaderPattern.xlsx using Aspose.Cells in C#.
+class ApplyHeaderFillPattern
 {
-    class HeaderFillPatternDemo
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate header cells (first row, columns A to D)
+        for (int col = 0; col < 4; col++)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate header cells with sample text
-                sheet.Cells["A1"].PutValue("ID");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["C1"].PutValue("Score");
-
-                // Create a style for the header cells
-                Style headerStyle = workbook.CreateStyle();
-
-                // Apply a dense hatch pattern (DiagonalCrosshatch) to the style
-                headerStyle.Pattern = BackgroundType.DiagonalCrosshatch;
-
-                // Set foreground (text) and background colors for the pattern
-                headerStyle.ForegroundColor = Color.White;
-                headerStyle.BackgroundColor = Color.DarkBlue;
-
-                // Enable cell shading (pattern application)
-                StyleFlag flag = new StyleFlag { CellShading = true };
-
-                // Define the range that covers the header row (A1:C1)
-                int startRow = 0;
-                int startColumn = 0;
-                int totalRows = 1;
-                int totalColumns = 3;
-
-                // Resolve ambiguity between Aspose.Cells.Range and System.Range
-                Aspose.Cells.Range headerRange = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
-                headerRange.ApplyStyle(headerStyle, flag);
-
-                // Determine output file path
-                string outputPath = "HeaderFillPattern.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Cell cell = sheet.Cells[0, col];
+            cell.PutValue($"Header {col + 1}");
         }
+
+        // Create a style for the header cells
+        Style headerStyle = workbook.CreateStyle();
+
+        // Use a dense hatch pattern (ThickDiagonalCrosshatch)
+        headerStyle.Pattern = BackgroundType.ThickDiagonalCrosshatch;
+
+        // Define foreground and background colors for the pattern
+        headerStyle.ForegroundColor = Color.LightGray;
+        headerStyle.BackgroundColor = Color.DarkGray;
+
+        // Apply the style to the header range
+        StyleFlag flag = new StyleFlag();
+        flag.CellShading = true; // Enable pattern application
+        sheet.Cells.CreateRange(0, 0, 1, 4).ApplyStyle(headerStyle, flag);
+
+        // Save the workbook
+        workbook.Save("HeaderPattern.xlsx");
     }
 }

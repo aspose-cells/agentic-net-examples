@@ -6,21 +6,41 @@ class Program
 {
     static void Main()
     {
-        // Path to the Excel file to be loaded
-        string inputPath = "input.xlsx";
-
-        // Create LoadOptions and configure custom globalization settings
+        // Configure load options with a specific culture (German in this example)
         LoadOptions loadOptions = new LoadOptions();
-        // Example: use German culture (comma as decimal separator)
         loadOptions.CultureInfo = new CultureInfo("de-DE");
 
-        // Load the workbook with the specified LoadOptions
-        Workbook workbook = new Workbook(inputPath, loadOptions);
+        // Load the workbook using the configured LoadOptions
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // Demonstrate that the culture settings are applied
-        Console.WriteLine("Cell A1 value with German culture: " + workbook.Worksheets[0].Cells["A1"].StringValue);
+        // Apply custom globalization settings to the loaded workbook
+        workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
 
-        // Save the workbook (optional)
+        // Example usage: display a cell value to see the effect of the culture settings
+        Console.WriteLine("Cell A1 value: " + workbook.Worksheets[0].Cells["A1"].StringValue);
+
+        // Save the workbook after applying the custom settings
         workbook.Save("output.xlsx");
+    }
+
+    // Custom globalization settings example
+    private class CustomGlobalizationSettings : GlobalizationSettings
+    {
+        // Override boolean value strings
+        public override string GetBooleanValueString(bool value)
+        {
+            return value ? "ИСТИНА" : "ЛОЖЬ";
+        }
+
+        // Override error value strings (example translation)
+        public override string GetErrorValueString(string error)
+        {
+            return error switch
+            {
+                "#DIV/0!" => "#ДЕЛ/0!",
+                "#NAME?" => "#ИМЯ?",
+                _ => base.GetErrorValueString(error)
+            };
+        }
     }
 }

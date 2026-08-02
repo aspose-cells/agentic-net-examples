@@ -1,14 +1,22 @@
+// Title: Export Aspose.Cells Chart to Scalable SVG in C# Using SvgImageOptions
+// Description: Shows how to build a workbook, add a line chart, set SvgImageOptions (FitToViewPort, CssPrefix, EmbeddedFontType), and write the chart directly to an SVG file, with optional workbook saving for further processing.
+// Keywords: Aspose.Cells | C# SVG chart export | SvgImageOptions | chart.ToImage | vector SVG | line chart export | Excel to SVG | Aspose.Cells chart rendering | scalable vector graphics | .NET chart SVG
+// Common Searches: Aspose.Cells export chart as SVG C# | How to use SvgImageOptions with Aspose.Cells | C# generate SVG from Excel chart | Save Aspose.Cells chart to SVG file | Vector chart export Aspose.Cells .NET
+// Developer Intent: Create an SVG representation of an Aspose.Cells chart in C# while preserving vector quality.
+// Use Cases: Render a high‑resolution line chart for a responsive web dashboard. | Produce printable SVG graphics for reports that require crisp scaling. | Extract chart visuals as SVG assets for reuse in other design tools while keeping the original workbook editable.
+// AI Prompts: Write C# code that builds a bar chart with Aspose.Cells and exports it to SVG using custom CSS classes and embedded fonts. | Explain how to loop through all charts in a workbook and save each as a separate SVG file with distinct SvgImageOptions settings. | Describe the benefits of embedding WOFF fonts in SVG output from Aspose.Cells and show the required option configuration.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsSvgExportDemo
+namespace AsposeCellsSvgExport
 {
-    class Program
+    // Shows how to build a workbook, add a line chart, set SvgImageOptions (FitToViewPort, CssPrefix, EmbeddedFontType), and write the chart directly to an SVG file, with optional workbook saving for further processing.
+    public class ExportChartToSvg
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
@@ -21,63 +29,51 @@ namespace AsposeCellsSvgExportDemo
                 sheet.Cells["A2"].PutValue("Jan");
                 sheet.Cells["A3"].PutValue("Feb");
                 sheet.Cells["A4"].PutValue("Mar");
+
                 sheet.Cells["B1"].PutValue("Sales");
                 sheet.Cells["B2"].PutValue(120);
                 sheet.Cells["B3"].PutValue(210);
                 sheet.Cells["B4"].PutValue(150);
 
                 // Add a line chart covering the data range
-                int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
+                int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
                 chart.NSeries.Add("B2:B4", true);          // Values
                 chart.NSeries.CategoryData = "A2:A4";      // Categories
                 chart.Title.Text = "Quarterly Sales";
 
-                // Configure SVG rendering options (no ImageFormat needed for SVG)
-                SvgImageOptions svgOpts = new SvgImageOptions
+                // Configure SVG rendering options
+                SvgImageOptions svgOptions = new SvgImageOptions
                 {
-                    FitToViewPort = true,            // Make SVG fit the viewport
-                    CssPrefix = "chart-",            // Optional: custom CSS prefix
-                    EmbeddedFontType = SvgEmbeddedFontType.Woff // Optional: embed fonts
+                    FitToViewPort = true,                     // Make SVG fit the viewport (optional)
+                    CssPrefix = "chart-",                     // Optional CSS prefix for styling
+                    EmbeddedFontType = SvgEmbeddedFontType.Woff // Optional font embedding
                 };
 
                 // Export the chart directly to an SVG file
-                string svgPath = "QuarterlySalesChart.svg";
+                string outputPath = "QuarterlySalesChart.svg";
+                chart.ToImage(outputPath, svgOptions);
 
-                // Ensure the directory for the SVG exists
-                string svgDir = Path.GetDirectoryName(svgPath);
-                if (!string.IsNullOrEmpty(svgDir) && !Directory.Exists(svgDir))
-                {
-                    Directory.CreateDirectory(svgDir);
-                }
-
-                try
-                {
-                    chart.ToImage(svgPath, svgOpts);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to export chart to SVG: {ex.Message}");
-                }
-
-                // Optionally, save the workbook for reference
+                // Optionally save the workbook for reference
                 string workbookPath = "QuarterlySalesWorkbook.xlsx";
-                try
-                {
-                    workbook.Save(workbookPath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                }
+                workbook.Save(workbookPath);
 
-                Console.WriteLine($"Chart exported to SVG: {Path.GetFullPath(svgPath)}");
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
+                Console.WriteLine($"Chart exported to SVG: {outputPath}");
+                Console.WriteLine($"Workbook saved to: {workbookPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ExportChartToSvg.Run();
         }
     }
 }

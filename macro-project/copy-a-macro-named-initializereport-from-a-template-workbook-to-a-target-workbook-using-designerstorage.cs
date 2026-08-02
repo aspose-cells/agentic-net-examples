@@ -12,29 +12,28 @@ namespace MacroCopyExample
             Workbook templateWorkbook = new Workbook("TemplateWithMacro.xlsm");
 
             // Load (or create) the target workbook where the macro will be copied to
-            Workbook targetWorkbook = new Workbook();
-
-            // Ensure the target workbook can hold macros
+            Workbook targetWorkbook = new Workbook(); // creates a new empty workbook
+            // Ensure the target workbook is macro‑enabled
             targetWorkbook.Settings.EnableMacros = true;
 
             // Retrieve the designer storage (binary data) of the macro named "InitializeReport"
-            // This works for macros stored as Designer modules (e.g., userforms or designer code)
+            // from the template workbook's VBA project.
             byte[] macroStorage = templateWorkbook.VbaProject.Modules.GetDesignerStorage("InitializeReport");
 
-            if (macroStorage != null && macroStorage.Length > 0)
+            if (macroStorage == null)
             {
-                // Add the retrieved designer storage to the target workbook's VBA project
-                // The AddDesignerStorage method creates a Designer module with the same name
-                targetWorkbook.VbaProject.Modules.AddDesignerStorage("InitializeReport", macroStorage);
-                Console.WriteLine("Macro 'InitializeReport' copied successfully via DesignerStorage.");
-            }
-            else
-            {
-                Console.WriteLine("Designer storage for macro 'InitializeReport' not found in the template workbook.");
+                Console.WriteLine("Macro 'InitializeReport' not found in the template workbook.");
+                return;
             }
 
-            // Save the target workbook as a macro‑enabled file
+            // Add the retrieved designer storage to the target workbook's VBA project.
+            // This creates a new designer module with the same name and code.
+            targetWorkbook.VbaProject.Modules.AddDesignerStorage("InitializeReport", macroStorage);
+
+            // Save the target workbook as a macro‑enabled file.
             targetWorkbook.Save("TargetWithCopiedMacro.xlsm", SaveFormat.Xlsm);
+
+            Console.WriteLine("Macro 'InitializeReport' successfully copied to the target workbook.");
         }
     }
 }

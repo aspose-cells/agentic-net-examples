@@ -1,56 +1,55 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfExportRetry
+class PdfExportWithRetry
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (use the provided create rule)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Sample Data");
+        worksheet.Cells["A2"].PutValue(123);
+        worksheet.Cells["A3"].PutValue(DateTime.Now);
+
+        // Configure PDF save options
+        PdfSaveOptions options = new PdfSaveOptions
         {
-            // Path to the source Excel file (replace with actual path if needed)
-            string excelPath = "input.xlsx";
+            // Initial attempt: do not output a blank page when nothing to print
+            OutputBlankPageWhenNothingToPrint = false
+        };
 
-            // Path for the output PDF file
-            string pdfPath = "output.pdf";
+        const string outputPath = "ExportedDocument.pdf";
+        bool saved = false;
 
-            // Load the workbook (using the standard load rule)
-            Workbook workbook = new Workbook(excelPath);
+        try
+        {
+            // First attempt to save PDF (use the provided save rule)
+            workbook.Save(outputPath, options);
+            saved = true;
+            Console.WriteLine("PDF saved successfully on first attempt.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"First PDF export failed: {ex.Message}");
+        }
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Initially try without forcing a blank page when nothing is printed
-                OutputBlankPageWhenNothingToPrint = false,
-
-                // Optional: hide errors during rendering to avoid immediate failure
-                IgnoreError = true
-            };
-
+        if (!saved)
+        {
+            // Retry with OutputBlankPageWhenNothingToPrint set to true
+            options.OutputBlankPageWhenNothingToPrint = true;
             try
             {
-                // First attempt to save the workbook as PDF
-                workbook.Save(pdfPath, pdfOptions);
-                Console.WriteLine("PDF saved successfully on first attempt.");
+                workbook.Save(outputPath, options);
+                Console.WriteLine("PDF saved successfully after retry with OutputBlankPageWhenNothingToPrint enabled.");
             }
             catch (Exception ex)
             {
-                // Log the error
-                Console.WriteLine($"First PDF export failed: {ex.Message}");
-
-                // Retry with OutputBlankPageWhenNothingToPrint set to true
-                pdfOptions.OutputBlankPageWhenNothingToPrint = true;
-
-                try
-                {
-                    workbook.Save(pdfPath, pdfOptions);
-                    Console.WriteLine("PDF saved successfully on retry with OutputBlankPageWhenNothingToPrint = true.");
-                }
-                catch (Exception retryEx)
-                {
-                    // If it still fails, report the error
-                    Console.WriteLine($"Retry PDF export also failed: {retryEx.Message}");
-                }
+                Console.WriteLine($"Retry PDF export also failed: {ex.Message}");
+                // Further error handling could be placed here
             }
         }
     }
 }
+
+// Author: Aspose.Cells .NET example implementation.

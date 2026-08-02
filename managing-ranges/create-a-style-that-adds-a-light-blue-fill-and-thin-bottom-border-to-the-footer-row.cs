@@ -11,25 +11,30 @@ namespace AsposeCellsFooterStyle
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Create a style with light blue fill and a thin bottom border
-            Style style = workbook.CreateStyle();
-            style.BackgroundColor = Color.LightBlue;          // light blue fill
-            style.Pattern = BackgroundType.Solid;             // solid fill pattern
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin; // thin bottom border
-            style.Borders[BorderType.BottomBorder].Color = Color.Black;            // border color
+            // Define the index of the footer row (for example, row 10)
+            int footerRowIndex = 9; // zero‑based index (row 10 in Excel)
 
-            // Define which style attributes should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.BottomBorder = true;   // apply bottom border
-            flag.CellShading = true;    // apply fill (background color)
+            // Create a new style
+            Style footerStyle = workbook.CreateStyle();
 
-            // Determine the footer row index (for demo, use the row after the last used row)
-            int footerRowIndex = cells.MaxDataRow + 1;
+            // Set a light blue fill
+            footerStyle.BackgroundColor = Color.LightBlue;
+            footerStyle.Pattern = BackgroundType.Solid;
+
+            // Set a thin bottom border
+            footerStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+            footerStyle.Borders[BorderType.BottomBorder].Color = Color.Black;
+
+            // Create a style flag to indicate which parts of the style should be applied
+            StyleFlag flag = new StyleFlag
+            {
+                Borders = true,          // apply border settings
+                CellShading = true       // apply fill (background) settings
+            };
 
             // Apply the style to the entire footer row
-            cells.ApplyRowStyle(footerRowIndex, style, flag);
+            sheet.Cells.ApplyRowStyle(footerRowIndex, footerStyle, flag);
 
             // Save the workbook
             workbook.Save("FooterStyle.xlsx");

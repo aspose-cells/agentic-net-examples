@@ -1,4 +1,3 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
@@ -10,38 +9,31 @@ class VerifyChartLocalization
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // ----- Localized source data -----
-        // Japanese strings for categories, values, and labels
-        worksheet.Cells["A1"].PutValue("カテゴリ");          // Header for categories
-        worksheet.Cells["A2"].PutValue("商品A");            // Category 1
-        worksheet.Cells["A3"].PutValue("商品B");            // Category 2
-        worksheet.Cells["B1"].PutValue("売上");            // Header for values
-        worksheet.Cells["B2"].PutValue(120);               // Value 1
-        worksheet.Cells["B3"].PutValue(150);               // Value 2
+        // Put localized strings into cells (e.g., Chinese)
+        worksheet.Cells["A1"].PutValue("图表标题");      // Chart title
+        worksheet.Cells["B1"].PutValue("类别轴标题");   // Category (X) axis title
+        worksheet.Cells["C1"].PutValue("数值轴标题");   // Value (Y) axis title
 
-        // Cells that contain the localized chart title and axis titles
-        worksheet.Cells["C1"].PutValue("売上チャート");      // Chart title
-        worksheet.Cells["D1"].PutValue("商品");            // Category (X) axis title
-        worksheet.Cells["E1"].PutValue("金額 (千円)");      // Value (Y) axis title
+        // Add sample data for the chart
+        worksheet.Cells["A2"].PutValue("一");
+        worksheet.Cells["A3"].PutValue("二");
+        worksheet.Cells["A4"].PutValue("三");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["B4"].PutValue(30);
 
-        // ----- Create a chart -----
-        // Add a column chart positioned from row 5, column 0 to row 20, column 10
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+        // Add a column chart to the worksheet
+        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
         Chart chart = worksheet.Charts[chartIndex];
 
         // Bind data series and categories
-        chart.NSeries.Add("B2:B3", true);          // Values
-        chart.NSeries.CategoryData = "A2:A3";      // Categories
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-        // ----- Apply localized titles from source cells -----
-        chart.Title.Text = worksheet.Cells["C1"].StringValue;               // Chart title
-        chart.CategoryAxis.Title.Text = worksheet.Cells["D1"].StringValue; // X‑axis title
-        chart.ValueAxis.Title.Text = worksheet.Cells["E1"].StringValue;    // Y‑axis title
-
-        // ----- Verification output -----
-        Console.WriteLine("Chart Title: " + chart.Title.Text);
-        Console.WriteLine("Category Axis Title: " + chart.CategoryAxis.Title.Text);
-        Console.WriteLine("Value Axis Title: " + chart.ValueAxis.Title.Text);
+        // Set chart title and axis titles using the localized cell values
+        chart.Title.Text = worksheet.Cells["A1"].StringValue;
+        chart.CategoryAxis.Title.Text = worksheet.Cells["B1"].StringValue;
+        chart.ValueAxis.Title.Text = worksheet.Cells["C1"].StringValue;
 
         // Save the workbook (lifecycle rule)
         workbook.Save("LocalizedChart.xlsx");

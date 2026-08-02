@@ -2,45 +2,50 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
 class Program
 {
-    static async System.Threading.Tasks.Task Main()
+    static async Task Main()
     {
-        // Create a new workbook (create rule)
+        // Create a new workbook and add some data
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Sample Data for PNG rendering");
+        worksheet.Cells["A1"].PutValue("Aspose.Cells PNG Export");
+        worksheet.Cells["A2"].PutValue(DateTime.Now);
 
-        // Configure image rendering options (PNG)
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        // Configure rendering options for PNG output
+        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
         {
             ImageType = ImageType.Png,
             OnePagePerSheet = true
         };
 
-        // Render the first page of the worksheet to a memory stream (SheetRender.ToImage(int, Stream) rule)
-        using (MemoryStream imageStream = new MemoryStream())
+        // Render the first page of the worksheet to a memory stream
+        using (MemoryStream pngStream = new MemoryStream())
         {
-            SheetRender sheetRender = new SheetRender(worksheet, options);
-            sheetRender.ToImage(0, imageStream);
-            imageStream.Position = 0; // reset for reading
+            SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
+            sheetRender.ToImage(0, pngStream); // uses SheetRender.ToImage(int, Stream) rule
+            pngStream.Position = 0; // reset stream for reading
 
             // Prepare HTTP client for POST
-            using (HttpClient client = new HttpClient())
+            using (HttpClient httpClient = new HttpClient())
             {
                 string endpoint = "https://example.com/api/upload"; // replace with actual URL
 
-                // Create content from the image stream
-                var content = new StreamContent(imageStream);
-                content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                // Create HTTP content from the PNG stream
+                ByteArrayContent httpContent = new ByteArrayContent(pngStream.ToArray());
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
 
                 // Send POST request
-                HttpResponseMessage response = await client.PostAsync(endpoint, content);
-                Console.WriteLine($"POST response: {(int)response.StatusCode} {response.ReasonPhrase}");
+                HttpResponseMessage response = await httpClient.PostAsync(endpoint, httpContent);
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"Response status: {response.StatusCode}");
+                Console.WriteLine($"Response body: {responseBody}");
             }
         }
     }

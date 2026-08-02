@@ -1,64 +1,58 @@
+// Title: Read Cell.Value after formula calculation with a custom CalculationMonitor in Aspose.Cells for .NET
+// Description: Shows how to attach an AbstractCalculationMonitor via CalculationOptions, execute Workbook.CalculateFormula, and read worksheet.Cells["A1"].Value and Cells["B1"].Value to confirm the computed results.
+// Keywords: Aspose.Cells | C# | .NET | CalculationMonitor | AbstractCalculationMonitor | AfterCalculate | workbook.CalculateFormula | read cell value | formula evaluation | programmatic verification
+// Common Searches: Aspose.Cells get cell value after CalculateFormula | How to use AbstractCalculationMonitor in C# | Read calculated result of a cell with Aspose.Cells | Log cell changes during formula recalculation Aspose | C# example for custom CalculationMonitor
+// Developer Intent: Retrieve and verify the values of cells after running CalculateFormula, optionally logging changes through a custom monitor.
+// Use Cases: Automated unit tests that compare expected and actual formula results. | Audit trails that capture original and new values when formulas recalculate. | Triggering business rules when a cell's calculated value differs from its previous state.
+// AI Prompts: Generate C# code that calculates formulas with Aspose.Cells, then reads Cell.Value to compare with expected numbers. | Create an AbstractCalculationMonitor implementation that logs OriginalValue and CalculatedValue for each changed cell. | Show how to configure CalculationOptions with a custom monitor to capture AfterCalculate events and output the new values.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaMonitorDemo
 {
-    // Custom monitor to capture calculation details for each cell
-    public class FormulaMonitor : AbstractCalculationMonitor
-    {
-        // Store the last calculated value for demonstration purposes
-        public object LastCalculatedValue { get; private set; }
-
-        // This method is called after each cell is calculated
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            // Check if the cell's value actually changed during calculation
-            if (ValueChanged)
-            {
-                // OriginalValue is the value before calculation,
-                // CalculatedValue is the newly computed value.
-                Console.WriteLine($"Cell ({rowIndex}, {columnIndex}) changed from [{OriginalValue}] to [{CalculatedValue}]");
-                LastCalculatedValue = CalculatedValue;
-            }
-            else
-            {
-                // No change – still useful for tracing
-                Console.WriteLine($"Cell ({rowIndex}, {columnIndex}) unchanged. Value: [{OriginalValue}]");
-            }
-        }
-    }
-
+    // Shows how to attach an AbstractCalculationMonitor via CalculationOptions, execute Workbook.CalculateFormula, and read worksheet.Cells["A1"].Value and Cells["B1"].Value to confirm the computed results.
     class Program
     {
         static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // 2. Populate cells: A1 with a static value, A2 with a formula that depends on A1
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["A2"].Formula = "=A1*2";
+            // Set up formulas
+            worksheet.Cells["A1"].Formula = "=1+2";      // Expected result: 3
+            worksheet.Cells["B1"].Formula = "=A1*3";    // Expected result: 9
 
-            // 3. Set up the calculation monitor and options
-            FormulaMonitor monitor = new FormulaMonitor();
+            // Create a custom calculation monitor
+            var monitor = new MyCalculationMonitor();
+
+            // Attach the monitor via calculation options
             CalculationOptions options = new CalculationOptions
             {
                 CalculationMonitor = monitor
             };
 
-            // 4. Trigger calculation – the monitor will be invoked for each calculated cell
+            // Perform calculation – this will invoke AfterCalculate for each cell
             workbook.CalculateFormula(options);
 
-            // 5. After calculation, read the cell's Value property to confirm the result
-            Cell resultCell = sheet.Cells["A2"];
-            Console.WriteLine($"After calculation, cell A2 Value = {resultCell.Value}");
+            // After calculation, read the cell values directly to confirm results
+            Console.WriteLine($"A1 value after calculation: {worksheet.Cells["A1"].Value}");
+            Console.WriteLine($"B1 value after calculation: {worksheet.Cells["B1"].Value}");
+        }
 
-            // 6. Optionally, verify that the monitor captured the same value
-            Console.WriteLine($"Monitor captured CalculatedValue = {monitor.LastCalculatedValue}");
-
-            // 7. Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("FormulaMonitorResult.xlsx");
+        // Custom monitor that reports changes using CalculatedValue and OriginalValue
+        private class MyCalculationMonitor : AbstractCalculationMonitor
+        {
+            public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
+            {
+                // Only act when the cell's value actually changed
+                if (ValueChanged)
+                {
+                    // CalculatedValue provides the newly computed value
+                    Console.WriteLine($"Cell ({rowIndex},{columnIndex}) changed from [{OriginalValue}] to [{CalculatedValue}]");
+                }
+            }
         }
     }
 }

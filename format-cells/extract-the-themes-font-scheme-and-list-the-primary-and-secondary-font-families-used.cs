@@ -1,26 +1,27 @@
 using System;
 using Aspose.Cells;
 
-namespace ThemeFontExtractor
+namespace AsposeCellsThemeFontExample
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook (or load an existing one if needed)
             Workbook workbook = new Workbook();
 
             // Retrieve the primary (major) theme font
-            string majorFont = workbook.Settings.GetThemeFont(FontSchemeType.Major);
+            string primaryFont = workbook.Settings.GetThemeFont(FontSchemeType.Major);
+
             // Retrieve the secondary (minor) theme font
-            string minorFont = workbook.Settings.GetThemeFont(FontSchemeType.Minor);
+            string secondaryFont = workbook.Settings.GetThemeFont(FontSchemeType.Minor);
 
-            // Display the results
-            Console.WriteLine("Primary (Major) Theme Font: " + majorFont);
-            Console.WriteLine("Secondary (Minor) Theme Font: " + minorFont);
+            // Output the font families
+            Console.WriteLine("Primary (Major) Theme Font: " + primaryFont);
+            Console.WriteLine("Secondary (Minor) Theme Font: " + secondaryFont);
 
-            // Optionally save the workbook (demonstrates lifecycle compliance)
-            workbook.Save("ThemeFontInfo.xlsx");
+            // Optionally save the workbook to demonstrate persistence
+            workbook.Save("ThemeFontDemo.xlsx");
         }
     }
 }

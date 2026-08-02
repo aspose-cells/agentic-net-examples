@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
@@ -11,11 +10,11 @@ namespace AsposeCellsExamples
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for a 3‑D chart
+                // Populate sample data for the chart
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["A2"].PutValue("Q1");
                 sheet.Cells["A3"].PutValue("Q2");
@@ -33,29 +32,30 @@ namespace AsposeCellsExamples
                 int chartIdx = sheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIdx];
 
-                // Set data range for the chart
+                // Set the data range for the chart
                 chart.NSeries.Add("B2:C4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Increase the depth of the 3‑D chart
-                chart.DepthPercent = 300; // 20‑2000 range
+                // Increase the depth perception of the 3‑D chart
+                chart.DepthPercent = 300; // deeper effect
 
-                // Optional 3‑D visual adjustments
-                chart.Perspective = 40;   // 0‑100
-                chart.Elevation = 25;     // degrees
+                // Adjust other 3‑D properties
+                chart.Perspective = 40;
+                chart.Elevation = 25;
 
                 // Save the workbook
                 string outputPath = "Sparkline3DDepthDemo.xlsx";
                 workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

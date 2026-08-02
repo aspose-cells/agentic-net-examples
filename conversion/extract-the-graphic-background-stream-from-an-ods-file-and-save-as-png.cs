@@ -1,3 +1,11 @@
+// Title: Extract embedded ODS page background as PNG with Aspose.Cells for .NET
+// Description: Loads an ODS workbook, accesses the first worksheet's PageSetup, verifies an embedded OdsPageBackground of type Graphic, reads the raw GraphicData bytes, and writes them to a PNG file.
+// Keywords: Aspose.Cells | .NET | ODS background extraction | OdsPageBackground | GraphicData | save as PNG | embedded graphic | page setup | C# example | convert ODS to image
+// Common Searches: Aspose.Cells extract ODS background C# | save ODS page background as PNG | OdsPageBackground GraphicData example | how to get embedded graphic from ODS file | convert ODS background to image using .NET
+// Developer Intent: Retrieve the embedded graphic background from an ODS file and write it to a PNG image.
+// Use Cases: Reuse the original ODS background image in other documents or web assets. | Generate thumbnail previews of ODS sheets for a document management system. | Validate presence of an embedded background before further ODS processing.
+// AI Prompts: Write C# code that extracts an ODS page background with Aspose.Cells and saves it as JPEG. | Explain how to handle linked ODS backgrounds (IsLink = true) and download the external image. | Provide a script to batch‑process multiple ODS files, extracting each background to a separate folder.
+
 using System;
 using System.IO;
 using Aspose.Cells;
@@ -5,62 +13,40 @@ using Aspose.Cells.Ods;
 
 namespace AsposeCellsExamples
 {
-    public class ExtractOdsPageBackground
+    // Loads an ODS workbook, accesses the first worksheet's PageSetup, verifies an embedded OdsPageBackground of type Graphic, reads the raw GraphicData bytes, and writes them to a PNG file.
+    class ExtractOdsBackground
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Path to the source ODS file
+            string odsPath = "input.ods";
+
+            // Load the ODS workbook
+            Workbook workbook = new Workbook(odsPath);
+
+            // Access the first worksheet's page setup
+            Worksheet sheet = workbook.Worksheets[0];
+            PageSetup pageSetup = sheet.PageSetup;
+
+            // Get the ODS page background object
+            OdsPageBackground background = pageSetup.ODSPageBackground;
+
+            // Verify that a graphic background is present and it is embedded (not linked)
+            if (background.Type == OdsPageBackgroundType.Graphic && !background.IsLink)
             {
-                // Path to the source ODS file
-                string odsPath = "input.ods";
+                // Retrieve the raw graphic data (byte array)
+                byte[] imageData = background.GraphicData;
 
-                // Verify that the source file exists
-                if (!File.Exists(odsPath))
-                {
-                    Console.WriteLine($"Error: The file \"{odsPath}\" was not found.");
-                    return;
-                }
+                // Save the graphic data as a PNG file
+                string pngPath = "background.png";
+                File.WriteAllBytes(pngPath, imageData);
 
-                // Load the ODS workbook
-                Workbook workbook = new Workbook(odsPath);
-
-                // Access the first worksheet (you can change the index if needed)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Get the ODS page background settings
-                OdsPageBackground background = sheet.PageSetup.ODSPageBackground;
-
-                // Verify that the background is of type Graphic and contains data
-                if (background.Type == OdsPageBackgroundType.Graphic && background.GraphicData != null)
-                {
-                    // Retrieve the raw graphic data (byte array)
-                    byte[] imageData = background.GraphicData;
-
-                    // Define the output PNG file path
-                    string pngPath = "background.png";
-
-                    // Write the image data to a PNG file
-                    File.WriteAllBytes(pngPath, imageData);
-
-                    Console.WriteLine($"Graphic background extracted and saved to: {pngPath}");
-                }
-                else
-                {
-                    Console.WriteLine("The ODS file does not contain a graphic page background.");
-                }
+                Console.WriteLine($"Graphic background extracted and saved to: {pngPath}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No embedded graphic background found in the ODS file.");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ExtractOdsPageBackground.Run();
         }
     }
 }

@@ -1,3 +1,11 @@
+// Title: Extract worksheet paper size (width & height) to JSON with Aspose.Cells for .NET
+// Description: C# utility that loads an Excel workbook using Aspose.Cells, reads each worksheet's PageSetup.PaperWidth and PaperHeight (in inches), and returns a formatted JSON array containing the sheet name and its dimensions.
+// Keywords: Aspose.Cells paper size | C# worksheet page setup | extract Excel paper width height | JSON export Aspose.Cells | PageSetup.PaperWidth | PageSetup.PaperHeight | print layout audit .NET | Excel sheet dimensions JSON
+// Common Searches: how to get paper width and height of each Excel sheet using Aspose.Cells | C# extract worksheet page setup dimensions to JSON | Aspose.Cells get page size for all worksheets | convert Excel sheet print size to JSON in .NET | retrieve paper dimensions from workbook with Aspose
+// Developer Intent: Read the PaperWidth and PaperHeight of every worksheet in a workbook and output the data as a JSON string.
+// Use Cases: Generate a print‑layout audit report that lists each sheet’s paper size before printing. | Provide a JSON configuration for a reporting service that needs exact page dimensions per worksheet. | Quickly display page‑setup settings in the console for developers troubleshooting mismatched print layouts.
+// AI Prompts: Write a C# method using Aspose.Cells that collects PaperWidth and PaperHeight from all worksheets and returns an indented JSON string. | Extend the extractor to include PageSetup.Orientation, margins, and header/footer settings in the JSON output. | Create a unit test that validates the JSON produced by GetPaperSizesJson against expected dimensions for a sample workbook.
+
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -5,53 +13,48 @@ using Aspose.Cells;
 
 namespace AsposeCellsUtilities
 {
-    // Represents paper size information for a worksheet
+    // Represents paper dimensions for a worksheet
+    // C# utility that loads an Excel workbook using Aspose.Cells, reads each worksheet's PageSetup.PaperWidth and PaperHeight (in inches), and returns a formatted JSON array containing the sheet name and its dimensions.
     public class WorksheetPaperInfo
     {
         public string WorksheetName { get; set; }
-        public double PaperWidthInches { get; set; }
-        public double PaperHeightInches { get; set; }
+        public double WidthInches { get; set; }
+        public double HeightInches { get; set; }
     }
 
     public static class PaperSizeExtractor
     {
-        /// <summary>
-        /// Loads the workbook from the specified path, extracts paper width and height
-        /// for each worksheet, and returns a JSON string summarizing the information.
-        /// </summary>
-        /// <param name="filePath">Path to the Excel file.</param>
-        /// <returns>JSON string containing worksheet names with their paper dimensions.</returns>
-        public static string GetPaperSizes(string filePath)
+        // Extracts paper width and height from all worksheets in the given workbook file
+        // and returns a JSON string summarizing the information.
+        public static string GetPaperSizesJson(string workbookPath)
         {
-            // Load the workbook (uses Aspose.Cells' load constructor)
-            Workbook workbook = new Workbook(filePath);
+            // Load the workbook from the specified file path
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Prepare a list to hold paper size data for each worksheet
-            List<WorksheetPaperInfo> paperInfoList = new List<WorksheetPaperInfo>();
+            var paperInfoList = new List<WorksheetPaperInfo>();
 
-            // Iterate through all worksheets in the workbook
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Access the PageSetup of the current worksheet
+                // Access the PageSetup of the worksheet
                 PageSetup pageSetup = sheet.PageSetup;
 
-                // Collect the required information
-                WorksheetPaperInfo info = new WorksheetPaperInfo
+                // Retrieve paper dimensions (in inches)
+                double width = pageSetup.PaperWidth;
+                double height = pageSetup.PaperHeight;
+
+                // Store the information
+                paperInfoList.Add(new WorksheetPaperInfo
                 {
                     WorksheetName = sheet.Name,
-                    PaperWidthInches = pageSetup.PaperWidth,
-                    PaperHeightInches = pageSetup.PaperHeight
-                };
-
-                paperInfoList.Add(info);
+                    WidthInches = width,
+                    HeightInches = height
+                });
             }
 
-            // Serialize the list to JSON (using System.Text.Json)
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
-            string jsonResult = JsonSerializer.Serialize(paperInfoList, options);
+            // Serialize the list to a formatted JSON string
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResult = JsonSerializer.Serialize(paperInfoList, jsonOptions);
 
             return jsonResult;
         }
@@ -60,10 +63,15 @@ namespace AsposeCellsUtilities
     // Example usage
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            string excelPath = "input.xlsx"; // replace with your file path
-            string jsonSummary = PaperSizeExtractor.GetPaperSizes(excelPath);
+            // Path to the Excel file to analyze
+            string filePath = "input.xlsx";
+
+            // Get JSON summary of paper sizes
+            string jsonSummary = PaperSizeExtractor.GetPaperSizesJson(filePath);
+
+            // Output the JSON to console
             Console.WriteLine(jsonSummary);
         }
     }

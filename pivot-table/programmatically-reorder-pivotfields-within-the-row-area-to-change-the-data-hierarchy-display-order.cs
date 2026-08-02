@@ -11,64 +11,52 @@ namespace PivotFieldReorderDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
-            cells["A1"].Value = "Region";
-            cells["B1"].Value = "Product";
-            cells["C1"].Value = "Sales";
+            Cells cells = sheet.Cells;
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "SubCategory";
+            cells["C1"].Value = "Amount";
 
-            cells["A2"].Value = "North";
+            cells["A2"].Value = "Fruit";
             cells["B2"].Value = "Apple";
-            cells["C2"].Value = 1200;
+            cells["C2"].Value = 120;
 
-            cells["A3"].Value = "North";
+            cells["A3"].Value = "Fruit";
             cells["B3"].Value = "Banana";
-            cells["C3"].Value = 800;
+            cells["C3"].Value = 80;
 
-            cells["A4"].Value = "South";
-            cells["B4"].Value = "Apple";
-            cells["C4"].Value = 1500;
+            cells["A4"].Value = "Vegetable";
+            cells["B4"].Value = "Carrot";
+            cells["C4"].Value = 50;
 
-            cells["A5"].Value = "South";
-            cells["B5"].Value = "Banana";
-            cells["C5"].Value = 900;
+            cells["A5"].Value = "Vegetable";
+            cells["B5"].Value = "Broccoli";
+            cells["C5"].Value = 70;
 
             // Add a pivot table based on the data range
             PivotTableCollection pivotTables = sheet.PivotTables;
-            int pivotIndex = pivotTables.Add("A1:C5", "E3", "SalesPivot");
+            int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
             PivotTable pivotTable = pivotTables[pivotIndex];
 
-            // Add two fields to the row area: Region (index 0) and Product (index 1)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0); // Region
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 1); // Product
+            // Add two fields to the row area: first "Category", then "SubCategory"
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");      // position 0
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory"); // position 1
 
-            // Add the Sales field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
+            // Add the data field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Display the original order of row fields
-            Console.WriteLine("Original Row Field Order:");
-            for (int i = 0; i < pivotTable.RowFields.Count; i++)
-            {
-                Console.WriteLine($"Position {i}: {pivotTable.RowFields[i].Name}");
-            }
-
-            // Reorder the row fields: move the field at position 0 (Region) to position 1
-            // This will make Product appear before Region in the hierarchy
-            pivotTable.RowFields.Move(0, 1);
-
-            // Display the new order after moving
-            Console.WriteLine("\nRow Field Order After Move:");
-            for (int i = 0; i < pivotTable.RowFields.Count; i++)
-            {
-                Console.WriteLine($"Position {i}: {pivotTable.RowFields[i].Name}");
-            }
+            // At this point the hierarchy is Category -> SubCategory.
+            // To change the display order to SubCategory -> Category, move the field.
+            // Current positions: Category (0), SubCategory (1)
+            // Move SubCategory (currPos = 1) to position 0.
+            pivotTable.RowFields.Move(1, 0);
 
             // Refresh and calculate the pivot table to apply changes
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook to a file
+            // Save the workbook
             workbook.Save("PivotFieldReorderResult.xlsx");
         }
     }

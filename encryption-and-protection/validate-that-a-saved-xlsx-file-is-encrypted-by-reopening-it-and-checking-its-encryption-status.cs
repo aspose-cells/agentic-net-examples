@@ -1,48 +1,32 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionValidation
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path for the encrypted workbook
-            string encryptedFilePath = "encrypted.xlsx";
+        // Path and password for the encrypted workbook
+        string filePath = "encrypted.xlsx";
+        string password = "mySecret";
 
-            // 1. Create a new workbook and add some data
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Encryption test");
+        // Create a new workbook and add some data
+        Workbook workbook = new Workbook();
+        workbook.Worksheets[0].Cells["A1"].PutValue("Encrypted test");
 
-            // 2. Set a password to encrypt the workbook
-            wb.Settings.Password = "SecretPassword";
+        // Encrypt the workbook with a password
+        workbook.Settings.Password = password;
 
-            // 3. Save the workbook (encryption is applied automatically)
-            wb.Save(encryptedFilePath);
+        // Save the encrypted workbook
+        workbook.Save(filePath);
 
-            // 4. Verify encryption status using FileFormatInfo
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(encryptedFilePath);
-            Console.WriteLine($"FileFormatInfo.IsEncrypted: {fileInfo.IsEncrypted}");
+        // Reopen the file and check its encryption status using FileFormatInfo
+        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+        Console.WriteLine("Is the saved file encrypted? " + formatInfo.IsEncrypted);
 
-            // 5. Verify encryption status using WorkbookSettings after loading with password
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-            {
-                Password = "SecretPassword"
-            };
-            Workbook loadedWb = new Workbook(encryptedFilePath, loadOptions);
-            Console.WriteLine($"Workbook.Settings.IsEncrypted after load: {loadedWb.Settings.IsEncrypted}");
-
-            // 6. Attempt to load without password to demonstrate failure (optional)
-            try
-            {
-                Workbook failLoad = new Workbook(encryptedFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Loading without password failed as expected: {ex.Message}");
-            }
-        }
+        // Load the encrypted workbook with the correct password to verify it can be opened
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+        loadOptions.Password = password;
+        Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
+        Console.WriteLine("Loaded workbook cell A1 value: " + loadedWorkbook.Worksheets[0].Cells["A1"].StringValue);
     }
 }

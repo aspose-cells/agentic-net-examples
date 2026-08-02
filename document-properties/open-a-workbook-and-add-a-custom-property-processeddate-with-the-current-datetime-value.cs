@@ -2,17 +2,33 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class Program
+namespace AsposeCellsCustomPropertyDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (or you could load an existing one)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Path to the workbook to be opened
+            string inputPath = "input.xlsx";
 
-        // Add a custom document property named "ProcessedDate" with the current date and time
-        workbook.CustomDocumentProperties.Add("ProcessedDate", DateTime.Now);
+            // Load the workbook (creates a new one if the file does not exist)
+            Workbook workbook;
+            if (System.IO.File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a new empty workbook
+            }
 
-        // Save the workbook to a file
-        workbook.Save("ProcessedWorkbook.xlsx");
+            // Add a custom document property named "ProcessedDate" with the current DateTime value
+            DateTime now = DateTime.Now;
+            workbook.CustomDocumentProperties.Add("ProcessedDate", now);
+
+            // Save the workbook with the new property
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+        }
     }
 }

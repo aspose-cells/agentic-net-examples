@@ -1,64 +1,89 @@
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace CustomCalculationEngineDemo
 {
     // Custom engine that provides implementations for user‑defined functions.
-    // If a function is not recognized, it substitutes it with a built‑in equivalent
-    // or returns a custom result.
-    public class SubstituteEngine : AbstractCalculationEngine
+    // If a function is not recognized, it returns the Excel error "#NAME?".
+    public class UserDefinedEngine : AbstractCalculationEngine
     {
-        // Example: indicate that we do not need parameters in array mode or literal text.
-        public override bool IsParamArrayModeRequired => false;
-        public override bool IsParamLiteralRequired => false;
-        public override bool ProcessBuiltInFunctions => false;
+        // Mapping of function name (upper case) to a delegate that performs the calculation.
+        private readonly Dictionary<string, Func<CalculationData, object>> _functions;
 
-        // Force recalculation for volatile custom functions (optional).
-        public override bool ForceRecalculate(string functionName)
+        public UserDefinedEngine()
         {
-            // Recalculate every time for functions that depend on external state.
-            return functionName.Equals("NOWCUSTOM", StringComparison.OrdinalIgnoreCase);
+            _functions = new Dictionary<string, Func<CalculationData, object>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "MYADD",  CalculateMyAdd },
+                { "MYMULT", CalculateMyMult }
+                // Add more custom functions here as needed.
+            };
         }
 
+        // Force recalculation for all custom functions to ensure each cell gets its own result.
+        public override bool ForceRecalculate(string functionName)
+        {
+            return _functions.ContainsKey(functionName);
+        }
+
+        // Core calculation method invoked by Aspose.Cells for each function call.
         public override void Calculate(CalculationData data)
         {
-            string func = data.FunctionName?.ToUpperInvariant();
+            if (data == null) return;
 
-            if (func == "MYSUM")
+            // Try to find a user‑defined implementation.
+            if (_functions.TryGetValue(data.FunctionName, out var handler))
             {
-                // MYSUM(a,b,...) => sum of all numeric parameters
-                double sum = 0;
-                for (int i = 0; i < data.ParamCount; i++)
+                // Execute the custom logic and assign the result.
+                data.CalculatedValue = handler(data);
+                return;
+            }
+
+            // Function not found – return Excel's #NAME? error.
+            data.CalculatedValue = "#NAME?";
+        }
+
+        // Example implementation: MYADD(param1, param2, ...) returns the sum of all numeric parameters.
+        private object CalculateMyAdd(CalculationData data)
+        {
+            double sum = 0;
+            for (int i = 0; i < data.ParamCount; i++)
+            {
+                // Parameters are returned as objects; attempt conversion to double.
+                object val = data.GetParamValue(i);
+                if (val is double d)
                 {
-                    object val = data.GetParamValue(i);
-                    if (val is double d) sum += d;
-                    else if (double.TryParse(Convert.ToString(val), out d)) sum += d;
+                    sum += d;
                 }
-                data.CalculatedValue = sum;
-            }
-            else if (func == "MYAVG")
-            {
-                // MYAVG(a,b,...) => average of numeric parameters
-                double sum = 0;
-                int count = 0;
-                for (int i = 0; i < data.ParamCount; i++)
+                else
                 {
-                    object val = data.GetParamValue(i);
-                    if (val is double d) { sum += d; count++; }
-                    else if (double.TryParse(Convert.ToString(val), out d)) { sum += d; count++; }
+                    // Try to convert other types (e.g., string representations of numbers).
+                    if (double.TryParse(Convert.ToString(val), out double parsed))
+                        sum += parsed;
                 }
-                data.CalculatedValue = count > 0 ? sum / count : "#DIV/0!";
             }
-            else if (func == "NOWCUSTOM")
+            return sum;
+        }
+
+        // Example implementation: MYMULT(param1, param2, ...) returns the product of all numeric parameters.
+        private object CalculateMyMult(CalculationData data)
+        {
+            double product = 1;
+            for (int i = 0; i < data.ParamCount; i++)
             {
-                // Substitute NOWCUSTOM with current date‑time
-                data.CalculatedValue = DateTime.Now;
+                object val = data.GetParamValue(i);
+                if (val is double d)
+                {
+                    product *= d;
+                }
+                else
+                {
+                    if (double.TryParse(Convert.ToString(val), out double parsed))
+                        product *= parsed;
+                }
             }
-            else
-            {
-                // Function not recognized – return #NAME? to let Excel handle it or provide fallback.
-                data.CalculatedValue = "#NAME?";
-            }
+            return product;
         }
     }
 
@@ -66,40 +91,41 @@ namespace CustomCalculationEngineDemo
     {
         static void Main()
         {
-            // Create a new workbook.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // -------------------- Create workbook --------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate some sample data.
-            ws.Cells["A1"].PutValue(10);
-            ws.Cells["A2"].PutValue(20);
-            ws.Cells["A3"].PutValue(30);
+            sheet.Cells["A1"].PutValue(5);
+            sheet.Cells["A2"].PutValue(10);
+            sheet.Cells["B1"].PutValue(2);
+            sheet.Cells["B2"].PutValue(3);
 
-            // Use custom functions in formulas.
-            ws.Cells["B1"].Formula = "=MYSUM(A1, A2, A3)";   // Expected 60
-            ws.Cells["B2"].Formula = "=MYAVG(A1, A2, A3)";   // Expected 20
-            ws.Cells["B3"].Formula = "=NOWCUSTOM()";        // Expected current date‑time
-            ws.Cells["B4"].Formula = "=UNKNOWNFUNC(1,2)";   // Will return #NAME?
+            // Formulas that use user‑defined functions.
+            sheet.Cells["C1"].Formula = "=MYADD(A1, A2)";      // Expected 15
+            sheet.Cells["C2"].Formula = "=MYMULT(B1, B2)";    // Expected 6
+            // This function does not exist in our engine – should return #NAME?.
+            sheet.Cells["C3"].Formula = "=UNKNOWNFUNC(A1)";
 
-            // Set calculation options to use our custom engine.
-            CalculationOptions opts = new CalculationOptions
+            // -------------------- Set calculation options with custom engine --------------------
+            CalculationOptions options = new CalculationOptions
             {
-                CustomEngine = new SubstituteEngine(),
+                CustomEngine = new UserDefinedEngine(),
+                // Keep default settings for other options.
                 Recursive = true,
                 IgnoreError = false
             };
 
-            // Perform calculation.
-            wb.CalculateFormula(opts);
+            // Perform calculation using the custom engine.
+            workbook.CalculateFormula(options);
 
             // Output results to console.
-            Console.WriteLine("B1 (MYSUM)   = " + ws.Cells["B1"].Value);
-            Console.WriteLine("B2 (MYAVG)   = " + ws.Cells["B2"].Value);
-            Console.WriteLine("B3 (NOWCUSTOM)= " + ws.Cells["B3"].Value);
-            Console.WriteLine("B4 (UNKNOWN) = " + ws.Cells["B4"].StringValue);
+            Console.WriteLine("C1 (MYADD)   = " + sheet.Cells["C1"].Value);
+            Console.WriteLine("C2 (MYMULT)  = " + sheet.Cells["C2"].Value);
+            Console.WriteLine("C3 (UNKNOWN) = " + sheet.Cells["C3"].Value);
 
-            // Save the workbook.
-            wb.Save("SubstituteEngineResult.xlsx");
+            // -------------------- Save workbook --------------------
+            workbook.Save("CustomEngineResult.xlsx");
         }
     }
 }

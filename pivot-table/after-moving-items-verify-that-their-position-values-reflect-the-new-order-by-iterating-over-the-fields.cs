@@ -4,7 +4,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotDemo
 {
-    class VerifyPivotFieldPositions
+    class VerifyPivotItemPositionsAfterMove
     {
         static void Main()
         {
@@ -30,7 +30,7 @@ namespace AsposeCellsPivotDemo
             sheet.Cells["C4"].PutValue(50);
 
             sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B5"].PutValue("Broccoli");
+            sheet.Cells["B5"].PutValue("Potato");
             sheet.Cells["C5"].PutValue(70);
 
             // Add a pivot table based on the data range
@@ -42,50 +42,47 @@ namespace AsposeCellsPivotDemo
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
             pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
 
-            // Add the Amount field to the data area
+            // Add a data field
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Refresh and calculate the pivot table so that items are generated
+            // Refresh and calculate to populate the pivot items
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Display field order and their Position property before moving
-            Console.WriteLine("Before Move:");
-            for (int i = 0; i < pivotTable.RowFields.Count; i++)
-            {
-                PivotField field = pivotTable.RowFields[i];
-                Console.WriteLine($"Field Index: {i}, Name: {field.Name}, Position: {field.Position}");
-            }
+            Console.WriteLine("=== Before Move ===");
+            PrintPivotItemsPositions(pivotTable);
 
-            // Move the first row field (Category) to position 1 (second place)
+            // Move the first row field (Category) to position 1 (swap with SubCategory)
+            // Using PivotFieldCollection.Move method as per the rule
             pivotTable.RowFields.Move(0, 1);
 
-            // Refresh again to ensure internal state is consistent
+            // Refresh after moving fields
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Display field order and their Position property after moving
-            Console.WriteLine("\nAfter Move:");
-            for (int i = 0; i < pivotTable.RowFields.Count; i++)
-            {
-                PivotField field = pivotTable.RowFields[i];
-                Console.WriteLine($"Field Index: {i}, Name: {field.Name}, Position: {field.Position}");
-            }
+            Console.WriteLine("\n=== After Move ===");
+            PrintPivotItemsPositions(pivotTable);
 
-            // Verify that each PivotItem within the fields also reflects correct ordering
-            Console.WriteLine("\nPivot Items Position Verification:");
-            foreach (PivotField field in pivotTable.RowFields)
+            // Save the workbook (lifecycle rule)
+            workbook.Save("PivotItemPositionAfterMove.xlsx");
+        }
+
+        // Helper method to iterate over row fields and their pivot items,
+        // printing each item's Position property to verify order.
+        private static void PrintPivotItemsPositions(PivotTable pivotTable)
+        {
+            for (int fieldIdx = 0; fieldIdx < pivotTable.RowFields.Count; fieldIdx++)
             {
-                Console.WriteLine($"Field: {field.Name}");
+                PivotField field = pivotTable.RowFields[fieldIdx];
+                Console.WriteLine($"Row Field {fieldIdx}: {field.Name}");
+
+                // Iterate over the PivotItems of the current field
                 foreach (PivotItem item in field.PivotItems)
                 {
-                    // Position property of PivotItem reflects its order among all items
-                    Console.WriteLine($"  Item: {item.Name}, Position: {item.Position}");
+                    // Position property reflects the item's index in the overall collection
+                    Console.WriteLine($"    Item: {item.Name}, Position: {item.Position}");
                 }
             }
-
-            // Save the workbook (output file name can be adjusted as needed)
-            workbook.Save("PivotFieldPositionVerification.xlsx");
         }
     }
 }

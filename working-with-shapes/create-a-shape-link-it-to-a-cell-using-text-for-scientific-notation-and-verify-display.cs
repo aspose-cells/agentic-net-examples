@@ -1,36 +1,52 @@
+// Title: C# – Link a Rectangle Shape to a TEXT‑formatted Scientific Notation Cell with Aspose.Cells
+// Description: Shows how to put a number in A1, format it as scientific notation using the TEXT function in B1, attach a rectangle shape to B1, refresh the shape text, and save the workbook using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | shape linked cell | rectangle shape | TEXT function | scientific notation | SetLinkedCell | UpdateSelectedValue | formula calculation
+// Common Searches: Aspose.Cells link shape to cell | C# shape displays TEXT formula result | display scientific notation in shape Aspose.Cells | SetLinkedCell rectangle shape .NET | refresh linked shape after formula
+// Developer Intent: Create a rectangle shape, bind it to a cell that returns a TEXT‑formatted scientific notation string, and confirm the shape displays that text.
+// Use Cases: Dynamic labels that automatically reflect formatted numeric results. | Automated report generation where shapes serve as data‑driven captions. | Testing that linked shapes correctly inherit formula output before saving.
+// AI Prompts: Generate C# code with Aspose.Cells to add a rectangle shape, link it to a cell using the TEXT function for scientific notation, update the shape, and print its Text property. | Explain the effect of each parameter in SetLinkedCell when linking a shape to a worksheet cell in Aspose.Cells. | Outline the steps to recalculate formulas and refresh a linked shape's displayed value in Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsShapeLinkedCellDemo
 {
-    static void Main()
+    // Shows how to put a number in A1, format it as scientific notation using the TEXT function in B1, attach a rectangle shape to B1, refresh the shape text, and save the workbook using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put a numeric value into cell B2 and apply scientific notation format
-        Cell cell = worksheet.Cells["B2"];
-        cell.PutValue(123456789);
-        Style sciStyle = workbook.CreateStyle();
-        sciStyle.Custom = "0.00E+00"; // scientific format
-        cell.SetStyle(sciStyle);
+            // Put a numeric value in cell A1
+            worksheet.Cells["A1"].PutValue(123456789);
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, width, height, upper left pixel offset X, upper left pixel offset Y
-        Shape shape = worksheet.Shapes.AddRectangle(2, 2, 120, 30, 0, 0);
+            // In cell B1 use the TEXT function to format A1 in scientific notation
+            // The formula will produce a string like "1.23E+08"
+            worksheet.Cells["B1"].Formula = "TEXT(A1,\"0.00E+00\")";
 
-        // Link the shape to cell B2 (absolute A1 style, locale aware)
-        shape.SetLinkedCell("$B$2", false, true);
+            // Recalculate formulas so B1 contains the formatted text
+            workbook.CalculateFormula();
 
-        // Update the shape's displayed value based on the linked cell
-        shape.UpdateSelectedValue();
+            // Add a rectangle shape that will act as a text box
+            // Parameters: upper left row, upper left column, top, left, height, width
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 150, 30);
 
-        // Verify that the shape's text reflects the scientific notation value
-        Console.WriteLine("Shape text (should be scientific): " + shape.Text);
+            // Link the shape to cell B1 (which holds the scientific notation text)
+            // isR1C1 = false (A1 style), isLocal = true (locale aware)
+            shape.SetLinkedCell("$B$1", false, true);
 
-        // Save the workbook
-        workbook.Save("ShapeLinkedCellScientific.xlsx");
+            // Update the shape's displayed value from the linked cell
+            shape.UpdateSelectedValue();
+
+            // Verify the displayed text by reading the Shape.Text property
+            Console.WriteLine("Shape text (should be scientific notation): " + shape.Text);
+
+            // Save the workbook to a file
+            workbook.Save("ShapeLinkedCellScientificNotation.xlsx");
+        }
     }
 }

@@ -2,37 +2,39 @@ using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsCompressionDemo
+namespace CompressionPerformanceDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Path to the source workbook
             string sourcePath = "input.xlsx";
 
-            // Load the workbook (uses Workbook(string) constructor)
+            // Load the workbook from the file
             Workbook workbook = new Workbook(sourcePath);
 
-            // Prepare OoxmlSaveOptions for Level1 compression (fastest)
-            OoxmlSaveOptions optionsLevel1 = new OoxmlSaveOptions();
-            optionsLevel1.CompressionType = OoxmlCompressionType.Level1;
+            // -------------------- Save with Level1 (fastest) --------------------
+            // Create OoxmlSaveOptions and set compression to Level1
+            OoxmlSaveOptions level1Options = new OoxmlSaveOptions();
+            level1Options.CompressionType = OoxmlCompressionType.Level1;
 
-            // Measure time for saving with Level1
-            Stopwatch sw = Stopwatch.StartNew();
-            workbook.Save("output_level1.xlsx", optionsLevel1);
-            sw.Stop();
-            Console.WriteLine($"Saving with OoxmlCompressionType.Level1 took {sw.ElapsedMilliseconds} ms.");
+            // Measure the time taken to save with Level1 compression
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            workbook.Save("output_Level1.xlsx", level1Options);
+            stopwatch.Stop();
+            Console.WriteLine($"Level1 compression save time: {stopwatch.ElapsedMilliseconds} ms");
 
-            // Prepare OoxmlSaveOptions for Level9 compression (best compression, slower)
-            OoxmlSaveOptions optionsLevel9 = new OoxmlSaveOptions();
-            optionsLevel9.CompressionType = OoxmlCompressionType.Level9;
+            // -------------------- Save with Level9 (best compression) --------------------
+            // Create OoxmlSaveOptions and set compression to Level9
+            OoxmlSaveOptions level9Options = new OoxmlSaveOptions();
+            level9Options.CompressionType = OoxmlCompressionType.Level9;
 
-            // Measure time for saving with Level9
-            sw.Restart();
-            workbook.Save("output_level9.xlsx", optionsLevel9);
-            sw.Stop();
-            Console.WriteLine($"Saving with OoxmlCompressionType.Level9 took {sw.ElapsedMilliseconds} ms.");
+            // Measure the time taken to save with Level9 compression
+            stopwatch.Restart();
+            workbook.Save("output_Level9.xlsx", level9Options);
+            stopwatch.Stop();
+            Console.WriteLine($"Level9 compression save time: {stopwatch.ElapsedMilliseconds} ms");
         }
     }
 }

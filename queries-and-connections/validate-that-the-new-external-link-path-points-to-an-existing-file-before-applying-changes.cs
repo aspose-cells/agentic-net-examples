@@ -2,34 +2,36 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-class ValidateExternalLinkPath
+namespace AsposeCellsExternalLinkValidation
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook (lifecycle rule: load)
-        string sourceFile = "input.xlsx";
-        Workbook workbook = new Workbook(sourceFile);
-
-        // Define the new external link path
-        string newExternalPath = @"C:\Data\external.xlsx";
-
-        // Validate that the file exists before applying the change
-        if (File.Exists(newExternalPath))
+        static void Main()
         {
-            // Update each external link's DataSource (feature rule: ExternalLink.DataSource)
-            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
+            // Load an existing workbook that contains external links
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+
+            // Define the new external link path you want to apply
+            string newExternalPath = @"C:\ExternalData\NewSource.xlsx";
+
+            // Validate that the new path points to an existing file
+            if (!File.Exists(newExternalPath))
             {
-                link.DataSource = newExternalPath;
+                Console.WriteLine($"Error: The file '{newExternalPath}' does not exist.");
+                return;
             }
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("output.xlsx");
-            Console.WriteLine("External link path updated and workbook saved.");
-        }
-        else
-        {
-            Console.WriteLine($"The specified external file does not exist: {newExternalPath}");
-            Console.WriteLine("No changes were applied to the workbook.");
+            // Apply the new path to each external link in the workbook
+            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
+            {
+                // Update the DataSource property only after validation
+                link.DataSource = newExternalPath;
+                Console.WriteLine($"External link updated to: {link.DataSource}");
+            }
+
+            // Save the workbook with the updated external links
+            workbook.Save("OutputWorkbook.xlsx");
+            Console.WriteLine("Workbook saved successfully with validated external links.");
         }
     }
 }

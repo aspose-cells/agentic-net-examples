@@ -16,17 +16,17 @@ namespace AsposeCellsPivotAutoRefresh
             dataSheet.Cells["A1"].PutValue("Product");
             dataSheet.Cells["B1"].PutValue("Sales");
             dataSheet.Cells["A2"].PutValue("Apple");
-            dataSheet.Cells["B2"].PutValue(1000);
+            dataSheet.Cells["B2"].PutValue(1200);
             dataSheet.Cells["A3"].PutValue("Banana");
-            dataSheet.Cells["B3"].PutValue(2000);
+            dataSheet.Cells["B3"].PutValue(850);
             dataSheet.Cells["A4"].PutValue("Orange");
-            dataSheet.Cells["B4"].PutValue(3000);
+            dataSheet.Cells["B4"].PutValue(950);
 
             // Add a pivot table based on the data range
-            int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
+            int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
             PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
 
-            // Configure the pivot table (Product as rows, Sales as data)
+            // Configure the pivot table (Product as row, Sales as data)
             pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
             pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
 

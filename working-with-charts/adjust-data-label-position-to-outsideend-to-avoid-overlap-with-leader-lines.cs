@@ -1,27 +1,12 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDataLabelPositionDemo
 {
-    public class DataLabelOutsideEndDemo
+    class Program
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -32,7 +17,6 @@ namespace AsposeCellsExamples
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
             sheet.Cells["A4"].PutValue("C");
-
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
@@ -50,23 +34,14 @@ namespace AsposeCellsExamples
             Series series = chart.NSeries[0];
             series.DataLabels.ShowValue = true;
 
-            // Position data labels outside the end of each column
+            // Position data labels outside the end of each bar to avoid overlapping leader lines
             series.DataLabels.Position = LabelPositionType.OutsideEnd;
 
-            // Enable leader lines (optional)
+            // (Optional) Enable leader lines if needed
             series.HasLeaderLines = true;
 
-            // Define output file path
-            string outputPath = "DataLabelOutsideEndDemo.xlsx";
-
-            // Ensure we can write the file (overwrite if exists)
-            if (File.Exists(outputPath))
-            {
-                File.Delete(outputPath);
-            }
-
             // Save the workbook
-            workbook.Save(outputPath);
+            workbook.Save("DataLabelOutsideEndDemo.xlsx");
         }
     }
 }

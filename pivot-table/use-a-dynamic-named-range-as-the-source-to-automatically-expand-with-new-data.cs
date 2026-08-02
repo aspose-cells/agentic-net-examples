@@ -1,72 +1,45 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-class Program
+class DynamicNamedRangeDemo
 {
     static void Main()
     {
-        try
+        // 1. Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // 2. Populate initial data in column A (A1:A5)
+        for (int i = 0; i < 5; i++)
         {
-            // ---------- Create a new workbook ----------
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
-
-            // ---------- Populate initial data in column A ----------
-            cells["A1"].PutValue("Item1");
-            cells["A2"].PutValue("Item2");
-            cells["A3"].PutValue("Item3");
-
-            // ---------- Set a dynamic array formula in B1 ----------
-            // The formula creates a sequence whose length equals the number of non‑empty cells in column A.
-            // SEQUENCE(COUNTA(A:A)) will spill into B1, B2, B3, … automatically.
-            cells["B1"].SetDynamicArrayFormula("=SEQUENCE(COUNTA(A:A))", new FormulaParseOptions(), true);
-
-            // Calculate and refresh the dynamic array so the spill range is materialized.
-            wb.CalculateFormula();
-            wb.RefreshDynamicArrayFormulas(true);
-
-            // ---------- Define a named range that points to the spilled range ----------
-            // The “#” after a cell reference returns the entire spill range of that cell.
-            int nameIdx = wb.Worksheets.Names.Add("MyDynamicRange");
-            wb.Worksheets.Names[nameIdx].RefersTo = "=Sheet1!$B$1#";
-
-            // ---------- Read values via the named range ----------
-            Name dynName = wb.Worksheets.Names["MyDynamicRange"];
-            AsposeRange dynRange = dynName.GetRange(); // current spilled range
-
-            Console.WriteLine("Initial dynamic range values:");
-            for (int i = 0; i < dynRange.RowCount; i++)
-            {
-                Console.WriteLine(dynRange[i, 0].Value);
-            }
-
-            // ---------- Add more data to column A ----------
-            cells["A4"].PutValue("Item4");
-            cells["A5"].PutValue("Item5");
-
-            // Re‑calculate and refresh the dynamic array so the spill expands.
-            wb.CalculateFormula();
-            wb.RefreshDynamicArrayFormulas(true);
-
-            // ---------- Read updated values ----------
-            dynRange = dynName.GetRange(); // refreshed spilled range
-            Console.WriteLine("\nAfter adding more items:");
-            for (int i = 0; i < dynRange.RowCount; i++)
-            {
-                Console.WriteLine(dynRange[i, 0].Value);
-            }
-
-            // ---------- Save the workbook ----------
-            string outputPath = "DynamicNamedRangeDemo.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine($"\nWorkbook saved to: {Path.GetFullPath(outputPath)}");
+            cells[i, 0].PutValue(i + 1); // values 1..5
         }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
+
+        // 3. Define a dynamic named range "MyData" that expands with non‑empty cells in column A
+        //    Formula uses OFFSET together with COUNTA to calculate the height dynamically.
+        int nameIndex = workbook.Worksheets.Names.Add("MyData");
+        Name myDataName = workbook.Worksheets.Names[nameIndex];
+        myDataName.RefersTo = "=OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)";
+
+        // 4. Set a dynamic array formula that consumes the named range.
+        //    Example: sort the data automatically.
+        Cell formulaCell = cells["B1"];
+        formulaCell.SetDynamicArrayFormula("=SORT(MyData)", new FormulaParseOptions(), true);
+
+        // 5. Calculate formulas and refresh dynamic array spill range
+        workbook.CalculateFormula();
+        workbook.RefreshDynamicArrayFormulas(true);
+
+        // 6. Append new data rows to column A (A6 and A7)
+        cells[5, 0].PutValue(6);
+        cells[6, 0].PutValue(7);
+
+        // 7. Refresh dynamic array formulas again so the spill range expands automatically
+        workbook.RefreshDynamicArrayFormulas(true);
+        workbook.CalculateFormula();
+
+        // 8. Save the workbook
+        workbook.Save("DynamicNamedRangeDemo.xlsx");
     }
 }

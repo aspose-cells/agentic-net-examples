@@ -8,21 +8,25 @@ namespace AsposeCellsPivotRefreshExample
     {
         static void Main()
         {
-            // Load the existing workbook that contains a pivot table
+            // Load an existing workbook that contains a pivot table
             Workbook workbook = new Workbook("input.xlsx");
 
-            // Iterate through all worksheets (or target a specific one)
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Disable Excel 2003 compatibility for each pivot table in the worksheet
-                foreach (PivotTable pivot in sheet.PivotTables)
+                // Iterate through all pivot tables in the worksheet
+                foreach (PivotTable pivotTable in sheet.PivotTables)
                 {
-                    pivot.IsExcel2003Compatible = false;
+                    // Disable Excel 2003 compatibility to allow strings longer than 255 characters
+                    pivotTable.IsExcel2003Compatible = false;
                 }
+
+                // Refresh all pivot tables in the current worksheet
+                sheet.RefreshPivotTables();
             }
 
-            // Refresh all pivot tables in the workbook to reflect the changes
-            workbook.Worksheets.RefreshPivotTables();
+            // Alternatively, refresh all pivot tables in the entire workbook at once
+            // workbook.Worksheets.RefreshPivotTables();
 
             // Save the updated workbook
             workbook.Save("output.xlsx");

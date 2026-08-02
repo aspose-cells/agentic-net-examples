@@ -2,119 +2,98 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace CustomRibbonLib
+namespace RibbonUtilityApp
 {
-    /// <summary>
-    /// Provides helper methods to work with custom Ribbon XML and path settings for Aspose.Cells workbooks.
-    /// </summary>
-    public static class RibbonHelper
+    public static class RibbonUtility
     {
-        /// <summary>
-        /// Sets the custom Ribbon XML for the given workbook.
-        /// </summary>
-        /// <param name="workbook">The workbook to modify.</param>
-        /// <param name="ribbonXml">The Ribbon XML string.</param>
-        public static void SetRibbonXml(Workbook workbook, string ribbonXml)
-        {
-            // Assign the custom Ribbon XML.
-            workbook.RibbonXml = ribbonXml;
-        }
-
-        /// <summary>
-        /// Updates the library path that Aspose.Cells uses for external references.
-        /// </summary>
-        /// <param name="libraryPath">The full path to the library folder.</param>
-        public static void UpdateLibraryPath(string libraryPath)
-        {
-            // Set the lookup path for external references.
-            CellsHelper.LibraryPath = libraryPath;
-        }
-
-        /// <summary>
-        /// Saves the workbook to the specified file path.
-        /// </summary>
-        /// <param name="workbook">The workbook to save.</param>
-        /// <param name="outputPath">The full file name (including extension) where the workbook will be saved.</param>
-        public static void SaveWorkbook(Workbook workbook, string outputPath)
-        {
-            // Persist the workbook to disk.
-            workbook.Save(outputPath);
-        }
-
-        /// <summary>
-        /// Convenience method that creates a new workbook, applies Ribbon XML, updates the library path,
-        /// and saves the result.
-        /// </summary>
-        /// <param name="ribbonXml">Custom Ribbon XML.</param>
-        /// <param name="libraryPath">Path to external libraries.</param>
-        /// <param name="outputPath">Destination file path.</param>
-        public static void CreateAndSave(string ribbonXml, string libraryPath, string outputPath)
-        {
-            // Create a new workbook.
-            Workbook wb = new Workbook();
-
-            // Apply Ribbon XML.
-            SetRibbonXml(wb, ribbonXml);
-
-            // Update library path for external references.
-            UpdateLibraryPath(libraryPath);
-
-            // Save the workbook.
-            SaveWorkbook(wb, outputPath);
-        }
-    }
-
-    /// <summary>
-    /// Entry point for the application.
-    /// </summary>
-    public static class Program
-    {
-        public static void Main()
+        // Creates a new workbook, assigns custom ribbon XML, and saves it as a macro‑enabled file.
+        public static void CreateWorkbookWithRibbon(string ribbonXml, string outputFile)
         {
             try
             {
-                // Sample Ribbon XML (replace with actual XML as needed).
-                string ribbonXml = @"<customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
-                                        <ribbon>
-                                            <tabs>
-                                                <tab id='customTab' label='Custom Tab'>
-                                                    <group id='customGroup' label='Custom Group'>
-                                                        <button id='customButton' label='Click Me' size='large' onAction='OnButtonClick' />
-                                                    </group>
-                                                </tab>
-                                            </tabs>
-                                        </ribbon>
-                                    </customUI>";
-
-                // Path to external libraries (ensure the directory exists).
-                string libraryPath = @"C:\AsposeLibraries";
-
-                if (!Directory.Exists(libraryPath))
-                {
-                    Console.WriteLine($"Library path does not exist: {libraryPath}");
-                    return;
-                }
-
-                // Destination workbook path.
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "CustomRibbonWorkbook.xlsx");
-
-                // Ensure we can write to the output directory.
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!Directory.Exists(outputDir))
-                {
-                    Console.WriteLine($"Output directory does not exist: {outputDir}");
-                    return;
-                }
-
-                // Create workbook with custom Ribbon and save it.
-                RibbonHelper.CreateAndSave(ribbonXml, libraryPath, outputPath);
-
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                Workbook workbook = new Workbook();
+                workbook.RibbonXml = ribbonXml;
+                workbook.Save(outputFile, SaveFormat.Xlsm);
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors.
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error creating workbook: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Loads an existing workbook, updates its Ribbon XML, and saves the result.
+        public static void UpdateWorkbookRibbon(string inputFile, string ribbonXml, string outputFile)
+        {
+            try
+            {
+                if (!File.Exists(inputFile))
+                    throw new FileNotFoundException("Input file not found.", inputFile);
+
+                Workbook workbook = new Workbook(inputFile);
+                workbook.RibbonXml = ribbonXml;
+                workbook.Save(outputFile, SaveFormat.Xlsm);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error updating workbook: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Sets the global library path used by Aspose.Cells for external formula references.
+        public static void SetLibraryPath(string path)
+        {
+            try
+            {
+                CellsHelper.LibraryPath = path;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error setting library path: {ex.Message}");
+                throw;
+            }
+        }
+    }
+
+    class Program
+    {
+        // Entry point required for compilation.
+        static void Main(string[] args)
+        {
+            // Simple command‑line usage:
+            //   create <ribbonXml> <outputFile>
+            //   update <inputFile> <ribbonXml> <outputFile>
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage:");
+                Console.WriteLine("  create <ribbonXml> <outputFile>");
+                Console.WriteLine("  update <inputFile> <ribbonXml> <outputFile>");
+                return;
+            }
+
+            try
+            {
+                string command = args[0].ToLowerInvariant();
+
+                if (command == "create" && args.Length == 3)
+                {
+                    RibbonUtility.CreateWorkbookWithRibbon(args[1], args[2]);
+                    Console.WriteLine("Workbook created successfully.");
+                }
+                else if (command == "update" && args.Length == 4)
+                {
+                    RibbonUtility.UpdateWorkbookRibbon(args[1], args[2], args[3]);
+                    Console.WriteLine("Workbook updated successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid arguments.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

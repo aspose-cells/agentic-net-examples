@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
 namespace CurrencyParsingExample
@@ -7,74 +8,67 @@ namespace CurrencyParsingExample
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // lifecycle: create
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // ------------------------------------------------------------
-            // Sample data: put some currency formatted strings in column A
-            // ------------------------------------------------------------
-            // Apply a custom currency format to the cells so that StringValue
-            // returns the formatted representation (e.g., "$1,234.56").
-            Style currencyStyle = workbook.CreateStyle();
-            currencyStyle.Custom = "$#,##0.00";
+            // Sample data: formatted currency strings in column A
+            cells["A1"].PutValue("$1,234.56");   // US format
+            cells["A2"].PutValue("€2.345,78");   // European format (comma as decimal)
+            cells["A3"].PutValue("£3,210");      // No decimal part
+            cells["A4"].PutValue("Invalid");     // Non‑numeric string
 
-            // Row 0
-            cells["A1"].PutValue(1234.56);
-            cells["A1"].SetStyle(currencyStyle);
+            // Apply appropriate number formats so that StringValue returns the formatted text
+            Style styleUS = cells["A1"].GetStyle();
+            styleUS.Number = 164; // Currency format (e.g., $#,##0.00)
+            cells["A1"].SetStyle(styleUS);
 
-            // Row 1
-            cells["A2"].PutValue(987.0);
-            cells["A2"].SetStyle(currencyStyle);
+            Style styleEU = cells["A2"].GetStyle();
+            styleEU.Number = 164; // Same format, culture will affect parsing later
+            cells["A2"].SetStyle(styleEU);
 
-            // Row 2 – a value that is not a currency (will stay as is)
-            cells["A3"].PutValue("Not a number");
+            Style styleUK = cells["A3"].GetStyle();
+            styleUK.Number = 164;
+            cells["A3"].SetStyle(styleUK);
 
-            // ------------------------------------------------------------
-            // Process each used row in column A
-            // ------------------------------------------------------------
-            int maxRow = cells.MaxDataRow; // last row that contains data
-            for (int row = 0; row <= maxRow; row++)
+            // Define cultures for parsing each cell (could be derived dynamically)
+            CultureInfo[] cultures = new CultureInfo[]
             {
-                Cell sourceCell = cells[row, 0]; // column A
-                // Get the formatted string as it appears in Excel
-                string formattedText = sourceCell.StringValue;
+                new CultureInfo("en-US"), // for A1
+                new CultureInfo("de-DE"), // for A2 (uses comma as decimal)
+                new CultureInfo("en-GB"), // for A3
+                CultureInfo.InvariantCulture // fallback for A4
+            };
 
-                // Try to convert the formatted text to a numeric value using
-                // the NUMBERVALUE worksheet function. This handles currency
-                // symbols, thousand separators, etc.
-                object numericResult = null;
-                try
-                {
-                    // The formula is =NUMBERVALUE("formattedText")
-                    // Escape any double quotes inside the text.
-                    string escapedText = formattedText.Replace("\"", "\"\"");
-                    string formula = $"=NUMBERVALUE(\"{escapedText}\")";
-                    numericResult = sheet.CalculateFormula(formula);
-                }
-                catch
-                {
-                    // If conversion fails, leave numericResult as null
-                }
+            // Process cells in column A (rows 0 to 3)
+            for (int row = 0; row <= 3; row++)
+            {
+                Cell sourceCell = cells[row, 0]; // Column A
+                string formattedText = sourceCell.StringValue; // Get formatted string
 
-                // If conversion succeeded and the result is a double, store it
-                // in the adjacent cell (column B) for further calculations.
-                Cell targetCell = cells[row, 1]; // column B
-                if (numericResult is double d)
+                // Try to parse using the corresponding culture and Currency style
+                double numericValue;
+                bool parsed = double.TryParse(
+                    formattedText,
+                    NumberStyles.Currency,
+                    cultures[row],
+                    out numericValue);
+
+                // If parsing succeeded, store the numeric value in the adjacent cell (column B)
+                if (parsed)
                 {
-                    targetCell.PutValue(d);
+                    Cell targetCell = cells[row, 1]; // Column B
+                    targetCell.PutValue(numericValue);
                 }
                 else
                 {
-                    // Preserve the original text if it cannot be parsed
-                    targetCell.PutValue(formattedText);
+                    // Optionally, write an error indicator
+                    cells[row, 1].PutValue("N/A");
                 }
             }
 
-            // ------------------------------------------------------------
-            // Save the workbook to verify the result
-            // ------------------------------------------------------------
+            // Save the workbook (lifecycle: save)
             workbook.Save("CurrencyParsingResult.xlsx");
         }
     }

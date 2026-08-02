@@ -1,41 +1,44 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class ExportDocumentStructureDemo
+namespace AsposeCellsPdfOutlineDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – demonstrates ExportDocumentStructure for PDF outline
+    class Program
     {
-        // Create a new workbook with three worksheets
-        Workbook workbook = new Workbook();
-        Worksheet summarySheet = workbook.Worksheets[0];
-        summarySheet.Name = "Summary";
-
-        Worksheet detailsSheet = workbook.Worksheets.Add("Details");
-        Worksheet dataSheet = workbook.Worksheets.Add("Data");
-
-        // Fill each sheet with some sample data
-        summarySheet.Cells["A1"].PutValue("Summary Sheet");
-        detailsSheet.Cells["A1"].PutValue("Details Sheet");
-        dataSheet.Cells["A1"].PutValue("Data Sheet");
-
-        // Create an outline (grouped rows and columns) on the "Data" sheet
-        // This will be reflected in the PDF outline when ExportDocumentStructure is true
-        dataSheet.Cells.GroupRows(0, 4, true);      // Group rows 1‑5
-        dataSheet.Cells.GroupColumns(0, 2, true);  // Group columns A‑C
-        dataSheet.IsOutlineShown = true;           // Ensure the outline is visible in Excel
-
-        // Configure PDF save options to export the document structure (outline)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        static void Main()
         {
-            ExportDocumentStructure = true
-        };
+            // Create a new workbook and access the default worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Summary";
 
-        // Save the workbook as a PDF; the resulting PDF will contain an outline
-        // that mirrors the worksheet hierarchy and the outline created above
-        string pdfPath = "WorkbookWithOutline.pdf";
-        workbook.Save(pdfPath, pdfOptions);
+            // Add additional worksheets to form a hierarchy
+            Worksheet sheet2 = workbook.Worksheets.Add("Details");
+            Worksheet sheet3 = workbook.Worksheets.Add("Statistics");
 
-        Console.WriteLine($"PDF saved to '{pdfPath}' with document structure exported.");
+            // Populate each sheet with sample data
+            sheet1.Cells["A1"].PutValue("Report Summary");
+            sheet2.Cells["A1"].PutValue("Detailed Data");
+            sheet3.Cells["A1"].PutValue("Statistical Overview");
+
+            // Create an outline (grouping) in the first sheet to illustrate hierarchy
+            // Group rows 2-5 under a collapsible outline
+            sheet1.Cells.GroupRows(1, 4, true);
+            // Optionally set the outline to be shown when the workbook is opened
+            sheet1.IsOutlineShown = true;
+
+            // Configure PDF save options to export the document structure (outline/bookmarks)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                ExportDocumentStructure = true   // Enables PDF outline matching sheet hierarchy
+            };
+
+            // Save the workbook as PDF with the specified options
+            string outputPath = "WorkbookWithOutline.pdf";
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"PDF saved to '{outputPath}' with document structure exported.");
+        }
     }
 }

@@ -8,30 +8,29 @@ namespace AsposeCellsVbaDemo
     {
         static void Main()
         {
-            // Create a new workbook (default format is Xlsx)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Access the VBA project of the workbook
+            // Access the VBA project (read‑only property, but we can add modules)
             VbaProject vbaProject = workbook.VbaProject;
 
             // Add a procedural (standard) VBA module named "Automation"
+            // (rule: VbaModuleCollection.Add(VbaModuleType, string))
             int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Procedural, "Automation");
 
             // Retrieve the added module
             VbaModule automationModule = vbaProject.Modules[moduleIndex];
 
-            // Define a multi‑line VBA subroutine that logs the workbook opening event
-            string vbaCode = 
-                "Sub LogWorkbookOpen()\r\n" +
-                "    ' This subroutine can be called from Workbook_Open event\r\n" +
+            // Insert a multi‑line VBA subroutine that runs when the workbook is opened.
+            // Using the Auto_Open macro which Excel executes on opening a macro‑enabled file.
+            automationModule.Codes =
+                "Sub Auto_Open()\r\n" +
+                "    ' Log workbook opening event\r\n" +
                 "    MsgBox \"Workbook opened at \" & Now\r\n" +
                 "End Sub";
 
-            // Assign the VBA code to the module
-            automationModule.Codes = vbaCode;
-
-            // Save the workbook as a macro‑enabled file (Xlsm) so the VBA project is retained
-            workbook.Save("AutomationModuleDemo.xlsm", SaveFormat.Xlsm);
+            // Save the workbook as a macro‑enabled file (lifecycle rule: save)
+            workbook.Save("AutomationWorkbook.xlsm", SaveFormat.Xlsm);
         }
     }
 }

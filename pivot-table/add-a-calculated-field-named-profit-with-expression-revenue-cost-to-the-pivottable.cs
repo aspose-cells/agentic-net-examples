@@ -1,75 +1,54 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotCalculatedFieldDemo
 {
-    public class AddCalculatedFieldProfitDemo
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data with Revenue and Cost columns
-                Cells cells = sheet.Cells;
-                cells["A1"].Value = "Product";
-                cells["B1"].Value = "Revenue";
-                cells["C1"].Value = "Cost";
+            // Populate sample source data for the pivot table
+            // Columns: Product, Revenue, Cost
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Revenue");
+            sheet.Cells["C1"].PutValue("Cost");
 
-                cells["A2"].Value = "A";
-                cells["B2"].Value = 1200;
-                cells["C2"].Value = 800;
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(5000);
+            sheet.Cells["C2"].PutValue(3000);
 
-                cells["A3"].Value = "B";
-                cells["B3"].Value = 1500;
-                cells["C3"].Value = 900;
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(7000);
+            sheet.Cells["C3"].PutValue(4000);
 
-                cells["A4"].Value = "C";
-                cells["B4"].Value = 1800;
-                cells["C4"].Value = 1100;
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(6000);
+            sheet.Cells["C4"].PutValue(3500);
 
-                // Create a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add a pivot table based on the data range A1:C4
+            int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Revenue");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");
+            // Configure the pivot table fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");      // Row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Revenue");    // Data field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");       // Data field
 
-                // Add a calculated field named "Profit" with the formula [Revenue] - [Cost]
-                // The formula must start with '=' and reference the field names directly
-                pivotTable.AddCalculatedField("Profit", "=Revenue-Cost", true);
+            // Add a calculated field named "Profit" with the formula [Revenue]-[Cost]
+            // The formula must start with '=' when using AddCalculatedField
+            pivotTable.AddCalculatedField("Profit", "=Revenue-Cost", true);
 
-                // Refresh and calculate the pivot table to reflect the new field
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+            // Refresh and calculate the pivot table to populate the new field
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-                // Define output file path
-                string outputPath = "PivotTable_With_Profit_CalculatedField.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AddCalculatedFieldProfitDemo.Run();
+            // Save the workbook
+            workbook.Save("PivotTable_With_Profit_CalculatedField.xlsx");
         }
     }
 }

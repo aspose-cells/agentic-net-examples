@@ -1,58 +1,47 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshExample
+namespace AsposeCellsPivotRefreshDemo
 {
     class Program
     {
         static void Main()
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+            // Populate source data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["B4"].PutValue(150);
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Add a pivot table based on the source data
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Get the worksheet that should contain the pivot table
-                Worksheet worksheet = workbook.Worksheets["Sheet1"] ?? workbook.Worksheets[0];
+            // Initial calculation so the pivot shows correct values
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-                // Update source data (example range A2:B5)
-                worksheet.Cells["B2"].PutValue(1500);
-                worksheet.Cells["B3"].PutValue(2500);
-                worksheet.Cells["B4"].PutValue(1800);
-                worksheet.Cells["B5"].PutValue(2200);
+            // ----- Change the source data -----
+            sheet.Cells["B2"].PutValue(200); // Update Apple sales
+            sheet.Cells["B3"].PutValue(90);  // Update Banana sales
 
-                // Ensure there is at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
-                    return;
-                }
+            // Refresh only the specific pivot table to reflect the changes
+            pivot.RefreshData();   // Refreshes data from the source
+            pivot.CalculateData(); // Recalculates the pivot report
 
-                // Refresh the first pivot table
-                PivotTable pivotTable = worksheet.PivotTables[0];
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("PivotRefreshResult.xlsx");
         }
     }
 }

@@ -5,52 +5,44 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
+        // Load the workbook that contains the data.
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Work with the first worksheet (adjust if needed).
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // OPTIONAL: populate column Q (index 16) with sample data
-        // cells["Q1"].PutValue("Apple");
-        // cells["Q2"].PutValue("Banana");
-        // cells["Q3"].PutValue("Apple"); // duplicate
-        // cells["Q4"].PutValue("Cherry");
-        // cells["Q5"].PutValue("Banana"); // duplicate
+        // Determine the last row that contains data in the sheet.
+        int lastRow = sheet.Cells.MaxDataRow; // zero‑based index
 
-        // Determine the last row that contains data in the sheet
-        int lastRow = cells.MaxDataRow; // overall max data row
-
-        // Define the range covering column Q (0‑based column index 16)
-        CellArea range = new CellArea
+        // Define the range that covers column Q (index 16) from the first row to the last data row.
+        CellArea area = new CellArea
         {
             StartRow = 0,
             EndRow = lastRow,
-            StartColumn = 16,
+            StartColumn = 16,   // Column Q
             EndColumn = 16
         };
 
-        // Add a conditional formatting collection to the worksheet
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
+        // Add a new conditional formatting collection to the worksheet.
+        int cfIndex = sheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
 
-        // Apply the range to the conditional formatting
-        fcs.AddArea(range);
+        // Apply the defined area to the conditional formatting.
+        fcs.AddArea(area);
 
-        // Add a condition that highlights duplicate values
+        // Add a condition that highlights duplicate values.
         int conditionIndex = fcs.AddCondition(FormatConditionType.DuplicateValues);
         FormatCondition condition = fcs[conditionIndex];
 
-        // Create a style with a red background
+        // Create a style with a solid red background.
         Style redStyle = workbook.CreateStyle();
         redStyle.ForegroundColor = Color.Red;
         redStyle.Pattern = BackgroundType.Solid;
 
-        // Assign the style to the condition
+        // Assign the style to the condition.
         condition.Style = redStyle;
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("DuplicateValuesInColumnQ.xlsx");
+        // Save the workbook with the applied formatting.
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,6 +1,6 @@
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
 namespace AsposeCellsCustomStyleExample
 {
@@ -8,41 +8,35 @@ namespace AsposeCellsCustomStyleExample
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("Input.xlsx");
 
-            // Sample data: simulate cells that are mapped to /Customer/Name
-            // In a real scenario these cells would be populated via XML import/mapping
-            string[] customerNames = { "Alice Johnson", "Bob Smith", "Carol Davis" };
-            for (int i = 0; i < customerNames.Length; i++)
-            {
-                // Populate column A with customer names (starting from row 1)
-                cells[i, 0].PutValue(customerNames[i]);
-            }
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
             // Create a custom style to highlight customer names
             Style highlightStyle = workbook.CreateStyle();
+            highlightStyle.ForegroundColor = Color.Yellow;          // cell background
             highlightStyle.Pattern = BackgroundType.Solid;
-            highlightStyle.ForegroundColor = Color.Yellow;      // Cell background
-            highlightStyle.Font.IsBold = true;                  // Bold font
-            highlightStyle.Font.Color = Color.DarkBlue;         // Font color
-            highlightStyle.Font.Size = 12;                      // Font size
+            highlightStyle.Font.IsBold = true;                     // bold font
+            highlightStyle.Font.Color = Color.Red;                 // font color
+            highlightStyle.Font.Size = 12;
 
-            // Apply the custom style to all cells in column A that contain a name
-            for (int row = 0; row < customerNames.Length; row++)
+            // Assume that cells mapped to /Customer/Name are in column B (index 1)
+            // Apply the style to rows 2 through 10 (adjust as needed)
+            for (int row = 1; row <= 9; row++) // zero‑based index: row 1 = second row
             {
-                Cell nameCell = cells[row, 0];
-                // Ensure the cell actually has a value before styling
+                Cell nameCell = cells[row, 1]; // column B
+                // Optionally verify the cell contains a name before styling
                 if (!string.IsNullOrEmpty(nameCell.StringValue))
                 {
                     nameCell.SetStyle(highlightStyle);
                 }
             }
 
-            // Save the workbook with the applied style
-            workbook.Save("CustomerNamesHighlighted.xlsx");
+            // Save the modified workbook
+            workbook.Save("Output.xlsx");
         }
     }
 }

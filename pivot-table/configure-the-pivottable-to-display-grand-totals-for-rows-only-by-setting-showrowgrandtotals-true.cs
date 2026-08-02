@@ -2,50 +2,54 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class PivotGrandTotalRowsOnly
+namespace AsposeCellsPivotDemo
 {
-    static void Main()
+    class ShowRowGrandTotalsOnly
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Region");
-        sheet.Cells["C1"].PutValue("Sales");
+            // Populate sample data for the pivot table
+            Cells cells = sheet.Cells;
+            cells["A1"].Value = "Product";
+            cells["B1"].Value = "Region";
+            cells["C1"].Value = "Sales";
 
-        sheet.Cells["A2"].PutValue("Product A");
-        sheet.Cells["B2"].PutValue("North");
-        sheet.Cells["C2"].PutValue(1000);
+            cells["A2"].Value = "Product A";
+            cells["B2"].Value = "North";
+            cells["C2"].Value = 1000;
 
-        sheet.Cells["A3"].PutValue("Product B");
-        sheet.Cells["B3"].PutValue("South");
-        sheet.Cells["C3"].PutValue(1500);
+            cells["A3"].Value = "Product B";
+            cells["B3"].Value = "South";
+            cells["C3"].Value = 1500;
 
-        sheet.Cells["A4"].PutValue("Product A");
-        sheet.Cells["B4"].PutValue("South");
-        sheet.Cells["C4"].PutValue(2000);
+            cells["A4"].Value = "Product A";
+            cells["B4"].Value = "South";
+            cells["C4"].Value = 2000;
 
-        sheet.Cells["A5"].PutValue("Product B");
-        sheet.Cells["B5"].PutValue("North");
-        sheet.Cells["C5"].PutValue(1200);
+            cells["A5"].Value = "Product B";
+            cells["B5"].Value = "North";
+            cells["C5"].Value = 1200;
 
-        // Add a pivot table based on the data range A1:C5, place it at E3, and name it "PivotTable1"
-        PivotTableCollection pivotTables = sheet.PivotTables;
-        int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = pivotTables[pivotIndex];
+            // Add a pivot table based on the data range
+            PivotTableCollection pivotTables = sheet.PivotTables;
+            int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
+            PivotTable pivotTable = pivotTables[pivotIndex];
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region as column field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
+            // Configure the pivot table to show grand totals for rows only
+            pivotTable.ShowRowGrandTotals = true;   // Enable row grand totals
+            pivotTable.ShowColumnGrandTotals = false; // Disable column grand totals
 
-        // Show grand totals for rows only
-        pivotTable.ShowRowGrandTotals = true;    // Enable row grand totals
-        pivotTable.ShowColumnGrandTotals = false; // Disable column grand totals
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Product as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region as column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales as data field
 
-        // Save the workbook to a file
-        workbook.Save("PivotTableRowGrandTotalsOnly.xlsx");
+            // Save the workbook to a file
+            workbook.Save("PivotTable_ShowRowGrandTotalsOnly.xlsx");
+        }
     }
 }

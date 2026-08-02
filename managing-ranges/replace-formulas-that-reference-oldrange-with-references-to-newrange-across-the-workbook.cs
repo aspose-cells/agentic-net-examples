@@ -1,24 +1,35 @@
 using System;
 using Aspose.Cells;
 
-namespace ReplaceFormulaReferences
+class ReplaceFormulaRange
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Loop through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Loop through all cells in the current worksheet
+            foreach (Cell cell in sheet.Cells)
+            {
+                // Process only cells that contain a formula
+                if (!string.IsNullOrEmpty(cell.Formula))
+                {
+                    // Replace the old named range with the new one inside the formula
+                    string updatedFormula = cell.Formula.Replace("OldRange", "NewRange");
 
-            // Replace all occurrences of the named range "OldRange" with "NewRange"
-            // This works for formulas, cell values, and any text containing the placeholder.
-            int replacedCount = workbook.Replace("OldRange", "NewRange");
-
-            // Optionally, you can output how many replacements were made
-            Console.WriteLine($"Replaced {replacedCount} occurrences of 'OldRange' with 'NewRange'.");
-
-            // Save the modified workbook to a new file
-            workbook.Save("output.xlsx");
+                    // Update the cell's formula only if a change was made
+                    if (updatedFormula != cell.Formula)
+                    {
+                        cell.Formula = updatedFormula;
+                    }
+                }
+            }
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

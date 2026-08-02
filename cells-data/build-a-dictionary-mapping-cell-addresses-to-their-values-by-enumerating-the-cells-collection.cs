@@ -12,34 +12,36 @@ class Program
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // Add some sample data to the worksheet
-        cells["A1"].PutValue("Hello");
-        cells["B1"].PutValue(123);
-        cells["C2"].PutValue(DateTime.Now);
-        cells["D4"].PutValue(true);
+        // Populate some sample data
+        cells["A1"].PutValue("Name");
+        cells["B1"].PutValue("Age");
+        cells["A2"].PutValue("John");
+        cells["B2"].PutValue(30);
+        cells["A3"].PutValue("Alice");
+        cells["B3"].PutValue(25);
 
-        // Dictionary to hold cell address -> value mappings
-        Dictionary<string, object> cellValues = new Dictionary<string, object>();
+        // Dictionary to map cell addresses to their values
+        Dictionary<string, object> addressValueMap = new Dictionary<string, object>();
 
-        // Enumerate all instantiated cells in the worksheet
+        // Enumerate the Cells collection using Cells.GetEnumerator()
         IEnumerator enumerator = cells.GetEnumerator();
         while (enumerator.MoveNext())
         {
             Cell cell = (Cell)enumerator.Current;
-            // Store only cells that have a non‑null value
+            // Add only cells that contain a non‑null value
             if (cell.Value != null)
             {
-                cellValues[cell.Name] = cell.Value;
+                addressValueMap[cell.Name] = cell.Value;
             }
         }
 
-        // Display the collected address‑value pairs
-        foreach (var kvp in cellValues)
+        // Output the dictionary contents
+        foreach (KeyValuePair<string, object> kvp in addressValueMap)
         {
-            Console.WriteLine($"{kvp.Key} = {kvp.Value}");
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
         }
 
-        // Save the workbook (optional, demonstrates the required save rule)
-        workbook.Save("CellDictionaryDemo.xlsx");
+        // Save the workbook (optional, just to demonstrate lifecycle usage)
+        workbook.Save("CellAddressValueMap.xlsx");
     }
 }

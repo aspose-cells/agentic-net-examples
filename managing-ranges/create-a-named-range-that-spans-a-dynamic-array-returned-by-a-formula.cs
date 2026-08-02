@@ -1,41 +1,48 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsDynamicArrayNamedRange
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Populate some data that the dynamic array formula will reference
-        cells["B1"].PutValue(10);
-        cells["B2"].PutValue(20);
-        cells["B3"].PutValue(30);
+            // Input value that will determine the size of the dynamic array
+            // Example: B1 = 3 will make SEQUENCE generate 3 rows
+            cells["B1"].PutValue(3);
 
-        // Set a dynamic array formula in A1 that spills the range B1:B3
-        Cell formulaCell = cells["A1"];
-        // The method returns the area that the formula should spill into
-        CellArea spillArea = formulaCell.SetDynamicArrayFormula("=B1:B3", new FormulaParseOptions(), true);
+            // Set a dynamic array formula in A1.
+            // The formula will spill into neighboring cells based on the value in B1.
+            Cell startCell = cells["A1"];
+            // SetDynamicArrayFormula returns the range (CellArea) the formula *should* spill into
+            CellArea spillArea = startCell.SetDynamicArrayFormula(
+                "=SEQUENCE(B1,2)",          // generate a 3‑row, 2‑column array when B1 = 3
+                new FormulaParseOptions(), // parsing options (default)
+                true);                      // calculate the values immediately
 
-        // Calculate formulas so the spilled values are materialized
-        wb.CalculateFormula();
+            // Refresh dynamic array formulas so that the spill range is materialized
+            wb.RefreshDynamicArrayFormulas(true);
 
-        // Build the address string of the spilled range (e.g., "B1:B3")
-        string startAddr = cells[spillArea.StartRow, spillArea.StartColumn].Name;
-        string endAddr   = cells[spillArea.EndRow,   spillArea.EndColumn].Name;
-        string rangeAddress = $"{startAddr}:{endAddr}";
+            // Build the address string for the spilled range (e.g., Sheet1!A1:B3)
+            string startAddress = cells[spillArea.StartRow, spillArea.StartColumn].Name;
+            string endAddress   = cells[spillArea.EndRow,   spillArea.EndColumn].Name;
+            string rangeAddress = $"{sheet.Name}!{startAddress}:{endAddress}";
 
-        // Create a named range that refers to the spilled dynamic array range
-        int nameIdx = wb.Worksheets.Names.Add("MyDynamicArray");
-        wb.Worksheets.Names[nameIdx].RefersTo = $"={ws.Name}!{rangeAddress}";
+            // Create a named range that refers to the spilled dynamic array
+            int nameIdx = wb.Worksheets.Names.Add("MyDynamicArray");
+            Name dynName = wb.Worksheets.Names[nameIdx];
+            dynName.RefersTo = $"={rangeAddress}";
 
-        // Optional: output the RefersTo string to verify
-        Console.WriteLine("Named range RefersTo: " + wb.Worksheets.Names[nameIdx].RefersTo);
+            // Optional: verify the named range points to the correct area
+            Console.WriteLine($"Named range '{dynName.Text}' refers to: {dynName.RefersTo}");
 
-        // Save the workbook
-        wb.Save("DynamicArrayNamedRange.xlsx");
+            // Save the workbook
+            wb.Save("DynamicArrayNamedRange.xlsx");
+        }
     }
 }

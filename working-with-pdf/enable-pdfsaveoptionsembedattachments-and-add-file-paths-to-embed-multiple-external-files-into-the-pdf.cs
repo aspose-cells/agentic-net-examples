@@ -1,88 +1,80 @@
+// Title: Embed Multiple Files as PDF Attachments with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, adds two OLE objects (a text file and a DOCX file), enables PdfSaveOptions.EmbedAttachments, and saves the workbook as a PDF containing the external files as embedded attachments. Temporary files are removed after saving.
+// Keywords: Aspose.Cells | PdfSaveOptions | EmbedAttachments | C# | multiple PDF attachments | OLE object | Excel to PDF | embed txt file | embed docx file | Aspose.Cells for .NET | PDF attachment | export workbook with attachments
+// Common Searches: Aspose.Cells embed multiple attachments in PDF | PdfSaveOptions EmbedAttachments C# example | How to add OLE objects and save as PDF with attachments | Save Excel as PDF with embedded files using Aspose | C# code to embed txt and docx in PDF via Aspose.Cells
+// Developer Intent: Generate a PDF from an Excel workbook that bundles several external files as embedded attachments using Aspose.Cells for .NET.
+// Use Cases: Create a single PDF report that includes supporting documents (e.g., a summary text file and a contract Word file) for easy distribution. | Automate invoice PDFs that carry attached terms‑and‑conditions or warranty documents alongside the invoice data. | Produce compliance packages where logs, policies, and reference files are packaged as embedded attachments within one PDF.
+// AI Prompts: Show how to embed additional file types such as images or PDFs as attachments using Aspose.Cells PdfSaveOptions. | Refactor the sample to accept a list of file paths and embed them in a loop instead of hard‑coding each file. | Explain how to extract the embedded attachments from the generated PDF with Aspose.PDF.
+
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
 namespace AsposeCellsPdfAttachmentDemo
 {
+    // C# example that creates a workbook, adds two OLE objects (a text file and a DOCX file), enables PdfSaveOptions.EmbedAttachments, and saves the workbook as a PDF containing the external files as embedded attachments. Temporary files are removed after saving.
     class Program
     {
         static void Main()
         {
-            // Create temporary files that will be embedded as attachments
-            string[] tempFiles = new string[]
-            {
-                Path.Combine(Path.GetTempPath(), "SampleDoc.docx"),
-                Path.Combine(Path.GetTempPath(), "SamplePdf.pdf"),
-                Path.Combine(Path.GetTempPath(), "SampleXls.xlsx")
-            };
-
-            // Write simple content to each file
-            File.WriteAllText(tempFiles[0], "This is a sample DOCX document.");
-            File.WriteAllBytes(tempFiles[1], new byte[] { 0x25, 0x50, 0x44, 0x46 }); // minimal PDF header "%PDF"
-            File.WriteAllText(tempFiles[2], "A1,Sample,XLSX\n"); // placeholder content for XLSX (will be ignored)
-
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF with Multiple Embedded Attachments");
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells["A1"].PutValue("PDF with Multiple Embedded Attachments");
 
-            // Add each file as an OLE object (displayed as an icon)
-            int startRow = 5;
-            int startColumn = 0;
-            int iconWidth = 100;
-            int iconHeight = 100;
+            // Prepare sample files to embed
+            string txtFile = "SampleText.txt";
+            string docxFile = "SampleDoc.docx";
 
-            for (int i = 0; i < tempFiles.Length; i++)
+            try
             {
-                string filePath = tempFiles[i];
-                byte[] fileData = File.ReadAllBytes(filePath);
+                // Create a simple text file
+                File.WriteAllText(txtFile, "This is a sample text file to be embedded.");
 
-                // Add OLE object at a different position for each file
-                int oleIndex = sheet.OleObjects.Add(startRow + i * 5, startColumn, iconWidth, iconHeight, fileData);
-                OleObject ole = sheet.OleObjects[oleIndex];
+                // Create a simple docx file (placeholder bytes)
+                File.WriteAllBytes(docxFile, new byte[] { 80, 75, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
-                // Set the appropriate file format type based on extension
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                switch (ext)
+                // Add first OLE object (text file) to the worksheet
+                if (File.Exists(txtFile))
                 {
-                    case ".docx":
-                        ole.FileFormatType = FileFormatType.Docx;
-                        break;
-                    case ".pdf":
-                        ole.FileFormatType = FileFormatType.Pdf;
-                        break;
-                    case ".xlsx":
-                        ole.FileFormatType = FileFormatType.Xlsx;
-                        break;
-                    default:
-                        ole.FileFormatType = FileFormatType.Unknown;
-                        break;
+                    int oleIndex1 = worksheet.OleObjects.Add(5, 5, 200, 200, File.ReadAllBytes(txtFile));
+                    OleObject oleObject1 = worksheet.OleObjects[oleIndex1];
+                    oleObject1.DisplayAsIcon = true;
+                    oleObject1.Label = Path.GetFileName(txtFile);
                 }
 
-                // Display as an icon with a label
-                ole.DisplayAsIcon = true;
-                ole.Label = Path.GetFileName(filePath);
+                // Add second OLE object (docx file) to the worksheet
+                if (File.Exists(docxFile))
+                {
+                    int oleIndex2 = worksheet.OleObjects.Add(15, 5, 200, 200, File.ReadAllBytes(docxFile));
+                    OleObject oleObject2 = worksheet.OleObjects[oleIndex2];
+                    oleObject2.DisplayAsIcon = true;
+                    oleObject2.Label = Path.GetFileName(docxFile);
+                }
+
+                // Configure PDF save options to embed attachments
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    EmbedAttachments = true
+                };
+
+                // Save the workbook as PDF with embedded attachments
+                string outputPdf = "PdfWithMultipleEmbeddedAttachments.pdf";
+                workbook.Save(outputPdf, pdfOptions);
+
+                Console.WriteLine($"PDF saved successfully: {outputPdf}");
             }
-
-            // Configure PDF save options to embed attachments
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            catch (Exception ex)
             {
-                EmbedAttachments = true
-            };
-
-            // Save the workbook as PDF with embedded attachments
-            string outputPdf = Path.Combine(Path.GetTempPath(), "WorkbookWithAttachments.pdf");
-            workbook.Save(outputPdf, pdfOptions);
-
-            Console.WriteLine($"PDF saved to: {outputPdf}");
-            Console.WriteLine("Embedded attachments:");
-            foreach (string f in tempFiles)
-                Console.WriteLine($"- {f}");
-
-            // Clean up temporary files (optional)
-            foreach (string f in tempFiles)
-                File.Delete(f);
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Clean up temporary files
+                if (File.Exists(txtFile)) File.Delete(txtFile);
+                if (File.Exists(docxFile)) File.Delete(docxFile);
+            }
         }
     }
 }

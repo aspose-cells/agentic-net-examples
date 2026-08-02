@@ -2,71 +2,50 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceMonitoring
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the large workbook to be processed
+        string workbookPath = "LargeWorkbook.xlsx";
+
+        // Path to the log file where timestamps will be recorded
+        string logPath = "PerformanceLog.txt";
+
+        // Open the log file (overwrite if it exists)
+        using (StreamWriter log = new StreamWriter(logPath, false))
         {
-            // Path to the large workbook to be processed
-            const string inputPath = "Large.xlsx";
-            // Path where the processed workbook will be saved
-            const string outputPath = "Large_processed.xlsx";
-            // Path to the performance log file
-            const string logPath = "performance.log";
+            // Load the workbook (no special load options required for this demo)
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Ensure the log file exists and open it for appending
-            using (StreamWriter logWriter = new StreamWriter(logPath, true))
+            // Log the overall start time of the enumeration
+            log.WriteLine($"Workbook enumeration started at {DateTime.Now:O}");
+
+            // Iterate through each worksheet in the workbook
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
             {
-                try
+                Worksheet sheet = workbook.Worksheets[sheetIndex];
+
+                // Log the start time for the current worksheet
+                log.WriteLine($"Worksheet '{sheet.Name}' (index {sheetIndex}) start at {DateTime.Now:O}");
+
+                // Example enumeration: iterate over rows that contain data
+                Cells cells = sheet.Cells;
+                int maxDataRow = cells.MaxDataRow; // last row with data
+
+                for (int row = 0; row <= maxDataRow; row++)
                 {
-                    // Create a SystemTimeInterruptMonitor (no interruption limit needed for logging)
-                    SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-                    LoadOptions loadOptions = new LoadOptions
-                    {
-                        InterruptMonitor = monitor
-                    };
-
-                    // Start the monitor (use a very large limit so it does not interrupt)
-                    monitor.StartMonitor(int.MaxValue);
-
-                    // Log the start timestamp
-                    DateTime startTime = DateTime.Now;
-                    logWriter.WriteLine($"Enumeration started at: {startTime:O}");
-
-                    // Load the large workbook with the monitor attached
-                    Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                    // Enumerate each worksheet and optionally iterate through its rows
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        // Example enumeration: iterate through used rows in column A
-                        Cells cells = sheet.Cells;
-                        int maxDataRow = cells.MaxDataRow;
-                        for (int row = 0; row <= maxDataRow; row++)
-                        {
-                            // Access a cell to simulate work (no modification needed)
-                            _ = cells[row, 0].Value;
-                        }
-                    }
-
-                    // Log the end timestamp
-                    DateTime endTime = DateTime.Now;
-                    logWriter.WriteLine($"Enumeration ended at: {endTime:O}");
-                    logWriter.WriteLine($"Total duration (seconds): {(endTime - startTime).TotalSeconds:F2}");
-                    logWriter.WriteLine(new string('-', 40));
-                    logWriter.Flush();
-
-                    // Save the workbook after processing
-                    workbook.Save(outputPath);
+                    // Access a cell to ensure the row is actually read.
+                    // In a real scenario you would perform your processing here.
+                    var _ = cells[row, 0].Value;
                 }
-                catch (Exception ex)
-                {
-                    // Log any exception that occurs during processing
-                    logWriter.WriteLine($"Error: {ex.Message}");
-                    logWriter.WriteLine($"StackTrace: {ex.StackTrace}");
-                }
+
+                // Log the end time for the current worksheet
+                log.WriteLine($"Worksheet '{sheet.Name}' (index {sheetIndex}) end at {DateTime.Now:O}");
             }
+
+            // Log the overall end time of the enumeration
+            log.WriteLine($"Workbook enumeration finished at {DateTime.Now:O}");
         }
     }
 }

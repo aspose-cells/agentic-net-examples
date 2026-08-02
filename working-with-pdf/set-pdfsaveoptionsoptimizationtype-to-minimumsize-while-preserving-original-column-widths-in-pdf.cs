@@ -6,25 +6,31 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook and add some data
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some data
-        worksheet.Cells["A1"].PutValue("Column 1");
-        worksheet.Cells["B1"].PutValue("Column 2");
-        worksheet.Cells["A2"].PutValue("Data 1");
-        worksheet.Cells["B2"].PutValue("Data 2");
+        // Set explicit column widths to demonstrate that they are preserved
+        sheet.Cells.SetColumnWidth(0, 20); // Column A width
+        sheet.Cells.SetColumnWidth(1, 30); // Column B width
 
-        // Set explicit column widths to ensure they are preserved in the PDF
-        worksheet.Cells.SetColumnWidth(0, 25); // Width for column A
-        worksheet.Cells.SetColumnWidth(1, 30); // Width for column B
+        // Populate sample cells
+        sheet.Cells["A1"].PutValue("This is a long text that requires a wide column");
+        sheet.Cells["B1"].PutValue(12345);
 
-        // Create PDF save options and set the optimization type to MinimumSize
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-        pdfSaveOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Minimize the PDF file size
+            OptimizationType = PdfOptimizationType.MinimumSize,
+            // Preserve original column widths (do not force all columns onto one page)
+            AllColumnsInOnePagePerSheet = false,
+            OnePagePerSheet = false
+        };
 
-        // Save the workbook as a PDF while preserving the original column widths
-        workbook.Save("PreservedColumns_MinSize.pdf", pdfSaveOptions);
+        // Save the workbook as a PDF with the specified options
+        workbook.Save("PreservedColumns.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – sets MinimumSize optimization while keeping column widths.

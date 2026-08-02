@@ -1,8 +1,9 @@
 using System;
 using Aspose.Cells;
 
-namespace PreserveWorksheetNameCapitalization
+namespace AsposeCellsHtmlExport
 {
+    // Author: Aspose.Cells .NET example – preserves worksheet name case in HTML headings
     class Program
     {
         static void Main()
@@ -10,34 +11,27 @@ namespace PreserveWorksheetNameCapitalization
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and give it a mixed‑case name
+            // Access the first worksheet and set a custom name with mixed case
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "SalesReport2023";   // original capitalization to be preserved
+            sheet.Name = "MyCustomSheet";
 
             // Add some sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(150);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue("Data1");
+            sheet.Cells["B2"].PutValue("Data2");
 
-            // Configure HTML save options
+            // Configure HTML save options to export row/column headings.
+            // This ensures that the worksheet name appears in the generated HTML
+            // using the exact capitalization defined above.
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Use the worksheet name as the HTML page title – this keeps the exact case
-                PageTitle = sheet.Name,
-
-                // Export the sheet name as a heading inside the HTML file
-                ExportPageHeaders = true,
-
-                // Save all sheets into a single HTML file (optional, but keeps headings together)
-                SaveAsSingleFile = true,
-                ShowAllSheets = true
+                ExportRowColumnHeadings = true   // modern property (preferred over obsolete ExportHeadings)
+                // ExportHeadings = true          // optional: kept for backward compatibility if needed
             };
 
-            // Save the workbook as HTML; the heading tags will contain "SalesReport2023"
-            workbook.Save("SalesReport2023.html", htmlOptions);
+            // Save the workbook as an HTML file; the heading tag will contain "MyCustomSheet"
+            workbook.Save("MyCustomSheet.html", htmlOptions);
         }
     }
 }

@@ -8,38 +8,44 @@ namespace AsposeCellsShiftFirstRowDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create rule)
+            // Create a new workbook and get the first worksheet's cells collection
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Existing data that will be shifted down
+            // Add some existing data that we want to shift down
             cells["A1"].PutValue("Existing Header");
             cells["A2"].PutValue("Existing Value 1");
             cells["A3"].PutValue("Existing Value 2");
 
-            // Prepare a DataTable to import
+            // Prepare a sample DataTable to be imported
             DataTable table = new DataTable();
-            table.Columns.Add("Col1");
-            table.Columns.Add("Col2");
+            table.Columns.Add("Column1");
+            table.Columns.Add("Column2");
+            // First row of the table (will become the first row after import)
             table.Rows.Add("NewHeader1", "NewHeader2");
-            table.Rows.Add("NewData1", "NewData2");
-            table.Rows.Add("NewData3", "NewData4");
+            // Data rows
+            table.Rows.Add("Data1", "Data2");
+            table.Rows.Add("Data3", "Data4");
 
-            // Set import options: shift the first row down so existing rows move lower
-            ImportTableOptions options = new ImportTableOptions
+            // Configure import options to shift the first row down
+            ImportTableOptions importOptions = new ImportTableOptions
             {
-                IsFieldNameShown = true,   // import column names as header
-                ShiftFirstRowDown = true   // shift existing rows down before inserting
+                // When true, the first row of the imported table is placed one row below the specified start row
+                ShiftFirstRowDown = true,
+                // Do not show field names separately; they are already part of the DataTable rows
+                IsFieldNameShown = false,
+                // Insert new rows so existing rows are not overwritten
+                InsertRows = true
             };
 
-            // Import the table starting at row 0, column 0
-            // Because ShiftFirstRowDown is true, the first imported row will be placed at A2,
-            // and the original rows will move down accordingly.
-            cells.ImportData(table, 0, 0, options);
+            // Import the DataTable starting at row index 0, column index 0
+            // Because ShiftFirstRowDown = true, the first row of the table will be placed at A2,
+            // pushing the existing data down to A3, A4, etc.
+            cells.ImportData(table, 0, 0, importOptions);
 
-            // Save the workbook (lifecycle save rule)
-            workbook.Save("ShiftFirstRowDemo.xlsx");
+            // Save the workbook to verify the result
+            workbook.Save("ShiftFirstRowDownResult.xlsx");
         }
     }
 }

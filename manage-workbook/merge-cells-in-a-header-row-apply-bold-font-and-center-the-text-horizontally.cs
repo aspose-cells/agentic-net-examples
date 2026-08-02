@@ -5,14 +5,14 @@ namespace AsposeCellsHeaderMergeDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Merge cells in the first row (A1:D1) to create a header area
+            // Merge cells in the first row (e.g., A1 to D1)
             // Parameters: firstRow, firstColumn, totalRows, totalColumns
             cells.Merge(0, 0, 1, 4);
 
@@ -27,6 +27,9 @@ namespace AsposeCellsHeaderMergeDemo
 
             // Center the text horizontally
             headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+
+            // (Optional) Center the text vertically as well
+            headerStyle.VerticalAlignment = TextAlignmentType.Center;
 
             // Apply the modified style back to the merged cell
             cells[0, 0].SetStyle(headerStyle);

@@ -2,43 +2,33 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImportDemo
+class PreserveHtmlImportDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a DataTable containing HTML strings
+        DataTable table = new DataTable();
+        table.Columns.Add("ID");
+        table.Columns.Add("Content");
+        table.Rows.Add("1", "<b>Bold Text</b>");
+        table.Rows.Add("2", "<a href='https://www.example.com'>Example Link</a>");
+
+        // Create a new workbook and get the first worksheet's cells
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Configure import options to preserve HTML formatting
+        ImportTableOptions importOptions = new ImportTableOptions
         {
-            // Create a DataTable containing HTML formatted text
-            DataTable table = new DataTable();
-            table.Columns.Add("ID");
-            table.Columns.Add("Content");
-            table.Columns.Add("Time");
+            IsFieldNameShown = true, // import column headers
+            IsHtmlString = true      // treat cell values as HTML
+        };
 
-            // Sample row with an HTML anchor tag
-            table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
+        // Import the DataTable starting at cell A1 (row 0, column 0)
+        cells.ImportData(table, 0, 0, importOptions);
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Configure import options:
-            // - Show field names (column headers)
-            // - Preserve HTML formatting by setting IsHtmlString to true
-            // - Apply a time format to the third column
-            ImportTableOptions importOptions = new ImportTableOptions
-            {
-                IsFieldNameShown = true,
-                IsHtmlString = true,
-                NumberFormats = new string[] { null, null, "h:mm AM/PM" }
-            };
-
-            // Import the DataTable into the worksheet starting at cell A1 (row 0, column 0)
-            worksheet.Cells.ImportData(table, 0, 0, importOptions);
-
-            // Save the workbook; the HTML content will be retained in the cell as rich text
-            workbook.Save("HtmlStringImportDemo.xlsx");
-
-            Console.WriteLine("Import completed. Workbook saved as HtmlStringImportDemo.xlsx");
-        }
+        // Save the workbook to an Excel file
+        workbook.Save("PreserveHtmlDemo.xlsx");
     }
 }

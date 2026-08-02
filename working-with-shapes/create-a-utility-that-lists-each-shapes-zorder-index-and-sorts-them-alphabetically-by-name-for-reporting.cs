@@ -1,95 +1,68 @@
+// Title: List and Sort Worksheet Shape Z‑Order Indices with Aspose.Cells for .NET
+// Description: A C# utility that creates a workbook, adds named shapes, adjusts their Z‑order, extracts each shape's Name and ZOrderPosition, sorts the entries alphabetically, prints a tabular report, and saves the file as ShapeZOrderReport.xlsx.
+// Keywords: Aspose.Cells shape Z-order | C# list worksheet shapes | retrieve Shape.ZOrderPosition | sort Excel shapes by name | shape hierarchy report .NET | enumerate shapes in workbook | Aspose.Cells shape reporting utility
+// Common Searches: how to get shape Z-order in Aspose.Cells | sort Excel shapes alphabetically using Aspose.Cells | list shape names and Z-order positions .NET | Aspose.Cells shape layering report example | retrieve and display shape ZOrderPosition C#
+// Developer Intent: Generate a report that shows each worksheet shape’s Z‑order index, ordered alphabetically by shape name.
+// Use Cases: Create a printable audit of shape layering before publishing the workbook. | Validate shape order programmatically to ensure correct rendering when converting to PDF. | Automate detection of unintended Z‑order changes in generated spreadsheets.
+// AI Prompts: Write a method that returns a DataTable with shape names and Z‑order values sorted alphabetically. | Modify the example to export the sorted shape list to a CSV file instead of the console. | Add robust error handling for worksheets without shapes and log the sorted report to a file.
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsUtilities
+namespace ShapeZOrderReport
 {
-    /// <summary>
-    /// Utility that reports each shape's Z‑order index and lists them alphabetically by name.
-    /// </summary>
-    public static class ShapeZOrderReporter
-    {
-        /// <summary>
-        /// Loads a workbook, gathers shape information, sorts it by name, prints the report,
-        /// and saves the workbook (optional).
-        /// </summary>
-        /// <param name="inputPath">Path to the Excel file to load. If null or empty, a new workbook is created.</param>
-        /// <param name="outputPath">Path to save the workbook after processing. If null or empty, the workbook is not saved.</param>
-        public static void Run(string inputPath, string outputPath)
-        {
-            // Load or create workbook
-            Workbook workbook;
-            if (!string.IsNullOrEmpty(inputPath))
-            {
-                // Load existing workbook
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                // Create a new workbook and add sample shapes for demonstration
-                workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-
-                // Add three shapes with default names
-                ws.Shapes.AddRectangle(2, 0, 2, 0, 80, 120);   // "Rectangle 1"
-                ws.Shapes.AddOval(5, 0, 5, 0, 80, 120);       // "Oval 1"
-                ws.Shapes.AddLine(8, 0, 8, 0, 80, 120);       // "Line 1"
-
-                // Optionally rename shapes to illustrate alphabetical sorting
-                ws.Shapes[0].Name = "AlphaShape";
-                ws.Shapes[1].Name = "BetaShape";
-                ws.Shapes[2].Name = "GammaShape";
-
-                // Adjust Z‑order positions for demonstration
-                ws.Shapes[0].ZOrderPosition = 2; // front
-                ws.Shapes[1].ZOrderPosition = 0; // back
-                ws.Shapes[2].ZOrderPosition = 1; // middle
-            }
-
-            // Work with the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            ShapeCollection shapes = worksheet.Shapes;
-
-            // Collect name and Z‑order for each shape
-            var shapeInfoList = new List<(string Name, int ZOrder)>();
-            foreach (Shape shape in shapes)
-            {
-                // Some shapes may have empty names; use a placeholder if needed
-                string name = string.IsNullOrEmpty(shape.Name) ? $"Unnamed_{shape.Id}" : shape.Name;
-                shapeInfoList.Add((name, shape.ZOrderPosition));
-            }
-
-            // Sort the list alphabetically by shape name
-            shapeInfoList.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
-
-            // Output the report
-            Console.WriteLine("Shape Z‑Order Report (sorted by name):");
-            Console.WriteLine("--------------------------------------");
-            foreach (var info in shapeInfoList)
-            {
-                Console.WriteLine($"Name: {info.Name}, Z‑Order Position: {info.ZOrder}");
-            }
-
-            // Save the workbook if an output path is provided
-            if (!string.IsNullOrEmpty(outputPath))
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"\nWorkbook saved to: {outputPath}");
-            }
-        }
-    }
-
-    // Example usage
+    // A C# utility that creates a workbook, adds named shapes, adjusts their Z‑order, extracts each shape's Name and ZOrderPosition, sorts the entries alphabetically, prints a tabular report, and saves the file as ShapeZOrderReport.xlsx.
     class Program
     {
         static void Main()
         {
-            // Provide paths as needed; empty strings will trigger creation of a sample workbook.
-            string inputFile = "";   // e.g., "input.xlsx"
-            string outputFile = "ShapeReportDemo.xlsx";
+            // Create a new workbook (lifecycle create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            ShapeZOrderReporter.Run(inputFile, outputFile);
+            // Add sample shapes with distinct names
+            Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 120);
+            rect.Name = "RectangleA";
+
+            Shape oval = sheet.Shapes.AddOval(5, 0, 5, 0, 80, 120);
+            oval.Name = "OvalB";
+
+            Shape line = sheet.Shapes.AddLine(8, 0, 8, 0, 80, 120);
+            line.Name = "LineC";
+
+            // Change Z-order to demonstrate different positions
+            // Bring "OvalB" to front (higher Z-order)
+            oval.ToFrontOrBack(1);
+            // Send "LineC" to back (lower Z-order)
+            line.ToFrontOrBack(-1);
+
+            // Retrieve all shapes from the worksheet
+            ShapeCollection shapes = sheet.Shapes;
+
+            // Build a list of shape info (name and Z-order)
+            List<(string Name, int ZOrder)> shapeInfo = new List<(string, int)>();
+            foreach (Shape shape in shapes)
+            {
+                // Use Shape.Name and Shape.ZOrderPosition properties
+                shapeInfo.Add((shape.Name, shape.ZOrderPosition));
+            }
+
+            // Sort the list alphabetically by shape name
+            var sortedInfo = shapeInfo.OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase);
+
+            // Output the report
+            Console.WriteLine("Shape Name\tZ-Order Position");
+            Console.WriteLine("--------------------------------");
+            foreach (var info in sortedInfo)
+            {
+                Console.WriteLine($"{info.Name}\t{info.ZOrder}");
+            }
+
+            // Save the workbook (lifecycle save)
+            workbook.Save("ShapeZOrderReport.xlsx");
         }
     }
 }

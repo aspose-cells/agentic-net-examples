@@ -1,13 +1,22 @@
+// Title: Add a Rectangle Shape Over a Chart Plot Area Using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, inserts sample data, builds a column chart, calculates the plot‑area dimensions, converts the ratios to the 1/4000 chart unit required by AddShapeInChart, places an external rectangle that aligns exactly with the plot area, applies simple formatting, and saves the file as an XLSX document.
+// Keywords: Aspose.Cells | C# chart shape | AddShapeInChart | plot area coordinates | external shape | chart overlay | Aspose.Cells example | Excel automation .NET
+// Common Searches: Aspose.Cells add shape to chart plot area | Get chart plot area position Aspose.Cells .NET | How to overlay rectangle on Excel chart using Aspose | Convert PlotArea ratios to AddShapeInChart units | Place external shape in Aspose.Cells chart
+// Developer Intent: Insert an external rectangle that matches the chart's plot area and persist the workbook.
+// Use Cases: Visually emphasize the data region of a chart in automated reports | Add branded or labeled annotations that line up with the plot area | Generate dynamic Excel files where shapes are positioned relative to chart dimensions
+// AI Prompts: Write C# code with Aspose.Cells to place a circular shape over the plot area of a line chart and set its opacity. | Explain the formula for translating PlotArea.XRatioToChart, YRatioToChart, WidthRatioToChart, HeightRatioToChart into the integer values required by AddShapeInChart. | Provide a tutorial for adding multiple shapes to different chart sections (plot area, legend, title) using Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartShapeExample
+namespace AsposeCellsExternalShapeExample
 {
-    class Program
+    // This C# example creates a workbook, inserts sample data, builds a column chart, calculates the plot‑area dimensions, converts the ratios to the 1/4000 chart unit required by AddShapeInChart, places an external rectangle that aligns exactly with the plot area, applies simple formatting, and saves the file as an XLSX document.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
@@ -25,7 +34,7 @@ namespace AsposeCellsChartShapeExample
                 worksheet.Cells["B3"].PutValue(20);
                 worksheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
+                // Add a column chart to the worksheet
                 int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
                 Chart chart = worksheet.Charts[chartIndex];
                 chart.NSeries.Add("B2:B4", true);
@@ -34,27 +43,33 @@ namespace AsposeCellsChartShapeExample
                 // Ensure the chart is calculated so that PlotArea dimensions are valid
                 chart.Calculate();
 
-                // Convert plot area size to the unit required by AddShapeInChart (1/4000 of chart area)
-                // Plot area starts at the left/top edge of the chart (0,0)
-                int left = 0;
-                int top = 0;
-                int right = (int)(chart.PlotArea.WidthRatioToChart * 4000);
-                int bottom = (int)(chart.PlotArea.HeightRatioToChart * 4000);
+                // Get plot area ratios relative to the chart (values between 0 and 1)
+                double leftRatio = chart.PlotArea.XRatioToChart;
+                double topRatio = chart.PlotArea.YRatioToChart;
+                double widthRatio = chart.PlotArea.WidthRatioToChart;
+                double heightRatio = chart.PlotArea.HeightRatioToChart;
 
-                // Add a rectangle shape that covers the plot area
+                // Convert ratios to the unit required by AddShapeInChart (1/4000 of chart area)
+                int left = (int)(leftRatio * 4000);
+                int top = (int)(topRatio * 4000);
+                int right = (int)((leftRatio + widthRatio) * 4000);
+                int bottom = (int)((topRatio + heightRatio) * 4000);
+
+                // Add an external rectangle shape exactly over the plot area
                 Shape shape = chart.Shapes.AddShapeInChart(
-                    MsoDrawingType.Rectangle,
-                    PlacementType.Move,
-                    left,
-                    top,
-                    right,
-                    bottom);
+                    MsoDrawingType.Rectangle,   // Shape type
+                    PlacementType.Move,        // Placement behavior
+                    left, top, right, bottom);
 
-                // Optional: set some text for the shape
-                shape.Text = "Plot Area";
+                // Optional: set some visual properties
+                shape.Fill.SolidFill.Color = System.Drawing.Color.LightBlue;
+                shape.Line.SolidFill.Color = System.Drawing.Color.DarkBlue;
+                shape.Text = "Plot Area Overlay";
 
                 // Save the workbook
-                workbook.Save("ChartWithPlotAreaShape.xlsx");
+                string outputPath = "ChartWithExternalShape.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

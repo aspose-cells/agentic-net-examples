@@ -1,57 +1,35 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class StrictComplianceSaveDemo
 {
-    public class StrictComplianceSaveDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load an existing workbook (replace with a valid file path)
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
+
+        // Enable ISO/IEC 29500:2008 Strict compliance for OOXML
+        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+
+        // Define a path that typically requires elevated permissions
+        string restrictedPath = @"C:\Windows\System32\restricted.xlsx";
+
+        try
         {
-            Run();
+            // Attempt to save the workbook to the restricted location
+            workbook.Save(restrictedPath);
+            Console.WriteLine("Workbook saved successfully.");
         }
-
-        public static void Run()
+        catch (UnauthorizedAccessException ex)
         {
-            // Path to an existing workbook to load
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            Workbook workbook = null;
-            try
-            {
-                // Load the workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            // Enable ISO/IEC 29500:2008 Strict compliance for OOXML
-            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
-
-            // Destination path with likely insufficient write permissions
-            string protectedPath = @"C:\Windows\System32\protected_output.xlsx";
-
-            try
-            {
-                // Attempt to save the workbook to the protected location
-                workbook.Save(protectedPath);
-                Console.WriteLine("Workbook saved successfully (unexpected).");
-            }
-            catch (Exception ex)
-            {
-                // Expected failure due to insufficient permissions
-                Console.WriteLine("Failed to save workbook: " + ex.Message);
-            }
+            // Expected when the application lacks write permission
+            Console.WriteLine("Failed to save workbook due to insufficient permissions: " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            // Handle any other unexpected errors
+            Console.WriteLine("An error occurred while saving the workbook: " + ex.Message);
         }
     }
 }

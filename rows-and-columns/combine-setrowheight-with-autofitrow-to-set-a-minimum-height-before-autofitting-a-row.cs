@@ -1,39 +1,37 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class SetRowHeightWithAutoFitDemo
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (create rule)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Add sample data that will affect row height
-        cells["A1"].PutValue("This is a very long text that should cause the row to expand when auto‑fitted.");
-        // Enable text wrapping so the row may need to grow
-        Style style = cells["A1"].GetStyle();
-        style.IsTextWrapped = true;
-        cells["A1"].SetStyle(style);
+        // Populate some sample data in the first row
+        worksheet.Cells["A1"].PutValue("Short");
+        worksheet.Cells["B1"].PutValue("A much longer piece of text that may require a taller row.");
 
-        // Define the minimum row height (in points)
-        double minHeight = 30.0;
+        // Define the row index and the desired minimum height (in points)
+        int rowIndex = 0;
+        double minHeight = 20.0; // Minimum row height
 
-        // Set the minimum height before auto‑fitting (SetRowHeight rule)
-        cells.SetRowHeight(0, minHeight);
+        // Set the minimum height first
+        worksheet.Cells.SetRowHeight(rowIndex, minHeight);
 
-        // Auto‑fit the row based on its content (AutoFitRow rule)
-        worksheet.AutoFitRow(0);
+        // Auto‑fit the row based on its content
+        worksheet.AutoFitRow(rowIndex);
 
-        // After auto‑fit, ensure the height is not less than the minimum
-        double actualHeight = cells.GetRowHeight(0);
+        // Ensure the row height is not less than the minimum
+        double actualHeight = worksheet.Cells.GetRowHeight(rowIndex);
         if (actualHeight < minHeight)
         {
-            cells.SetRowHeight(0, minHeight);
+            worksheet.Cells.SetRowHeight(rowIndex, minHeight);
         }
 
-        // Save the workbook (save rule)
-        workbook.Save("SetRowHeightWithAutoFit.xlsx");
+        // Save the workbook
+        workbook.Save("RowHeight_MinAutoFit.xlsx");
     }
 }
+// Author: Aspose.Cells .NET example – combines SetRowHeight with AutoFitRow to enforce a minimum row height.

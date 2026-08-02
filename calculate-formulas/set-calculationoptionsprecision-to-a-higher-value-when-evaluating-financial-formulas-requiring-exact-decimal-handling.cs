@@ -14,25 +14,20 @@ namespace AsposeCellsPrecisionDemo
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Example financial data
-            // A1: Principal
-            // A2: Interest Rate
-            // A3: Periods
-            // A4: Formula = Principal * (1 + Rate) ^ Periods
-            cells["A1"].PutValue(1000.00);          // Principal
-            cells["A2"].PutValue(0.075);            // Interest Rate (7.5%)
-            cells["A3"].PutValue(5);                // Periods (years)
+            // Populate cells with financial values (example)
+            cells["A1"].PutValue(1234.56);   // Principal
+            cells["A2"].PutValue(0.075);     // Interest rate (7.5%)
+            cells["A3"].PutValue(5);         // Years
 
-            // Set the compound interest formula
-            cells["A4"].Formula = "=A1*(1+A2)^A3";
+            // Formula that calculates compound interest
+            // =A1 * (1 + A2) ^ A3
+            cells["B1"].Formula = "=A1*(1+A2)^A3";
 
-            // Configure calculation options for higher precision
+            // Configure calculation options to use Decimal precision for exact results
             CalculationOptions calcOptions = new CalculationOptions
             {
-                // Use Decimal strategy to handle calculations with exact decimal precision
                 PrecisionStrategy = CalculationPrecisionStrategy.Decimal,
-
-                // Optional: keep other defaults (ignore errors, recursive calculation)
+                // Optional: keep other defaults (IgnoreError, Recursive, etc.)
                 IgnoreError = true,
                 Recursive = true
             };
@@ -41,10 +36,10 @@ namespace AsposeCellsPrecisionDemo
             workbook.CalculateFormula(calcOptions);
 
             // Retrieve and display the calculated result
-            double result = cells["A4"].DoubleValue;
-            Console.WriteLine("Compound interest result (high precision): " + result);
+            double result = cells["B1"].DoubleValue;
+            Console.WriteLine("Compound interest result (Decimal precision): " + result);
 
-            // Save the workbook (you can change the path as needed)
+            // Save the workbook to verify the result in the file
             workbook.Save("FinancialPrecisionDemo.xlsx");
         }
     }

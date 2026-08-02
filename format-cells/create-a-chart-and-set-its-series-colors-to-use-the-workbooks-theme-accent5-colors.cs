@@ -44,8 +44,8 @@ namespace AsposeCellsThemeAccent5Demo
                 // Use solid fill
                 series.Area.FillFormat.FillType = FillType.Solid;
 
-                // Set the fill color to the theme Accent5 color (tint 0)
-                series.Area.FillFormat.SolidFill.CellsColor.ThemeColor = new ThemeColor(ThemeColorType.Accent5, 0);
+                // Set the fill to the Accent5 theme color
+                series.Area.FillFormat.SolidFill.CellsColor.ThemeColor = new ThemeColor(ThemeColorType.Accent5, 0.0);
             }
 
             // Save the workbook

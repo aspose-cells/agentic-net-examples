@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Aspose.Cells;
 
 namespace AsposeCellsMemoryMeasurement
@@ -10,31 +11,24 @@ namespace AsposeCellsMemoryMeasurement
             // Path to the workbook to be loaded
             string workbookPath = "example.xlsx";
 
+            // Measure memory before loading
+            long memoryBefore = Process.GetCurrentProcess().PrivateMemorySize64;
+
             // Create load options and enable parsing of pivot cached records
             LoadOptions loadOptions = new LoadOptions();
             loadOptions.ParsingPivotCachedRecords = true;
 
-            // Force a garbage collection and get the memory usage before loading
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memoryBefore = GC.GetTotalMemory(true);
-
             // Load the workbook with the specified options
             Workbook workbook = new Workbook(workbookPath, loadOptions);
 
-            // Force a garbage collection and get the memory usage after loading
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memoryAfter = GC.GetTotalMemory(true);
+            // Measure memory after loading
+            long memoryAfter = Process.GetCurrentProcess().PrivateMemorySize64;
 
-            // Calculate and display the memory consumed by the load operation
+            // Calculate and display the memory consumption
             long memoryConsumed = memoryAfter - memoryBefore;
-            Console.WriteLine($"Memory before loading: {memoryBefore:N0} bytes");
-            Console.WriteLine($"Memory after loading : {memoryAfter:N0} bytes");
-            Console.WriteLine($"Memory consumed while loading (ParsingPivotCachedRecords = true): {memoryConsumed:N0} bytes");
-
-            // Optional: Save the workbook to verify it was loaded correctly
-            workbook.Save("LoadedWithPivotCache.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine($"Memory before loading: {memoryBefore / 1024 / 1024} MB");
+            Console.WriteLine($"Memory after loading : {memoryAfter / 1024 / 1024} MB");
+            Console.WriteLine($"Memory consumed by loading workbook with ParsingPivotCachedRecords=true: {memoryConsumed / 1024 / 1024} MB");
         }
     }
 }

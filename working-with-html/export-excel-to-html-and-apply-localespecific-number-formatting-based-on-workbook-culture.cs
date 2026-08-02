@@ -1,37 +1,47 @@
+// Title: Export Excel to HTML with German (de‑DE) Number Formatting using Aspose.Cells for .NET
+// Description: Demonstrates how to set a workbook's CultureInfo to de‑DE, apply a locale‑aware numeric style, configure HtmlSaveOptions with ExportDataOptions.All, and save the sheet as an HTML file that displays German‑style separators.
+// Keywords: Aspose.Cells | HTML export | locale specific number format | workbook culture | de-DE | C# .NET | HtmlSaveOptions | ExportDataOptions.All | custom numeric format | Excel to HTML
+// Common Searches: Aspose.Cells export Excel to HTML with German formatting | set workbook culture de-DE Aspose.Cells | locale aware number format in HTML export .NET | HtmlSaveOptions ExportDataOptions.All example | preserve Excel culture in HTML output
+// Developer Intent: Create an HTML representation of an Excel workbook that automatically uses German numeric separators.
+// Use Cases: Produce web‑ready reports for German audiences where currency and decimal values follow local conventions. | Render an Excel worksheet as HTML while keeping hidden rows/columns visible via ExportDataOptions.All. | Automate batch conversion of localized Excel files to HTML for multilingual portals.
+// AI Prompts: Show how to export an Excel workbook to HTML with French (fr‑FR) culture using Aspose.Cells. | Provide C# code to apply a locale‑aware custom number format to a range before saving as HTML. | Explain the impact of HtmlSaveOptions.ExportDataOptions on the generated HTML in Aspose.Cells.
+
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-class ExportExcelToHtmlWithLocale
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // Demonstrates how to set a workbook's CultureInfo to de‑DE, apply a locale‑aware numeric style, configure HtmlSaveOptions with ExportDataOptions.All, and save the sheet as an HTML file that displays German‑style separators.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet and its cells
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+            // Set the workbook culture to German (Germany) – this will affect number formatting
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
 
-        // Populate cells with numeric values
-        cells["A1"].PutValue(1234.56);
-        cells["A2"].PutValue(7890.12);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Apply a built‑in number format (currency) to the cells
-        Style currencyStyle = workbook.CreateStyle();
-        currencyStyle.Number = 164; // Currency format
-        cells["A1"].SetStyle(currencyStyle);
-        cells["A2"].SetStyle(currencyStyle);
+            // Put a numeric value into a cell
+            sheet.Cells["A1"].PutValue(12345.67);
 
-        // Set the workbook culture to French (France) so numbers are formatted accordingly
-        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+            // Apply a numeric format that respects the culture (e.g., thousand separator, decimal separator)
+            Style style = sheet.Cells["A1"].GetStyle();
+            style.Custom = "#,##0.00";   // Custom format; separators will follow the set culture
+            sheet.Cells["A1"].SetStyle(style);
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        // Export all data (including styles and formatting)
-        htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
+            // Configure HTML save options (export all data)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportDataOptions = HtmlExportDataOptions.All
+            };
 
-        // Save the workbook as an HTML file using the specified options
-        workbook.Save("output.html", htmlOptions);
+            // Save the workbook as an HTML file
+            workbook.Save("ExportedWithLocale.html", htmlOptions);
+        }
     }
 }

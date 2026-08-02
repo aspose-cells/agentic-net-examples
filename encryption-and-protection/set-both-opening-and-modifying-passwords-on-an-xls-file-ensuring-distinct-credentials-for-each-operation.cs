@@ -1,47 +1,51 @@
+// Title: Set separate open and edit passwords on an XLS workbook using Aspose.Cells for .NET
+// Description: Shows how to create an XLS file, assign a password needed to open it and a different one needed to edit, save the workbook, then load it with the open credential and confirm edit protection via the Aspose.Cells C# API.
+// Keywords: Aspose.Cells | C# | .NET | XLS encryption | open password | edit password | write protection | Workbook.Settings.Password | WriteProtection.Password | password protected Excel | LoadOptions password
+// Common Searches: Aspose.Cells set open password C# | how to add edit password to XLS with Aspose.Cells | load password protected workbook .NET | validate write protection password Aspose.Cells | difference between open and edit passwords in Aspose.Cells
+// Developer Intent: Implement distinct credentials for opening and modifying an XLS file and programmatically verify both safeguards.
+// Use Cases: Distribute read‑only Excel reports that require a view password, while allowing authorized users to edit with a second credential. | Generate templates that anyone can open but only users with a separate password can modify. | Add password validation before automatically updating a protected workbook in a .NET automation pipeline.
+// AI Prompts: Generate C# code to change the edit password of an existing XLS workbook using Aspose.Cells. | Show how to remove write protection from a workbook after providing the correct edit password. | Explain steps to protect a .xlsx file with an open password and a separate edit password using Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordDemo
+// Shows how to create an XLS file, assign a password needed to open it and a different one needed to edit, save the workbook, then load it with the open credential and confirm edit protection via the Aspose.Cells C# API.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Add some sample data
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Password protected workbook.");
+        // Add sample data to the first worksheet
+        workbook.Worksheets[0].Cells["A1"].PutValue("Sensitive data");
 
-            // ----- Opening password (file encryption) -----
-            // This password is required to open the file
-            wb.Settings.Password = "OpenPwd123";
+        // ----- Set opening (file encryption) password -----
+        // This password is required to open the workbook
+        workbook.Settings.Password = "OpenPass123";
 
-            // ----- Modifying (write) password -----
-            // This password is required to modify the file after it is opened
-            wb.Settings.WriteProtection.Password = "ModifyPwd456";
+        // ----- Set modifying (write protection) password -----
+        // This password is required to modify the workbook after it is opened
+        workbook.Settings.WriteProtection.Password = "ModifyPass456";
 
-            // Save the workbook (XLS format)
-            string filePath = "PasswordProtectedWorkbook.xls";
-            wb.Save(filePath);
+        // Save the workbook to a file (XLS format)
+        string filePath = "ProtectedWorkbook.xls";
+        workbook.Save(filePath);
 
-            // ------------------- Verification -------------------
-            // Load the workbook using the opening password
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.Password = "OpenPwd123";
-            Workbook loadedWb = new Workbook(filePath, loadOptions);
+        // ----- Load the workbook using the opening password -----
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.Password = "OpenPass123";
+        Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
 
-            // Check that the write protection password is set
-            bool isWriteProtected = loadedWb.Settings.WriteProtection.IsWriteProtected;
-            Console.WriteLine("Is write-protected: " + isWriteProtected);
+        // Verify that the opening password worked
+        Console.WriteLine("Workbook opened successfully with opening password.");
 
-            // Validate the modify password
-            bool isValidModifyPwd = loadedWb.Settings.WriteProtection.ValidatePassword("ModifyPwd456");
-            Console.WriteLine("Modify password valid: " + isValidModifyPwd);
+        // Verify that write protection is enabled
+        bool isWriteProtected = loadedWorkbook.Settings.WriteProtection.IsWriteProtected;
+        Console.WriteLine("Write protection enabled: " + isWriteProtected);
 
-            // Output a cell value to confirm successful load
-            Console.WriteLine("Cell A1 value: " + loadedWb.Worksheets[0].Cells["A1"].Value);
-        }
+        // Validate the modify password
+        bool isModifyPasswordValid = loadedWorkbook.Settings.WriteProtection.ValidatePassword("ModifyPass456");
+        Console.WriteLine("Modify password validation result: " + isModifyPasswordValid);
     }
 }

@@ -1,83 +1,54 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerDemo
+namespace SlicerProcessingDemo
 {
-    public class SlicerSelectionHandler
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load an existing workbook that contains slicers
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
+                // Get the slicer collection for the current worksheet
+                SlicerCollection slicers = sheet.Slicers;
 
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Iterate through each slicer in the collection
+                for (int s = 0; s < slicers.Count; s++)
                 {
-                    // Get slicers on the current worksheet
-                    SlicerCollection slicers = sheet.Slicers;
+                    Slicer slicer = slicers[s];
 
-                    // Process each slicer
-                    for (int s = 0; s < slicers.Count; s++)
+                    // Access the slicer cache items
+                    SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
+
+                    // Log currently selected items
+                    Console.WriteLine($"Worksheet: {sheet.Name}, Slicer: {slicer.Name}");
+                    for (int i = 0; i < items.Count; i++)
                     {
-                        Slicer slicer = slicers[s];
-
-                        // Access slicer cache items
-                        SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
-
-                        // Log currently selected items
-                        Console.WriteLine($"Worksheet: {sheet.Name}, Slicer: {slicer.Name}");
-                        for (int i = 0; i < items.Count; i++)
+                        SlicerCacheItem item = items[i];
+                        if (item.Selected)
                         {
-                            SlicerCacheItem item = items[i];
-                            if (item.Selected)
-                            {
-                                Console.WriteLine($"  Selected Item: {item.Value}");
-                            }
+                            Console.WriteLine($"  Selected Item: {item.Value}");
                         }
-
-                        // Deselect all items
-                        for (int i = 0; i < items.Count; i++)
-                        {
-                            items[i].Selected = false;
-                        }
-
-                        // Refresh slicer to apply changes
-                        slicer.Refresh();
                     }
+
+                    // Deselect all items
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        items[i].Selected = false;
+                    }
+
+                    // Refresh the slicer (also refreshes the underlying PivotTable)
+                    slicer.Refresh();
                 }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SlicerSelectionHandler.Run();
+            // Save the workbook after modifications
+            workbook.Save("output.xlsx");
         }
     }
 }

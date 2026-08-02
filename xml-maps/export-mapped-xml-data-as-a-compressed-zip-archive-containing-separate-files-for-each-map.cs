@@ -3,46 +3,54 @@ using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 
-namespace AsposeCellsExportXmlToZip
+class ExportXmlMapsToZip
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the workbook that contains XML maps
+        string workbookPath = "MappedData.xlsx";
+
+        // Path for the resulting zip archive
+        string zipPath = "ExportedXmlMaps.zip";
+
+        // Load the workbook (uses the provided load rule)
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Verify that the workbook has XML maps
+        if (workbook.Worksheets.XmlMaps.Count == 0)
         {
-            // Load an existing workbook that contains XML maps
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine("No XML maps found in the workbook.");
+            return;
+        }
 
-            // Prepare the output zip file
-            string zipPath = "ExportedXmlMaps.zip";
-            using (FileStream zipFileStream = new FileStream(zipPath, FileMode.Create))
-            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create))
+        // Create (or overwrite) the zip archive
+        using (FileStream zipFile = new FileStream(zipPath, FileMode.Create))
+        using (ZipArchive archive = new ZipArchive(zipFile, ZipArchiveMode.Update))
+        {
+            // Iterate through each XML map in the workbook
+            for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
             {
-                // Iterate through all XML maps in the workbook
-                for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
+                XmlMap xmlMap = workbook.Worksheets.XmlMaps[i];
+
+                // Export the XML map to a memory stream (uses the provided ExportXml rule)
+                using (MemoryStream xmlStream = new MemoryStream())
                 {
-                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[i];
-                    string mapName = xmlMap.Name;
+                    workbook.ExportXml(xmlMap.Name, xmlStream);
+                    xmlStream.Position = 0; // Reset stream position for reading
 
-                    // Export the XML data of the current map to a memory stream
-                    using (MemoryStream xmlStream = new MemoryStream())
+                    // Define the entry name inside the zip (one file per map)
+                    string entryName = $"{xmlMap.Name}.xml";
+
+                    // Add the exported XML as a new entry in the zip archive
+                    ZipArchiveEntry entry = archive.CreateEntry(entryName);
+                    using (Stream entryStream = entry.Open())
                     {
-                        workbook.ExportXml(mapName, xmlStream);
-                        xmlStream.Position = 0; // Reset stream position for reading
-
-                        // Create a zip entry named after the map (e.g., Map1.xml)
-                        string entryName = $"{mapName}.xml";
-                        ZipArchiveEntry entry = zipArchive.CreateEntry(entryName, CompressionLevel.Optimal);
-
-                        // Write the exported XML into the zip entry
-                        using (Stream entryStream = entry.Open())
-                        {
-                            xmlStream.CopyTo(entryStream);
-                        }
+                        xmlStream.CopyTo(entryStream);
                     }
                 }
             }
-
-            Console.WriteLine($"All XML maps have been exported to '{zipPath}'.");
         }
+
+        Console.WriteLine($"Successfully exported {workbook.Worksheets.XmlMaps.Count} XML map(s) to '{zipPath}'.");
     }
 }

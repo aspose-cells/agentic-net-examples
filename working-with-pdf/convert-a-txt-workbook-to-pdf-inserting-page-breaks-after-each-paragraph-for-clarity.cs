@@ -1,47 +1,53 @@
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTxtToPdf
+namespace TxtToPdfWithPageBreaks
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
         {
-            // Path to the source TXT (CSV/TSV) file
-            string txtFilePath = "input.txt";
+            // Path to the source TXT file
+            string txtPath = "source.txt";
 
-            // Load the TXT file into a workbook
-            // Aspose.Cells automatically detects the format (CSV/TSV) based on the file extension
-            Workbook workbook = new Workbook(txtFilePath);
-
-            // Get the first worksheet (the TXT data is loaded into the first sheet)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the last row that contains data
-            int lastDataRow = sheet.Cells.MaxDataRow; // zero‑based index
+            // Read all lines from the TXT file
+            string[] lines = File.ReadAllLines(txtPath);
 
-            // Insert a horizontal page break after each row (paragraph) for clarity
-            // Adding a break at the first cell of the next row forces the current row onto its own page
-            for (int row = 0; row <= lastDataRow; row++)
+            int currentRow = 0;
+            bool previousLineWasEmpty = false;
+
+            foreach (string line in lines)
             {
-                // Build the cell name for the start of the next row (e.g., "A2", "A3", ...)
-                string cellName = $"A{row + 2}"; // +2 because rows are 0‑based and we want the next row
-                sheet.AddPageBreaks(cellName);
+                // Write the line into column A (index 0)
+                sheet.Cells[currentRow, 0].PutValue(line);
+                currentRow++;
+
+                // Detect paragraph boundaries (empty line)
+                bool isEmpty = string.IsNullOrWhiteSpace(line);
+                if (isEmpty && !previousLineWasEmpty && currentRow > 1)
+                {
+                    // Add a horizontal page break after the empty line
+                    // The cell name for the break is the first cell of the next row (e.g., "A5")
+                    string cellName = CellsHelper.CellIndexToName(currentRow, 0);
+                    sheet.HorizontalPageBreaks.Add(cellName);
+                }
+
+                previousLineWasEmpty = isEmpty;
             }
 
-            // Configure PDF save options (optional customizations can be added here)
+            // Save the workbook as PDF
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Example: ensure each sheet is not forced onto a single page
+                // Example: ensure each sheet can span multiple pages
                 OnePagePerSheet = false
             };
-
-            // Save the modified workbook as a PDF
-            string pdfOutputPath = "output.pdf";
-            workbook.Save(pdfOutputPath, pdfOptions);
-
-            Console.WriteLine($"TXT workbook converted to PDF with page breaks: {pdfOutputPath}");
+            workbook.Save("output.pdf", pdfOptions);
         }
     }
 }

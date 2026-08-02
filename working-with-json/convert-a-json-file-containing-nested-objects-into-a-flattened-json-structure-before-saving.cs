@@ -1,79 +1,38 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsJsonFlattenExample
+namespace AsposeCellsJsonFlattenDemo
 {
-    public class JsonFlattenProcessor
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Path to the source JSON file that contains nested objects
+            string inputJsonPath = "nested_input.json";
+
+            // Path for the flattened JSON output
+            string outputJsonPath = "flattened_output.json";
+
+            // Load the JSON file into a workbook.
+            // JsonLoadOptions can be left with default settings; we only need to read the data.
+            JsonLoadOptions loadOptions = new JsonLoadOptions();
+            Workbook workbook = new Workbook(inputJsonPath, loadOptions);
+
+            // Configure JSON save options to produce a flattened structure.
+            // Setting ExportNestedStructure to false disables the parent‑child hierarchy.
+            JsonSaveOptions saveOptions = new JsonSaveOptions
             {
-                // Input JSON file containing nested objects
-                string inputJsonPath = "nested_input.json";
+                ExportNestedStructure = false,   // flatten the JSON
+                AlwaysExportAsJsonObject = true, // ensure the result is a JSON object even with one sheet
+                SkipEmptyRows = true,            // optional: omit empty rows for cleaner output
+                Indent = "    "                  // optional: pretty‑print with 4‑space indentation
+            };
 
-                // Output JSON file that will contain the flattened structure
-                string outputJsonPath = "flattened_output.json";
+            // Save the workbook as a flattened JSON file.
+            workbook.Save(outputJsonPath, saveOptions);
 
-                // Ensure the input file exists
-                if (!File.Exists(inputJsonPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputJsonPath}");
-                    return;
-                }
-
-                // Read the JSON content
-                string jsonContent = File.ReadAllText(inputJsonPath);
-
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Import the JSON data into the worksheet using default layout options
-                JsonUtility.ImportData(jsonContent, worksheet.Cells, 0, 0, new JsonLayoutOptions());
-
-                // Configure JSON save options for a flattened structure
-                JsonSaveOptions saveOptions = new JsonSaveOptions
-                {
-                    ExportNestedStructure = false,      // Flatten the JSON
-                    AlwaysExportAsJsonObject = true,    // Ensure output is a JSON object even with one sheet
-                    SkipEmptyRows = true,               // Omit empty rows for cleaner output
-                    HasHeaderRow = true,                // Treat first row as header (optional)
-                    ExportEmptyCells = false            // Do not include empty cells
-                };
-
-                // Save the workbook as a JSON file with the flattening options applied
-                workbook.Save(outputJsonPath, saveOptions);
-
-                // Display the resulting flattened JSON
-                if (File.Exists(outputJsonPath))
-                {
-                    string flattenedJson = File.ReadAllText(outputJsonPath);
-                    Console.WriteLine("Flattened JSON output:");
-                    Console.WriteLine(flattenedJson);
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to create output file: {outputJsonPath}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            JsonFlattenProcessor.Run();
+            Console.WriteLine($"Flattened JSON saved to: {outputJsonPath}");
         }
     }
 }

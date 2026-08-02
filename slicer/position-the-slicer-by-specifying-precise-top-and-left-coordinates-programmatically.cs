@@ -4,7 +4,7 @@ using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Drawing;
 
-namespace SlicerPositionExample
+namespace AsposeCellsSlicerPositionDemo
 {
     class Program
     {
@@ -16,37 +16,36 @@ namespace SlicerPositionExample
 
             // Populate worksheet with sample data for a pivot table
             sheet.Cells["A1"].Value = "Category";
+            sheet.Cells["A2"].Value = "Fruit";
+            sheet.Cells["A3"].Value = "Vegetable";
             sheet.Cells["B1"].Value = "Sales";
-            sheet.Cells["A2"].Value = "Food";
-            sheet.Cells["B2"].Value = 1200;
-            sheet.Cells["A3"].Value = "Beverage";
-            sheet.Cells["B3"].Value = 800;
-            sheet.Cells["A4"].Value = "Electronics";
-            sheet.Cells["B4"].Value = 1500;
+            sheet.Cells["B2"].Value = 120;
+            sheet.Cells["B3"].Value = 80;
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D2", "SalesPivot");
+            // Add a pivot table based on the sample data
+            int pivotIdx = sheet.PivotTables.Add("A1:B3", "D5", "SalesPivot");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
             pivot.AddFieldToArea(PivotFieldType.Row, "Category");
             pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-            // Add a slicer linked to the pivot table for the "Category" field
-            // Destination cell "F2" is the upper‑left corner of the slicer range
-            int slicerIdx = sheet.Slicers.Add(pivot, "F2", "Category");
+            // Add a slicer for the "Category" field of the pivot table
+            // The slicer will be placed initially at cell E5 (upper‑left corner)
+            int slicerIdx = sheet.Slicers.Add(pivot, "E5", "Category");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Position the slicer precisely using the Shape object (pixel units)
-            // Set the left offset (horizontal) to 100 pixels from the worksheet's left edge
-            slicer.Shape.Left = 100;
-            // Set the top offset (vertical) to 50 pixels from the worksheet's top edge
-            slicer.Shape.Top = 50;
+            // Position the slicer precisely using its underlying Shape object
+            // Values are in pixels relative to the worksheet's top‑left corner
+            slicer.Shape.Left = 150;   // Horizontal offset from the left edge
+            slicer.Shape.Top = 80;     // Vertical offset from the top edge
 
-            // Optionally, adjust size if needed
-            slicer.Shape.Width = 200;   // width in pixels
-            slicer.Shape.Height = 150;  // height in pixels
+            // Optionally set size (also using the Shape object)
+            slicer.Shape.Width = 200;
+            slicer.Shape.Height = 150;
 
             // Save the workbook
-            workbook.Save("SlicerPositioned.xlsx");
+            workbook.Save("SlicerPositionedDemo.xlsx");
         }
     }
 }

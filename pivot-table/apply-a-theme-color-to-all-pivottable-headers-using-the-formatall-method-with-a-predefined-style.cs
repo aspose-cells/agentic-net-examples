@@ -2,15 +2,14 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Drawing;
 
-namespace PivotHeaderThemeDemo
+namespace AsposeCellsPivotThemeDemo
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -39,7 +38,7 @@ namespace PivotHeaderThemeDemo
             int pivotIdx = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
 
-            // Configure the pivot fields
+            // Configure pivot fields
             pivot.AddFieldToArea(PivotFieldType.Row, "Category");
             pivot.AddFieldToArea(PivotFieldType.Column, "Region");
             pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
@@ -47,24 +46,22 @@ namespace PivotHeaderThemeDemo
             // Ensure the pivot table is calculated
             pivot.CalculateData();
 
-            // Define a custom theme color (Accent1) – for example, a teal shade
-            Color customAccent = Color.FromArgb(0, 128, 128);
-            workbook.SetThemeColor(ThemeColorType.Accent1, customAccent);
+            // Define a custom theme color (e.g., Accent1) and apply it to the workbook theme
+            workbook.SetThemeColor(ThemeColorType.Accent1, Color.OrangeRed);
 
-            // Create a style that uses the theme color for the font
+            // Create a style that uses the defined theme color for the font
             Style headerStyle = workbook.CreateStyle();
             headerStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
             headerStyle.Font.IsBold = true;
             headerStyle.Font.Size = 12;
             headerStyle.Pattern = BackgroundType.Solid;
-            headerStyle.ForegroundColor = Color.LightGray; // optional background for visibility
+            headerStyle.ForegroundColor = Color.LightYellow;
 
-            // Apply the style to the entire pivot table using FormatAll
-            // (Headers will inherit the font theme color defined above)
+            // Apply the style to all cells of the pivot table (including headers) using FormatAll
             pivot.FormatAll(headerStyle);
 
             // Save the workbook
-            workbook.Save("PivotHeaderThemeDemo.xlsx", SaveFormat.Xlsx);
+            workbook.Save("PivotTableHeadersWithThemeColor.xlsx", SaveFormat.Xlsx);
         }
     }
 }

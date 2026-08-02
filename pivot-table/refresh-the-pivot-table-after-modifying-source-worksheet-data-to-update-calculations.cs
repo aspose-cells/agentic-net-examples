@@ -2,57 +2,31 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshDemo
+namespace PivotRefreshExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load an existing workbook that contains a pivot table
+            Workbook workbook = new Workbook("SourceData.xlsx");
 
-            // Get the first worksheet (will hold source data)
+            // Access the worksheet that holds the source data for the pivot table
             Worksheet dataSheet = workbook.Worksheets[0];
-            Cells cells = dataSheet.Cells;
 
-            // Populate source data for the pivot table
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("Fruit");
-            cells["B2"].PutValue(10);
-            cells["A3"].PutValue("Fruit");
-            cells["B3"].PutValue(20);
-            cells["A4"].PutValue("Vegetable");
-            cells["B4"].PutValue(15);
+            // Modify some source data cells
+            dataSheet.Cells["B2"].PutValue(1500); // Change a value
+            dataSheet.Cells["B3"].PutValue(2500); // Change another value
 
-            // Add a new worksheet to host the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            // Refresh all pivot tables in the worksheet that uses the modified data
+            // This uses the provided RefreshPivotTables method on Worksheet
+            dataSheet.RefreshPivotTables();
 
-            // Create a pivot table based on the source range A1:B4
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B4", "C3", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Configure the pivot table (row field and data field)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Initial calculation so the pivot table shows data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // ----- Modify source data -----
-            cells["B2"].PutValue(30); // Change Fruit amount from 10 to 30
-            cells["B4"].PutValue(25); // Change Vegetable amount from 15 to 25
-
-            // Refresh all pivot tables in the worksheet containing the pivot table
-            // This updates the pivot cache and recalculates the pivot report
-            pivotSheet.RefreshPivotTables();
-
-            // Alternatively, you could refresh all pivot tables in the entire workbook:
+            // Alternatively, refresh all pivot tables in the entire workbook:
             // workbook.Worksheets.RefreshPivotTables();
 
             // Save the updated workbook
-            workbook.Save("RefreshedPivotTableDemo.xlsx");
+            workbook.Save("RefreshedPivotTables.xlsx");
         }
     }
 }

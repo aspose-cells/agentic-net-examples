@@ -5,56 +5,79 @@ using Aspose.Cells.Saving;
 
 namespace AsposeCellsDemo
 {
-    public class WorkbookExportHandler
+    public class WorkbookExporter
     {
-        // Exports an existing workbook to a file on disk.
-        public void ExportWorkbook(string outputPath)
+        // Exports a newly created workbook as an XLSX file to the provided stream.
+        public void ExportWorkbook(Stream outputStream, string fileName = "Report.xlsx")
         {
             try
             {
-                const string inputPath = "input.xlsx";
+                if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
 
-                // Verify that the source workbook exists.
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"The workbook file '{inputPath}' was not found.");
+                // Create a new workbook (default format is XLSX)
+                var workbook = new Workbook();
 
-                // Load the workbook from the file.
-                var workbook = new Workbook(inputPath);
+                // Add sample data to the first worksheet
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
 
-                // Use OoxmlSaveOptions for .xlsx output.
-                var saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+                // Configure save options for the XLSX format
+                var saveOptions = new OoxmlSaveOptions();
 
-                // Save the workbook to the specified output path.
-                workbook.Save(outputPath, saveOptions);
+                // Save the workbook to the provided stream
+                workbook.Save(outputStream, saveOptions);
             }
             catch (Exception ex)
             {
-                // Wrap and rethrow to allow the caller to handle the error.
+                // Wrap and rethrow to let the caller handle the failure
                 throw new InvalidOperationException("Failed to export workbook.", ex);
+            }
+        }
+
+        // Loads a workbook from a file if it exists; otherwise throws a descriptive exception.
+        public Workbook LoadWorkbook(string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(filePath))
+                    throw new ArgumentException("File path must be provided.", nameof(filePath));
+
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException($"The file '{filePath}' was not found.", filePath);
+
+                return new Workbook(filePath);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to load workbook from '{filePath}'.", ex);
             }
         }
     }
 
-    public class Program
+    public static class Program
     {
-        // Entry point required for console application.
+        // Entry point required for compilation.
         public static void Main(string[] args)
         {
             try
             {
-                string outputPath = "output.xlsx";
+                var exporter = new WorkbookExporter();
 
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
+                // Define output file path
+                string outputPath = "Report.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
                     Directory.CreateDirectory(outputDir);
+
+                // Export workbook to file
+                using (var fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                {
+                    exporter.ExportWorkbook(fileStream, Path.GetFileName(outputPath));
                 }
 
-                var handler = new WorkbookExportHandler();
-                handler.ExportWorkbook(outputPath);
-
-                Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
             }
             catch (Exception ex)
             {

@@ -1,70 +1,62 @@
+// Title: Import CSV into an Aspose.Cells worksheet using a custom ICellsDataTable (C#)
+// Description: Read a CSV file line‑by‑line, convert each field to int, double or string, build an ArrayList of object arrays, create an ICellsDataTable with CellsDataTableFactory, import it to the first worksheet at A1 via ImportData, and save as XLSX.
+// Keywords: Aspose.Cells ImportData | ICellsDataTable | CellsDataTableFactory | CSV to Excel C# | type conversion CSV Aspose | ImportTableOptions | Workbook.Save XLSX | .NET Excel library
+// Common Searches: how to import csv into Aspose.Cells worksheet | custom ICellsDataTable example C# | ImportData with ImportTableOptions Aspose | convert csv values to int double Aspose.Cells | read csv into workbook using CellsDataTableFactory
+// Developer Intent: Load CSV content into an Excel workbook while preserving native .NET data types via a custom ICellsDataTable.
+// Use Cases: Parse a CSV file, infer numeric types, and populate an Excel sheet for reporting. | Create a reusable ICellsDataTable from any IEnumerable of object arrays for bulk import. | Apply ImportTableOptions (e.g., header handling, column width auto‑fit) during the import process. | Generate an XLSX file that can be further processed or shared after CSV ingestion.
+// AI Prompts: Show how to skip the first row (header) when importing CSV with ICellsDataTable. | Provide C# code that uses a DataTable instead of an ArrayList with CellsDataTableFactory. | Explain which ImportTableOptions settings preserve formulas or formatting during CSV import.
+
 using System;
 using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvImport
+// Read a CSV file line‑by‑line, convert each field to int, double or string, build an ArrayList of object arrays, create an ICellsDataTable with CellsDataTableFactory, import it to the first worksheet at A1 via ImportData, and save as XLSX.
+class ImportCsvWithCustomDataTable
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the CSV file to be imported
+        string csvPath = "data.csv";
+
+        // Read the CSV file line by line and build a collection of object arrays
+        ArrayList dataLists = new ArrayList();
+        using (StreamReader reader = new StreamReader(csvPath))
         {
-            try
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                // Path to the CSV file to be imported
-                string csvPath = "data.csv";
+                // Split each line by comma (adjust delimiter if needed)
+                string[] parts = line.Split(',');
 
-                // Verify that the CSV file exists
-                if (!File.Exists(csvPath))
+                // Convert each field to the most appropriate type (int, double, or string)
+                object[] row = new object[parts.Length];
+                for (int i = 0; i < parts.Length; i++)
                 {
-                    Console.WriteLine($"Error: CSV file not found at path '{csvPath}'.");
-                    return;
+                    string value = parts[i].Trim();
+
+                    if (int.TryParse(value, out int intVal))
+                        row[i] = intVal;
+                    else if (double.TryParse(value, out double doubleVal))
+                        row[i] = doubleVal;
+                    else
+                        row[i] = value;
                 }
 
-                // Read all lines from the CSV file
-                string[] lines = File.ReadAllLines(csvPath);
-
-                // Prepare a collection where each item represents a row of the CSV file
-                // Aspose.Cells expects an ArrayList of rows, where each row is an ArrayList of column values
-                ArrayList dataRows = new ArrayList();
-
-                foreach (string line in lines)
-                {
-                    // Split the line by comma (you can change the delimiter if needed)
-                    string[] fields = line.Split(',');
-
-                    // Create a row as an ArrayList and add the fields
-                    ArrayList row = new ArrayList();
-                    row.AddRange(fields);
-
-                    // Add the row to the collection
-                    dataRows.Add(row);
-                }
-
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // Obtain the factory for building ICellsDataTable from the workbook
-                CellsDataTableFactory factory = workbook.CellsDataTableFactory;
-
-                // Build an ICellsDataTable from the prepared collection
-                // The second parameter 'true' indicates that the first row contains column names
-                ICellsDataTable dataTable = factory.GetInstance(dataRows, true);
-
-                // Import the custom data table into the first worksheet starting at cell A1 (row 0, column 0)
-                ImportTableOptions importOptions = new ImportTableOptions();
-                workbook.Worksheets[0].Cells.ImportData(dataTable, 0, 0, importOptions);
-
-                // Save the workbook to an XLSX file (lifecycle rule: save)
-                string outputPath = "ImportedFromCsv.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"CSV data has been imported successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                dataLists.Add(row);
             }
         }
+
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Build an ICellsDataTable from the collection using the factory
+        ICellsDataTable cellsTable = workbook.CellsDataTableFactory.GetInstance(dataLists, true);
+
+        // Import the data table into the first worksheet starting at cell A1 (row 0, column 0)
+        workbook.Worksheets[0].Cells.ImportData(cellsTable, 0, 0, new ImportTableOptions());
+
+        // Save the workbook to an XLSX file
+        workbook.Save("ImportedFromCsv.xlsx");
     }
 }

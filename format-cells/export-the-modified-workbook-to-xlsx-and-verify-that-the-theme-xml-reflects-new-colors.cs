@@ -2,76 +2,86 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using Aspose.Cells;
 
-class CustomThemeExportAndVerify
+namespace AsposeCellsThemeVerification
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Define 12 custom theme colors (Background1, Text1, ..., FollowedHyperlink)
-        Color[] customColors = new Color[]
+        static void Main()
         {
-            Color.FromArgb(255, 255, 0, 0),     // Red
-            Color.FromArgb(255, 0, 255, 0),     // Green
-            Color.FromArgb(255, 0, 0, 255),     // Blue
-            Color.FromArgb(255, 255, 255, 0),   // Yellow
-            Color.FromArgb(255, 255, 0, 255),   // Magenta
-            Color.FromArgb(255, 0, 255, 255),   // Cyan
-            Color.FromArgb(255, 128, 0, 128),   // Purple
-            Color.FromArgb(255, 128, 128, 0),   // Olive
-            Color.FromArgb(255, 0, 128, 128),   // Teal
-            Color.FromArgb(255, 128, 0, 0),     // Maroon
-            Color.FromArgb(255, 0, 128, 0),     // Dark Green
-            Color.FromArgb(255, 0, 0, 128)      // Navy
-        };
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Apply the custom theme to the workbook
-        workbook.CustomTheme("MyCustomTheme", customColors);
+            // Define 12 custom theme colors (Background1, Text1, ..., FollowedHyperlink)
+            Color[] customColors = new Color[]
+            {
+                Color.FromArgb(255, 255, 0, 0),     // Background1 - Red
+                Color.FromArgb(255, 0, 255, 0),     // Text1 - Green
+                Color.FromArgb(255, 0, 0, 255),     // Background2 - Blue
+                Color.FromArgb(255, 255, 255, 0),   // Text2 - Yellow
+                Color.FromArgb(255, 255, 0, 255),   // Accent1 - Magenta
+                Color.FromArgb(255, 0, 255, 255),   // Accent2 - Cyan
+                Color.FromArgb(255, 128, 0, 128),   // Accent3 - Purple
+                Color.FromArgb(255, 128, 128, 0),   // Accent4 - Olive
+                Color.FromArgb(255, 0, 128, 128),   // Accent5 - Teal
+                Color.FromArgb(255, 128, 0, 0),     // Accent6 - Maroon
+                Color.FromArgb(255, 0, 128, 0),     // Hyperlink - Dark Green
+                Color.FromArgb(255, 0, 0, 128)      // FollowedHyperlink - Navy
+            };
 
-        // Save the workbook as XLSX
-        string filePath = "CustomThemeDemo.xlsx";
-        workbook.Save(filePath);
+            // Apply the custom theme to the workbook
+            workbook.CustomTheme("MyCustomTheme", customColors);
 
-        // Verify that the theme XML inside the saved XLSX contains the new colors
-        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-        using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Read))
+            // Save the workbook to XLSX
+            string filePath = "CustomThemeDemo.xlsx";
+            workbook.Save(filePath);
+
+            // Verify that the theme XML inside the XLSX contains the new colors
+            VerifyThemeColorsInXml(filePath, customColors);
+        }
+
+        static void VerifyThemeColorsInXml(string xlsxPath, Color[] expectedColors)
         {
-            // Theme XML is stored at xl/theme/theme1.xml
-            ZipArchiveEntry themeEntry = zip.GetEntry("xl/theme/theme1.xml");
-            if (themeEntry == null)
+            // Open the XLSX package as a zip archive
+            using (FileStream fs = new FileStream(xlsxPath, FileMode.Open, FileAccess.Read))
+            using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))
             {
-                Console.WriteLine("Theme XML not found in the workbook.");
-                return;
-            }
-
-            string themeXml;
-            using (StreamReader reader = new StreamReader(themeEntry.Open()))
-            {
-                themeXml = reader.ReadToEnd();
-            }
-
-            // Check for the presence of the first custom color (Red) in the XML.
-            // Aspose stores colors as six‑digit hex without the leading '#'.
-            string firstColorHex = ColorTranslator.ToHtml(customColors[0]).TrimStart('#').ToUpperInvariant();
-
-            bool containsFirstColor = themeXml.IndexOf(firstColorHex, StringComparison.OrdinalIgnoreCase) >= 0;
-            Console.WriteLine($"Theme XML contains first custom color (#{firstColorHex}): {containsFirstColor}");
-
-            // Optionally, verify all custom colors are present
-            bool allColorsPresent = true;
-            for (int i = 0; i < customColors.Length; i++)
-            {
-                string hex = ColorTranslator.ToHtml(customColors[i]).TrimStart('#').ToUpperInvariant();
-                if (themeXml.IndexOf(hex, StringComparison.OrdinalIgnoreCase) < 0)
+                // Theme XML is stored at xl/theme/theme1.xml
+                ZipArchiveEntry themeEntry = archive.GetEntry("xl/theme/theme1.xml");
+                if (themeEntry == null)
                 {
-                    allColorsPresent = false;
-                    Console.WriteLine($"Missing color #{hex} in theme XML (index {i}).");
+                    Console.WriteLine("Theme XML not found in the workbook.");
+                    return;
                 }
+
+                // Read the XML content
+                string themeXml;
+                using (StreamReader reader = new StreamReader(themeEntry.Open(), Encoding.UTF8))
+                {
+                    themeXml = reader.ReadToEnd();
+                }
+
+                // Check that each expected color appears as a hex value in the XML
+                bool allFound = true;
+                for (int i = 0; i < expectedColors.Length; i++)
+                {
+                    // Theme colors are stored as srgbClr elements with hex values (e.g., <a:srgbClr val="FF0000"/>)
+                    string hex = expectedColors[i].R.ToString("X2") +
+                                 expectedColors[i].G.ToString("X2") +
+                                 expectedColors[i].B.ToString("X2");
+                    if (!themeXml.Contains($"val=\"{hex}\"", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine($"Color #{i} (#{hex}) not found in theme XML.");
+                        allFound = false;
+                    }
+                }
+
+                Console.WriteLine(allFound
+                    ? "All custom theme colors verified in theme XML."
+                    : "Some custom theme colors are missing in theme XML.");
             }
-            Console.WriteLine($"All custom colors present in theme XML: {allColorsPresent}");
         }
     }
 }

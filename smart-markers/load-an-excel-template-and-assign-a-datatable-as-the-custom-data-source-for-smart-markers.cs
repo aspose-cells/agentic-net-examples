@@ -2,34 +2,38 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-class Program
+namespace SmartMarkerDemo
 {
-    static void Main()
+    class Program
     {
-        // Load the Excel template that contains smart markers
-        Workbook workbook = new Workbook("Template.xlsx");
+        static void Main()
+        {
+            // Load the Excel template that contains smart markers
+            Workbook workbook = new Workbook("Template.xlsx");
 
-        // Create a DataTable that will serve as the custom data source
-        DataTable dataTable = new DataTable("Products");
-        dataTable.Columns.Add("ProductID", typeof(int));
-        dataTable.Columns.Add("ProductName", typeof(string));
-        dataTable.Columns.Add("Price", typeof(decimal));
+            // Create a WorkbookDesigner and assign the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
 
-        // Populate the DataTable with sample data
-        dataTable.Rows.Add(1, "Laptop", 1200.50m);
-        dataTable.Rows.Add(2, "Phone", 799.99m);
-        dataTable.Rows.Add(3, "Tablet", 450.75m);
+            // Prepare a DataTable that will be used as the custom data source
+            DataTable dataTable = new DataTable("Products");
+            dataTable.Columns.Add("ProductID", typeof(int));
+            dataTable.Columns.Add("ProductName", typeof(string));
+            dataTable.Columns.Add("Price", typeof(decimal));
 
-        // Initialize the WorkbookDesigner with the loaded workbook
-        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Add sample rows
+            dataTable.Rows.Add(1, "Laptop", 999.99m);
+            dataTable.Rows.Add(2, "Smartphone", 699.49m);
+            dataTable.Rows.Add(3, "Tablet", 399.00m);
 
-        // Assign the DataTable as the data source for the smart markers
-        designer.SetDataSource(dataTable);
+            // Set the DataTable as the data source for smart markers
+            designer.SetDataSource(dataTable);
 
-        // Process the smart markers to populate the worksheet with data
-        designer.Process();
+            // Process the smart markers and populate the worksheet with data
+            designer.Process();
 
-        // Save the processed workbook to a new file
-        workbook.Save("Result.xlsx");
+            // Save the resulting workbook
+            workbook.Save("Result.xlsx");
+        }
     }
 }

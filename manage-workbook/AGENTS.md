@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Create, configure, inspect, clean, copy, and manage Excel workbooks in C#
 primary_apis: [Workbook, WorkbookSettings, WorksheetCollection, ContentTypePropertyCollection, CustomXmlPartCollection]
 related_categories: [../open-workbook/, ../save-workbook/, ../working-with-worksheets/, ../document-properties/]

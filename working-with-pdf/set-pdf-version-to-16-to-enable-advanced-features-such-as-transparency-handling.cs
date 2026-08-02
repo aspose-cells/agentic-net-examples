@@ -2,24 +2,23 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class SetPdfVersionExample
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and add some content
         Workbook workbook = new Workbook();
-
-        // Add sample data to the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF version 1.6 example");
+        sheet.Cells["A1"].PutValue("PDF version set to 1.6 (Pdf16)");
 
-        // Configure PDF save options to use PDF 1.6 compliance
+        // Configure PDF save options with compliance level Pdf16 (PDF 1.6)
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            Compliance = PdfCompliance.Pdf16 // Set PDF version to 1.6
+            // Author note: setting compliance to Pdf16 enables PDF 1.6 features such as transparency
+            Compliance = PdfCompliance.Pdf16
         };
 
-        // Save the workbook as a PDF file with the specified options
+        // Save the workbook as PDF using the configured options
         workbook.Save("OutputPdf16.pdf", pdfOptions);
     }
 }

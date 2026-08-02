@@ -1,39 +1,42 @@
 using System;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsTxtExportExample
+namespace AsposeCellsTxtExportDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate data programmatically
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Laptop");
-            worksheet.Cells["B2"].PutValue(999.99);
-            worksheet.Cells["A3"].PutValue("Phone");
-            worksheet.Cells["B3"].PutValue(699.99);
-            worksheet.Cells["A4"].PutValue("Tablet");
-            worksheet.Cells["B4"].PutValue(399.99);
+            // Populate sample data programmatically
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Laptop");
+            sheet.Cells["B2"].PutValue(999.99);
+            sheet.Cells["A3"].PutValue("Phone");
+            sheet.Cells["B3"].PutValue(599.99);
+            sheet.Cells["A4"].PutValue("Tablet");
+            sheet.Cells["B4"].PutValue(399.99);
 
-            // Configure text save options for tab‑delimited output (rule usage)
-            TxtSaveOptions txtOptions = new TxtSaveOptions();
-            txtOptions.Separator = '\t';               // Tab character as delimiter
-            txtOptions.Encoding = System.Text.Encoding.UTF8;
-            txtOptions.ExportAllSheets = false;        // Export only the active sheet
+            // Configure text save options for tab‑delimited output
+            TxtSaveOptions txtOptions = new TxtSaveOptions
+            {
+                // Use tab character as the separator
+                Separator = '\t',
+                // Ensure UTF‑8 encoding for proper character handling
+                Encoding = Encoding.UTF8
+            };
 
-            // Save the workbook as a tab‑delimited TXT file (lifecycle rule)
-            string outputPath = "ExportedData.txt";
-            workbook.Save(outputPath, txtOptions);
+            // Save the workbook as a tab‑delimited TXT file (lifecycle rule: save)
+            workbook.Save("ExportedData.txt", txtOptions);
 
-            Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
+            Console.WriteLine("Workbook has been exported as a tab‑delimited TXT file.");
         }
     }
 }

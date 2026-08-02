@@ -1,47 +1,59 @@
-using Aspose.Cells;
+// Title: C# – Create CSV summary of worksheet names, Tab IDs, and empty‑sheet status with Aspose.Cells
+// Description: This C# example loads an Excel file using Aspose.Cells, walks through every worksheet, captures the sheet’s name and TabId, evaluates emptiness by checking MaxDataRow and MaxDataColumn, and writes the results to a CSV file with proper escaping. The workbook can be saved unchanged after the report is generated.
+// Keywords: Aspose.Cells | .NET | C# | CSV report | worksheet name | TabId | empty worksheet detection | MaxDataRow | MaxDataColumn | Excel workbook analysis | export worksheet list
+// Common Searches: Aspose.Cells list worksheets CSV | C# get TabId of Excel sheets | detect empty worksheets Aspose.Cells | export workbook metadata to CSV | generate worksheet summary .NET
+// Developer Intent: Produce a CSV file that enumerates each worksheet’s name, its TabId, and a boolean indicating whether the sheet contains any data.
+// Use Cases: Quick audit of workbook structure before data processing | Provide non‑technical stakeholders with a concise sheet inventory | Skip blank worksheets during bulk import operations | Log worksheet metadata for automated quality checks
+// AI Prompts: Write a function that returns a DataTable with columns WorksheetName, TabId, IsEmpty using Aspose.Cells. | Extend the sample to also record the total data rows and columns for each sheet in the CSV. | Add comprehensive error handling for missing files, permission issues, and log each step of the CSV generation.
+
 using System;
 using System.IO;
-using System.Text;
+using Aspose.Cells;
 
-class WorksheetReport
+// This C# example loads an Excel file using Aspose.Cells, walks through every worksheet, captures the sheet’s name and TabId, evaluates emptiness by checking MaxDataRow and MaxDataColumn, and writes the results to a CSV file with proper escaping. The workbook can be saved unchanged after the report is generated.
+class Program
 {
     static void Main()
     {
         // Load an existing workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath); // uses the provided load rule
+        string inputFile = "input.xlsx";
+        Workbook workbook = new Workbook(inputFile); // load rule
 
-        // Prepare CSV header
-        StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.AppendLine("WorksheetName,TabId,IsEmpty");
+        // Path for the CSV report
+        string csvFile = "WorksheetReport.csv";
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Create CSV and write header
+        using (StreamWriter writer = new StreamWriter(csvFile))
         {
-            string name = sheet.Name;
-            int tabId = sheet.TabId;
+            writer.WriteLine("WorksheetName,TabId,IsEmpty");
 
-            // Determine if the sheet is empty.
-            // Check a reasonable number of columns for any data.
-            bool isEmpty = true;
-            for (int col = 0; col < 100; col++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // GetLastDataRow returns -1 when the column has no data.
-                if (sheet.Cells.GetLastDataRow(col) >= 0)
-                {
-                    isEmpty = false;
-                    break;
-                }
-            }
+                string name = sheet.Name;
+                int tabId = sheet.TabId;
 
-            // Append the information as a CSV line
-            csvBuilder.AppendLine($"{name},{tabId},{isEmpty}");
+                // Determine if the sheet is empty.
+                // A sheet is considered empty when it has no data rows and no data columns.
+                bool isEmpty = sheet.Cells.MaxDataRow == 0 && sheet.Cells.MaxDataColumn == 0;
+
+                // Write CSV line (escape name if needed)
+                writer.WriteLine($"{EscapeCsv(name)},{tabId},{isEmpty}");
+            }
         }
 
-        // Save the CSV report (free‑form code, no specific rule for CSV saving)
-        string outputPath = "WorksheetReport.csv";
-        File.WriteAllText(outputPath, csvBuilder.ToString());
+        // Save the workbook if any modifications were made (optional)
+        workbook.Save("output.xlsx"); // save rule
+    }
 
-        Console.WriteLine($"CSV report generated at: {outputPath}");
+    // Helper to escape CSV fields containing commas, quotes, or newlines
+    static string EscapeCsv(string field)
+    {
+        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        {
+            field = field.Replace("\"", "\"\"");
+            return $"\"{field}\"";
+        }
+        return field;
     }
 }

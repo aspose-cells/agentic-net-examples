@@ -2,22 +2,25 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class SetPdfVersionExample
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
+        // Create a new workbook and add sample data
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF version 1.4 example");
+        sheet.Cells["A1"].PutValue("PDF 1.4 Compatibility Demo");
 
-        // Create PDF save options (rule: PdfSaveOptions constructor)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Set PDF save options to PDF 1.4 (compatible with older PDF viewers)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Pdf14 enum value corresponds to PDF version 1.4
+            Compliance = PdfCompliance.Pdf14
+        };
 
-        // Set the compliance level to PDF 1.4 (rule: PdfSaveOptions.Compliance property)
-        pdfOptions.Compliance = PdfCompliance.Pdf14;
-
-        // Save the workbook as a PDF using the specified options (rule: Workbook.Save)
-        workbook.Save("Output_Pdf14.pdf", pdfOptions);
+        // Save the workbook as PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }
+
+// Author: Example demonstrating PDF 1.4 compliance with Aspose.Cells for .NET.

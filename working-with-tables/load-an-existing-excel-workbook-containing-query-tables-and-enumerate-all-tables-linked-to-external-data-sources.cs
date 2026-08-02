@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
@@ -7,106 +6,47 @@ namespace AsposeCellsExamples
 {
     public class EnumerateExternalQueryTables
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Path to the input workbook
-            string inputPath = "InputWorkbookWithQueryTables.xlsx";
-
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             // Load the existing workbook that contains query tables
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
+            // Replace "input.xlsx" with the actual path to your workbook
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Iterate through each worksheet in the workbook
-            for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet sheet = workbook.Worksheets[wsIndex];
+                // Access the collection of query tables in the current worksheet
+                QueryTableCollection queryTables = sheet.QueryTables;
+
+                // If there are no query tables, continue to the next worksheet
+                if (queryTables.Count == 0)
+                    continue;
+
                 Console.WriteLine($"Worksheet: {sheet.Name}");
 
-                // Check if the worksheet has any query tables
-                if (sheet.QueryTables.Count == 0)
-                {
-                    Console.WriteLine("  No query tables in this worksheet.");
-                    continue;
-                }
-
                 // Enumerate each query table
-                for (int qtIndex = 0; qtIndex < sheet.QueryTables.Count; qtIndex++)
+                for (int i = 0; i < queryTables.Count; i++)
                 {
-                    QueryTable queryTable = sheet.QueryTables[qtIndex];
-                    Console.WriteLine($"  Query Table {qtIndex + 1}: {queryTable.Name}");
-                    Console.WriteLine($"    Result Range: {queryTable.ResultRange.Address}");
+                    QueryTable queryTable = queryTables[i];
 
-                    // Get the external connection associated with the query table
-                    ExternalConnection extConn = queryTable.ExternalConnection;
-                    if (extConn != null)
+                    // Retrieve the external connection associated with the query table
+                    ExternalConnection externalConnection = queryTable.ExternalConnection;
+
+                    // If the query table has an external connection, display its details
+                    if (externalConnection != null)
                     {
-                        Console.WriteLine("    Linked to external data source:");
-                        Console.WriteLine($"      Connection ID    : {extConn.Id}");
-                        Console.WriteLine($"      Connection Name  : {extConn.Name}");
-                        Console.WriteLine($"      Connection Type  : {extConn.ClassType}");
-                        Console.WriteLine($"      Connection String: {extConn.ConnectionString}");
-                        Console.WriteLine($"      Refresh on Load  : {extConn.RefreshOnLoad}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("    No external connection associated with this query table.");
+                        Console.WriteLine($"  Query Table Name: {queryTable.Name}");
+                        Console.WriteLine($"    Connection ID   : {queryTable.ConnectionId}");
+                        Console.WriteLine($"    External Conn ID: {externalConnection.Id}");
+                        Console.WriteLine($"    External Conn Name: {externalConnection.Name}");
+                        Console.WriteLine($"    Connection String : {externalConnection.ConnectionString}");
+                        Console.WriteLine($"    Refresh On Load   : {externalConnection.RefreshOnLoad}");
                     }
                 }
             }
 
-            // List workbook‑level external links (if any)
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-            if (externalLinks.Count > 0)
-            {
-                Console.WriteLine("\nWorkbook External Links:");
-                for (int i = 0; i < externalLinks.Count; i++)
-                {
-                    ExternalLink link = externalLinks[i];
-                    Console.WriteLine($"  Link {i + 1}: DataSource = {link.DataSource}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("\nNo workbook external links found.");
-            }
-
-            // Save the workbook (unchanged) if needed
-            try
-            {
-                workbook.Save("EnumeratedQueryTablesOutput.xlsx");
-                Console.WriteLine("\nWorkbook saved as EnumeratedQueryTablesOutput.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Optionally save the workbook (unchanged) to a new file
+            workbook.Save("output.xlsx");
         }
     }
 }

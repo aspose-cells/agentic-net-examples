@@ -6,39 +6,59 @@ class Program
 {
     static void Main()
     {
-        // Load an existing Excel file into a byte array (replace with your source)
-        byte[] excelBytes = File.ReadAllBytes("input.xlsx");
+        // ------------------------------------------------------------
+        // 1. Create a workbook with an initial formula and save it to a
+        //    memory stream (simulating an existing file in memory).
+        // ------------------------------------------------------------
+        Workbook originalWorkbook = new Workbook();
+        Worksheet originalSheet = originalWorkbook.Worksheets[0];
+        originalSheet.Cells["A1"].PutValue(5);                 // A1 = 5
+        originalSheet.Cells["B1"].Formula = "=A1*2";           // B1 = A1 * 2
 
-        // Create a memory stream from the byte array
-        using (MemoryStream inputStream = new MemoryStream(excelBytes))
+        using (MemoryStream stream = new MemoryStream())
         {
-            // Load the workbook from the memory stream
-            Workbook workbook = new Workbook(inputStream);
+            // Save the workbook into the stream.
+            originalWorkbook.Save(stream, SaveFormat.Xlsx);
+            // Reset the stream position so it can be read from the beginning.
+            stream.Position = 0;
 
-            // Access the first worksheet
+            // ------------------------------------------------------------
+            // 2. Load the workbook from the memory stream.
+            // ------------------------------------------------------------
+            Workbook workbook = new Workbook(stream);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Change the formula of a specific cell (e.g., B2)
-            // Original formula is replaced with a new one that multiplies A1 by 10
-            sheet.Cells["B2"].Formula = "=A1*10";
+            // ------------------------------------------------------------
+            // 3. Change an existing formula.
+            //    - Add a new value in C1.
+            //    - Update B1 to use the new cell.
+            // ------------------------------------------------------------
+            sheet.Cells["C1"].PutValue(10);                     // C1 = 10
+            sheet.Cells["B1"].Formula = "=C1*3";                // B1 = C1 * 3
 
-            // Prepare calculation options (e.g., ignore errors during calculation)
+            // ------------------------------------------------------------
+            // 4. Prepare calculation options.
+            // ------------------------------------------------------------
             CalculationOptions calcOptions = new CalculationOptions
             {
-                IgnoreError = true
+                Recursive = true,      // calculate dependent cells across worksheets
+                IgnoreError = false    // do not suppress calculation errors
             };
 
-            // Recalculate all formulas in the workbook using the specified options
+            // ------------------------------------------------------------
+            // 5. Calculate all formulas using the specified options.
+            // ------------------------------------------------------------
             workbook.CalculateFormula(calcOptions);
 
-            // Save the updated workbook to a new memory stream
-            using (MemoryStream outputStream = new MemoryStream())
-            {
-                workbook.Save(outputStream, SaveFormat.Xlsx);
+            // ------------------------------------------------------------
+            // 6. Output the result of the changed formula.
+            // ------------------------------------------------------------
+            Console.WriteLine("Calculated B1 value: " + sheet.Cells["B1"].Value);
 
-                // Optionally write the result to a physical file for verification
-                File.WriteAllBytes("output.xlsx", outputStream.ToArray());
-            }
+            // ------------------------------------------------------------
+            // 7. (Optional) Save the modified workbook to a file.
+            // ------------------------------------------------------------
+            workbook.Save("ModifiedWorkbook.xlsx");
         }
     }
 }

@@ -1,73 +1,30 @@
-using System;
-using System.IO;
+// Title: Aspose.Cells for .NET – Remove All PivotTable Slicers from a Worksheet
+// Description: Load an existing workbook, access the target worksheet, clear its SlicerCollection to delete every slicer linked to any PivotTable, and save the updated file using Aspose.Cells C# API.
+// Keywords: Aspose.Cells clear slicers | remove pivot table slicers .NET | worksheet slicers.Clear() | delete Excel slicers programmatically | C# Aspose.Cells slicer collection | pivot table slicer removal
+// Common Searches: how to delete all slicers in an Excel file with Aspose.Cells | clear slicer collection on a worksheet C# | remove pivot table slicers using Aspose.Cells for .NET | Aspose.Cells delete slicers programmatically | C# code to clear Excel slicers
+// Developer Intent: Programmatically delete every slicer associated with PivotTables by clearing the worksheet’s SlicerCollection.
+// Use Cases: Prepare a distribution‑ready workbook by stripping interactive slicers before publishing. | Reset a PivotTable template so end users can create fresh slicers. | Automate cleanup of temporary slicers after generating a pivot‑based analysis.
+// AI Prompts: Generate C# code that lists all slicer names on a worksheet before clearing them with Aspose.Cells. | Explain how to verify that slicers have been removed after calling worksheet.Slicers.Clear(). | Show how to clear slicers for a specific PivotTable without affecting slicers linked to other PivotTables.
+
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsExamples
+// Load an existing workbook, access the target worksheet, clear its SlicerCollection to delete every slicer linked to any PivotTable, and save the updated file using Aspose.Cells C# API.
+class Program
 {
-    public class RemoveAllSlicersFromPivotDemo
+    static void Main()
     {
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+        // Load an existing workbook that contains the PivotTable and its slicers
+        Workbook workbook = new Workbook("input.xlsx");
 
-        public static void Run()
-        {
-            const string inputPath = "InputWithPivot.xlsx";
-            const string outputPath = "OutputWithoutSlicers.xlsx";
+        // Access the worksheet that holds the PivotTable
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+        // Clear all slicers on this worksheet (removes slicers linked to the PivotTable)
+        worksheet.Slicers.Clear();
 
-            try
-            {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one PivotTable on the sheet
-                PivotTableCollection pivotTables = worksheet.PivotTables;
-                if (pivotTables.Count > 0)
-                {
-                    // Get the slicer collection for the worksheet
-                    SlicerCollection slicers = worksheet.Slicers;
-
-                    // Clear all slicers associated with the PivotTable(s)
-                    slicers.Clear();
-                }
-                else
-                {
-                    Console.WriteLine("No PivotTables found on the worksheet.");
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved without slicers to: {outputPath}");
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
-            }
-        }
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

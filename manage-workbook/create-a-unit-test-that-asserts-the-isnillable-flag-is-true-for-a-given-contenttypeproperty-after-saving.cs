@@ -1,73 +1,51 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-namespace AsposeCellsTests
+namespace AsposeCellsDemo
 {
-    class Program
+    public class Program
     {
-        private const string PropertyName = "Admin";
-        private const string PropertyValue = "Aspose";
-        private const string PropertyType = "text";
+        private const string TestFile = "ContentTypePropertyIsNillableTest.xlsx";
 
-        static void Main()
+        public static void Main()
         {
-            string tempFile = null;
-
             try
             {
                 // Create a new workbook and add a content type property
                 var workbook = new Workbook();
-                workbook.ContentTypeProperties.Add(PropertyName, PropertyValue, PropertyType);
+                workbook.ContentTypeProperties.Add("Admin", "Aspose", "text");
 
-                // Retrieve the added property and set IsNillable flag
-                var property = workbook.ContentTypeProperties[PropertyName];
+                // Retrieve the property and set IsNillable to true
+                ContentTypeProperty property = workbook.ContentTypeProperties["Admin"];
                 property.IsNillable = true;
 
-                // Save the workbook to a temporary file
-                tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
-                workbook.Save(tempFile);
+                // Save the workbook to a file
+                workbook.Save(TestFile);
 
-                // Ensure the file was created before attempting to load it
-                if (!File.Exists(tempFile))
-                {
-                    Console.WriteLine("Temporary file was not created.");
-                    return;
-                }
+                // Ensure the file exists before loading
+                if (!File.Exists(TestFile))
+                    throw new FileNotFoundException($"The file '{TestFile}' was not found after saving.");
 
-                // Load the saved workbook
-                var loadedWorkbook = new Workbook(tempFile);
-                var loadedProperty = loadedWorkbook.ContentTypeProperties[PropertyName];
+                // Load the workbook from the saved file
+                var loadedWorkbook = new Workbook(TestFile);
+                ContentTypeProperty loadedProperty = loadedWorkbook.ContentTypeProperties["Admin"];
 
                 // Verify that IsNillable remains true after loading
                 if (loadedProperty.IsNillable)
                 {
-                    Console.WriteLine("Test passed: IsNillable is true after saving and loading.");
+                    Console.WriteLine("IsNillable flag is true after loading. Test passed.");
                 }
                 else
                 {
-                    Console.WriteLine("Test failed: IsNillable is false after saving and loading.");
+                    Console.WriteLine("IsNillable flag is false after loading. Test failed.");
                 }
             }
             catch (Exception ex)
             {
-                // Runtime safety: capture any unexpected errors
-                Console.WriteLine($"Exception: {ex.Message}");
-            }
-            finally
-            {
-                // Cleanup: delete the temporary file if it exists
-                if (!string.IsNullOrEmpty(tempFile) && File.Exists(tempFile))
-                {
-                    try
-                    {
-                        File.Delete(tempFile);
-                    }
-                    catch
-                    {
-                        // Suppress any cleanup errors
-                    }
-                }
+                // Runtime safety: report any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

@@ -1,50 +1,57 @@
+// Title: Ungroup Columns and Keep Original Widths with Aspose.Cells for .NET (C#)
+// Description: Loads an Excel file, records the widths of a column range, groups the columns, temporarily changes their size and adds header values, then ungroups the range and restores the saved widths before saving the workbook.
+// Keywords: Aspose.Cells | C# | UngroupColumns | PreserveColumnWidth | GroupColumns | ColumnWidth | .NET Excel | Worksheet manipulation | Excel column grouping | code example
+// Common Searches: Aspose.Cells ungroup columns keep width | restore column width after ungrouping C# | how to preserve Excel column sizes with Aspose.Cells | group then ungroup columns example Aspose.Cells .NET | C# code to save and reapply column widths in Excel
+// Developer Intent: Remove column grouping while maintaining the original column dimensions.
+// Use Cases: Temporarily widen columns for a header row, then revert to the template’s original layout. | Process a spreadsheet where columns are grouped for data entry, and the final report must match the original column widths. | Automate report generation that adjusts column grouping for visual emphasis without altering the final column sizing.
+// AI Prompts: Write C# code using Aspose.Cells that ungroups columns A‑C and restores their previous widths after a temporary width change. | Explain how to capture column widths before grouping and reapply them after ungrouping with Aspose.Cells for .NET. | Create a reusable method that accepts a worksheet and a column range, ungroups the columns, and preserves their original widths.
+
 using System;
 using Aspose.Cells;
 
+// Loads an Excel file, records the widths of a column range, groups the columns, temporarily changes their size and adds header values, then ungroups the range and restores the saved widths before saving the workbook.
 class UngroupColumnsDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace the path with your file)
+        Workbook workbook = new Workbook("input.xlsx");
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
-        // Populate sample data in columns A to D
-        cells["A1"].PutValue("Short");
-        cells["B1"].PutValue("Medium length text");
-        cells["C1"].PutValue("Very very long text that needs column width adjustment");
-        cells["D1"].PutValue("Another example");
+        int firstCol = 0;   // first column index to ungroup
+        int lastCol = 2;    // last column index to ungroup
 
-        // Set initial column widths to a consistent value (e.g., 15 characters)
-        for (int col = 0; col <= 3; col++)
+        // Preserve original column widths so they stay consistent after ungrouping
+        int colCount = lastCol - firstCol + 1;
+        double[] originalWidths = new double[colCount];
+        for (int i = 0; i < colCount; i++)
         {
-            cells.Columns[col].Width = 15;
+            int colIndex = firstCol + i;
+            originalWidths[i] = worksheet.Cells.Columns[colIndex].Width;
         }
 
-        // Group columns B and C (indexes 1 to 2) and hide them as an example modification
-        cells.GroupColumns(1, 2, true);
-
-        // Perform some modification while columns are grouped
-        cells["A2"].PutValue("New data while columns are grouped");
-
-        // Store current column widths before ungrouping
-        double[] storedWidths = new double[4];
-        for (int col = 0; col <= 3; col++)
+        // Example modification: group the columns, change their width, add some data
+        cells.GroupColumns(firstCol, lastCol);
+        for (int i = firstCol; i <= lastCol; i++)
         {
-            storedWidths[col] = cells.Columns[col].Width;
+            worksheet.Cells.Columns[i].Width = 30; // temporary width change
+        }
+        worksheet.Cells["A1"].PutValue("Grouped");
+        worksheet.Cells["B1"].PutValue("Columns");
+        worksheet.Cells["C1"].PutValue("Demo");
+
+        // Ungroup the columns
+        cells.UngroupColumns(firstCol, lastCol);
+
+        // Restore the original widths to keep column width consistency
+        for (int i = 0; i < colCount; i++)
+        {
+            int colIndex = firstCol + i;
+            worksheet.Cells.Columns[colIndex].Width = originalWidths[i];
         }
 
-        // Ungroup columns B and C (indexes 1 to 2)
-        cells.UngroupColumns(1, 2);
-
-        // Restore the stored widths to keep column widths consistent across the worksheet
-        for (int col = 0; col <= 3; col++)
-        {
-            cells.Columns[col].Width = storedWidths[col];
-        }
-
-        // Save the workbook
-        workbook.Save("UngroupColumnsConsistentWidths.xlsx");
+        // Save the workbook with the changes
+        workbook.Save("output.xlsx");
     }
 }

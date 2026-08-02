@@ -1,57 +1,62 @@
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class Program
+namespace AsposeCellsWebQueryDetector
 {
-    static void Main()
+    class Program
     {
-        // Array of workbook file paths to be examined
-        string[] workbookFiles = new string[]
+        static void Main(string[] args)
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx"
-            // Add additional file paths as needed
-        };
-
-        foreach (string filePath in workbookFiles)
-        {
-            // Load the workbook (lifecycle rule)
-            Workbook workbook = new Workbook(filePath);
-
-            Console.WriteLine($"Processing workbook: {filePath}");
-
-            // Access the external connections collection (rule)
-            ExternalConnectionCollection connections = workbook.DataConnections;
-
-            bool anyWebQuery = false;
-
-            // Iterate through all external connections
-            for (int i = 0; i < connections.Count; i++)
+            // List of workbook file paths to process
+            string[] workbookFiles = new string[]
             {
-                // Retrieve connection by index (rule)
-                ExternalConnection conn = connections[i];
+                "Workbook1.xlsx",
+                "Workbook2.xlsx",
+                "Workbook3.xlsx"
+            };
 
-                // Determine if this connection is a WebQueryConnection
-                if (conn is WebQueryConnection webConn)
+            foreach (string filePath in workbookFiles)
+            {
+                // Load the workbook (lifecycle: load)
+                Workbook workbook = new Workbook(filePath);
+
+                Console.WriteLine($"Processing workbook: {filePath}");
+
+                // Access the collection of external connections
+                ExternalConnectionCollection connections = workbook.DataConnections;
+
+                bool hasWebQuery = false;
+
+                // Iterate through all external connections
+                for (int i = 0; i < connections.Count; i++)
                 {
-                    anyWebQuery = true;
-                    Console.WriteLine($"  WebQuery Connection #{i + 1}");
-                    Console.WriteLine($"    Name           : {webConn.Name}");
-                    Console.WriteLine($"    URL            : {webConn.Url}");
-                    Console.WriteLine($"    IsHtmlTables   : {webConn.IsHtmlTables}");
-                    Console.WriteLine($"    ClassType      : {webConn.ClassType}");
+                    ExternalConnection conn = connections[i];
+
+                    // Check if the connection is a WebQueryConnection
+                    if (conn is WebQueryConnection webQuery)
+                    {
+                        hasWebQuery = true;
+                        Console.WriteLine($"  WebQuery Connection #{i + 1}");
+                        Console.WriteLine($"    Name : {webQuery.Name}");
+                        Console.WriteLine($"    URL  : {webQuery.Url}");
+                        Console.WriteLine($"    IsHtmlTables : {webQuery.IsHtmlTables}");
+                        Console.WriteLine($"    HtmlFormat   : {webQuery.HtmlFormat}");
+                    }
                 }
+
+                if (!hasWebQuery)
+                {
+                    Console.WriteLine("  No WebQuery connections found.");
+                }
+
+                // No modifications are made, so no need to save the workbook.
+                // If you wanted to persist changes, you would use:
+                // workbook.Save("Updated_" + System.IO.Path.GetFileName(filePath));
             }
 
-            if (!anyWebQuery)
-            {
-                Console.WriteLine("  No WebQuery connections found.");
-            }
-
-            // Save the workbook unchanged (lifecycle rule)
-            string outputPath = $"Processed_{System.IO.Path.GetFileName(filePath)}";
-            workbook.Save(outputPath);
+            Console.WriteLine("Detection completed.");
         }
     }
 }

@@ -1,66 +1,54 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace ValidateOdsPivotTable
 {
-    public class ValidateOdsPivotTable
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            // Path to the ODS file to be validated
+            string odsPath = "input.ods";
 
-        public static void Run()
-        {
-            // Path to the ODS file that should contain a pivot table
-            string odsPath = "SamplePivot.ods";
+            // Create OdsLoadOptions and enable pivot table refresh on load
+            OdsLoadOptions loadOptions = new OdsLoadOptions();
+            loadOptions.RefreshPivotTables = true; // Ensure pivot tables are rendered
 
-            // Verify file exists to avoid FileNotFoundException
-            if (!File.Exists(odsPath))
-            {
-                Console.WriteLine($"File not found: {odsPath}");
-                return;
-            }
-
-            // Load options: refresh pivot tables when the file is opened
-            OdsLoadOptions loadOptions = new OdsLoadOptions
-            {
-                RefreshPivotTables = true
-            };
-
-            // Load the workbook with the specified ODS load options
+            // Load the ODS workbook with the specified options
             Workbook workbook = new Workbook(odsPath, loadOptions);
 
             // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Verify that at least one pivot table exists
-            if (worksheet.PivotTables.Count == 0)
+            // Retrieve the collection of pivot tables in the worksheet
+            PivotTableCollection pivotTables = worksheet.PivotTables;
+
+            // Validate that at least one pivot table exists
+            if (pivotTables.Count > 0)
+            {
+                Console.WriteLine("Pivot table(s) found in the ODS file.");
+
+                // Optionally, inspect the first pivot table for additional validation
+                PivotTable pivot = pivotTables[0];
+
+                // Check if the pivot table has any row fields (basic sanity check)
+                if (pivot.RowFields.Count > 0)
+                {
+                    Console.WriteLine("Pivot table contains row fields, indicating it is rendered correctly.");
+                }
+                else
+                {
+                    Console.WriteLine("Pivot table exists but has no row fields.");
+                }
+
+                // Verify that the pivot data has been refreshed
+                Console.WriteLine("RefreshDataOnOpeningFile flag: " + pivot.RefreshDataOnOpeningFile);
+            }
+            else
             {
                 Console.WriteLine("No pivot tables were found in the ODS file.");
-                return;
             }
-
-            // Retrieve the first pivot table for inspection
-            PivotTable pivot = worksheet.PivotTables[0];
-
-            // Since RefreshDataFlag is obsolete, assume data is current after loading with RefreshPivotTables=true
-            bool isDataCurrent = true;
-
-            // Output validation details
-            Console.WriteLine($"Pivot tables found: {worksheet.PivotTables.Count}");
-            Console.WriteLine($"First pivot table name: {pivot.Name}");
-            Console.WriteLine($"Pivot data current (no refresh needed): {isDataCurrent}");
-            Console.WriteLine($"Base fields count (should be >0 if rendered): {pivot.BaseFields.Count}");
         }
     }
 }

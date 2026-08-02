@@ -3,87 +3,65 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsTimingDemo
+class CellCalculationTimer : AbstractCalculationMonitor
 {
-    // Custom monitor that measures the time taken to calculate each cell
-    public class TimingCalculationMonitor : AbstractCalculationMonitor
+    // Store a stopwatch for each cell being calculated
+    private readonly Dictionary<string, Stopwatch> _timers = new Dictionary<string, Stopwatch>();
+
+    private string GetKey(int sheet, int row, int col) => $"{sheet}:{row}:{col}";
+
+    public override void BeforeCalculate(int sheetIndex, int rowIndex, int colIndex)
     {
-        // Stopwatch is reused for each cell calculation
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-
-        // Called before a cell is calculated
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int colIndex)
-        {
-            _stopwatch.Restart(); // start timing
-        }
-
-        // Called after a cell is calculated
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
-        {
-            _stopwatch.Stop(); // stop timing
-            TimeSpan elapsed = _stopwatch.Elapsed;
-
-            // Log the timing information together with cell address
-            Console.WriteLine(
-                $"Calculated Sheet{sheetIndex} Cell[{rowIndex}, {colIndex}] " +
-                $"in {elapsed.TotalMilliseconds:F3} ms. " +
-                $"ValueChanged: {ValueChanged}, " +
-                $"Original: {OriginalValue}, New: {CalculatedValue}");
-        }
+        // Start timing before the cell is calculated
+        var key = GetKey(sheetIndex, rowIndex, colIndex);
+        var sw = Stopwatch.StartNew();
+        _timers[key] = sw;
     }
 
-    public class Program
+    public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
     {
-        public static void Main()
+        // Stop timing after calculation and log the elapsed time
+        var key = GetKey(sheetIndex, rowIndex, colIndex);
+        if (_timers.TryGetValue(key, out var sw))
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add sample formulas
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sw.Stop();
+            Console.WriteLine($"Cell (Sheet {sheetIndex}, Row {rowIndex}, Column {colIndex}) calculated in {sw.ElapsedMilliseconds} ms. New Value: {CalculatedValue}");
+            _timers.Remove(key);
+        }
+    }
+}
 
-            // Sample data
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].Formula = "=A1+A2";          // simple addition
-            cells["B1"].Formula = "=A3*2";           // dependent on A3
-            cells["C1"].Formula = "=NOW()";          // volatile function
-            cells["D1"].Formula = "=SUM(A1:A2)";     // aggregate function
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
-            // 2. Prepare calculation options with the timing monitor
-            // -------------------------------------------------
-            CalculationOptions options = new CalculationOptions
-            {
-                CalculationMonitor = new TimingCalculationMonitor(),
-                // Ensure recursive calculation so dependent cells are processed
-                Recursive = true
-            };
+        // Add sample data and formulas
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["A3"].Formula = "=A1+A2";
+        sheet.Cells["B1"].Formula = "=SUM(A1:A3)";
+        sheet.Cells["C1"].Formula = "=NOW()"; // volatile function
 
-            // -------------------------------------------------
-            // 3. Loop through the cells that contain formulas and calculate each one individually
-            // -------------------------------------------------
-            // Collect cells that have formulas
-            List<Cell> formulaCells = new List<Cell>();
-            foreach (Cell cell in cells)
-            {
-                if (cell.IsFormula)
-                {
-                    formulaCells.Add(cell);
-                }
-            }
+        // Create a calculation monitor that logs timing
+        var monitor = new CellCalculationTimer();
 
-            // Calculate each formula cell using Cell.Calculate with the same options
-            foreach (Cell cell in formulaCells)
+        // Set calculation options with the custom monitor
+        var options = new CalculationOptions { CalculationMonitor = monitor };
+
+        // Loop through all cells, calculate only those that contain formulas
+        foreach (Cell cell in sheet.Cells)
+        {
+            if (cell.IsFormula)
             {
                 cell.Calculate(options);
             }
-
-            // -------------------------------------------------
-            // 4. Save the workbook (lifecycle rule: use provided save logic)
-            // -------------------------------------------------
-            workbook.Save("TimingCalculationDemo.xlsx");
         }
+
+        // Save the workbook
+        workbook.Save("TimedCalculations.xlsx");
     }
 }

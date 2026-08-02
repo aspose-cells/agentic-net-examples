@@ -4,44 +4,49 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsChartBackground
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 5, 15, 15);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the chart area fill type to texture (picture background)
-            chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
-
-            string imagePath = "background.png";
-
-            // Load the image file if it exists
-            if (File.Exists(imagePath))
+            try
             {
-                byte[] imageData = File.ReadAllBytes(imagePath);
-                chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
-                chart.ChartArea.Area.FillFormat.TextureFill.PictureFormatType = FillPictureType.Stretch;
-            }
-            else
-            {
-                Console.WriteLine($"Image file '{imagePath}' not found. Skipping background texture.");
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook with the chart background applied
-            workbook.Save("ChartWithPictureBackground.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Get the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Add a column chart to the worksheet
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 5, 15, 15);
+                Chart chart = worksheet.Charts[chartIndex];
+
+                // Set the chart area fill type to texture (picture)
+                chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
+
+                // Load image data from a file if it exists
+                string imagePath = "background.png";
+                if (File.Exists(imagePath))
+                {
+                    byte[] imageData = File.ReadAllBytes(imagePath);
+                    // Apply the image data to the texture fill of the chart area
+                    chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
+                }
+                else
+                {
+                    Console.WriteLine($"Image file not found: {Path.GetFullPath(imagePath)}. Chart will use default background.");
+                }
+
+                // Save the workbook
+                string outputPath = "ChartWithPictureBackground.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

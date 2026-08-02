@@ -2,20 +2,14 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookDecryptor
+namespace AsposeCellsPasswordDecryptor
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect the first argument to be the CSV file path.
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Usage: WorkbookDecryptor <csvFilePath>");
-                return;
-            }
-
-            string csvPath = args[0];
+            // Path to the CSV file containing "filePath,password" per line
+            string csvPath = "files_and_passwords.csv";
 
             if (!File.Exists(csvPath))
             {
@@ -23,55 +17,49 @@ namespace WorkbookDecryptor
                 return;
             }
 
-            // Read each line of the CSV (format: workbookPath,password)
-            foreach (var line in File.ReadLines(csvPath))
+            // Read all non‑empty lines from the CSV
+            string[] lines = File.ReadAllLines(csvPath);
+            foreach (string line in lines)
             {
-                // Skip empty lines
                 if (string.IsNullOrWhiteSpace(line))
-                    continue;
+                    continue; // skip empty lines
 
-                // Split by comma – assume no commas inside fields
-                var parts = line.Split(new[] { ',' }, 2);
+                // Expecting two columns separated by a comma
+                string[] parts = line.Split(new[] { ',' }, 2);
                 if (parts.Length != 2)
                 {
-                    Console.WriteLine($"Invalid line (expected two columns): {line}");
+                    Console.WriteLine($"Invalid line format (expected 'path,password'): {line}");
                     continue;
                 }
 
-                string workbookPath = parts[0].Trim();
+                string filePath = parts[0].Trim();
                 string password = parts[1].Trim();
 
-                if (!File.Exists(workbookPath))
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"Workbook not found: {workbookPath}");
+                    Console.WriteLine($"Workbook not found: {filePath}");
                     continue;
                 }
 
                 try
                 {
-                    // Load the workbook with the supplied password
+                    // Load the workbook with the provided password
                     LoadOptions loadOptions = new LoadOptions();
-                    loadOptions.Password = password;
+                    loadOptions.Password = password; // rule: LoadOptions.Password
 
-                    Workbook wb = new Workbook(workbookPath, loadOptions);
+                    Workbook wb = new Workbook(filePath, loadOptions); // rule: Workbook(string, LoadOptions)
 
-                    // Remove encryption by clearing the password property
-                    wb.Settings.Password = null;
+                    // Remove the password protection
+                    wb.Settings.Password = null; // rule: WorkbookSettings.Password
 
-                    // Determine output path – same folder with "_decrypted" suffix
-                    string directory = Path.GetDirectoryName(workbookPath);
-                    string filenameWithoutExt = Path.GetFileNameWithoutExtension(workbookPath);
-                    string extension = Path.GetExtension(workbookPath);
-                    string outputPath = Path.Combine(directory, $"{filenameWithoutExt}_decrypted{extension}");
+                    // Save the workbook back to the same file (overwrites the encrypted version)
+                    wb.Save(filePath); // rule: Workbook.Save(string)
 
-                    // Save the unprotected workbook
-                    wb.Save(outputPath);
-
-                    Console.WriteLine($"Decrypted workbook saved to: {outputPath}");
+                    Console.WriteLine($"Successfully decrypted: {filePath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to process '{workbookPath}': {ex.Message}");
+                    Console.WriteLine($"Failed to decrypt {filePath}: {ex.Message}");
                 }
             }
         }

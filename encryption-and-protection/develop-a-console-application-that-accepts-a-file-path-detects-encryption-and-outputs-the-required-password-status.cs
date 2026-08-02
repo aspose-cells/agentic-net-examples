@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsEncryptionChecker
@@ -7,7 +8,7 @@ namespace AsposeCellsEncryptionChecker
     {
         static void Main(string[] args)
         {
-            // Ensure a file path is provided as a command‑line argument
+            // Ensure a file path is provided
             if (args.Length == 0)
             {
                 Console.WriteLine("Usage: AsposeCellsEncryptionChecker <excel-file-path>");
@@ -16,20 +17,24 @@ namespace AsposeCellsEncryptionChecker
 
             string filePath = args[0];
 
-            // Detect the file format and retrieve encryption information
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-
-            // Output whether the file is encrypted
-            Console.WriteLine($"Is file encrypted? {fileInfo.IsEncrypted}");
-
-            // Provide a friendly message based on the encryption status
-            if (fileInfo.IsEncrypted)
+            // Verify that the file exists
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine("The file requires a password to open.");
+                Console.WriteLine($"Error: File not found - {filePath}");
+                return;
             }
-            else
+
+            try
             {
-                Console.WriteLine("The file is not encrypted.");
+                // Detect file format and encryption status
+                FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+
+                Console.WriteLine($"File: {filePath}");
+                Console.WriteLine($"Is encrypted: {fileInfo.IsEncrypted}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the file: {ex.Message}");
             }
         }
     }

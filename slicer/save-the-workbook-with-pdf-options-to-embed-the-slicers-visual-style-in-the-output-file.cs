@@ -1,21 +1,43 @@
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Required for PdfSaveOptions
 
-class Program
+namespace AsposeCellsRunner
 {
-    static void Main()
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main(string[] args)
+        {
+            const string inputPath = "input_with_slicer.xlsx";
+            const string outputPath = "output_with_slicer.pdf";
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Enable exporting of document structure so that slicer visual styles are preserved in the PDF
-        pdfOptions.ExportDocumentStructure = true;
+                // Load the workbook that contains a slicer
+                Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as PDF using the specified options
-        workbook.Save("output.pdf", pdfOptions);
+                // Configure PDF save options to preserve slicer visual styles
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    ExportDocumentStructure = true
+                };
+
+                // Save the workbook as PDF using the configured options
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -2,61 +2,86 @@ using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-class MemoryComparison
+namespace AsposeCellsMemoryComparison
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (creation rule)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        // Size of the test workbook
+        const int RowCount = 5000;
+        const int ColumnCount = 50;
 
-        // Define a large dataset size
-        int totalRows = 5000;
-        int totalCols = 50;
-        Random random = new Random();
-
-        // Populate the worksheet with random numeric data
-        for (int row = 0; row < totalRows; row++)
+        static void Main()
         {
-            for (int col = 0; col < totalCols; col++)
+            // Prepare a large workbook with sample data
+            Workbook wb = CreateLargeWorkbook();
+
+            // Measure memory usage with Automatic calculation mode
+            long memoryAutomatic = MeasureMemory(() =>
             {
-                cells[row, col].PutValue(random.NextDouble());
-            }
+                wb.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+                // Force a calculation to materialize any internal structures
+                wb.CalculateFormula();
+            });
+
+            // Measure memory usage with AutomaticExceptTable calculation mode
+            long memoryAutomaticExceptTable = MeasureMemory(() =>
+            {
+                wb.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+                wb.CalculateFormula();
+            });
+
+            // Output the results
+            Console.WriteLine($"Memory after Automatic mode: {memoryAutomatic:N0} bytes");
+            Console.WriteLine($"Memory after AutomaticExceptTable mode: {memoryAutomaticExceptTable:N0} bytes");
+            Console.WriteLine($"Difference: {Math.Abs(memoryAutomatic - memoryAutomaticExceptTable):N0} bytes");
+
+            // Save the workbook (using the standard save rule)
+            wb.Save("LargeWorkbook.xlsx", SaveFormat.Xlsx);
+
+            // Clean up
+            wb.Dispose();
         }
 
-        // Ensure a clean state before measuring memory
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
+        // Creates a workbook filled with numeric data
+        static Workbook CreateLargeWorkbook()
+        {
+            Workbook workbook = new Workbook(); // create workbook (rule)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // -------------------- Automatic mode --------------------
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-        // Optionally trigger a calculation to reflect the mode
-        workbook.CalculateFormula();
+            // Populate cells with simple formulas to engage the calculation engine
+            for (int i = 0; i < RowCount; i++)
+            {
+                for (int j = 0; j < ColumnCount; j++)
+                {
+                    // Example formula: =ROW()+COLUMN()
+                    cells[i, j].Formula = $"=ROW()+COLUMN()";
+                }
+            }
 
-        long memoryAutomatic = GetCurrentProcessMemory();
+            return workbook;
+        }
 
-        // -------------------- AutomaticExceptTable mode --------------------
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
-        // Recalculate after changing the mode
-        workbook.CalculateFormula();
+        // Executes an action and returns the memory used (in bytes) after the action completes
+        static long MeasureMemory(Action action)
+        {
+            // Ensure a clean baseline
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
 
-        long memoryAutomaticExceptTable = GetCurrentProcessMemory();
+            long before = GC.GetTotalMemory(true);
 
-        // Output the memory consumption results
-        Console.WriteLine($"Memory (Automatic): {memoryAutomatic / 1024.0 / 1024.0:F2} MB");
-        Console.WriteLine($"Memory (AutomaticExceptTable): {memoryAutomaticExceptTable / 1024.0 / 1024.0:F2} MB");
+            // Perform the operation we want to measure
+            action();
 
-        // Save the workbook (save rule)
-        workbook.Save("LargeWorkbook.xlsx");
-    }
+            // Allow any pending allocations to settle
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
 
-    // Helper method to retrieve the current process private memory size
-    static long GetCurrentProcessMemory()
-    {
-        Process proc = Process.GetCurrentProcess();
-        proc.Refresh();
-        return proc.PrivateMemorySize64;
+            long after = GC.GetTotalMemory(true);
+            return after - before;
+        }
     }
 }

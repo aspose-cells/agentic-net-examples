@@ -1,76 +1,63 @@
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsMultiSeriesSparkline
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // Populate sample data for three series (rows 1‑3)
-                // Each series will be plotted as a separate sparkline
-                // -------------------------------------------------
-                for (int col = 0; col < 6; col++)
+            // ---------- Populate first data range (Series 1) ----------
+            // Range: A1:E5
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 5; col++)
                 {
-                    sheet.Cells[0, col].PutValue(col + 1);               // Series 1
-                    sheet.Cells[1, col].PutValue((col + 1) * 2);         // Series 2
-                    sheet.Cells[2, col].PutValue((col + 1) * 3);         // Series 3
+                    sheet.Cells[row, col].PutValue(row + col + 1);
                 }
-
-                // -------------------------------------------------
-                // Define the location for the first sparkline (cell H1)
-                // -------------------------------------------------
-                CellArea firstLocation = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 0,
-                    StartColumn = 7,
-                    EndColumn = 7
-                };
-
-                // -------------------------------------------------
-                // Add a sparkline group of type Line for the first series
-                // -------------------------------------------------
-                int groupIndex = sheet.SparklineGroups.Add(
-                    SparklineType.Line,
-                    "A1:F1",          // data range for first series
-                    false,            // plot by row (horizontal)
-                    firstLocation);
-
-                SparklineGroup group = sheet.SparklineGroups[groupIndex];
-
-                // -------------------------------------------------
-                // Add second and third sparklines to the same group,
-                // each pointing to a different data range.
-                // -------------------------------------------------
-                group.Sparklines.Add("A2:F2", 1, 7); // series 2 at H2
-                group.Sparklines.Add("A3:F3", 2, 7); // series 3 at H3
-
-                // Optional: customize appearance (same for all series)
-                CellsColor seriesColor = workbook.CreateCellsColor();
-                seriesColor.Color = Color.DarkBlue;
-                group.SeriesColor = seriesColor;
-                group.ShowHighPoint = true;
-                group.ShowLowPoint = true;
-
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                workbook.Save("MultiSeriesSparkline.xlsx");
             }
-            catch (Exception ex)
+
+            // ---------- Populate second data range (Series 2) ----------
+            // Range: F1:J5
+            for (int row = 0; row < 5; row++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                for (int col = 5; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue((row + 1) * (col - 4));
+                }
             }
+
+            // Define the location range for the multi‑series sparkline.
+            // It must have the same number of rows as the data ranges (5 rows).
+            CellArea location = new CellArea
+            {
+                StartRow = 5,   // Row 6 (zero‑based)
+                EndRow = 9,     // Row 10 (zero‑based) → 5 rows total
+                StartColumn = 0,
+                EndColumn = 0   // Single column (A)
+            };
+
+            // Add a sparkline group with the first data range.
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:E5", false, location);
+            SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+
+            // Include the second data range to create a multi‑series sparkline.
+            sparklineGroup.ResetRanges("A1:E5,F1:J5", false, location);
+
+            // Save the workbook containing the multi‑series sparkline.
+            string outputPath = "MultiSeriesSparkline.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

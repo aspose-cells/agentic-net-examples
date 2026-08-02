@@ -2,20 +2,22 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class PdfAComplianceExample
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some content
+        // Create a new workbook and add sample content
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF/A compliance example");
+        sheet.Cells["A1"].PutValue("PDF/A compliant document");
 
-        // Set PDF save options to use PDF/A-1b compliance (ISO 19005-1)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.Compliance = PdfCompliance.PdfA1b;
+        // Configure PDF save options for PDF/A-1b compliance
+        PdfSaveOptions saveOptions = new PdfSaveOptions();
+        saveOptions.Compliance = PdfCompliance.PdfA1b; // Enable PDF/A-1b compliance
 
         // Save the workbook as a PDF file with the specified compliance level
-        workbook.Save("PdfA1b_Output.pdf", pdfOptions);
+        workbook.Save("output.pdf", saveOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example for PDF/A compliance.

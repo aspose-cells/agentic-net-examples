@@ -1,81 +1,68 @@
 using System;
 using Aspose.Cells;
 
-public class BusinessStatusThemeMapper
-{
-    // Maps a business status string to a specific theme accent color.
-    private static ThemeColor GetThemeColorForStatus(string status)
-    {
-        // Define mapping between status values and theme accent types.
-        // Adjust the mapping as needed for your business logic.
-        switch (status?.Trim().ToUpperInvariant())
-        {
-            case "OPEN":
-                return new ThemeColor(ThemeColorType.Accent1, 0.0); // Accent1
-            case "CLOSED":
-                return new ThemeColor(ThemeColorType.Accent2, 0.0); // Accent2
-            case "PENDING":
-                return new ThemeColor(ThemeColorType.Accent3, 0.0); // Accent3
-            case "INPROGRESS":
-                return new ThemeColor(ThemeColorType.Accent4, 0.0); // Accent4
-            case "ONHOLD":
-                return new ThemeColor(ThemeColorType.Accent5, 0.0); // Accent5
-            default:
-                // Fallback to a neutral accent.
-                return new ThemeColor(ThemeColorType.Accent6, 0.0); // Accent6
-        }
-    }
-
-    // Applies the mapped theme color as the cell's background fill.
-    public static void ApplyStatusTheme(Cell cell, string status)
-    {
-        if (cell == null) throw new ArgumentNullException(nameof(cell));
-
-        // Retrieve the appropriate ThemeColor based on status.
-        ThemeColor themeColor = GetThemeColorForStatus(status);
-
-        // Create a new style (using the workbook's CreateStyle method).
-        Style style = cell.Worksheet.Workbook.CreateStyle();
-
-        // Set solid fill pattern.
-        style.Pattern = BackgroundType.Solid;
-
-        // Apply the theme color to the cell's background.
-        style.BackgroundThemeColor = themeColor;
-
-        // Assign the style to the cell.
-        cell.SetStyle(style);
-    }
-
-    // Demonstrates usage: creates a workbook, fills status values, and applies theme colors.
-    public static void RunDemo()
-    {
-        // Create a new workbook (lifecycle rule: create).
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample data.
-        string[] statuses = { "Open", "Closed", "Pending", "InProgress", "OnHold", "Unknown" };
-
-        // Populate column A with status values and apply theme colors.
-        for (int i = 0; i < statuses.Length; i++)
-        {
-            Cell cell = sheet.Cells[i, 0]; // Column A
-            cell.PutValue(statuses[i]);
-            ApplyStatusTheme(cell, statuses[i]);
-        }
-
-        // Save the workbook (lifecycle rule: save).
-        workbook.Save("BusinessStatusTheme.xlsx");
-    }
-}
-
-// Entry point for testing.
 class Program
 {
     static void Main()
     {
-        BusinessStatusThemeMapper.RunDemo();
-        Console.WriteLine("Workbook created with status-themed cell fills.");
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Sample business status values
+        string[] statuses = { "Open", "Closed", "Pending", "InProgress", "Cancelled", "Unknown" };
+
+        // Populate cells with status values and apply theme accent colors
+        for (int i = 0; i < statuses.Length; i++)
+        {
+            Cell cell = worksheet.Cells[i, 0];
+            cell.PutValue(statuses[i]);
+            ApplyStatusTheme(statuses[i], cell);
+        }
+
+        // Save the workbook
+        workbook.Save("StatusThemeMapping.xlsx");
+    }
+
+    // Maps a business status to a specific theme accent color and applies it as cell fill
+    static void ApplyStatusTheme(string status, Cell cell)
+    {
+        // Determine which ThemeColorType (accent) to use based on the status
+        ThemeColorType accent;
+        switch (status)
+        {
+            case "Open":
+                accent = ThemeColorType.Accent1;
+                break;
+            case "Closed":
+                accent = ThemeColorType.Accent2;
+                break;
+            case "Pending":
+                accent = ThemeColorType.Accent3;
+                break;
+            case "InProgress":
+                accent = ThemeColorType.Accent4;
+                break;
+            case "Cancelled":
+                accent = ThemeColorType.Accent5;
+                break;
+            default:
+                // Fallback accent for any undefined status
+                accent = ThemeColorType.Accent6;
+                break;
+        }
+
+        // Create a ThemeColor with no tint (0.0) for solid fill
+        ThemeColor themeColor = new ThemeColor(accent, 0.0);
+
+        // Retrieve the current style of the cell
+        Style style = cell.GetStyle();
+
+        // Apply the theme color as the foreground (fill) color and set a solid pattern
+        style.ForegroundThemeColor = themeColor;
+        style.Pattern = BackgroundType.Solid;
+
+        // Assign the modified style back to the cell
+        cell.SetStyle(style);
     }
 }

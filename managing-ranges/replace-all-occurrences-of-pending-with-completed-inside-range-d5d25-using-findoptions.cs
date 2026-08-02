@@ -1,46 +1,46 @@
 using System;
 using Aspose.Cells;
 
-class ReplacePendingWithCompleted
+namespace ReplacePendingWithCompleted
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") if needed
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Define the search range D5:D25 (zero‑based indices)
-        CellArea searchArea = new CellArea
+        static void Main()
         {
-            StartRow = 4,   // Row 5
-            StartColumn = 3, // Column D
-            EndRow = 24,    // Row 25
-            EndColumn = 3   // Column D
-        };
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") if needed
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure FindOptions to search only within the defined range
-        FindOptions findOptions = new FindOptions
-        {
-            LookInType = LookInType.Values,          // search cell values
-            LookAtType = LookAtType.EntireContent,   // match the whole cell content
-        };
-        findOptions.SetRange(searchArea);
+            // Define the search range D5:D25 (zero‑based indexes)
+            CellArea range = new CellArea
+            {
+                StartRow = 4,   // Row 5
+                StartColumn = 3, // Column D
+                EndRow = 24,    // Row 25
+                EndColumn = 3   // Column D
+            };
 
-        // Find the first occurrence of "Pending" within the range
-        Cell foundCell = worksheet.Cells.Find("Pending", null, findOptions);
+            // Configure FindOptions to limit the search to the defined range
+            FindOptions findOptions = new FindOptions();
+            findOptions.SetRange(range);
+            findOptions.LookInType = LookInType.Values;          // search cell values
+            findOptions.LookAtType = LookAtType.EntireContent;   // match whole cell content
 
-        // Replace all found occurrences with "Completed"
-        while (foundCell != null)
-        {
-            foundCell.PutValue("Completed");
+            // Iterate through all cells that contain "Pending" within the range
+            Cell previousCell = null;
+            Cell foundCell = sheet.Cells.Find("Pending", previousCell, findOptions);
+            while (foundCell != null)
+            {
+                // Replace the cell's value
+                foundCell.PutValue("Completed");
 
-            // Continue searching from the cell just processed
-            foundCell = worksheet.Cells.Find("Pending", foundCell, findOptions);
+                // Continue searching from the current cell
+                previousCell = foundCell;
+                foundCell = sheet.Cells.Find("Pending", previousCell, findOptions);
+            }
+
+            // Save the workbook
+            workbook.Save("output.xlsx");
         }
-
-        // Save the workbook
-        workbook.Save("output.xlsx");
     }
 }

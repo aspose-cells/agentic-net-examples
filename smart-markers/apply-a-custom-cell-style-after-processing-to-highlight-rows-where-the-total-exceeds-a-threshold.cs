@@ -1,64 +1,58 @@
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace AsposeCellsHighlightRows
+class HighlightRowsByTotal
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace the path with your file)
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Threshold for highlighting rows
+        double threshold = 100.0;
+
+        // Create a custom style for highlighting
+        Style highlightStyle = workbook.CreateStyle();
+        highlightStyle.ForegroundColor = Color.Yellow;          // Background color
+        highlightStyle.Pattern = BackgroundType.Solid;          // Apply solid fill
+        highlightStyle.Font.IsBold = true;                      // Bold font
+
+        // StyleFlag to apply all style attributes
+        StyleFlag flag = new StyleFlag();
+        flag.All = true;
+
+        // Determine the used range of rows
+        int maxRow = cells.MaxDataRow;
+
+        // Define the columns that contribute to the total (adjust as needed)
+        int startCol = 0;
+        int endCol = 2;
+
+        // Iterate through each row and calculate the total
+        for (int row = 0; row <= maxRow; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            double rowTotal = 0;
 
-            // Sample data: fill rows with numeric values in columns A, B, C
-            int totalRows = 10;
-            for (int r = 0; r < totalRows; r++)
+            for (int col = startCol; col <= endCol; col++)
             {
-                cells[r, 0].PutValue(r + 10);   // Column A
-                cells[r, 1].PutValue((r + 1) * 5); // Column B
-                cells[r, 2].PutValue(r * 3);   // Column C
-            }
-
-            // Define the threshold for the row total
-            double threshold = 100.0;
-
-            // Create a custom style to highlight rows
-            Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.Pattern = BackgroundType.Solid;
-            highlightStyle.ForegroundColor = Color.Yellow; // Background color
-            highlightStyle.Font.Color = Color.Red;         // Font color
-            highlightStyle.Font.IsBold = true;
-
-            // Define which style attributes should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.All = true; // Apply all formatting defined in the style
-
-            // Iterate through each row, calculate the sum of the first three columns,
-            // and apply the highlight style if the sum exceeds the threshold
-            for (int r = 0; r < totalRows; r++)
-            {
-                double rowSum = 0;
-                for (int c = 0; c < 3; c++)
+                Cell cell = cells[row, col];
+                if (cell.Type == CellValueType.IsNumeric)
                 {
-                    // Ensure the cell contains a numeric value before adding
-                    if (cells[r, c].IsNumericValue)
-                    {
-                        rowSum += cells[r, c].DoubleValue;
-                    }
-                }
-
-                if (rowSum > threshold)
-                {
-                    // Apply the style to the entire row
-                    cells.ApplyRowStyle(r, highlightStyle, flag);
+                    rowTotal += cell.DoubleValue;
                 }
             }
 
-            // Save the workbook
-            workbook.Save("HighlightedRows.xlsx");
+            // If the total exceeds the threshold, apply the custom style to the entire row
+            if (rowTotal > threshold)
+            {
+                cells.ApplyRowStyle(row, highlightStyle, flag);
+            }
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

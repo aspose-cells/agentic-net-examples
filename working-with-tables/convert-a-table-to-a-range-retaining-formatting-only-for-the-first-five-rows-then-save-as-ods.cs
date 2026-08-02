@@ -1,46 +1,69 @@
+// Title: C# – Convert Excel Table to Range, Keep First 5 Rows Formatting, Save as ODS with Aspose.Cells
+// Description: Demonstrates how to create a workbook, add a ListObject (table), apply a built‑in style, convert the table to a normal range, clear formatting from rows 6‑10 while preserving the first five rows, and export the result as an ODS file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# convert table to range | preserve first rows formatting Aspose | clear formats rows Aspose.Cells | save workbook as ODS .NET | ListObject ConvertToRange ODS export | TableStyleMedium2 Aspose.Cells
+// Common Searches: Aspose.Cells convert ListObject to range keep header formatting | C# clear table formatting after ConvertToRange | Export Excel table as ODS with Aspose.Cells | How to keep first N rows styled when converting table to range | Aspose.Cells OdsSaveOptions example
+// Developer Intent: Convert a ListObject to a regular cell range, retain the table style for the first five rows, remove styling from the remaining rows, and save the workbook as an ODS document.
+// Use Cases: Generate a styled preview where only the header and top five data rows keep the table appearance before sharing the file with LibreOffice. | Create a template that uses a table style for visual consistency, then strip formatting from rows beyond the preview section for downstream ODS processing. | Export Excel data to ODS while preserving essential formatting for reporting headers and a limited data slice.
+// AI Prompts: Write C# code using Aspose.Cells to convert a ListObject to a range, keep formatting for the first N rows, and save as ODS. | Show how to clear formatting from rows 6‑10 after converting an Excel table to a range with Aspose.Cells. | Explain OdsSaveOptions settings for exporting a workbook that originally contained a styled table.
+
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 using Aspose.Cells.Ods;
 
-class ConvertTableToRangeExample
+namespace AsposeCellsTableToRange
 {
-    static void Main()
+    // Demonstrates how to create a workbook, add a ListObject (table), apply a built‑in style, convert the table to a normal range, clear formatting from rows 6‑10 while preserving the first five rows, and export the result as an ODS file using Aspose.Cells for .NET.
+    public class ConvertTableToRangeWithFormatting
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data (10 rows, 3 columns)
-        for (int row = 0; row < 10; row++)
+        // Entry point required for console application
+        public static void Main(string[] args)
         {
-            cells[row, 0].PutValue($"ID {row + 1}");
-            cells[row, 1].PutValue($"Name {row + 1}");
-            cells[row, 2].PutValue(row * 10);
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Apply a style to the whole sheet (so formatting exists on all rows)
-        Style style = workbook.CreateStyle();
-        style.Font.Color = Color.Blue;
-        style.Font.IsBold = true;
-        sheet.Cells.ApplyStyle(style, new StyleFlag { FontColor = true, FontBold = true });
-
-        // Add a table that covers the data (including header row)
-        int tableIndex = sheet.ListObjects.Add(0, 0, 9, 2, true);
-        ListObject table = sheet.ListObjects[tableIndex];
-        table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-        // Convert the table to a range, keeping only the first five rows (0‑4)
-        TableToRangeOptions options = new TableToRangeOptions
+        public static void Run()
         {
-            LastRow = 4   // zero‑based index; rows 0‑4 correspond to the first five rows
-        };
-        table.ConvertToRange(options);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as ODS
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        workbook.Save("TableConverted.ods", saveOptions);
+            // Populate sample data (10 rows, 3 columns)
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
+            for (int row = 2; row <= 10; row++)
+            {
+                sheet.Cells[row - 1, 0].PutValue(row - 1);                     // ID
+                sheet.Cells[row - 1, 1].PutValue($"Person {row - 1}");        // Name
+                sheet.Cells[row - 1, 2].PutValue((row - 1) * 10);             // Score
+            }
+
+            // Create a table (ListObject) that covers the whole data range
+            int tableIndex = sheet.ListObjects.Add(0, 0, 9, 2, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+
+            // Apply a built‑in table style (affects all rows initially)
+            table.TableStyleType = TableStyleType.TableStyleMedium2;
+
+            // Convert the table to a normal range (keeps formatting for all rows)
+            table.ConvertToRange();
+
+            // Clear formatting for rows beyond the first five (rows 6‑10, zero‑based index 5‑9)
+            // Parameters: startRow, startColumn, totalRows, totalColumns
+            sheet.Cells.ClearFormats(5, 0, 5, 3); // 5 rows, 3 columns
+
+            // Save the workbook as ODS using default OdsSaveOptions
+            OdsSaveOptions odsOptions = new OdsSaveOptions();
+            workbook.Save("TableConvertedRange.ods", odsOptions);
+        }
     }
 }

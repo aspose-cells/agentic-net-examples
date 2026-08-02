@@ -2,96 +2,59 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotTabularDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and add sample data
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
+        dataSheet.Name = "Data";
 
-            // -------------------------------------------------
-            // Prepare source data for the pivot table
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+        dataSheet.Cells["A1"].PutValue("Category");
+        dataSheet.Cells["B1"].PutValue("SubCategory");
+        dataSheet.Cells["C1"].PutValue("Amount");
+        dataSheet.Cells["A2"].PutValue("Fruit");
+        dataSheet.Cells["B2"].PutValue("Apple");
+        dataSheet.Cells["C2"].PutValue(100);
+        dataSheet.Cells["A3"].PutValue("Fruit");
+        dataSheet.Cells["B3"].PutValue("Banana");
+        dataSheet.Cells["C3"].PutValue(150);
+        dataSheet.Cells["A4"].PutValue("Vegetable");
+        dataSheet.Cells["B4"].PutValue("Carrot");
+        dataSheet.Cells["C4"].PutValue(80);
 
-            // Header row
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("SubCategory");
-            dataSheet.Cells["C1"].PutValue("Amount");
+        // Add a worksheet for the pivot table
+        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-            // Sample rows
-            dataSheet.Cells["A2"].PutValue("Fruit");
-            dataSheet.Cells["B2"].PutValue("Apple");
-            dataSheet.Cells["C2"].PutValue(120);
+        // Create the pivot table
+        int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C4", "A1", "PivotTable1");
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            dataSheet.Cells["A3"].PutValue("Fruit");
-            dataSheet.Cells["B3"].PutValue("Banana");
-            dataSheet.Cells["C3"].PutValue(80);
+        // Add fields to the pivot table
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            dataSheet.Cells["A4"].PutValue("Vegetable");
-            dataSheet.Cells["B4"].PutValue("Carrot");
-            dataSheet.Cells["C4"].PutValue(50);
+        // Set the pivot table to Tabular layout
+        pivotTable.ShowInTabularForm();
 
-            dataSheet.Cells["A5"].PutValue("Vegetable");
-            dataSheet.Cells["B5"].PutValue("Potato");
-            dataSheet.Cells["C5"].PutValue(70);
+        // Refresh and calculate the pivot data
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-            // -------------------------------------------------
-            // Create a worksheet to host the pivot table
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+        // Verify column alignment:
+        // In Tabular form each field occupies its own column, so the start column of the
+        // column header range should match the start column of the data body range.
+        CellArea columnRange = pivotTable.ColumnRange;
+        CellArea dataBodyRange = pivotTable.DataBodyRange;
 
-            // Add the pivot table (source range, destination cell, name)
-            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A1", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+        bool isAligned = columnRange.StartColumn == dataBodyRange.StartColumn;
 
-            // Add fields: Category and SubCategory as rows, Amount as data
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+        Console.WriteLine($"Column alignment verification: {(isAligned ? "PASS" : "FAIL")}");
+        Console.WriteLine($"ColumnRange.StartColumn = {columnRange.StartColumn}, DataBodyRange.StartColumn = {dataBodyRange.StartColumn}");
 
-            // -------------------------------------------------
-            // Set the layout to Tabular form
-            // -------------------------------------------------
-            pivotTable.ShowInTabularForm();
-
-            // Refresh and calculate to populate the view
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // -------------------------------------------------
-            // Verify column alignment after applying Tabular layout
-            // -------------------------------------------------
-            // In Tabular layout the column headers and data columns should start at the same column index.
-            // We compare the start column of the column header range with the start column of the data body range.
-            CellArea columnHeaderRange = pivotTable.ColumnRange;   // Header area (if any)
-            CellArea dataBodyRange = pivotTable.DataBodyRange;    // Data area
-
-            // If there are no column fields, ColumnRange may be empty (StartColumn = -1). In that case,
-            // we verify that the first data column aligns with the first row field column.
-            int expectedStartColumn = dataBodyRange.StartColumn;
-
-            if (columnHeaderRange.StartColumn != -1 && columnHeaderRange.StartColumn != expectedStartColumn)
-            {
-                throw new InvalidOperationException(
-                    $"Column alignment mismatch: Column header starts at {columnHeaderRange.StartColumn}, " +
-                    $"but data starts at {expectedStartColumn}.");
-            }
-
-            // Additional sanity check: ensure that each row in the data body has the same number of columns.
-            int dataColumns = dataBodyRange.EndColumn - dataBodyRange.StartColumn + 1;
-            if (dataColumns <= 0)
-            {
-                throw new InvalidOperationException("Data body range does not contain any columns.");
-            }
-
-            // -------------------------------------------------
-            // Save the workbook
-            // -------------------------------------------------
-            workbook.Save("PivotTableTabularLayoutDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("PivotTabularLayoutDemo.xlsx");
     }
 }

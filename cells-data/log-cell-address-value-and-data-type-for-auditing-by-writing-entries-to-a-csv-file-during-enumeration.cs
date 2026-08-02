@@ -9,54 +9,47 @@ namespace AsposeCellsAuditExample
     {
         static void Main()
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
             // Populate some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(0.69);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.49);
-            sheet.Cells["A4"].PutValue(DateTime.Now);
-            sheet.Cells["B4"].PutValue(true);
+            cells["A1"].PutValue("Product");
+            cells["B1"].PutValue("Price");
+            cells["A2"].PutValue("Apple");
+            cells["B2"].PutValue(0.69);
+            cells["A3"].PutValue("Banana");
+            cells["B3"].PutValue(0.49);
+            cells["A4"].PutValue(DateTime.Now);
+            cells["B4"].PutValue(true);
 
-            // Save the workbook (save rule) – optional, just to demonstrate lifecycle usage
-            workbook.Save("SampleData.xlsx");
+            // Path for the audit CSV file
+            string csvPath = "audit.csv";
 
-            // Prepare CSV file for audit logging
-            string csvPath = "CellAuditLog.csv";
+            // Open a StreamWriter for the CSV file
             using (StreamWriter writer = new StreamWriter(csvPath))
             {
                 // Write CSV header
-                writer.WriteLine("CellAddress,Value,DataType");
+                writer.WriteLine("Address,Value,DataType");
 
-                // Get enumerator for all cells in the worksheet (enumeration)
-                IEnumerator cellEnumerator = sheet.Cells.GetEnumerator();
+                // Get the enumerator for all cells in the worksheet
+                IEnumerator enumerator = cells.GetEnumerator();
 
-                while (cellEnumerator.MoveNext())
+                // Iterate through each cell
+                while (enumerator.MoveNext())
                 {
-                    Cell cell = (Cell)cellEnumerator.Current;
+                    Cell cell = (Cell)enumerator.Current;
 
-                    // Retrieve address, value and type
-                    string address = cell.Name; // e.g., "A1"
-                    string value = cell.Value?.ToString() ?? string.Empty;
-                    string dataType = cell.Type.ToString(); // e.g., "IsString", "IsNumeric"
+                    // Prepare cell value as string; replace commas to avoid CSV column shift
+                    string valueString = cell.Value?.ToString().Replace(",", ";") ?? string.Empty;
 
-                    // Escape commas in value if needed
-                    if (value.Contains(","))
-                    {
-                        value = $"\"{value}\"";
-                    }
-
-                    // Write a CSV line
-                    writer.WriteLine($"{address},{value},{dataType}");
+                    // Write a line with address, value, and the cell's value type
+                    writer.WriteLine($"{cell.Name},{valueString},{cell.Type}");
                 }
             }
 
-            Console.WriteLine($"Audit log written to '{csvPath}'.");
+            Console.WriteLine($"Audit completed. CSV file created at: {Path.GetFullPath(csvPath)}");
         }
     }
 }

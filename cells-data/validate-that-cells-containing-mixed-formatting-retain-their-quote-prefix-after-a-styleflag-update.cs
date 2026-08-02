@@ -10,43 +10,40 @@ namespace AsposeCellsQuotePrefixValidation
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-
-            // Access cell A1 and put a value that looks like a number
             Cell cell = sheet.Cells["A1"];
-            cell.PutValue("12345");
 
-            // Create a style with QuotePrefix enabled and an initial number format
-            Style style = workbook.CreateStyle();
-            style.QuotePrefix = true;               // Enable quote prefix
-            style.Custom = "0";                     // Simple number format
+            // Put a value that starts with a single quote (quote prefix)
+            cell.PutValue("'MixedFormatting");
 
-            // Create a StyleFlag that applies both QuotePrefix and NumberFormat
+            // Create an initial style with QuotePrefix = true and make the text bold
+            Style initialStyle = workbook.CreateStyle();
+            initialStyle.QuotePrefix = true;          // Enable quote prefix
+            initialStyle.Font.IsBold = true;          // Additional formatting
+
+            // Apply the initial style to the cell
+            cell.SetStyle(initialStyle);
+
+            // Verify that QuotePrefix is set initially
+            Console.WriteLine("Initial QuotePrefix: " + cell.GetStyle().QuotePrefix); // Expected: True
+
+            // Create a new style that changes only the font color
+            Style newStyle = workbook.CreateStyle();
+            newStyle.Font.Color = System.Drawing.Color.Red;
+
+            // Create a StyleFlag that applies only the FontBold property (for demonstration)
+            // Here we set FontBold flag to true to modify font boldness, leaving QuotePrefix untouched
             StyleFlag flag = new StyleFlag();
-            flag.QuotePrefix = true;
-            flag.NumberFormat = true;
+            flag.FontBold = true;   // Only font bold flag is enabled
+            // All other flags, including QuotePrefix, remain false
 
-            // Apply the style to the cell
-            cell.SetStyle(style, flag);
+            // Apply the new style with the flag; this should not affect the QuotePrefix
+            cell.SetStyle(newStyle, flag);
 
-            // Verify that QuotePrefix is set
-            Console.WriteLine("After first style application:");
-            Console.WriteLine("QuotePrefix: " + cell.GetStyle().QuotePrefix);
-            Console.WriteLine("Number Format: " + cell.GetStyle().Custom);
+            // After applying the style flag, check that QuotePrefix is still true
+            bool quotePrefixAfterUpdate = cell.GetStyle().QuotePrefix;
+            Console.WriteLine("QuotePrefix after StyleFlag update: " + quotePrefixAfterUpdate); // Expected: True
 
-            // Change only the number format while keeping QuotePrefix flag true
-            style.Custom = "#,##0";                 // New number format
-            // Flag already has QuotePrefix = true; keep it unchanged
-            flag.NumberFormat = true;               // Ensure number format flag is still true
-
-            // Re-apply the updated style
-            cell.SetStyle(style, flag);
-
-            // Verify that QuotePrefix is still retained after the update
-            Console.WriteLine("\nAfter updating number format:");
-            Console.WriteLine("QuotePrefix: " + cell.GetStyle().QuotePrefix);
-            Console.WriteLine("Number Format: " + cell.GetStyle().Custom);
-
-            // Save the workbook (the file can be inspected manually if needed)
+            // Save the workbook (optional, just to verify the result in Excel)
             workbook.Save("QuotePrefixValidation.xlsx");
         }
     }

@@ -11,14 +11,16 @@ namespace AsposeCellsNumberFormatDemo
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a numeric value into a cell
-            Cell cell = sheet.Cells["B2"];
+            // Put a numeric value into cell A1
+            Cell cell = sheet.Cells["A1"];
             cell.PutValue(1234.56);
 
-            // Get the cell's style and set the built‑in currency format with two decimal places
+            // Create a style and set built‑in currency format with two decimal places
             // According to Aspose.Cells documentation, Number = 7 corresponds to "$#,##0.00_);($#,##0.00)"
-            Style style = cell.GetStyle();
+            Style style = workbook.CreateStyle();
             style.Number = 7;
+
+            // Apply the style to the cell
             cell.SetStyle(style);
 
             // Save the workbook

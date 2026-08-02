@@ -5,53 +5,66 @@ using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsExternalConnectionValidation
 {
-    public class ValidateExternalConnections
+    public class Program
     {
-        public static void Run(string inputPath, string outputPath)
+        public static void Main(string[] args)
         {
             try
             {
-                // Ensure the input file exists before loading
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Validate each external connection's credentials
-                foreach (ExternalConnection connection in workbook.DataConnections)
-                {
-                    // Use the modern CredentialsMethodType property
-                    if (connection.CredentialsMethodType == CredentialsMethodType.None)
-                    {
-                        throw new InvalidOperationException(
-                            $"External connection '{connection.Name}' has empty credentials.");
-                    }
-                }
-
-                // Save the workbook after successful validation
-                workbook.Save(outputPath);
+                ValidateExternalConnections.Run();
             }
             catch (Exception ex)
             {
-                // Log the error to the console
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }
 
-    class Program
+    public class ValidateExternalConnections
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-            // Default file paths; can be overridden via command‑line arguments
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            try
+            {
+                // Optional: load a workbook from a template if it exists
+                const string templatePath = "Template.xlsx";
+                Workbook workbook = File.Exists(templatePath) ? new Workbook(templatePath) : new Workbook();
 
-            if (args.Length > 0) inputPath = args[0];
-            if (args.Length > 1) outputPath = args[1];
+                // Example: add a dummy external connection for demonstration purposes
+                // ExternalConnection conn = workbook.DataConnections.Add("MyConnection", "http://example.com/data", "SELECT * FROM Table");
+                // conn.CredentialsMethodType = CredentialsMethodType.Integrated;
 
-            ValidateExternalConnections.Run(inputPath, outputPath);
+                bool allConnectionsValid = true;
+
+                // Validate each external connection's credentials
+                foreach (ExternalConnection conn in workbook.DataConnections)
+                {
+                    if (conn.CredentialsMethodType == CredentialsMethodType.None)
+                    {
+                        Console.WriteLine($"Connection \"{conn.Name}\" has empty credentials.");
+                        allConnectionsValid = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Connection \"{conn.Name}\" credentials are set to {conn.CredentialsMethodType}.");
+                    }
+                }
+
+                if (!allConnectionsValid)
+                {
+                    Console.WriteLine("Workbook contains external connections with empty credentials. Save operation aborted.");
+                    return;
+                }
+
+                // Save the validated workbook
+                const string outputPath = "ValidatedWorkbook.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during validation: {ex.Message}");
+            }
         }
     }
 }

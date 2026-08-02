@@ -4,43 +4,41 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartExport
+class ExportChartsToSvg
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source workbook
+        string workbookPath = "input.xlsx";
+
+        // Folder where SVG files will be saved
+        string outputFolder = "ChartsSvg";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Load the workbook
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Iterate through all worksheets
+        for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
         {
-            // Path to the source workbook
-            string workbookPath = "input.xlsx";
+            Worksheet sheet = workbook.Worksheets[sheetIdx];
 
-            // Load the workbook (lifecycle rule: use load)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Define the output folder for SVG files and ensure it exists
-            string outputFolder = Path.Combine(Environment.CurrentDirectory, "ExportedCharts");
-            Directory.CreateDirectory(outputFolder);
-
-            // Iterate through all worksheets
-            for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
+            // Iterate through all charts in the worksheet
+            for (int chartIdx = 0; chartIdx < sheet.Charts.Count; chartIdx++)
             {
-                Worksheet sheet = workbook.Worksheets[sheetIdx];
-                ChartCollection charts = sheet.Charts;
+                Chart chart = sheet.Charts[chartIdx];
 
-                // Iterate through all charts in the current worksheet
-                for (int chartIdx = 0; chartIdx < charts.Count; chartIdx++)
-                {
-                    Chart chart = charts[chartIdx];
+                // Build a unique file name for each chart
+                string fileName = $"Chart_Sheet{sheetIdx}_Index{chartIdx}.svg";
+                string filePath = Path.Combine(outputFolder, fileName);
 
-                    // Build a unique file name for each chart
-                    string fileName = $"Sheet{sheetIdx + 1}_Chart{chartIdx + 1}.svg";
-                    string filePath = Path.Combine(outputFolder, fileName);
-
-                    // Export the chart to SVG using the ToImage method with ImageType.Svg
-                    chart.ToImage(filePath, ImageType.Svg);
-                }
+                // Export chart to SVG using the ToImage method with ImageType.Svg
+                chart.ToImage(filePath, ImageType.Svg);
             }
-
-            Console.WriteLine($"All charts have been exported to SVG files in folder: {outputFolder}");
         }
+
+        Console.WriteLine("All charts have been exported to SVG files.");
     }
 }

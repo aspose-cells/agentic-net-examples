@@ -1,103 +1,68 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    // Custom globalization for English (default)
-    public class EnglishGlobalizationSettings : GlobalizationSettings
+    static void Main()
     {
-        public override string GetBooleanValueString(bool bv)
-        {
-            return bv ? "TRUE_EN" : "FALSE_EN";
-        }
+        // Create a new workbook with three worksheets
+        Workbook workbook = new Workbook();
+        Worksheet sheetEn = workbook.Worksheets[0];
+        sheetEn.Name = "English";
 
-        public override string GetErrorValueString(string err)
-        {
-            // Keep default error strings
-            return base.GetErrorValueString(err);
-        }
+        Worksheet sheetRu = workbook.Worksheets.Add("Russian");
+        Worksheet sheetDe = workbook.Worksheets.Add("German");
+
+        // ---------- Russian worksheet ----------
+        // Create a custom globalization object for Russian
+        SettableGlobalizationSettings ruSettings = new SettableGlobalizationSettings();
+        ruSettings.SetBooleanValueString(true, "ИСТИНА");
+        ruSettings.SetBooleanValueString(false, "ЛОЖЬ");
+        ruSettings.SetLocalFunctionName("SUM", "СУММ", true); // map SUM to СУММ
+
+        // Apply Russian settings and fill the sheet
+        workbook.Settings.GlobalizationSettings = ruSettings;
+        FillSheet(sheetRu, "RU");
+
+        // ---------- German worksheet ----------
+        // Create a custom globalization object for German
+        SettableGlobalizationSettings deSettings = new SettableGlobalizationSettings();
+        deSettings.SetBooleanValueString(true, "WAHR");
+        deSettings.SetBooleanValueString(false, "FALSCH");
+        deSettings.SetLocalFunctionName("SUM", "SUMME", true); // map SUM to SUMME
+
+        // Apply German settings and fill the sheet
+        workbook.Settings.GlobalizationSettings = deSettings;
+        FillSheet(sheetDe, "DE");
+
+        // ---------- English (default) worksheet ----------
+        // Reset to default globalization settings
+        workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
+        FillSheet(sheetEn, "EN");
+
+        // Save the workbook
+        workbook.Save("LocalizedWorkbook.xlsx");
     }
 
-    // Custom globalization for Russian
-    public class RussianGlobalizationSettings : GlobalizationSettings
+    // Helper method to populate a worksheet with sample data
+    static void FillSheet(Worksheet sheet, string prefix)
     {
-        public override string GetBooleanValueString(bool bv)
-        {
-            return bv ? "ИСТИНА" : "ЛОЖЬ";
-        }
+        Cells cells = sheet.Cells;
 
-        public override string GetErrorValueString(string err)
-        {
-            // Example of localized error messages
-            return err switch
-            {
-                "#DIV/0!" => "#ДЕЛ/0!",
-                "#VALUE!" => "#ЗНАЧ!",
-                _ => base.GetErrorValueString(err)
-            };
-        }
-    }
+        // Boolean values – will be displayed according to the active globalization settings
+        cells[0, 0].PutValue(true);
+        cells[0, 1].PutValue(false);
 
-    public class WorkbookWithPerWorksheetGlobalization
-    {
-        public static void Run()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook wb = new Workbook();
+        // Numeric values for SUM demonstration
+        cells[1, 0].PutValue(10);
+        cells[2, 0].PutValue(20);
+        cells[3, 0].PutValue(30);
 
-            // -------------------------------------------------
-            // Worksheet 1 – English globalization
-            // -------------------------------------------------
-            wb.Settings.GlobalizationSettings = new EnglishGlobalizationSettings(); // apply English settings
+        // Formula using the standard function name "SUM"
+        // The active globalization settings map it to the localized name when needed
+        cells[4, 0].Formula = "=SUM(A2:A4)";
 
-            Worksheet sheetEn = wb.Worksheets[0];
-            sheetEn.Name = "EnglishSheet";
-
-            // Populate some boolean values and a formula
-            sheetEn.Cells["A1"].PutValue(true);
-            sheetEn.Cells["A2"].PutValue(false);
-            sheetEn.Cells["A3"].Formula = "=TRUE()";   // will display "TRUE_EN"
-            sheetEn.Cells["A4"].Formula = "=FALSE()";  // will display "FALSE_EN"
-
-            // -------------------------------------------------
-            // Worksheet 2 – Russian globalization
-            // -------------------------------------------------
-            // Add a new worksheet for Russian section
-            int russianIndex = wb.Worksheets.Add();
-            Worksheet sheetRu = wb.Worksheets[russianIndex];
-            sheetRu.Name = "RussianSheet";
-
-            // Switch globalization settings to Russian before filling the sheet
-            wb.Settings.GlobalizationSettings = new RussianGlobalizationSettings(); // apply Russian settings
-
-            // Populate boolean values and a formula that will use Russian strings
-            sheetRu.Cells["A1"].PutValue(true);
-            sheetRu.Cells["A2"].PutValue(false);
-            sheetRu.Cells["A3"].Formula = "=TRUE()";   // will display "ИСТИНА"
-            sheetRu.Cells["A4"].Formula = "=FALSE()";  // will display "ЛОЖЬ"
-
-            // Demonstrate localized error handling
-            sheetRu.Cells["B1"].Formula = "=1/0"; // will produce #DIV/0! error, displayed as #ДЕЛ/0!
-
-            // -------------------------------------------------
-            // Calculate formulas (required to materialize the localized strings)
-            // -------------------------------------------------
-            wb.CalculateFormula();
-
-            // -------------------------------------------------
-            // Save the workbook (lifecycle rule: save)
-            // -------------------------------------------------
-            wb.Save("WorkbookPerWorksheetGlobalization.xlsx");
-        }
-    }
-
-    // Entry point for demonstration
-    class Program
-    {
-        static void Main()
-        {
-            WorkbookWithPerWorksheetGlobalization.Run();
-            Console.WriteLine("Workbook created with per‑worksheet globalization settings.");
-        }
+        // Ensure formulas are calculated with the current settings
+        sheet.Workbook.CalculateFormula();
     }
 }

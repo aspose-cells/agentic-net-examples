@@ -4,7 +4,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsImportCustomObjectsDemo
 {
-    // Sample custom object
+    // Sample data class
     public class Product
     {
         public string Name { get; set; }
@@ -17,35 +17,38 @@ namespace AsposeCellsImportCustomObjectsDemo
     {
         public static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // 2. Prepare sample data
+            // Prepare sample data
             List<Product> products = new List<Product>
             {
-                new Product { Name = "Apple",  Price = 2.99m, Stock = 150, Date = new DateTime(2023,12,31) },
+                new Product { Name = "Apple",  Price = 2.99m, Stock = 150, Date = new DateTime(2023, 12, 31) },
                 new Product { Name = "Orange", Price = 1.99m, Stock = 200, Date = new DateTime(2024, 1, 15) }
             };
 
-            // 3. Mapping dictionary: original property name -> desired column header
-            Dictionary<string, string> columnRenameMap = new Dictionary<string, string>
+            // Mapping dictionary: original property name -> desired column header
+            Dictionary<string, string> columnMapping = new Dictionary<string, string>
             {
                 { "Name",  "Product Name" },
                 { "Price", "Unit Price"   },
-                { "Stock", "Quantity"     },
-                { "Date",  "Release Date" }
+                { "Stock", "Inventory"    },
+                { "Date",  "Sale Date"    }
             };
 
-            // 4. Property names to import (must match object properties)
-            string[] propertyNames = { "Name", "Price", "Stock", "Date" };
+            // Property names to import (must be the original property names)
+            string[] propertyNames = new string[columnMapping.Count];
+            int idx = 0;
+            foreach (var kvp in columnMapping)
+                propertyNames[idx++] = kvp.Key;
 
-            // 5. Import the custom objects with property names shown as header row
-            cells.ImportCustomObjects(
+            // Import the custom objects; include property names as the first row
+            int importedRows = cells.ImportCustomObjects(
                 products,               // list
                 propertyNames,          // propertyNames
-                true,                   // isPropertyNameShown (header row)
+                true,                   // isPropertyNameShown (adds header row)
                 0,                      // firstRow
                 0,                      // firstColumn
                 products.Count,         // rowNumber
@@ -54,18 +57,18 @@ namespace AsposeCellsImportCustomObjectsDemo
                 true                    // convertStringToNumber
             );
 
-            // 6. Rename header cells according to the mapping dictionary
-            // Header row is at index 0 (firstRow)
+            // Rename the header cells according to the mapping dictionary
+            // Header row is at firstRow (0) because we set isPropertyNameShown = true
             for (int col = 0; col < propertyNames.Length; col++)
             {
-                string originalName = propertyNames[col];
-                if (columnRenameMap.TryGetValue(originalName, out string newName))
+                string originalProp = propertyNames[col];
+                if (columnMapping.TryGetValue(originalProp, out string newHeader))
                 {
-                    cells[0, col].PutValue(newName);
+                    cells[0, col].PutValue(newHeader);
                 }
             }
 
-            // 7. Save the workbook
+            // Save the workbook
             workbook.Save("ImportCustomObjectsWithRenamedColumns.xlsx");
         }
     }

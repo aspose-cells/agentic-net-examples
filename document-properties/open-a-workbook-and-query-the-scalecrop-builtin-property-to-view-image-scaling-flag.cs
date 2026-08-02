@@ -1,45 +1,21 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class BuiltInDocumentPropertyScaleCropDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            Run();
-        }
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        public static void Run()
-        {
-            try
-            {
-                string filePath = "input.xlsx";
+        // Access the built‑in document properties collection
+        BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
 
-                // Prevent FileNotFoundException
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    return;
-                }
+        // Query the ScaleCrop property which indicates the thumbnail display mode
+        bool scaleCrop = properties.ScaleCrop;
 
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Access built‑in document properties
-                var properties = workbook.BuiltInDocumentProperties;
-
-                // Get the ScaleCrop property (true = thumbnail is scaled, false = original size)
-                bool scaleCrop = properties.ScaleCrop;
-
-                // Display the value
-                Console.WriteLine("ScaleCrop property value: " + scaleCrop);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Output the value to the console
+        Console.WriteLine("ScaleCrop property value: " + scaleCrop);
     }
 }

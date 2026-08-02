@@ -5,7 +5,7 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
@@ -20,7 +20,8 @@ class Program
             // Read the PreserveFormatting flag
             bool preserveFormatting = queryTable.PreserveFormatting;
 
-            Console.WriteLine("PreserveFormatting flag value: " + preserveFormatting);
+            // Display the flag value
+            Console.WriteLine("PreserveFormatting: " + preserveFormatting);
         }
         else
         {

@@ -1,31 +1,27 @@
 using System;
-using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsHtmlBrReplacement
 {
-    static void Main()
+    class Program
     {
-        // Sample HTML containing <br> tags
-        string html = "<p>First line<br>Second line<br/>Third line</p>";
-
-        // Convert the HTML string to a memory stream
-        byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
-        using (MemoryStream stream = new MemoryStream(htmlBytes))
+        static void Main()
         {
-            // Load the HTML into a workbook with HtmlLoadOptions
+            // Path to the source HTML file
+            string htmlPath = "input.html";
+
+            // Load the HTML file into a workbook with default options
             HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-            // Optional: delete redundant spaces that may appear after line breaks
+            // Optional: enable deletion of redundant spaces that may appear after <br> handling
             loadOptions.DeleteRedundantSpaces = true;
 
-            Workbook workbook = new Workbook(stream, loadOptions);
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-            // Replace <br> and <br/> tags with line feed characters in all cells
+            // Replace all <br> tags in cell values with line feed characters
+            // This improves how line breaks are displayed in Excel cells
             workbook.Replace("<br>", "\n");
-            workbook.Replace("<br/>", "\n");
 
-            // Save the resulting workbook
+            // Save the modified workbook to an Excel file
             workbook.Save("output.xlsx");
         }
     }

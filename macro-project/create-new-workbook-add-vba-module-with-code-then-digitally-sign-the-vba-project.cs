@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
@@ -9,95 +8,44 @@ using Aspose.Cells.DigitalSignatures;
 
 namespace AsposeCellsVbaSigningDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            try
-            {
-                // Create a new workbook (macro-enabled format will be used when saving)
-                Workbook workbook = new Workbook();
+            // Create a new workbook (default format is XLSX)
+            Workbook workbook = new Workbook();
 
-                // Access the VBA project (it exists by default)
-                VbaProject vbaProject = workbook.VbaProject;
+            // Access the VBA project (it exists by default)
+            VbaProject vbaProject = workbook.VbaProject;
 
-                // Set optional project properties
-                vbaProject.Name = "DemoVbaProject";
-                vbaProject.Encoding = Encoding.UTF8;
+            // Optional: set project name and encoding
+            vbaProject.Name = "MyVbaProject";
+            vbaProject.Encoding = Encoding.UTF8;
 
-                // Add a new class module to the VBA project
-                int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "DemoModule");
-                VbaModule module = vbaProject.Modules[moduleIndex];
+            // Add a class module to the VBA project
+            int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "MyModule");
 
-                // Insert VBA code into the module
-                module.Codes = @"Sub HelloWorld()
-    MsgBox ""Hello from VBA!""
-End Sub";
+            // Set VBA code for the newly added module
+            VbaModule module = vbaProject.Modules[moduleIndex];
+            module.Codes = "Sub Hello()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
 
-                // Load a digital certificate (replace with your actual .pfx path and password)
-                string certPath = "MyCertificate.pfx";
-                string certPassword = "password";
+            // Load a digital certificate (replace with your actual .pfx path and password)
+            X509Certificate2 certificate = new X509Certificate2("MyCertificate.pfx", "certPassword");
 
-                if (!File.Exists(certPath))
-                {
-                    Console.WriteLine($"Certificate file not found: {certPath}");
-                    return;
-                }
+            // Create a DigitalSignature object using the certificate
+            DigitalSignature digitalSignature = new DigitalSignature(certificate, "Signed by Aspose.Cells", DateTime.Now);
 
-                X509Certificate2 certificate;
-                try
-                {
-                    certificate = new X509Certificate2(certPath, certPassword, X509KeyStorageFlags.MachineKeySet);
-                }
-                catch (CryptographicException ex)
-                {
-                    Console.WriteLine($"Failed to load certificate: {ex.Message}");
-                    return;
-                }
+            // Sign the VBA project with the digital signature
+            vbaProject.Sign(digitalSignature);
 
-                // Create a DigitalSignature object
-                DigitalSignature digitalSignature = new DigitalSignature(certificate, "VBA Project Signature", DateTime.Now);
+            // Save the workbook as a macro-enabled file to preserve the VBA project
+            string outputPath = "SignedVbaWorkbook.xlsm";
+            workbook.Save(outputPath, SaveFormat.Xlsm);
 
-                // Sign the VBA project
-                try
-                {
-                    vbaProject.Sign(digitalSignature);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to sign VBA project: {ex.Message}");
-                    return;
-                }
-
-                // Save the workbook as a macro-enabled file
-                string outputPath = "SignedVbaWorkbook.xlsm";
-                try
-                {
-                    workbook.Save(outputPath, SaveFormat.Xlsm);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                    return;
-                }
-
-                // Verify signing status
-                if (File.Exists(outputPath))
-                {
-                    Workbook verifyWorkbook = new Workbook(outputPath);
-                    Console.WriteLine("VBA Project IsSigned: " + verifyWorkbook.VbaProject.IsSigned);
-                    Console.WriteLine("VBA Project IsValidSigned: " + verifyWorkbook.VbaProject.IsValidSigned);
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to locate saved workbook: {outputPath}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Verify the signature by reloading the workbook
+            Workbook verifyWorkbook = new Workbook(outputPath);
+            Console.WriteLine("VBA Project IsSigned: " + verifyWorkbook.VbaProject.IsSigned);
+            Console.WriteLine("VBA Project IsValidSigned: " + verifyWorkbook.VbaProject.IsValidSigned);
         }
     }
 }

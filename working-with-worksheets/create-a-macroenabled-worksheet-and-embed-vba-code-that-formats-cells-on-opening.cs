@@ -1,57 +1,58 @@
+// Title: Create a macro‑enabled .xlsm workbook with a Workbook_Open VBA macro using Aspose.Cells for .NET (C#)
+// Description: Shows how to generate an .xlsm file with Aspose.Cells, add or locate the ThisWorkbook VBA module, inject a Workbook_Open routine that makes range A1:B2 bold with a green background, and save the workbook as a macro‑enabled file.
+// Keywords: Aspose.Cells | C# | VBA module | macro‑enabled workbook | xlsm generation | Workbook_Open event | programmatic Excel formatting | embed VBA code | save as .xlsm
+// Common Searches: Aspose.Cells add ThisWorkbook VBA module C# | Create .xlsm file with Aspose.Cells | Set Workbook_Open macro using Aspose.Cells | Programmatically format cells on workbook open | Embed VBA code in Excel file with Aspose
+// Developer Intent: Generate an .xlsm workbook and embed a Workbook_Open macro that automatically formats a specific cell range when the file is opened.
+// Use Cases: Distribute a template that applies consistent header styling on open. | Automate report formatting without requiring user interaction. | Create a self‑formatting Excel tool that enforces visual standards via VBA.
+// AI Prompts: Write C# code with Aspose.Cells to create an .xlsm workbook, add a ThisWorkbook module, and insert a Workbook_Open macro that bolds and colors range A1:B2. | Explain how to check for an existing VBA module and add one if missing when generating a macro‑enabled workbook with Aspose.Cells. | Show how to modify the injected VBA code to change the target range or formatting colors using Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
 namespace AsposeCellsMacroExample
 {
+    // Shows how to generate an .xlsm file with Aspose.Cells, add or locate the ThisWorkbook VBA module, inject a Workbook_Open routine that makes range A1:B2 bold with a green background, and save the workbook as a macro‑enabled file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (default format is Xlsx)
+                // Create a new workbook (default format is XLSX)
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet and give it a friendly name
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
+                // Access the VBA project (creates a project when saved as macro‑enabled)
+                VbaProject vbaProject = workbook.VbaProject;
 
-                // Put some sample data (optional, just to have cells to format)
-                sheet.Cells["A1"].PutValue("Sample");
-                sheet.Cells["A2"].PutValue("Data");
-
-                // Get the existing ThisWorkbook module or add it if missing
-                VbaModule vbaModule = null;
-                foreach (VbaModule mod in workbook.VbaProject.Modules)
+                // Try to get the existing "ThisWorkbook" module; if it does not exist, add it
+                VbaModule thisWorkbookModule = null;
+                foreach (VbaModule mod in vbaProject.Modules)
                 {
                     if (mod.Name.Equals("ThisWorkbook", StringComparison.OrdinalIgnoreCase))
                     {
-                        vbaModule = mod;
+                        thisWorkbookModule = mod;
                         break;
                     }
                 }
 
-                if (vbaModule == null)
+                if (thisWorkbookModule == null)
                 {
-                    int moduleIndex = workbook.VbaProject.Modules.Add(VbaModuleType.Document, "ThisWorkbook");
-                    vbaModule = workbook.VbaProject.Modules[moduleIndex];
+                    int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Document, "ThisWorkbook");
+                    thisWorkbookModule = vbaProject.Modules[moduleIndex];
                 }
 
-                // VBA code that runs when the workbook is opened.
-                // It formats the range A1:B2: sets background color to yellow and makes the font bold.
-                string vbaCode =
+                // Set VBA code for the Workbook_Open event
+                thisWorkbookModule.Codes =
                     "Private Sub Workbook_Open()\r\n" +
-                    "    Worksheets(\"Data\").Range(\"A1:B2\").Interior.Color = vbYellow\r\n" +
-                    "    Worksheets(\"Data\").Range(\"A1:B2\").Font.Bold = True\r\n" +
+                    "    With ThisWorkbook.Worksheets(1).Range(\"A1:B2\")\r\n" +
+                    "        .Font.Bold = True\r\n" +
+                    "        .Interior.Color = &H00FF00 ' Green background\r\n" +
+                    "    End With\r\n" +
                     "End Sub";
 
-                vbaModule.Codes = vbaCode;
-
                 // Save the workbook as a macro‑enabled file (.xlsm)
-                string outputPath = "MacroEnabledWorkbook.xlsm";
-                workbook.Save(outputPath, SaveFormat.Xlsm);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Save("MacroEnabledWorkbook.xlsm", SaveFormat.Xlsm);
             }
             catch (Exception ex)
             {

@@ -1,40 +1,45 @@
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class DeleteLargeVbaModules
+namespace AsposeCellsVbaModuleCleanup
 {
-    static void Main()
+    class Program
     {
-        // Load the macro-enabled workbook
-        Workbook workbook = new Workbook("input.xlsm");
-
-        // Access the VBA project and its modules
-        VbaProject vbaProject = workbook.VbaProject;
-        VbaModuleCollection modules = vbaProject.Modules;
-
-        // Iterate backwards so removal does not affect the loop index
-        for (int i = modules.Count - 1; i >= 0; i--)
+        static void Main()
         {
-            VbaModule module = modules[i];
+            // Load an existing macro-enabled workbook
+            Workbook workbook = new Workbook("input.xlsm");
 
-            // Determine the number of lines in the module's code
-            int lineCount = 0;
-            if (!string.IsNullOrEmpty(module.Codes))
+            // Access the VBA project and its module collection
+            VbaProject vbaProject = workbook.VbaProject;
+            VbaModuleCollection modules = vbaProject.Modules;
+
+            // Collect names of modules whose code exceeds 500 lines
+            List<string> modulesToRemove = new List<string>();
+            for (int i = 0; i < modules.Count; i++)
             {
-                lineCount = module.Codes.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
+                VbaModule module = modules[i];
+                string code = module.Codes ?? string.Empty;
+
+                // Count lines by splitting on both CRLF and LF
+                int lineCount = code.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
+
+                if (lineCount > 500)
+                {
+                    modulesToRemove.Add(module.Name);
+                }
             }
 
-            // Remove modules that exceed 500 lines
-            if (lineCount > 500)
+            // Remove the identified modules by name
+            foreach (string name in modulesToRemove)
             {
-                string name = module.Name;
                 modules.Remove(name);
-                Console.WriteLine($"Removed module '{name}' with {lineCount} lines.");
             }
-        }
 
-        // Save the workbook after removals
-        workbook.Save("output.xlsm", SaveFormat.Xlsm);
+            // Save the workbook after removal
+            workbook.Save("output.xlsm", SaveFormat.Xlsm);
+        }
     }
 }

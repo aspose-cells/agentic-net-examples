@@ -4,44 +4,41 @@ using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTiffSplitDemo
+class SplitTiffPages
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel workbook that will be rendered as a multi‑page TIFF
+        string workbookPath = "input.xlsx";
+
+        // Directory where individual single‑page TIFF files will be saved
+        string outputFolder = "output_pages";
+        Directory.CreateDirectory(outputFolder);
+
+        // Load the workbook
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Configure rendering options for TIFF output
+        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
         {
-            // Load the source Excel workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            ImageType = ImageType.Tiff,               // Set output format to TIFF
+            TiffCompression = TiffCompression.CompressionLZW,
+            OnePagePerSheet = false                    // Allow multiple pages per sheet
+        };
 
-            // Configure image options for TIFF rendering
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Tiff,               // Output format
-                TiffCompression = TiffCompression.CompressionLZW,
-                HorizontalResolution = 300,
-                VerticalResolution = 300
-            };
+        // Create a WorkbookRender instance (uses the provided rule)
+        WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
 
-            // Create a renderer for the entire workbook
-            WorkbookRender renderer = new WorkbookRender(workbook, options);
-
-            // Determine how many pages the workbook will generate
-            int totalPages = renderer.PageCount;
-
-            // Ensure the output directory exists
-            string outputDir = "TiffPages";
-            Directory.CreateDirectory(outputDir);
-
-            // Render each page to a separate single‑page TIFF file
-            for (int pageIndex = 0; pageIndex < totalPages; pageIndex++)
-            {
-                string pageFile = Path.Combine(outputDir, $"Page_{pageIndex + 1}.tiff");
-                renderer.ToImage(pageIndex, pageFile);
-                Console.WriteLine($"Saved page {pageIndex + 1} to {pageFile}");
-            }
-
-            // Clean up resources
-            renderer.Dispose();
+        // Iterate through each rendered page and save it as a separate TIFF file
+        for (int pageIndex = 0; pageIndex < renderer.PageCount; pageIndex++)
+        {
+            string pageFile = Path.Combine(outputFolder, $"page_{pageIndex + 1}.tiff");
+            // Save the specific page to a file (uses ToImage(int, string) rule)
+            renderer.ToImage(pageIndex, pageFile);
+            Console.WriteLine($"Saved page {pageIndex + 1} to {pageFile}");
         }
+
+        // Release resources
+        renderer.Dispose();
     }
 }

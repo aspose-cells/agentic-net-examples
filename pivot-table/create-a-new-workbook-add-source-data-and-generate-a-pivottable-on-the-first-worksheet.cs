@@ -2,13 +2,13 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotExample
+namespace AsposeCellsPivotDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
@@ -38,21 +38,23 @@ namespace AsposeCellsPivotExample
             cells["B6"].Value = "North";
             cells["C6"].Value = 5000;
 
-            // Define the source range, destination cell and table name for the pivot table
+            // Define the source range, destination cell, and pivot table name
             string sourceData = "A1:C6";
-            string destCellName = "E5";
-            string tableName = "SalesPivot";
+            string destCell = "E2";
+            string pivotName = "SalesPivot";
 
             // Add the pivot table using the (string, string, string) overload
-            int pivotIndex = worksheet.PivotTables.Add(sourceData, destCellName, tableName);
+            int pivotIndex = worksheet.PivotTables.Add(sourceData, destCell, pivotName);
 
-            // Configure the pivot table fields
+            // Retrieve the created pivot table
             PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+
+            // Configure fields: Product as Row, Region as Column, Sales as Data
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
             pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Refresh and calculate the pivot data
+            // Refresh and calculate the pivot table data
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

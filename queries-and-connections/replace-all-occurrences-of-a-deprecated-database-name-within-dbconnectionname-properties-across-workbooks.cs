@@ -1,52 +1,87 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsExamples
 {
-    public class ReplaceDbConnectionName
+    public class Program
     {
-        /// <summary>
-        /// Replaces occurrences of a deprecated database name within DBConnection.Name properties.
-        /// </summary>
-        /// <param name="inputPath">Path to the source workbook.</param>
-        /// <param name="outputPath">Path where the modified workbook will be saved.</param>
-        /// <param name="oldDbName">Deprecated database name to be replaced.</param>
-        /// <param name="newDbName">New database name to use.</param>
-        public static void ProcessWorkbook(string inputPath, string outputPath, string oldDbName, string newDbName)
+        public static void Main(string[] args)
         {
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all external connections in the workbook
-            foreach (ExternalConnection connection in workbook.DataConnections)
+            // Expected arguments: inputPath outputPath oldDbName newDbName
+            if (args.Length != 4)
             {
-                // Check if the connection is a DBConnection
-                if (connection is DBConnection dbConn)
-                {
-                    // Replace the deprecated name in the DBConnection.Name property
-                    if (!string.IsNullOrEmpty(dbConn.Name))
-                    {
-                        dbConn.Name = dbConn.Name.Replace(oldDbName, newDbName);
-                    }
-                }
+                Console.WriteLine("Usage: <inputPath> <outputPath> <oldDbName> <newDbName>");
+                return;
             }
 
-            // Save the modified workbook (lifecycle rule: save)
-            workbook.Save(outputPath);
+            try
+            {
+                ReplaceDeprecatedDbNameInConnections.Run(
+                    args[0], args[1], args[2], args[3]);
+
+                Console.WriteLine("Workbook processed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
+    }
 
-        // Example usage
-        public static void Main()
+    public class ReplaceDeprecatedDbNameInConnections
+    {
+        // Replace occurrences of a deprecated database name in DBConnection properties.
+        public static void Run(string inputPath, string outputPath, string oldDbName, string newDbName)
         {
-            string inputFile = "input.xlsx";
-            string outputFile = "output.xlsx";
-            string deprecatedName = "OldDatabase";
-            string updatedName = "NewDatabase";
+            // Ensure the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            ProcessWorkbook(inputFile, outputFile, deprecatedName, updatedName);
+            try
+            {
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine($"Processed workbook saved to '{outputFile}'.");
+                // Access the collection of external data connections.
+                ExternalConnectionCollection connections = workbook.DataConnections;
+
+                // Iterate through each connection and process only DBConnection instances.
+                foreach (ExternalConnection connection in connections)
+                {
+                    if (connection is DBConnection dbConn)
+                    {
+                        // Replace in the connection's Name property.
+                        if (!string.IsNullOrEmpty(dbConn.Name))
+                            dbConn.Name = dbConn.Name.Replace(oldDbName, newDbName);
+
+                        // Replace in SourceFile if present.
+                        if (!string.IsNullOrEmpty(dbConn.SourceFile))
+                            dbConn.SourceFile = dbConn.SourceFile.Replace(oldDbName, newDbName);
+
+                        // Replace in ConnectionString (new API, replaces obsolete ConnectionInfo).
+                        if (!string.IsNullOrEmpty(dbConn.ConnectionString))
+                            dbConn.ConnectionString = dbConn.ConnectionString.Replace(oldDbName, newDbName);
+
+                        // Replace in Command.
+                        if (!string.IsNullOrEmpty(dbConn.Command))
+                            dbConn.Command = dbConn.Command.Replace(oldDbName, newDbName);
+
+                        // Replace in SecondCommand (new API, replaces obsolete SeverCommand).
+                        if (!string.IsNullOrEmpty(dbConn.SecondCommand))
+                            dbConn.SecondCommand = dbConn.SecondCommand.Replace(oldDbName, newDbName);
+                    }
+                }
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+            }
+            catch
+            {
+                // Rethrow to allow the caller to handle the exception.
+                throw;
+            }
         }
     }
 }

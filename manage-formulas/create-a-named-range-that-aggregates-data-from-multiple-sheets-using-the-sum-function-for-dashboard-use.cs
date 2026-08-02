@@ -1,88 +1,64 @@
+// Title: Aspose.Cells .NET: Create a Named Range that Sums Data Across Multiple Worksheets for Dashboard Reporting
+// Description: Demonstrates how to build a new workbook, populate two sheets, define a named range called TotalSales that uses the SUM function to aggregate A1:A5 from both sheets, reference the range in a dashboard cell, trigger formula calculation, and save the file as DashboardNamedRange.xlsx using Aspose.Cells for C#.
+// Keywords: Aspose.Cells | C# | .NET | named range | SUM across worksheets | RefersTo formula | dashboard reporting | Excel automation | calculate formulas | multiple sheets
+// Common Searches: Aspose.Cells create named range that sums multiple sheets | C# SUM function across worksheets using Aspose.Cells | How to use RefersTo property for dashboard totals | Calculate formulas after adding a named range in Aspose.Cells | Save workbook with aggregated totals in Aspose.Cells .NET
+// Developer Intent: Define a named range that aggregates values from several worksheets with SUM and display the result on a dashboard cell.
+// Use Cases: Generate a consolidated total for sales data spread over several sheets. | Provide a single reference for KPI dashboards that updates automatically when source data changes. | Create reusable named ranges for financial summaries across quarterly worksheets. | Automate formula recalculation after adding or modifying named ranges before exporting the workbook.
+// AI Prompts: Show C# code that creates a named range summing A1:A5 from Sheet1 and Sheet2 with Aspose.Cells. | Explain how to update the RefersTo formula of a named range dynamically based on a list of sheet names. | Give steps to force formula calculation after defining a named range so the dashboard cell shows the correct total.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDashboardExample
+// Demonstrates how to build a new workbook, populate two sheets, define a named range called TotalSales that uses the SUM function to aggregate A1:A5 from both sheets, reference the range in a dashboard cell, trigger formula calculation, and save the file as DashboardNamedRange.xlsx using Aspose.Cells for C#.
+class DashboardNamedRange
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // -------------------------------------------------
+        // Sheet1: populate sample data in column A (A1:A5)
+        // -------------------------------------------------
+        Worksheet sheet1 = workbook.Worksheets[0];
+        sheet1.Name = "Sheet1";
+
+        for (int i = 0; i < 5; i++)
         {
-            try
-            {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // -------------------------------------------------
-                // Prepare sample data on two source worksheets
-                // -------------------------------------------------
-                // Sheet1 (default worksheet)
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "RegionA";
-                sheet1.Cells["A1"].PutValue("Product");
-                sheet1.Cells["B1"].PutValue("Sales");
-                sheet1.Cells["A2"].PutValue("Apple");
-                sheet1.Cells["B2"].PutValue(120);
-                sheet1.Cells["A3"].PutValue("Banana");
-                sheet1.Cells["B3"].PutValue(80);
-                sheet1.Cells["A4"].PutValue("Cherry");
-                sheet1.Cells["B4"].PutValue(150);
-
-                // Sheet2
-                int sheet2Index = workbook.Worksheets.Add();
-                Worksheet sheet2 = workbook.Worksheets[sheet2Index];
-                sheet2.Name = "RegionB";
-                sheet2.Cells["A1"].PutValue("Product");
-                sheet2.Cells["B1"].PutValue("Sales");
-                sheet2.Cells["A2"].PutValue("Apple");
-                sheet2.Cells["B2"].PutValue(200);
-                sheet2.Cells["A3"].PutValue("Banana");
-                sheet2.Cells["B3"].PutValue(130);
-                sheet2.Cells["A4"].PutValue("Cherry");
-                sheet2.Cells["B4"].PutValue(170);
-
-                // -------------------------------------------------
-                // Create a named range that aggregates sales from both sheets
-                // The name refers to a SUM formula that adds the same range on each sheet
-                // -------------------------------------------------
-                int nameIndex = workbook.Worksheets.Names.Add("TotalSales");
-                Name totalSalesName = workbook.Worksheets.Names[nameIndex];
-                // RefersTo must start with '=' and can contain multiple sheet references
-                totalSalesName.RefersTo = "=SUM(RegionA!$B$2:$B$4,RegionB!$B$2:$B$4)";
-
-                // -------------------------------------------------
-                // Use the named range on a dashboard sheet
-                // -------------------------------------------------
-                int dashboardIndex = workbook.Worksheets.Add();
-                Worksheet dashboard = workbook.Worksheets[dashboardIndex];
-                dashboard.Name = "Dashboard";
-                dashboard.Cells["A1"].PutValue("Aggregated Sales (All Regions):");
-                // The cell formula simply references the named range
-                dashboard.Cells["B1"].Formula = "=TotalSales";
-
-                // Calculate all formulas so the dashboard shows the result
-                workbook.CalculateFormula();
-
-                // -------------------------------------------------
-                // Save the workbook (lifecycle: save)
-                // -------------------------------------------------
-                string outputPath = "DashboardAggregatedSales.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details for troubleshooting
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Values 1,2,3,4,5
+            sheet1.Cells[i, 0].PutValue(i + 1);
         }
+
+        // -------------------------------------------------
+        // Sheet2: populate sample data in column A (A1:A5)
+        // -------------------------------------------------
+        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+
+        for (int i = 0; i < 5; i++)
+        {
+            // Values 10,20,30,40,50
+            sheet2.Cells[i, 0].PutValue((i + 1) * 10);
+        }
+
+        // -------------------------------------------------
+        // Create a named range that aggregates data from both sheets using SUM
+        // -------------------------------------------------
+        int nameIdx = workbook.Worksheets.Names.Add("TotalSales");
+        Name totalSalesName = workbook.Worksheets.Names[nameIdx];
+        // The RefersTo property holds a formula; SUM across the two ranges
+        totalSalesName.RefersTo = "=SUM(Sheet1!$A$1:$A$5,Sheet2!$A$1:$A$5)";
+
+        // -------------------------------------------------
+        // Use the named range in a dashboard cell (e.g., B1 on Sheet1)
+        // -------------------------------------------------
+        sheet1.Cells["B1"].Formula = "=TotalSales";
+
+        // Calculate formulas so the result appears in B1
+        workbook.CalculateFormula();
+
+        // -------------------------------------------------
+        // Save the workbook
+        // -------------------------------------------------
+        workbook.Save("DashboardNamedRange.xlsx");
     }
 }

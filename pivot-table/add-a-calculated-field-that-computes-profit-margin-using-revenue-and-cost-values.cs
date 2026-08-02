@@ -11,37 +11,34 @@ class Program
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Populate sample data with Revenue and Cost columns
+        // Populate sample data: Product, Revenue, Cost
         cells["A1"].Value = "Product";
-        cells["B1"].Value = "Region";
-        cells["C1"].Value = "Revenue";
-        cells["D1"].Value = "Cost";
+        cells["B1"].Value = "Revenue";
+        cells["C1"].Value = "Cost";
 
-        string[] products = { "A", "B", "A", "B" };
-        string[] regions = { "North", "North", "South", "South" };
-        double[] revenues = { 1000, 1500, 1200, 1800 };
-        double[] costs = { 600, 900, 700, 1100 };
+        cells["A2"].Value = "A";
+        cells["B2"].Value = 5000;
+        cells["C2"].Value = 3000;
 
-        for (int i = 0; i < products.Length; i++)
-        {
-            int row = i + 2;
-            cells[$"A{row}"].Value = products[i];
-            cells[$"B{row}"].Value = regions[i];
-            cells[$"C{row}"].Value = revenues[i];
-            cells[$"D{row}"].Value = costs[i];
-        }
+        cells["A3"].Value = "B";
+        cells["B3"].Value = 7000;
+        cells["C3"].Value = 4200;
 
-        // Add a pivot table covering the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:D5", "F3", "SalesPivot");
+        cells["A4"].Value = "C";
+        cells["B4"].Value = 6000;
+        cells["C4"].Value = 3600;
+
+        // Add a pivot table based on the data range
+        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
         PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add fields to the pivot table areas
+        // Add fields to the pivot table
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Revenue");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");
 
-        // Add a calculated field that computes profit margin: (Revenue - Cost) / Revenue
+        // Add a calculated field for profit margin: (Revenue - Cost) / Revenue
+        // The formula references the source field names exactly.
         pivotTable.AddCalculatedField("ProfitMargin", "=(Revenue-Cost)/Revenue", true);
 
         // Format the calculated field as a percentage
@@ -53,6 +50,6 @@ class Program
         pivotTable.CalculateData();
 
         // Save the workbook
-        workbook.Save("PivotWithProfitMargin.xlsx");
+        workbook.Save("PivotTable_With_ProfitMargin.xlsx");
     }
 }

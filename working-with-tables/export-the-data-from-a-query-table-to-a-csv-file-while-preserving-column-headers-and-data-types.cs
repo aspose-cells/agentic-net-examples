@@ -1,102 +1,101 @@
+// Title: Export Excel Query Table to CSV with Headers and Data Types – Aspose.Cells C#
+// Description: Loads a workbook containing a query table, uses ExportTableOptions (ExportColumnName = true, CheckMixedValueType = true) to export the used range to a DataTable, then writes the DataTable to a CSV file with column headers and proper CSV escaping, preserving original data types.
+// Keywords: Aspose.Cells export query table to CSV | C# export Excel to CSV with headers | ExportTableOptions CheckMixedValueType | ExportDataTable Aspose.Cells | CSV escaping C# DataTable | preserve data types when exporting Excel
+// Common Searches: how to export a query table to csv using aspose.cells | aspose.cells export excel range with column names | c# write datatable to csv with proper escaping | preserve numeric types when converting excel to csv | export query table from xlsx to csv asp.net
+// Developer Intent: Generate a CSV file from an Excel query table while keeping the original column headers and data types intact.
+// Use Cases: Create CSV reports from refreshed query tables for downstream analytics. | Supply external systems with exact column names and typed values via CSV. | Automate scheduled batch jobs that convert Excel query results to CSV.
+// AI Prompts: Show C# code using Aspose.Cells to export a worksheet range to CSV, preserving headers and handling mixed data types. | Explain the effect of ExportTableOptions.CheckMixedValueType on the DataTable and how numeric values are kept numeric in the CSV output. | Suggest improvements to the CSV writer for culture‑specific number formatting, custom delimiters, and large‑file streaming.
+
 using System;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-class ExportQueryTableToCsv
+namespace AsposeCellsExportQueryTableToCsv
 {
-    static void Main()
+    // Loads a workbook containing a query table, uses ExportTableOptions (ExportColumnName = true, CheckMixedValueType = true) to export the used range to a DataTable, then writes the DataTable to a CSV file with column headers and proper CSV escaping, preserving original data types.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate the worksheet with sample data (including headers)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
-            cells["C1"].PutValue("Amount");
-            cells["D1"].PutValue("Date");
-
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Alice");
-            cells["C2"].PutValue(123.45);
-            cells["D2"].PutValue(new DateTime(2023, 1, 15));
-
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Bob");
-            cells["C3"].PutValue(678.90);
-            cells["D3"].PutValue(new DateTime(2023, 2, 20));
-
-            // Define a ListObject (query table) that covers the data range
-            int totalRows = 3;   // header + 2 data rows
-            int totalCols = 4;   // four columns
-            int listObjectIndex = worksheet.ListObjects.Add(0, 0, totalRows, totalCols, true);
-            ListObject table = worksheet.ListObjects[listObjectIndex];
-            table.DisplayName = "SampleTable";
-
-            // Configure export options to preserve column headers and original data types
-            ExportTableOptions exportOptions = new ExportTableOptions
+            try
             {
-                ExportColumnName = true,   // first row becomes DataTable column names
-                ExportAsString = false,    // keep original .NET types
-                CheckMixedValueType = true // verify mixed types and fallback to string if needed
-            };
+                // Path to the source workbook containing the query table.
+                string sourcePath = "QueryTable.xlsx";
 
-            // Export the ListObject's data range to a DataTable using the options above
-            DataTable dataTable = table.DataRange.ExportDataTable(exportOptions);
-
-            // Write the DataTable to a CSV file while preserving data types in the output format
-            string csvFilePath = "QueryTableExport.csv";
-            using (StreamWriter writer = new StreamWriter(csvFilePath))
-            {
-                // Write CSV header
-                for (int col = 0; col < dataTable.Columns.Count; col++)
+                // Verify that the source file exists before attempting to load it.
+                if (!File.Exists(sourcePath))
                 {
-                    writer.Write(dataTable.Columns[col].ColumnName);
-                    if (col < dataTable.Columns.Count - 1) writer.Write(",");
+                    Console.WriteLine($"Source file '{sourcePath}' not found. Operation aborted.");
+                    return;
                 }
-                writer.WriteLine();
 
-                // Write each DataRow
-                foreach (DataRow row in dataTable.Rows)
+                // Load the workbook.
+                Workbook workbook = new Workbook(sourcePath);
+
+                // Get the first worksheet (adjust index if needed).
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Configure export options.
+                ExportTableOptions exportOptions = new ExportTableOptions
                 {
-                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    ExportColumnName = true,
+                    CheckMixedValueType = true,
+                    ExportAsString = false
+                };
+
+                // Determine the used range of the worksheet.
+                int firstRow = worksheet.Cells.MinRow;
+                int firstColumn = worksheet.Cells.MinColumn;
+                int totalRows = worksheet.Cells.MaxRow - firstRow + 1;
+                int totalColumns = worksheet.Cells.MaxColumn - firstColumn + 1;
+
+                // Export the range to a DataTable.
+                DataTable dataTable = worksheet.Cells.ExportDataTable(firstRow, firstColumn, totalRows, totalColumns, exportOptions);
+
+                // Write the DataTable to a CSV file while preserving headers.
+                string csvPath = "ExportedQueryTable.csv";
+                using (StreamWriter writer = new StreamWriter(csvPath))
+                {
+                    // Write column headers.
+                    for (int i = 0; i < dataTable.Columns.Count; i++)
                     {
-                        object value = row[col];
-
-                        // Preserve formatting for dates and numeric types
-                        if (value is DateTime dtValue)
-                        {
-                            // ISO 8601 format for dates
-                            writer.Write(dtValue.ToString("o", CultureInfo.InvariantCulture));
-                        }
-                        else if (value is IFormattable fmtValue)
-                        {
-                            // Use invariant culture for numbers to avoid locale issues
-                            writer.Write(fmtValue.ToString(null, CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            writer.Write(value?.ToString() ?? string.Empty);
-                        }
-
-                        if (col < dataTable.Columns.Count - 1) writer.Write(",");
+                        writer.Write(EscapeCsvValue(dataTable.Columns[i].ColumnName));
+                        if (i < dataTable.Columns.Count - 1) writer.Write(",");
                     }
                     writer.WriteLine();
-                }
-            }
 
-            // Save the workbook (optional, for verification)
-            workbook.Save("WorkbookWithQueryTable.xlsx");
+                    // Write each data row.
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        for (int i = 0; i < dataTable.Columns.Count; i++)
+                        {
+                            object value = row[i];
+                            writer.Write(EscapeCsvValue(value?.ToString() ?? string.Empty));
+                            if (i < dataTable.Columns.Count - 1) writer.Write(",");
+                        }
+                        writer.WriteLine();
+                    }
+                }
+
+                Console.WriteLine($"Query table exported successfully to '{csvPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // Helper method to escape CSV fields that contain commas, quotes, or line breaks.
+        private static string EscapeCsvValue(string value)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            if (value.Contains(",") || value.Contains("\"") || value.Contains("\r") || value.Contains("\n"))
+            {
+                // Double up any existing quotes and wrap the field in quotes.
+                string escaped = value.Replace("\"", "\"\"");
+                return $"\"{escaped}\"";
+            }
+            return value;
         }
     }
 }

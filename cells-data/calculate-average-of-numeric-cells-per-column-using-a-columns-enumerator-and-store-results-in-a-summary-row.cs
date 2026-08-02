@@ -1,53 +1,76 @@
 using System;
+using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-class AveragePerColumn
+namespace AsposeCellsColumnAverage
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // ----- Populate sample data -----
-        // Header row
-        for (int c = 0; c < 4; c++)
-            cells[0, c].PutValue($"Col{c + 1}");
-
-        // Numeric data rows (rows 1..10)
-        for (int r = 1; r <= 10; r++)
+        static void Main()
         {
-            for (int c = 0; c < 4; c++)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // ------------------------------------------------------------
+            // Populate sample numeric data (5 rows, 4 columns)
+            // ------------------------------------------------------------
+            int dataRows = 5;
+            int dataColumns = 4;
+            for (int row = 0; row < dataRows; row++)
             {
-                // Example values: row index multiplied by column index (1‑based)
-                cells[r, c].PutValue(r * (c + 1));
+                for (int col = 0; col < dataColumns; col++)
+                {
+                    // Example values: (row + 1) * (col + 1)
+                    cells[row, col].PutValue((row + 1) * (col + 1));
+                }
             }
+
+            // ------------------------------------------------------------
+            // Determine the index of the summary row (one row after data)
+            // ------------------------------------------------------------
+            int summaryRowIndex = dataRows; // zero‑based index
+
+            // Optional: put a label in the first cell of the summary row
+            cells[summaryRowIndex, 0].PutValue("Average");
+
+            // ------------------------------------------------------------
+            // Enumerate through each column using the Columns collection
+            // ------------------------------------------------------------
+            foreach (Column column in cells.Columns)
+            {
+                int colIndex = column.Index; // column index (zero‑based)
+
+                double sum = 0.0;
+                int count = 0;
+
+                // Enumerate rows to collect numeric values in the current column
+                IEnumerator rowEnum = cells.Rows.GetEnumerator();
+                while (rowEnum.MoveNext())
+                {
+                    Row row = (Row)rowEnum.Current;
+                    // Get the cell at the current column within this row
+                    Cell cell = row[colIndex];
+                    if (cell != null && cell.Type == CellValueType.IsNumeric)
+                    {
+                        sum += cell.DoubleValue;
+                        count++;
+                    }
+                }
+
+                // Calculate average; avoid division by zero
+                double average = count > 0 ? sum / count : 0.0;
+
+                // Store the average in the summary row, same column
+                cells[summaryRowIndex, colIndex].PutValue(average);
+            }
+
+            // ------------------------------------------------------------
+            // Save the workbook
+            // ------------------------------------------------------------
+            workbook.Save("ColumnAverages.xlsx");
         }
-
-        // ----- Create a table covering the data range -----
-        // Table range: from A1 (0,0) to D11 (10,3) – includes header + 10 data rows
-        ListObjectCollection tables = worksheet.ListObjects;
-        int tableIdx = tables.Add(0, 0, 10, 3, true);
-        ListObject table = tables[tableIdx];
-
-        // Show the totals row where averages will be placed
-        table.ShowTotals = true;
-
-        // ----- Set average calculation for each column using Columns enumerator -----
-        foreach (Column col in cells.Columns)
-        {
-            int colIndex = col.Index;
-
-            // Stop when we go beyond the last column of the table
-            if (colIndex > 3) break;
-
-            // The ListColumn at the same index corresponds to the table column
-            table.ListColumns[colIndex].TotalsCalculation = TotalsCalculation.Average;
-        }
-
-        // ----- Save the workbook -----
-        workbook.Save("AveragePerColumn.xlsx");
     }
 }

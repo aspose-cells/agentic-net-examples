@@ -1,99 +1,92 @@
+// Title: Correct corrupted named ranges after worksheet rename with Aspose.Cells for .NET
+// Description: Loads an Excel workbook, renames a worksheet, scans the workbook's NameCollection for defined names whose RefersTo formulas still contain the original sheet name, replaces the old sheet token with the new name, validates each corrected range via Name.GetRange(), and saves the repaired file.
+// Keywords: Aspose.Cells | .NET | C# | named range | worksheet rename | RefersTo correction | NameCollection | repair broken named ranges | update defined names | Excel automation
+// Common Searches: Aspose.Cells update named range after sheet rename | fix broken RefersTo references C# | detect corrupted named ranges in Excel | rename worksheet and correct defined names Aspose | how to repair named range links after sheet rename
+// Developer Intent: Update any defined names that still reference the original worksheet after it has been renamed.
+// Use Cases: Iterate through all workbook names to locate RefersTo strings containing the old sheet name. | Replace the outdated sheet token with the new worksheet name and assign the corrected RefersTo value. | Validate each updated name by retrieving its Range object to ensure the reference is functional. | Save the workbook to produce an Excel file free of broken named‑range links.
+// AI Prompts: Generate C# code using Aspose.Cells that scans a workbook's NameCollection, replaces old worksheet names in RefersTo strings with a new name, and verifies each range. | Provide a method to detect and fix corrupted named ranges after a sheet rename, handling missing RefersTo values and exceptions, then save the corrected workbook. | Explain best practices for maintaining named ranges when renaming worksheets in Aspose.Cells, including validation and error handling.
+
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.IO;
 using Aspose.Cells;
 
 namespace NamedRangeCorrectionDemo
 {
+    // Loads an Excel workbook, renames a worksheet, scans the workbook's NameCollection for defined names whose RefersTo formulas still contain the original sheet name, replaces the old sheet token with the new name, validates each corrected range via Name.GetRange(), and saves the repaired file.
     class Program
     {
         static void Main()
         {
-            // Load the workbook that may contain corrupted named ranges
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_corrected.xlsx";
 
-            // Build a set of current worksheet names for quick lookup
-            HashSet<string> sheetNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sheetNames.Add(ws.Name);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // OPTIONAL: Mapping of old sheet names to new ones (if known)
-            // In real scenarios this could be built from a log of rename operations
-            Dictionary<string, string> renameMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            Workbook workbook;
+            try
             {
-                // {"OldSheetName", "NewSheetName"},
-                // Example:
-                // {"Data_2020", "Data_2021"}
-            };
+                // Load the existing workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
 
-            // Regular expression to capture sheet name part before '!' in a RefersTo formula
-            // Handles cases like =Sheet1!$A$1:$B$2 or ='My Sheet'!$A$1
-            Regex sheetRegex = new Regex(@"^=?'?(?<sheet>[^'!]+)'?!", RegexOptions.Compiled);
+            // Original sheet name before renaming
+            const string oldSheetName = "Sheet1";
+
+            // Rename the first worksheet
+            const string newSheetName = "RenamedSheet";
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = newSheetName;
 
             // Iterate through all defined names in the workbook
-            foreach (Name definedName in workbook.Worksheets.Names)
+            NameCollection names = workbook.Worksheets.Names;
+            foreach (Name name in names)
             {
-                string refersTo = definedName.RefersTo; // e.g., "=Sheet1!$A$1:$A$10"
+                string refersTo = name.RefersTo;
                 if (string.IsNullOrEmpty(refersTo))
-                    continue;
+                    continue; // Skip names that do not refer to a range
 
-                // Extract the sheet name from the RefersTo string
-                Match match = sheetRegex.Match(refersTo);
-                if (!match.Success)
-                    continue; // Unable to parse, skip
-
-                string originalSheet = match.Groups["sheet"].Value;
-
-                // Check if the sheet still exists
-                if (sheetNames.Contains(originalSheet))
-                    continue; // Reference is valid
-
-                // Try to find a replacement sheet name
-                string newSheet = null;
-
-                // 1) Use explicit rename map if provided
-                if (renameMap.TryGetValue(originalSheet, out string mapped))
+                // Detect references that still contain the old sheet name
+                string oldSheetToken = oldSheetName + "!";
+                if (refersTo.Contains(oldSheetToken))
                 {
-                    newSheet = mapped;
-                }
-                else
-                {
-                    // 2) Fallback: look for a sheet with a similar name (case‑insensitive contains)
-                    foreach (string existing in sheetNames)
+                    // Update the reference to use the new sheet name
+                    string correctedRefersTo = refersTo.Replace(oldSheetToken, newSheetName + "!");
+                    name.RefersTo = correctedRefersTo;
+
+                    // Verify that the corrected range can be retrieved
+                    try
                     {
-                        if (existing.IndexOf(originalSheet, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            newSheet = existing;
-                            break;
-                        }
+                        // Use fully qualified Aspose.Cells.Range to avoid ambiguity with System.Range
+                        Aspose.Cells.Range correctedRange = name.GetRange();
+                        Console.WriteLine($"Name '{name.Text}' corrected to range {correctedRange.Address}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to retrieve range for name '{name.Text}': {ex.Message}");
                     }
                 }
-
-                if (newSheet == null)
-                {
-                    // No suitable replacement found – optionally log or leave as is
-                    Console.WriteLine($"Unable to resolve sheet '{originalSheet}' for named range '{definedName.Text}'.");
-                    continue;
-                }
-
-                // Build the corrected RefersTo string by replacing the old sheet name
-                // Preserve any leading '=' and possible surrounding quotes
-                string correctedRefersTo = Regex.Replace(
-                    refersTo,
-                    @"^=?'?[^'!]+?'?!",
-                    m => (refersTo.StartsWith("=") ? "=" : "") + (refersTo.Contains("'") ? $"'{newSheet}'!" : $"{newSheet}!"),
-                    RegexOptions.Compiled);
-
-                // Apply the corrected reference
-                definedName.RefersTo = correctedRefersTo;
-
-                Console.WriteLine($"Corrected named range '{definedName.Text}': '{refersTo}' => '{correctedRefersTo}'");
             }
 
             // Save the corrected workbook
-            workbook.Save("output_corrected.xlsx");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
     }
 }

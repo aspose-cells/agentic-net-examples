@@ -2,89 +2,69 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationErrorReport
+class ValidationErrorReporter
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // -------------------------------------------------
+        // Add sample data validations to demonstrate reporting
+        // -------------------------------------------------
+
+        // Validation for cell A1: Whole number between 10 and 20
+        CellArea areaA1 = new CellArea { StartRow = 0, StartColumn = 0, EndRow = 0, EndColumn = 0 };
+        int idxA1 = sheet.Validations.Add(areaA1);
+        Validation valA1 = sheet.Validations[idxA1];
+        valA1.Type = ValidationType.WholeNumber;
+        valA1.Operator = OperatorType.Between;
+        valA1.Formula1 = "10";
+        valA1.Formula2 = "20";
+        valA1.ErrorTitle = "Invalid Input";
+        valA1.ErrorMessage = "Value must be between 10 and 20";
+        valA1.ShowError = true;
+        valA1.AlertStyle = ValidationAlertType.Stop;
+
+        // Validation for cell B1: List of allowed values
+        CellArea areaB1 = new CellArea { StartRow = 0, StartColumn = 1, EndRow = 0, EndColumn = 1 };
+        int idxB1 = sheet.Validations.Add(areaB1);
+        Validation valB1 = sheet.Validations[idxB1];
+        valB1.Type = ValidationType.List;
+        valB1.Formula1 = "\"Red,Green,Blue\"";
+        valB1.ErrorTitle = "Invalid Color";
+        valB1.ErrorMessage = "Select a color from the list.";
+        valB1.ShowError = true;
+        valB1.AlertStyle = ValidationAlertType.Information;
+
+        // -------------------------------------------------
+        // Write validation error details to a text file
+        // -------------------------------------------------
+        string reportPath = "ValidationErrors.txt";
+
+        using (StreamWriter writer = new StreamWriter(reportPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            writer.WriteLine("Validation Error Report");
+            writer.WriteLine("========================");
+            writer.WriteLine();
 
-            // Define a validation for cells A1:A5 (whole numbers between 10 and 20)
-            CellArea area = CellArea.CreateCellArea("A1", "A5");
-            int validationIndex = sheet.Validations.Add(area);
-            Validation validation = sheet.Validations[validationIndex];
-            validation.Type = ValidationType.WholeNumber;
-            validation.Operator = OperatorType.Between;
-            validation.Formula1 = "10";
-            validation.Formula2 = "20";
-            validation.AlertStyle = ValidationAlertType.Stop;
-            validation.ErrorTitle = "Invalid Input";
-            validation.ErrorMessage = "Value must be between 10 and 20.";
-            validation.ShowError = true;
-
-            // Insert some test values (some valid, some invalid)
-            sheet.Cells["A1"].PutValue(5);   // Invalid
-            sheet.Cells["A2"].PutValue(15);  // Valid
-            sheet.Cells["A3"].PutValue(25);  // Invalid
-            sheet.Cells["A4"].PutValue(12);  // Valid
-            sheet.Cells["A5"].PutValue(8);   // Invalid
-
-            // Prepare a text file to store validation error details
-            string errorReportPath = "ValidationErrors.txt";
-            using (StreamWriter writer = new StreamWriter(errorReportPath, false))
+            // Iterate through all validations in the worksheet
+            for (int i = 0; i < sheet.Validations.Count; i++)
             {
-                // Iterate through all validations in the worksheet
-                foreach (Validation val in sheet.Validations)
-                {
-                    // For each area covered by the validation, check each cell
-                    foreach (CellArea valArea in val.Areas)
-                    {
-                        for (int row = valArea.StartRow; row <= valArea.EndRow; row++)
-                        {
-                            for (int col = valArea.StartColumn; col <= valArea.EndColumn; col++)
-                            {
-                                Cell cell = sheet.Cells[row, col];
-                                // If the cell value violates the validation, write details to the file
-                                if (!IsCellValueValid(cell, val))
-                                {
-                                    string cellName = CellsHelper.CellIndexToName(row, col);
-                                    writer.WriteLine($"Cell {cellName}: {val.ErrorMessage}");
-                                }
-                            }
-                        }
-                    }
-                }
+                Validation v = sheet.Validations[i];
+                writer.WriteLine($"Validation #{i + 1}");
+                writer.WriteLine($"Error Title   : {v.ErrorTitle}");
+                writer.WriteLine($"Error Message : {v.ErrorMessage}");
+                writer.WriteLine($"Show Error    : {v.ShowError}");
+                writer.WriteLine($"Alert Style   : {v.AlertStyle}");
+                writer.WriteLine();
             }
-
-            // Save the workbook (optional, just to keep the file)
-            workbook.Save("ValidationDemo.xlsx");
         }
 
-        // Helper method to evaluate whether a cell satisfies a given validation
-        private static bool IsCellValueValid(Cell cell, Validation validation)
-        {
-            // Use the built‑in validation check by attempting to apply the rule.
-            // Aspose.Cells does not expose a direct method, so we perform a simple check
-            // for WholeNumber between two values as an example.
-            if (validation.Type == ValidationType.WholeNumber && validation.Operator == OperatorType.Between)
-            {
-                if (double.TryParse(cell.StringValue, out double numericValue))
-                {
-                    if (double.TryParse(validation.Formula1, out double lower) &&
-                        double.TryParse(validation.Formula2, out double upper))
-                    {
-                        return numericValue >= lower && numericValue <= upper;
-                    }
-                }
-                // Non‑numeric or out of range values are invalid
-                return false;
-            }
-
-            // For other validation types, assume valid (extend as needed)
-            return true;
-        }
+        // -------------------------------------------------
+        // Save the workbook (optional, demonstrates normal lifecycle)
+        // -------------------------------------------------
+        workbook.Save("ValidationDemo.xlsx");
     }
 }

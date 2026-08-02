@@ -1,73 +1,74 @@
+// Title: Classify Excel Worksheets as Data‑Only, Shape‑Only, Mixed or Empty using Aspose.Cells for .NET (C#)
+// Description: Loads a workbook, iterates each worksheet, checks the Shapes collection and scans the cell range defined by MaxDataRow/MaxDataColumn to detect any non‑null values, then labels the sheet as Data‑Only, Shape‑Only, Mixed or Empty and writes the result to the console. Includes optional LoadOptions.IgnoreUselessShapes for faster processing.
+// Keywords: Aspose.Cells worksheet classification | C# detect shapes in Excel | check non‑empty cells Aspose.Cells | Excel sheet content type detection | .NET Excel mixed content | IgnoreUselessShapes option
+// Common Searches: how to identify data‑only vs shape‑only worksheets with Aspose.Cells | C# code to classify Excel sheets as data, shape, mixed or empty | detect empty worksheets and shapes in a .NET workbook | Aspose.Cells MaxDataRow MaxDataColumn example
+// Developer Intent: Determine whether each worksheet contains cell data, drawing shapes, both, or nothing.
+// Use Cases: Create a summary report that lists every worksheet and its content type for workbook cleanup. | Skip shape‑only sheets when exporting data to CSV or a database, processing only data‑only sheets. | Route worksheets to different pipelines (e.g., data extraction vs. image extraction) based on their classification.
+// AI Prompts: Generate a reusable method that returns "Data‑Only", "Shape‑Only", "Mixed" or "Empty" for a given Worksheet using Aspose.Cells. | Modify the sample to also count shapes and include the count in the console output. | Write unit tests that verify classification for worksheets with only data, only shapes, both, and none.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class Program
+namespace WorksheetClassificationDemo
 {
-    static void Main()
+    // Loads a workbook, iterates each worksheet, checks the Shapes collection and scans the cell range defined by MaxDataRow/MaxDataColumn to detect any non‑null values, then labels the sheet as Data‑Only, Shape‑Only, Mixed or Empty and writes the result to the console. Includes optional LoadOptions.IgnoreUselessShapes for faster processing.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule: use provided constructor)
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your file path)
+            string inputPath = "input.xlsx";
+            LoadOptions loadOptions = new LoadOptions
+            {
+                // Optional: ignore duplicate/overlapping shapes for faster processing
+                IgnoreUselessShapes = true
+            };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // -------------------------------------------------
-            // Prepare sample worksheets to demonstrate classification
-            // -------------------------------------------------
-
-            // Worksheet 0: contains only cell data
-            Worksheet dataOnlySheet = workbook.Worksheets[0];
-            dataOnlySheet.Name = "DataOnly";
-            dataOnlySheet.Cells["A1"].PutValue("Sample text");
-            dataOnlySheet.Cells["B2"].PutValue(12345);
-
-            // Worksheet 1: contains only shapes
-            Worksheet shapeOnlySheet = workbook.Worksheets.Add("ShapeOnly");
-            // Add a rectangle shape
-            shapeOnlySheet.Shapes.AddRectangle(1, 1, 0, 0, 120, 60);
-
-            // Worksheet 2: contains both data and shapes
-            Worksheet mixedSheet = workbook.Worksheets.Add("Mixed");
-            mixedSheet.Cells["C3"].PutValue(DateTime.Now);
-            // Add an ellipse shape using AddShape with MsoDrawingType.Oval (ellipse)
-            mixedSheet.Shapes.AddShape(MsoDrawingType.Oval, 1, 1, 0, 0, 80, 80);
-
-            // -------------------------------------------------
-            // Classification logic: data‑only, shape‑only, mixed, or empty
-            // -------------------------------------------------
+            // Iterate through each worksheet and classify its content
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine if the worksheet has any cell data
-                bool hasData = sheet.Cells.MaxDataRow >= 0 && sheet.Cells.MaxDataColumn >= 0;
-
-                // Determine if the worksheet has any drawing shapes
                 bool hasShapes = sheet.Shapes.Count > 0;
+                bool hasData = false;
 
-                string classification = hasData && hasShapes ? "Mixed content"
-                                    : hasData ? "Data‑only"
-                                    : hasShapes ? "Shape‑only"
-                                    : "Empty";
+                // Determine if the sheet contains any non‑empty cells
+                int maxRow = sheet.Cells.MaxDataRow;      // -1 if no data
+                int maxCol = sheet.Cells.MaxDataColumn;   // -1 if no data
+
+                if (maxRow >= 0 && maxCol >= 0)
+                {
+                    for (int r = 0; r <= maxRow && !hasData; r++)
+                    {
+                        for (int c = 0; c <= maxCol; c++)
+                        {
+                            Cell cell = sheet.Cells[r, c];
+                            // Cell.Type == CellValueType.IsNull indicates an empty cell
+                            if (cell != null && cell.Type != CellValueType.IsNull)
+                            {
+                                hasData = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Classify the worksheet based on presence of data and shapes
+                string classification;
+                if (hasData && hasShapes)
+                    classification = "Mixed Content";
+                else if (hasData)
+                    classification = "Data‑Only";
+                else if (hasShapes)
+                    classification = "Shape‑Only";
+                else
+                    classification = "Empty";
 
                 Console.WriteLine($"Worksheet \"{sheet.Name}\": {classification}");
             }
 
-            // Save the workbook (lifecycle rule: use provided Save method)
-            string outputPath = "ClassifiedWorkbook.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{Path.GetFullPath(outputPath)}\"");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            // Optionally, save the workbook after processing (not required for classification)
+            // workbook.Save("output.xlsx");
         }
     }
 }

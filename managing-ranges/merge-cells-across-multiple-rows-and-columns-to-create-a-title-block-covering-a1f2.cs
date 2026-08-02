@@ -1,30 +1,35 @@
 using System;
 using Aspose.Cells;
 
-class MergeTitleBlock
+namespace MergeTitleBlockDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Merge cells A1:F2 (rows 0-1, columns 0-5)
-        // firstRow = 0, firstColumn = 0, totalRows = 2, totalColumns = 6
-        cells.Merge(0, 0, 2, 6);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Set the title text in the merged cell (referenced by the upper‑left cell)
-        cells[0, 0].PutValue("Report Title");
+            // Merge cells from A1 (row 0, column 0) to F2 (row 1, column 5)
+            // totalRows = 2 (rows 0 and 1), totalColumns = 6 (columns 0 through 5)
+            cells.Merge(0, 0, 2, 6);
 
-        // Apply style: center alignment and bold font
-        Style style = cells[0, 0].GetStyle();
-        style.HorizontalAlignment = TextAlignmentType.Center;
-        style.VerticalAlignment = TextAlignmentType.Center;
-        style.Font.IsBold = true;
-        cells[0, 0].SetStyle(style);
+            // Set the title text in the merged cell (upper‑left cell of the range)
+            cells[0, 0].PutValue("Report Title");
 
-        // Save the workbook
-        workbook.Save("TitleBlock.xlsx");
+            // Apply center alignment and bold font to the title
+            Style style = cells[0, 0].GetStyle();
+            style.HorizontalAlignment = TextAlignmentType.Center;
+            style.VerticalAlignment = TextAlignmentType.Center;
+            style.Font.IsBold = true;
+            cells[0, 0].SetStyle(style);
+
+            // Save the workbook to a file
+            workbook.Save("TitleBlock.xlsx");
+        }
     }
 }

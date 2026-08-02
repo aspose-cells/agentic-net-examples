@@ -1,57 +1,88 @@
+// Title: C# – Override ChartGlobalizationSettings in Aspose.Cells to Localize Chart Legends to Arabic
+// Description: Demonstrates how to create a custom ArabicChartGlobalizationSettings class that overrides legend‑related methods, assign it to Workbook.Settings.GlobalizationSettings.ChartSettings, and generate a column chart with Arabic category, value, and legend text using Aspose.Cells.
+// Keywords: Aspose.Cells Arabic chart | ChartGlobalizationSettings override | C# chart legend localization | Arabic legend text Aspose.Cells | GetLegendIncreaseName Arabic | custom chart globalization .NET | Excel Arabic legends | Aspose.Cells chart localization example | globalization settings chart Arabic
+// Common Searches: how to translate chart legends to Arabic in Aspose.Cells | override ChartGlobalizationSettings for Arabic legends | Aspose.Cells Arabic chart example C# | set Arabic legend names in Excel charts programmatically | customize chart globalization settings Aspose.Cells
+// Developer Intent: Provide Arabic translations for all legend entries in charts generated with Aspose.Cells by overriding ChartGlobalizationSettings.
+// Use Cases: Generate sales or financial charts where legend items like Increase, Decrease, and Total appear in Arabic. | Apply a single ArabicChartGlobalizationSettings instance to a workbook so every new chart automatically uses Arabic terminology. | Create multilingual Excel reports that require Arabic chart legends without manually editing each chart.
+// AI Prompts: Write C# code that overrides ChartGlobalizationSettings to supply French translations for chart legends in Aspose.Cells. | Show how to attach a custom ChartGlobalizationSettings object to an existing workbook that already contains multiple charts. | Explain how to extend the ArabicChartGlobalizationSettings class to customize series names and other chart labels.
+
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class ArabicChartGlobalizationSettings : ChartGlobalizationSettings
+namespace AsposeCellsArabicChartDemo
 {
-    // Arabic translation for legend increase label
-    public override string GetLegendIncreaseName() => "زيادة";
-
-    // Arabic translation for legend decrease label
-    public override string GetLegendDecreaseName() => "نقصان";
-
-    // Arabic translation for legend total label
-    public override string GetLegendTotalName() => "المجموع";
-
-    // Arabic translation for series name (used in legend)
-    public override string GetSeriesName() => "السلسلة";
-
-    // Arabic translation for "Other" label
-    public override string GetOtherName() => "أخرى";
-
-    // Optional: Arabic translation for chart title
-    public override string GetChartTitleName() => "عنوان المخطط";
-
-    // Optional: Arabic translation for axis title
-    public override string GetAxisTitleName() => "عنوان المحور";
-}
-
-class Program
-{
-    static void Main()
+    // Custom globalization settings that provide Arabic translations for legend entries
+    // Demonstrates how to create a custom ArabicChartGlobalizationSettings class that overrides legend‑related methods, assign it to Workbook.Settings.GlobalizationSettings.ChartSettings, and generate a column chart with Arabic category, value, and legend text using Aspose.Cells.
+    public class ArabicChartGlobalizationSettings : ChartGlobalizationSettings
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Arabic text for "Increase" in legend
+        public override string GetLegendIncreaseName()
+        {
+            return "زيادة";
+        }
 
-        // Populate sample data
-        worksheet.Cells["A1"].PutValue("الفئة");
-        worksheet.Cells["A2"].PutValue("أ");
-        worksheet.Cells["A3"].PutValue("ب");
-        worksheet.Cells["B1"].PutValue("القيمة");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
+        // Arabic text for "Decrease" in legend
+        public override string GetLegendDecreaseName()
+        {
+            return "نقصان";
+        }
 
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
-        chart.Title.Text = "مثال المخطط";
+        // Arabic text for "Total" in legend
+        public override string GetLegendTotalName()
+        {
+            return "المجموع";
+        }
 
-        // Apply the Arabic globalization settings to all charts in the workbook
-        workbook.Settings.GlobalizationSettings.ChartSettings = new ArabicChartGlobalizationSettings();
+        // Optionally override other methods if needed (e.g., series name, other label)
+        public override string GetSeriesName()
+        {
+            return "سلسلة";
+        }
 
-        // Save the workbook
-        workbook.Save("ArabicChart.xlsx");
+        public override string GetOtherName()
+        {
+            return "أخرى";
+        }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Apply the custom Arabic chart globalization settings
+            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+            {
+                ChartSettings = new ArabicChartGlobalizationSettings()
+            };
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("الفئة");   // "Category" in Arabic
+            sheet.Cells["A2"].PutValue("المنتج 1");
+            sheet.Cells["A3"].PutValue("المنتج 2");
+            sheet.Cells["B1"].PutValue("القيمة"); // "Value" in Arabic
+            sheet.Cells["B2"].PutValue(150);
+            sheet.Cells["B3"].PutValue(250);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Bind data to the chart
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
+
+            // Set chart title (optional)
+            chart.Title.Text = "مخطط المبيعات";
+
+            // Save the workbook
+            workbook.Save("ArabicChartDemo.xlsx");
+        }
     }
 }

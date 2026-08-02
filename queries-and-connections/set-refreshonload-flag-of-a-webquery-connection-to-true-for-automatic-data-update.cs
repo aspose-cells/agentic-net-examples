@@ -5,37 +5,39 @@ using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsExamples
 {
-    public class SetRefreshOnLoadForWebQueryDemo
+    public class SetRefreshOnLoadForWebQuery
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook (in-memory)
+                // Create a new workbook (or load an existing one)
                 Workbook workbook = new Workbook();
 
-                // Ensure there is at least one external connection of type WebQueryConnection
+                // Ensure there is at least one external connection.
+                // In a real scenario you would add a WebQueryConnection to the collection.
+                // Here we simply use the first connection if it exists.
                 if (workbook.DataConnections.Count > 0 && workbook.DataConnections[0] is WebQueryConnection webQuery)
                 {
-                    // Set the RefreshOnLoad flag to true so the connection refreshes automatically on opening
+                    // Set the RefreshOnLoad flag to true so the connection refreshes automatically
+                    // when the workbook is opened.
                     webQuery.RefreshOnLoad = true;
-                    Console.WriteLine("RefreshOnLoad has been set to: " + webQuery.RefreshOnLoad);
+
+                    Console.WriteLine("RefreshOnLoad set to: " + webQuery.RefreshOnLoad);
                 }
                 else
                 {
-                    Console.WriteLine("No WebQueryConnection found in the workbook.");
+                    Console.WriteLine("No external connections found in the workbook.");
                 }
 
                 // Save the workbook with the modified connection settings
-                string outputPath = "WebQuery_RefreshOnLoad_True.xlsx";
-
-                // If a file with the same name exists, it will be overwritten
+                string outputPath = "WebQuery_RefreshOnLoad.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
@@ -45,7 +47,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            SetRefreshOnLoadForWebQueryDemo.Run();
+            SetRefreshOnLoadForWebQuery.Run();
         }
     }
 }

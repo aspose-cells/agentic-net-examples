@@ -1,69 +1,84 @@
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
 
-class SmartMarkerVariableLogger
+class VariableLoggingDesigner
+{
+    private readonly WorkbookDesigner _designer;
+
+    public VariableLoggingDesigner(Workbook workbook)
+    {
+        // Initialize WorkbookDesigner with the provided workbook
+        _designer = new WorkbookDesigner(workbook);
+
+        // Attach a callback to log each smart‑marker processing event
+        _designer.CallBack = new SmartMarkerLogger();
+    }
+
+    // Wrapper that logs the variable name/value and forwards the call to SetDataSource
+    public void SetVariable(string name, object value)
+    {
+        Console.WriteLine($"SetVariable called: Name = {name}, Value = {value}");
+        _designer.SetDataSource(name, value);
+    }
+
+    public void Process()
+    {
+        _designer.Process();
+    }
+
+    public void Save(string filePath)
+    {
+        _designer.Workbook.Save(filePath);
+    }
+}
+
+// Implementation of ISmartMarkerCallBack that logs processing details
+class SmartMarkerLogger : ISmartMarkerCallBack
+{
+    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+    {
+        Console.WriteLine($"SmartMarker processed - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+    }
+}
+
+// Sample data class used as a data source
+class Employee
+{
+    public string Name { get; set; }
+}
+
+// Demonstration of logging variable assignments and smart‑marker processing
+class Program
 {
     static void Main()
     {
-        const string templatePath = "Template.xlsx";
-        const string outputPath = "Output.xlsx";
+        // Create a new workbook that will serve as the template
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Verify that the template file exists before loading
-        if (!File.Exists(templatePath))
+        // Insert a variable smart marker and a data smart marker
+        sheet.Cells["A1"].PutValue("&=$MyVar");
+        sheet.Cells["A2"].PutValue("&=Employees.Name");
+
+        // Initialize the designer with logging capabilities
+        var designer = new VariableLoggingDesigner(workbook);
+
+        // Log and set a simple variable
+        designer.SetVariable("MyVar", "VariableValue");
+
+        // Log and set a collection data source
+        var employees = new List<Employee>
         {
-            Console.WriteLine($"Template file not found: {templatePath}");
-            return;
-        }
+            new Employee { Name = "John" },
+            new Employee { Name = "Jane" }
+        };
+        designer.SetVariable("Employees", employees);
 
-        try
-        {
-            // Load the template workbook that contains smart markers
-            Workbook workbook = new Workbook(templatePath);
+        // Process all smart markers
+        designer.Process();
 
-            // Initialize the WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // Prepare data object for smart markers
-            var reportData = new ReportData
-            {
-                ReportDate = DateTime.Now,
-                Title = "Sales Summary",
-                Total = 12345.67
-            };
-
-            // Log each variable value
-            LogSetVariable(nameof(reportData.ReportDate), reportData.ReportDate);
-            LogSetVariable(nameof(reportData.Title), reportData.Title);
-            LogSetVariable(nameof(reportData.Total), reportData.Total);
-
-            // Set the data source for smart markers (named source)
-            designer.SetDataSource("ReportData", reportData);
-
-            // Process the smart markers using the defined variables
-            designer.Process();
-
-            // Save the processed workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Helper method to log each variable assignment
-    static void LogSetVariable(string name, object value)
-    {
-        Console.WriteLine($"SetVariable called - Name: {name}, Value: {(value ?? "null")}");
-    }
-
-    // Simple data class used as the data source for smart markers
-    private class ReportData
-    {
-        public DateTime ReportDate { get; set; }
-        public string Title { get; set; } = null!;
-        public double Total { get; set; }
+        // Save the resulting workbook
+        designer.Save("LoggedSmartMarkers.xlsx");
     }
 }

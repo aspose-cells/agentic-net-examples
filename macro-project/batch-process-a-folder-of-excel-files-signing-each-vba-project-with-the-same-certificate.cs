@@ -1,3 +1,11 @@
+// Title: Batch sign VBA projects in multiple .xlsm files with Aspose.Cells for .NET (C#)
+// Description: A C# console utility that scans a folder for macro‑enabled Excel workbooks, loads each file with Aspose.Cells, signs its VBA project using a single PFX certificate, and writes the signed copies to an output directory. Includes folder validation, certificate loading, and per‑file error handling.
+// Keywords: Aspose.Cells VBA signing | batch digital signature Excel | C# sign .xlsm macros | load X509Certificate2 PFX | macro-enabled workbook automation | .NET Excel digital certificate | bulk VBA project signing
+// Common Searches: how to batch sign VBA projects in .xlsm files using C# | Aspose.Cells example for signing multiple macro workbooks | C# program to apply the same PFX certificate to many Excel files | automate digital signing of Excel macros with Aspose.Cells | load X509Certificate2 and sign VBA project in a folder
+// Developer Intent: Automatically apply a single digital certificate to the VBA projects of all macro‑enabled Excel files in a specified directory.
+// Use Cases: Prepare a distribution package of spreadsheets where each macro is trusted by the corporate certificate. | Integrate the tool into a CI/CD pipeline to sign generated .xlsm reports before release. | Re‑sign existing workbooks after a certificate renewal across shared network drives.
+// AI Prompts: Write C# code that uses Aspose.Cells to sign the VBA project of every .xlsm file in a folder with a given PFX certificate and password. | Show how to extend the batch signing script to create a CSV log containing file name, signing result, and error details. | Demonstrate how to verify a workbook’s VBA project signature and retrieve its metadata after saving with Aspose.Cells.
+
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -5,31 +13,42 @@ using Aspose.Cells;
 using Aspose.Cells.Vba;
 using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsVbaBatchSigner
+namespace AsposeCellsVbaBatchSigning
 {
-    public class VbaBatchSigner
+    // A C# console utility that scans a folder for macro‑enabled Excel workbooks, loads each file with Aspose.Cells, signs its VBA project using a single PFX certificate, and writes the signed copies to an output directory. Includes folder validation, certificate loading, and per‑file error handling.
+    class Program
     {
-        /// <summary>
-        /// Signs all VBA projects in macro‑enabled Excel files within a folder using the same certificate.
-        /// </summary>
-        /// <param name="sourceFolder">Folder containing the source .xlsm files.</param>
-        /// <param name="outputFolder">Folder where signed files will be saved.</param>
-        /// <param name="certificatePath">Path to the .pfx certificate file.</param>
-        /// <param name="certificatePassword">Password for the certificate.</param>
-        public static void SignVbaProjectsInFolder(string sourceFolder, string outputFolder, string certificatePath, string certificatePassword)
+        static void Main(string[] args)
         {
-            // Verify certificate file exists
+            // Input parameters
+            string sourceFolder = @"C:\InputExcelFiles";          // Folder containing Excel files to sign
+            string outputFolder = @"C:\SignedExcelFiles";         // Folder where signed files will be saved
+            string certificatePath = @"C:\Certificates\mycert.pfx"; // Path to the signing certificate (PFX)
+            string certificatePassword = "certPassword";          // Password for the PFX file
+
+            // Validate source folder
+            if (!Directory.Exists(sourceFolder))
+            {
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
+            }
+
+            // Ensure output directory exists
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+
+            // Validate certificate file
             if (!File.Exists(certificatePath))
             {
                 Console.WriteLine($"Certificate file not found: {certificatePath}");
                 return;
             }
 
-            X509Certificate2 certificate;
+            X509Certificate2 signingCertificate;
             try
             {
-                // Load the signing certificate once
-                certificate = new X509Certificate2(certificatePath, certificatePassword);
+                // Load the signing certificate
+                signingCertificate = new X509Certificate2(certificatePath, certificatePassword, X509KeyStorageFlags.MachineKeySet);
             }
             catch (Exception ex)
             {
@@ -37,42 +56,30 @@ namespace AsposeCellsVbaBatchSigner
                 return;
             }
 
-            // Create a DigitalSignature instance that will be reused for each workbook
-            DigitalSignature digitalSignature = new DigitalSignature(certificate, "Batch VBA Signature", DateTime.Now);
-
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputFolder))
-            {
-                Directory.CreateDirectory(outputFolder);
-            }
+            // Create a DigitalSignature instance that will be reused for all workbooks
+            DigitalSignature digitalSignature = new DigitalSignature(signingCertificate, "Batch VBA Signing", DateTime.Now);
 
             // Process each .xlsm file in the source folder
             foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsm"))
             {
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"Source file not found (skipped): {filePath}");
-                    continue;
-                }
-
                 try
                 {
-                    // Load the workbook (macro‑enabled)
+                    // Load the workbook (macro-enabled)
                     Workbook workbook = new Workbook(filePath);
 
                     // Access the VBA project
                     VbaProject vbaProject = workbook.VbaProject;
 
-                    // If a VBA project exists, sign it
+                    // If the workbook contains a VBA project, sign it
                     if (vbaProject != null)
                     {
                         vbaProject.Sign(digitalSignature);
                     }
 
-                    // Determine output file path (preserve original file name)
+                    // Determine output file path (same file name in output folder)
                     string outputFilePath = Path.Combine(outputFolder, Path.GetFileName(filePath));
 
-                    // Save the signed workbook as macro‑enabled format
+                    // Save the signed workbook as macro-enabled file
                     workbook.Save(outputFilePath, SaveFormat.Xlsm);
                 }
                 catch (Exception ex)
@@ -80,26 +87,8 @@ namespace AsposeCellsVbaBatchSigner
                     Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                 }
             }
-        }
 
-        // Example usage
-        public static void Main()
-        {
-            try
-            {
-                string sourceFolder = @"C:\ExcelFiles\Source";
-                string outputFolder = @"C:\ExcelFiles\Signed";
-                string certPath = @"C:\Certificates\mycert.pfx";
-                string certPassword = "certPassword";
-
-                SignVbaProjectsInFolder(sourceFolder, outputFolder, certPath, certPassword);
-
-                Console.WriteLine("Batch signing completed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine("Batch signing completed.");
         }
     }
 }

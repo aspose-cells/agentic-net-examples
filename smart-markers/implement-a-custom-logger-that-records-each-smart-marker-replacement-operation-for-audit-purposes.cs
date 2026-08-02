@@ -4,96 +4,58 @@ using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// Custom logger implementing ISmartMarkerCallBack to capture each smart marker replacement
+public class SmartMarkerAuditLogger : ISmartMarkerCallBack
 {
-    // Logger for smart‑marker processing
-    public class SmartMarkerAuditLogger : ISmartMarkerCallBack
+    private readonly List<string> _entries = new List<string>();
+
+    // This method is invoked by Aspose.Cells for every smart marker replacement
+    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
     {
-        private readonly List<string> _log = new List<string>();
-
-        // Called for each smart‑marker replacement
-        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
-        {
-            string entry = $"Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}";
-            _log.Add(entry);
-            Console.WriteLine(entry);
-        }
-
-        public IEnumerable<string> GetLog() => _log;
-
-        // Save log to a text file
-        public void SaveLog(string filePath)
-        {
-            File.WriteAllLines(filePath, _log);
-        }
+        string entry = $"Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}";
+        _entries.Add(entry);
+        Console.WriteLine("SmartMarker processed: " + entry);
     }
 
-    public class SmartMarkerProcessor
+    // Persist the collected log entries to a text file
+    public void SaveLog(string filePath)
     {
-        public static void Run()
-        {
-            try
-            {
-                const string templatePath = "template.xlsx";
-
-                // Ensure template exists; create a minimal one if missing
-                if (!File.Exists(templatePath))
-                {
-                    var wb = new Workbook();
-                    wb.Worksheets[0].Name = "Sheet1";
-                    // Example smart marker (optional)
-                    wb.Worksheets[0].Cells["A1"].PutValue("&=Products.ProductName");
-                    wb.Save(templatePath);
-                }
-
-                // Load the template workbook
-                Workbook template = new Workbook(templatePath);
-
-                // Initialize designer with logger callback
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = template,
-                    CallBack = new SmartMarkerAuditLogger()
-                };
-
-                // Sample data source
-                DataTable dt = new DataTable("Products");
-                dt.Columns.Add("ProductName", typeof(string));
-                dt.Columns.Add("Price", typeof(double));
-                dt.Rows.Add("Apple", 1.2);
-                dt.Rows.Add("Banana", 0.8);
-
-                designer.SetDataSource(dt);
-
-                // Process smart markers (do not preserve unrecognized markers)
-                designer.Process(false);
-
-                // Save the processed workbook
-                const string outputPath = "output.xlsx";
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-
-                // Persist audit log
-                if (designer.CallBack is SmartMarkerAuditLogger logger)
-                {
-                    const string logPath = "SmartMarkerAuditLog.txt";
-                    logger.SaveLog(logPath);
-                    Console.WriteLine($"Audit log saved to {logPath}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        File.WriteAllLines(filePath, _entries);
     }
+}
 
-    // Entry point
-    public static class Program
+public class SmartMarkerAuditDemo
+{
+    public static void Main()
     {
-        public static void Main()
-        {
-            SmartMarkerProcessor.Run();
-        }
+        // Load a template workbook that contains smart markers
+        Workbook template = new Workbook("TemplateWithSmartMarkers.xlsx");
+
+        // Prepare a simple data source
+        DataTable dt = new DataTable("Employees");
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Age", typeof(int));
+        dt.Rows.Add("John Doe", 30);
+        dt.Rows.Add("Jane Smith", 28);
+
+        // Initialize WorkbookDesigner and assign the template workbook
+        WorkbookDesigner designer = new WorkbookDesigner();
+        designer.Workbook = template;
+
+        // Set the data source for smart markers
+        designer.SetDataSource(dt);
+
+        // Attach the custom logger
+        SmartMarkerAuditLogger logger = new SmartMarkerAuditLogger();
+        designer.CallBack = logger;
+
+        // Process all smart markers in the workbook
+        designer.Process();
+
+        // Save the processed workbook
+        designer.Workbook.Save("ProcessedOutput.xlsx");
+
+        // Save the audit log to a file
+        logger.SaveLog("SmartMarkerAuditLog.txt");
     }
 }

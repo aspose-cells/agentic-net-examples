@@ -1,68 +1,49 @@
 using System;
 using System.IO;
+using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsBatchConversion
+namespace BatchXlsxToPdf
 {
-    public class XlsxToPdfBatchConverter
+    // Author: Aspose.Cells .NET example – batch conversion of XLSX files to PDF
+    class Program
     {
-        /// <summary>
-        /// Converts all .xlsx files in the specified input folder to PDF files in the output folder.
-        /// </summary>
-        /// <param name="inputFolder">Folder containing source .xlsx files.</param>
-        /// <param name="outputFolder">Folder where converted PDF files will be saved.</param>
-        public static void ConvertFolder(string inputFolder, string outputFolder)
+        static void Main()
         {
-            // Ensure the input directory exists
-            if (!Directory.Exists(inputFolder))
-            {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                return;
-            }
+            // Folder containing source XLSX files
+            string sourceFolder = @"C:\InputXlsx";
 
-            // Create the output directory if it does not exist
+            // Folder where PDF files will be saved
+            string outputFolder = @"C:\OutputPdf";
+
+            // Ensure the output directory exists
             Directory.CreateDirectory(outputFolder);
 
-            // Get all .xlsx files (case‑insensitive) in the input folder
-            string[] xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+            // Get all .xlsx files in the source folder
+            string[] xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
 
-            foreach (string sourcePath in xlsxFiles)
+            foreach (string xlsxPath in xlsxFiles)
             {
-                try
-                {
-                    // Build the destination PDF file path (same file name, .pdf extension)
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                    string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
+                // Build the corresponding PDF file name
+                string pdfFileName = Path.GetFileNameWithoutExtension(xlsxPath) + ".pdf";
+                string pdfPath = Path.Combine(outputFolder, pdfFileName);
 
-                    // Perform the conversion using Aspose.Cells.Utility.ConversionUtility
-                    ConversionUtility.Convert(sourcePath, destPath);
+                // Load options specific to XLSX files
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-                    Console.WriteLine($"Converted: {Path.GetFileName(sourcePath)} -> {Path.GetFileName(destPath)}");
-                }
-                catch (Exception ex)
+                // Save options for PDF output (example: fit all columns on one page per sheet)
+                PdfSaveOptions saveOptions = new PdfSaveOptions
                 {
-                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
-                }
+                    AllColumnsInOnePagePerSheet = true
+                };
+
+                // Convert the Excel file to PDF using the utility method
+                ConversionUtility.Convert(xlsxPath, loadOptions, pdfPath, saveOptions);
+
+                Console.WriteLine($"Converted '{Path.GetFileName(xlsxPath)}' to PDF.");
             }
 
             Console.WriteLine("Batch conversion completed.");
-        }
-
-        // Example entry point
-        public static void Main(string[] args)
-        {
-            // Example usage:
-            // args[0] = input folder, args[1] = output folder
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: XlsxToPdfBatchConverter <inputFolder> <outputFolder>");
-                return;
-            }
-
-            string inputFolder = args[0];
-            string outputFolder = args[1];
-
-            ConvertFolder(inputFolder, outputFolder);
         }
     }
 }

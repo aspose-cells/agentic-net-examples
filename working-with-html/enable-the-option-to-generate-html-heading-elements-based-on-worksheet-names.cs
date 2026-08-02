@@ -1,46 +1,53 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlHeadingDemo
+namespace AsposeCellsHtmlExport
 {
-    class Program
+    // Author: Aspose.Cells .NET example
+    class ExportWorksheetHeadings
     {
         static void Main()
         {
-            // Create a new workbook with multiple worksheets
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Worksheets.Add("Sales");
-            workbook.Worksheets.Add("Inventory");
 
-            // Add some sample data to each sheet
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                Worksheet sheet = workbook.Worksheets[i];
-                sheet.Cells["A1"].PutValue("Header");
-                sheet.Cells["A2"].PutValue($"Data for {sheet.Name}");
-            }
+            // Rename the default worksheet
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "SalesData";
 
-            // Set a page header that contains the worksheet name (&A placeholder)
-            // This will be rendered as an HTML heading when ExportPageHeaders is true
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Center section (1) will display the sheet name
-                sheet.PageSetup.SetHeader(1, "&A");
-            }
+            // Add a second worksheet and set its name
+            int sheet2Index = workbook.Worksheets.Add();
+            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+            sheet2.Name = "Summary";
 
-            // Configure HTML save options to export page headers
+            // Populate some sample data in the first sheet
+            sheet1.Cells["A1"].PutValue("Product");
+            sheet1.Cells["B1"].PutValue("Quantity");
+            sheet1.Cells["A2"].PutValue("Apple");
+            sheet1.Cells["B2"].PutValue(120);
+            sheet1.Cells["A3"].PutValue("Banana");
+            sheet1.Cells["B3"].PutValue(85);
+
+            // Populate some sample data in the second sheet
+            sheet2.Cells["A1"].PutValue("Report");
+            sheet2.Cells["A2"].PutValue("Generated on:");
+            sheet2.Cells["B2"].PutValue(DateTime.Now.ToString("yyyy-MM-dd"));
+
+            // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Export the page header (which now contains the sheet name)
-                ExportPageHeaders = true,
-                // Save all sheets into a single HTML file for easier viewing
-                SaveAsSingleFile = true,
-                // Optional: give the HTML page a title
-                PageTitle = "Workbook with Sheet Name Headings"
+                // Export row and column headings (e.g., A, B, 1, 2)
+                ExportRowColumnHeadings = true,
+
+                // Export worksheet properties so that each worksheet name appears as an HTML heading
+                ExportWorksheetProperties = true,
+
+                // Optional: export only the active worksheet (set to false to include all)
+                ExportActiveWorksheetOnly = false
             };
 
-            // Save the workbook as HTML
-            workbook.Save("WorkbookWithSheetHeadings.html", htmlOptions);
+            // Save the workbook as an HTML file with the configured options
+            workbook.Save("WorkbookWithHeadings.html", htmlOptions);
         }
     }
 }

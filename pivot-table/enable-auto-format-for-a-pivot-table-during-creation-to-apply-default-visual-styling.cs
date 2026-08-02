@@ -1,52 +1,41 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotAutoFormatDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Product");
-            sheet.Cells["C1"].PutValue("Sales");
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["A2"].PutValue("A");
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["A3"].PutValue("B");
+        worksheet.Cells["B3"].PutValue(200);
+        worksheet.Cells["A4"].PutValue("A");
+        worksheet.Cells["B4"].PutValue(150);
 
-            sheet.Cells["A2"].PutValue("Electronics");
-            sheet.Cells["B2"].PutValue("Laptop");
-            sheet.Cells["C2"].PutValue(1200);
+        // Add a pivot table to the worksheet
+        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-            sheet.Cells["A3"].PutValue("Electronics");
-            sheet.Cells["B3"].PutValue("Phone");
-            sheet.Cells["C3"].PutValue(800);
+        // Configure the pivot table fields
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-            sheet.Cells["A4"].PutValue("Furniture");
-            sheet.Cells["B4"].PutValue("Chair");
-            sheet.Cells["C4"].PutValue(150);
+        // Enable automatic formatting (default visual style)
+        pivotTable.IsAutoFormat = true;
+        // Optionally specify a particular auto‑format type
+        pivotTable.AutoFormatType = PivotTableAutoFormatType.Classic;
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C4", "E5", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        // Populate the pivot table with calculated data
+        pivotTable.CalculateData();
 
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Enable automatic formatting (default visual style)
-            pivotTable.IsAutoFormat = true;               // Apply default auto format
-            pivotTable.AutoFormatType = PivotTableAutoFormatType.Report1; // Optional: choose a specific style
-
-            // Populate the pivot table with calculated data
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTableAutoFormatDemo.xlsx");
-        }
+        // Save the workbook with the formatted pivot table
+        workbook.Save("PivotTableAutoFormatDemo.xlsx");
     }
 }

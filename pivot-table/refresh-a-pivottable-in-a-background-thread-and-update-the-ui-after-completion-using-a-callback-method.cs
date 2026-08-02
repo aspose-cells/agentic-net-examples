@@ -3,63 +3,87 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class Program
+namespace AsposeCellsPivotRefreshDemo
 {
-    static async Task Main()
+    class Program
     {
-        // -------------------- Create workbook and sample data --------------------
-        Workbook workbook = new Workbook();                         // create workbook
-        Worksheet sheet = workbook.Worksheets[0];
-
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(200);
-        sheet.Cells["A4"].PutValue("Apple");
-        sheet.Cells["B4"].PutValue(150);
-
-        // -------------------- Add a pivot table --------------------
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
-
-        // Initial calculation so the pivot has data before refresh
-        pivotTable.CalculateData();
-
-        // -------------------- Define UI callback --------------------
-        // In a real UI (WinForms/WPF) this would update controls.
-        // Here we simply write to the console and save the workbook.
-        Action refreshCompletedCallback = () =>
+        // Callback method that will be invoked on the UI thread after refresh completes
+        static void OnRefreshCompleted()
         {
-            Console.WriteLine("Pivot table refresh completed.");
-            workbook.Save("PivotRefreshed.xlsx");   // save after refresh
-        };
+            Console.WriteLine("Pivot table refresh completed and workbook saved.");
+            // Here you could update UI controls, e.g., enable buttons or refresh views
+        }
 
-        // -------------------- Refresh pivot in background thread --------------------
-        await RefreshPivotAsync(pivotTable, refreshCompletedCallback);
-
-        // Keep console open to view output
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
-    }
-
-    // Runs RefreshData and CalculateData on a background thread,
-    // then invokes the supplied callback on the original (UI) thread.
-    static async Task RefreshPivotAsync(PivotTable pivot, Action callback)
-    {
-        await Task.Run(() =>
+        // Asynchronous method that refreshes all pivot tables in the workbook
+        static void RefreshPivotTablesAsync(string workbookPath, Action callback)
         {
-            // Refresh data source of the pivot table
-            pivot.RefreshData();
+            // Run the refresh operation on a background thread
+            Task.Run(() =>
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(workbookPath);
 
-            // Recalculate the pivot table after data refresh
-            pivot.CalculateData();
-        });
+                // Refresh all pivot tables in the workbook
+                // This uses the provided RefreshPivotTables method from the API
+                workbook.Worksheets.RefreshPivotTables();
 
-        // Invoke UI callback after background work is done
-        callback?.Invoke();
+                // Optionally calculate data after refresh (if needed)
+                // Iterate through worksheets and calculate each pivot table
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (PivotTable pt in sheet.PivotTables)
+                    {
+                        pt.CalculateData();
+                    }
+                }
+
+                // Save the workbook back to the same file (or a new file)
+                workbook.Save(workbookPath);
+            })
+            .ContinueWith(t =>
+            {
+                // Invoke the callback on the thread that called RefreshPivotTablesAsync
+                // In a real UI application you would marshal this to the UI thread (e.g., using Dispatcher)
+                callback?.Invoke();
+            });
+        }
+
+        static void Main(string[] args)
+        {
+            // Path to the Excel file containing the pivot table
+            string filePath = "PivotTableDemo.xlsx";
+
+            // Ensure the workbook exists; create a simple one if not present
+            if (!System.IO.File.Exists(filePath))
+            {
+                // Create a workbook with sample data and a pivot table (using provided creation pattern)
+                Workbook wb = new Workbook();
+                Worksheet dataSheet = wb.Worksheets[0];
+                dataSheet.Cells["A1"].PutValue("Product");
+                dataSheet.Cells["B1"].PutValue("Sales");
+                dataSheet.Cells["A2"].PutValue("Apple");
+                dataSheet.Cells["B2"].PutValue(120);
+                dataSheet.Cells["A3"].PutValue("Banana");
+                dataSheet.Cells["B3"].PutValue(150);
+                dataSheet.Cells["A4"].PutValue("Apple");
+                dataSheet.Cells["B4"].PutValue(80);
+
+                // Add a pivot table
+                int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
+                PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
+                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product
+                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales
+
+                // Save the initial workbook
+                wb.Save(filePath);
+            }
+
+            // Start the asynchronous refresh operation
+            RefreshPivotTablesAsync(filePath, OnRefreshCompleted);
+
+            // Keep the console alive to observe the callback (in a real UI app this wouldn't be needed)
+            Console.WriteLine("Refresh started on background thread. Press any key to exit...");
+            Console.ReadKey();
+        }
     }
 }

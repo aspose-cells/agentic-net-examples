@@ -1,45 +1,55 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Slicers;      // For Slicer class
+using Aspose.Cells.Rendering;   // For PdfSaveOptions
 
-class ConvertWorkbookWithSlicersToPdf
+namespace AsposeCellsExample
 {
-    static void Main()
+    class Program
     {
-        const string inputPath = "InputWithSlicers.xlsx";
-        const string outputPath = "OutputWithSlicers.pdf";
-
-        try
+        static void Main()
         {
-            // Verify the input file exists before loading
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook containing slicers
-            Workbook workbook = new Workbook(inputPath);
-
-            // Ensure all slicers are printable so they appear in the PDF
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                foreach (Slicer slicer in sheet.Slicers)
+                // Path to the source workbook that contains slicers
+                string sourceFile = "input_with_slicers.xlsx";
+
+                // Verify that the source file exists
+                if (!File.Exists(sourceFile))
                 {
-                    slicer.IsPrintable = true;
+                    Console.WriteLine($"Source file not found: {Path.GetFullPath(sourceFile)}");
+                    return;
                 }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(sourceFile);
+
+                // Ensure all slicers are printable so they appear in the PDF
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    foreach (Slicer slicer in ws.Slicers)
+                    {
+                        slicer.IsPrintable = true;
+                    }
+                }
+
+                // Configure PDF save options to retain document structure (includes slicer metadata)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    ExportDocumentStructure = true
+                };
+
+                // Save the workbook to PDF
+                string outputFile = "output.pdf";
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"PDF saved successfully: {Path.GetFullPath(outputFile)}");
             }
-
-            // Configure PDF save options (retain document structure)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            catch (Exception ex)
             {
-                ExportDocumentStructure = true
-            };
-
-            // Save the workbook as PDF
-            workbook.Save(outputPath, pdfOptions);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Handle any runtime errors
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

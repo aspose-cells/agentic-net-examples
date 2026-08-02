@@ -1,35 +1,36 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add sample content
+        // Create a new workbook and add some content
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
         worksheet.Cells["A1"].PutValue("Aspose.Cells TIFF to HTML Demo");
 
-        // Configure rendering options for TIFF output
-        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+        // Configure image options for TIFF rendering
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
         {
-            OnePagePerSheet = true,
-            ImageType = ImageType.Tiff
+            ImageType = ImageType.Tiff,   // Render as TIFF
+            OnePagePerSheet = true        // One page per sheet
         };
 
-        // Render the worksheet to a TIFF image stored in a memory stream
-        SheetRender sheetRenderer = new SheetRender(worksheet, renderOptions);
+        // Render the worksheet to a TIFF image in memory
         using (MemoryStream tiffStream = new MemoryStream())
         {
-            sheetRenderer.ToTiff(tiffStream); // Render to TIFF stream
+            SheetRender renderer = new SheetRender(worksheet, imgOptions);
+            renderer.ToTiff(tiffStream);          // Render to stream
+            tiffStream.Position = 0;              // Reset stream position
 
             // Convert the TIFF bytes to a Base64 string
             string base64Tiff = Convert.ToBase64String(tiffStream.ToArray());
 
-            // Build an HTML document that embeds the TIFF image using a data URI
+            // Build an HTML page that embeds the TIFF image using a data URI
             string htmlContent = $@"
 <html>
 <head><title>Embedded TIFF Image</title></head>
@@ -39,10 +40,9 @@ class Program
 </body>
 </html>";
 
-            // Save the HTML to a file
-            File.WriteAllText("output.html", htmlContent);
+            // Save the HTML file
+            File.WriteAllText("EmbeddedTiff.html", htmlContent);
+            Console.WriteLine("HTML file with embedded TIFF created: EmbeddedTiff.html");
         }
-
-        Console.WriteLine("HTML file with embedded TIFF image has been created.");
     }
 }

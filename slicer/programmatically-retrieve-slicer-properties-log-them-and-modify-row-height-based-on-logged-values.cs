@@ -25,9 +25,11 @@ namespace SlicerPropertyDemo
                 sheet.Cells["B3"].Value = 80;
                 sheet.Cells["A4"].Value = "Vegetable";
                 sheet.Cells["B4"].Value = 150;
+                sheet.Cells["A5"].Value = "Vegetable";
+                sheet.Cells["B5"].Value = 70;
 
                 // Add a pivot table based on the data
-                int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+                int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
                 PivotTable pivot = sheet.PivotTables[pivotIdx];
                 pivot.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
@@ -35,13 +37,12 @@ namespace SlicerPropertyDemo
                 pivot.CalculateData();
 
                 // Add a slicer linked to the pivot table.
-                // The second argument must be a valid cell address (e.g., "E1").
-                int slicerIdx = sheet.Slicers.Add(pivot, "E1", "Category");
+                // Destination cell must be a valid address (e.g., "E3").
+                int slicerIdx = sheet.Slicers.Add(pivot, "E3", "Category");
                 Slicer slicer = sheet.Slicers[slicerIdx];
-                slicer.Name = "CategorySlicer";
 
-                // Retrieve and log various slicer properties
-                Console.WriteLine("=== Slicer Properties Before Modification ===");
+                // Retrieve and log slicer properties
+                Console.WriteLine("=== Slicer Initial Properties ===");
                 Console.WriteLine($"Name: {slicer.Name}");
                 Console.WriteLine($"Caption: {slicer.Caption}");
                 Console.WriteLine($"RowHeight (points): {slicer.RowHeight}");
@@ -49,34 +50,25 @@ namespace SlicerPropertyDemo
                 Console.WriteLine($"ColumnWidth (points): {slicer.ColumnWidth}");
                 Console.WriteLine($"NumberOfColumns: {slicer.NumberOfColumns}");
                 Console.WriteLine($"LockedPosition: {slicer.LockedPosition}");
+                Console.WriteLine($"StyleType: {slicer.StyleType}");
 
-                // Example logic: increase row height by 5 points if current height is less than 25 points
+                // Example logic: if the current RowHeight is less than 25 points, increase it to 30 points
                 double currentRowHeight = slicer.RowHeight;
                 if (currentRowHeight < 25)
                 {
-                    double newRowHeight = currentRowHeight + 5;
-                    slicer.RowHeight = newRowHeight;
-                    Console.WriteLine($"RowHeight increased from {currentRowHeight} to {newRowHeight} points.");
+                    double newHeight = 30;
+                    slicer.RowHeight = newHeight;
+                    Console.WriteLine($"RowHeight was {currentRowHeight} pts, updated to {newHeight} pts.");
                 }
                 else
                 {
-                    Console.WriteLine("RowHeight is already 25 points or more; no change applied.");
+                    Console.WriteLine($"RowHeight ({currentRowHeight} pts) meets the required minimum; no change applied.");
                 }
-
-                // Log properties after modification
-                Console.WriteLine("=== Slicer Properties After Modification ===");
-                Console.WriteLine($"RowHeight (points): {slicer.RowHeight}");
 
                 // Save the workbook
-                string outputPath = "SlicerPropertyLogAndModify.xlsx";
-                // Ensure the directory exists (use current directory if none specified)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                string outputPath = "SlicerPropertyDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {

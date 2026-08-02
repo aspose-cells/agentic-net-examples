@@ -2,58 +2,38 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsEncryptionCheck
 {
     class Program
     {
         static void Main()
         {
-            // Path to the Excel file to be examined
+            // Path to the XLS file to be examined
             string filePath = "sample.xls";
 
-            try
+            // Detect file format and encryption status without loading the workbook
+            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+            Console.WriteLine($"Is the file encrypted? {fileInfo.IsEncrypted}");
+
+            // If the file is encrypted, attempt to load it with a password
+            if (fileInfo.IsEncrypted)
             {
-                // Verify that the file exists before attempting to read it
-                if (!File.Exists(filePath))
+                // Prepare load options with the password (replace with actual password)
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
                 {
-                    Console.WriteLine($"Error: File not found – \"{filePath}\"");
-                    return;
-                }
+                    Password = "yourPassword"
+                };
 
-                // Detect file format information without loading the workbook
-                FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+                // Load the workbook using the provided password
+                Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Output encryption status
-                Console.WriteLine($"Is encrypted: {fileInfo.IsEncrypted}");
+                // Verify encryption status via workbook settings
+                Console.WriteLine($"Workbook.Settings.IsEncrypted: {workbook.Settings.IsEncrypted}");
 
-                // Infer the encryption algorithm based on the detected file format
-                string algorithm = "Unknown";
-
-                if (fileInfo.IsEncrypted)
-                {
-                    // Use the string representation of the format to avoid enum version issues
-                    string format = fileInfo.FileFormatType.ToString();
-
-                    if (format.Equals("Xls", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Excel 97‑2003 (.xls) uses legacy XOR/compatible encryption
-                        algorithm = "XOR/Compatible (Excel 97‑2003)";
-                    }
-                    else if (format.Equals("Xlsx", StringComparison.OrdinalIgnoreCase) ||
-                             format.Equals("Xlsm", StringComparison.OrdinalIgnoreCase) ||
-                             format.Equals("Xlsb", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Excel 2007+ (.xlsx, .xlsm, .xlsb) uses AES encryption
-                        algorithm = "AES (Office Open XML)";
-                    }
-                }
-
-                Console.WriteLine($"Encryption algorithm (inferred): {algorithm}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // NOTE: Aspose.Cells does not expose the specific encryption algorithm directly.
+                // The encryption algorithm used by Excel (e.g., XOR, AES) is handled internally.
+                // If needed, you can infer the algorithm based on the file format version
+                // (XLS uses older algorithms, XLSX uses AES). Here we simply report the status.
             }
         }
     }

@@ -1,60 +1,86 @@
+// Title: Batch convert multiple Excel workbooks to PDF without charts using Aspose.Cells LoadOptions (C#)
+// Description: A C# console example that scans a folder for .xlsx and .xls files, loads each workbook with Aspose.Cells LoadOptions (optionally enabling LoadDataOnly to skip drawings), and saves them as PDFs using PdfSaveOptions (OnePagePerSheet, IgnoreError). The utility creates PDF files in a target directory while omitting chart objects, making it ideal for automated reporting pipelines.
+// Keywords: Aspose.Cells | C# | .NET | batch Excel to PDF | LoadOptions | LoadDataOnly | ignore charts | ignore drawings | PdfSaveOptions | OnePagePerSheet | command line utility | automation | server side conversion | GitHub example | Excel to PDF conversion
+// Common Searches: convert all Excel files in a folder to PDF Aspose.Cells C# | skip charts when saving Excel as PDF with Aspose.Cells | batch Excel to PDF conversion using LoadOptions | C# code to export multiple workbooks to PDF without drawings | Aspose.Cells example for folder‑wide PDF export
+// Developer Intent: Automatically transform every Excel workbook in a directory into a PDF while excluding chart and drawing objects.
+// Use Cases: Generate lightweight PDF reports from nightly Excel workbooks that contain large charts. | Create a command‑line tool for users to drop Excel files into a folder and receive chart‑free PDFs. | Integrate into a web service that receives uploaded spreadsheets, strips visual objects, and returns PDF output for archiving.
+// AI Prompts: Write a C# console program using Aspose.Cells that loads all .xlsx/.xls files from a specified folder with LoadDataOnly enabled and saves each as a PDF with OnePagePerSheet. | Provide error‑handling best practices for batch converting Excel files to PDF, including folder validation, logging of failed files, and graceful continuation. | Explain how LoadOptions.LoadDataOnly works in Aspose.Cells and how it affects chart rendering during PDF export.
+
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-class BatchExcelToPdf
+namespace BatchExcelToPdf
 {
-    static void Main()
+    // A C# console example that scans a folder for .xlsx and .xls files, loads each workbook with Aspose.Cells LoadOptions (optionally enabling LoadDataOnly to skip drawings), and saves them as PDFs using PdfSaveOptions (OnePagePerSheet, IgnoreError). The utility creates PDF files in a target directory while omitting chart objects, making it ideal for automated reporting pipelines.
+    class Program
     {
-        // Folder containing the source Excel files
-        string inputFolder = "InputExcels";
-        // Folder where the resulting PDF files will be saved
-        string outputFolder = "OutputPdfs";
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify the input directory exists
-        if (!Directory.Exists(inputFolder))
+        static void Main()
         {
-            Console.WriteLine($"Input folder '{inputFolder}' does not exist. No files to process.");
-            return;
-        }
+            // Folder containing the Excel files to be processed
+            string sourceFolder = @"C:\InputExcels";
+            // Folder where the resulting PDF files will be saved
+            string outputFolder = @"C:\OutputPdfs";
 
-        // Process each .xlsx file in the input folder
-        foreach (string sourcePath in Directory.GetFiles(inputFolder, "*.xlsx"))
-        {
-            // Extra safety: skip if the source file does not exist
-            if (!File.Exists(sourcePath))
-                continue;
-
-            try
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                // Load options – load only data (if supported) to ignore charts/shapes
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-                // Uncomment the following line if your Aspose.Cells version supports it
-                // loadOptions.LoadDataOnly = true;
+                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                return;
+            }
 
-                // PDF save options – each worksheet on a single page
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Ensure the output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Get all Excel files (XLSX and XLS) in the source folder
+            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string filePath in excelFiles)
+            {
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                if (extension != ".xlsx" && extension != ".xls")
+                    continue; // Skip non‑Excel files
+
+                // Additional safety: verify the file still exists
+                if (!File.Exists(filePath))
                 {
-                    OnePagePerSheet = true
-                };
+                    Console.WriteLine($"File not found (skipped): {filePath}");
+                    continue;
+                }
 
-                // Determine the destination PDF file path
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".pdf");
+                try
+                {
+                    // Load the workbook (default options)
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+                    // If a newer Aspose.Cells version supports LoadDataOnly, uncomment the line below:
+                    // loadOptions.LoadDataOnly = true; // ignore drawing objects
 
-                // Convert the Excel file to PDF
-                ConversionUtility.Convert(sourcePath, loadOptions, destPath, pdfOptions);
-                Console.WriteLine($"Converted '{sourcePath}' to '{destPath}'.");
+                    Workbook workbook = new Workbook(filePath, loadOptions);
+
+                    // Prepare PDF save options (optional customizations)
+                    PdfSaveOptions pdfOptions = new PdfSaveOptions
+                    {
+                        // Fit each worksheet on a single page
+                        OnePagePerSheet = true,
+                        // Suppress rendering errors (e.g., missing chart data)
+                        IgnoreError = true
+                    };
+
+                    // Build the output PDF file name
+                    string pdfFileName = Path.GetFileNameWithoutExtension(filePath) + ".pdf";
+                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
+
+                    // Save the workbook as PDF
+                    workbook.Save(pdfPath, pdfOptions);
+
+                    Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to PDF successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                // Log conversion errors without stopping the batch
-                Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
-            }
+
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

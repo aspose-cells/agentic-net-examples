@@ -10,25 +10,24 @@ namespace AsposeCellsProtectionDemo
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Example data (optional)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data");
-
             // Protect the workbook structure with a password
-            string workbookPassword = "wbStructurePwd";
-            workbook.Protect(ProtectionType.Structure, workbookPassword);
+            workbook.Protect(ProtectionType.Structure, "WorkbookStructurePwd");
 
-            // Protect all worksheets (no password, full protection)
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Protect (lock) every worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                ws.Protect(ProtectionType.All);
+                // Protect the worksheet without a password (all protection types)
+                sheet.Protect(ProtectionType.All);
             }
 
-            // Set a password to encrypt the file when saved
-            workbook.Settings.Password = "fileOpenPwd";
+            // Set a password to encrypt the workbook file (required to open)
+            workbook.Settings.Password = "OpenFilePwd";
 
             // Save the workbook as an encrypted XLSX file
             workbook.Save("ProtectedEncryptedWorkbook.xlsx", SaveFormat.Xlsx);
+
+            // Clean up
+            workbook.Dispose();
         }
     }
 }

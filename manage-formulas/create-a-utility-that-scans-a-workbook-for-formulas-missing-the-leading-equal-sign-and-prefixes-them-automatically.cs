@@ -1,33 +1,25 @@
+// Title: C# Aspose.Cells utility to detect and prepend missing ‘=’ in Excel formulas
+// Description: A C# example that loads an Excel workbook with Aspose.Cells, scans every used cell, identifies formulas that do not start with the equal sign, prefixes the missing '=', recalculates all formulas, and saves the corrected file.
+// Keywords: Aspose.Cells formula fix | C# add missing equal sign | prepend = to Excel formulas | bulk formula correction | scan workbook cells Aspose | Excel formula validation C# | recalculate formulas after edit | FormulaFixer utility | Excel automation missing = | Aspose.Cells FormulaFixer
+// Common Searches: how to add a leading = to Excel formulas using Aspose.Cells | C# code to find and fix formulas without = in a workbook | Aspose.Cells scan cells for malformed formulas | bulk correct missing equal signs in Excel with C# | recalculate workbook after fixing formulas Aspose | detect plain‑text formulas in Excel files
+// Developer Intent: Automatically locate cells whose Formula property lacks a leading '=', prepend the '=', recalculate the workbook, and save the updated file.
+// Use Cases: Clean up spreadsheets imported from systems that store formulas as plain text. | Prepare workbooks for accurate calculation before running analytics or reporting. | Integrate into migration pipelines to ensure formula syntax consistency across multiple files.
+// AI Prompts: Generate C# code with Aspose.Cells that scans all worksheets, adds a missing '=' to any formula, recalculates, and saves the workbook. | Show how to log the addresses of cells that were corrected when fixing formulas using Aspose.Cells. | Explain how to modify the utility to target a specific worksheet or a defined cell range.
+
 using System;
 using Aspose.Cells;
 
-namespace FormulaFixUtility
+namespace FormulaUtility
 {
-    class Program
+    // A C# example that loads an Excel workbook with Aspose.Cells, scans every used cell, identifies formulas that do not start with the equal sign, prefixes the missing '=', recalculates all formulas, and saves the corrected file.
+    public static class FormulaFixer
     {
-        static void Main(string[] args)
+        public static void FixFormulas(string inputPath, string outputPath)
         {
-            // Example usage:
-            // Input workbook path (replace with actual path)
-            string inputPath = "input.xlsx";
-            // Output workbook path
-            string outputPath = "output_fixed.xlsx";
+            // Load the workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputPath);
 
-            FixMissingEqualSignFormulas(inputPath, outputPath);
-            Console.WriteLine("Formula scan and fix completed.");
-        }
-
-        /// <summary>
-        /// Scans all cells in the workbook and adds a leading '=' to strings that look like formulas.
-        /// </summary>
-        /// <param name="inputFile">Path to the source workbook.</param>
-        /// <param name="outputFile">Path where the corrected workbook will be saved.</param>
-        static void FixMissingEqualSignFormulas(string inputFile, string outputFile)
-        {
-            // Load the workbook (lifecycle rule: use provided load logic)
-            Workbook workbook = new Workbook(inputFile);
-
-            // Iterate through each worksheet
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
@@ -36,34 +28,42 @@ namespace FormulaFixUtility
                 int maxRow = cells.MaxDataRow;
                 int maxCol = cells.MaxDataColumn;
 
+                // Scan each cell in the used range
                 for (int row = 0; row <= maxRow; row++)
                 {
                     for (int col = 0; col <= maxCol; col++)
                     {
                         Cell cell = cells[row, col];
 
-                        // Process only string cells (potential missing formula)
-                        if (cell.Type == CellValueType.IsString)
+                        // Retrieve the formula string; empty if the cell has no formula
+                        string formula = cell.Formula;
+
+                        // If a formula exists but does not start with '=', fix it
+                        if (!string.IsNullOrEmpty(formula) && !formula.StartsWith("="))
                         {
-                            string text = cell.StringValue;
-
-                            // Skip empty strings and already correct formulas
-                            if (string.IsNullOrWhiteSpace(text) || text.StartsWith("="))
-                                continue;
-
-                            // Simple heuristic: contains '(' and ')' suggests a formula
-                            if (text.Contains("(") && text.Contains(")"))
-                            {
-                                // Prefix with '=' and assign to Formula property
-                                cell.Formula = "=" + text;
-                            }
+                            // Prefix the missing equal sign
+                            cell.Formula = "=" + formula;
                         }
                     }
                 }
             }
 
-            // Save the modified workbook (lifecycle rule: use provided save logic)
-            workbook.Save(outputFile);
+            // Recalculate all formulas after fixing (optional but recommended)
+            workbook.CalculateFormula();
+
+            // Save the modified workbook (lifecycle rule: save)
+            workbook.Save(outputPath);
+        }
+
+        // Example usage
+        public static void Main()
+        {
+            string sourceFile = "input.xlsx";
+            string destinationFile = "output_fixed.xlsx";
+
+            FixFormulas(sourceFile, destinationFile);
+
+            Console.WriteLine($"Formulas fixed and workbook saved to '{destinationFile}'.");
         }
     }
 }

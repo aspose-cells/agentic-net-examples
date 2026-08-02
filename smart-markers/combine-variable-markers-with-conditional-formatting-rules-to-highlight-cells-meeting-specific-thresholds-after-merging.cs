@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
@@ -7,48 +8,52 @@ class Program
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Populate sample numeric data in column A (rows 0‑9)
+        // Populate sample numeric data in column A (rows 2‑11)
         for (int i = 0; i < 10; i++)
         {
-            cells[i, 0].PutValue(i * 10); // 0,10,20,...,90
+            // Values: 5, 15, 25, …, 95
+            cells[i + 1, 0].PutValue(i * 10 + 5);
         }
 
-        // Merge the header cells A1:B1 (row 0, column 0, 1 row, 2 columns)
+        // Merge cells A1:B1 to create a header area
         cells.Merge(0, 0, 1, 2);
         cells[0, 0].PutValue("Performance");
 
         // Add a conditional formatting collection to the worksheet
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = worksheet.ConditionalFormattings[cfIndex];
+        int cfIndex = sheet.ConditionalFormattings.Add();
+        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
 
-        // Define the range to which the formatting will be applied (A1:A10)
-        CellArea area = new CellArea
+        // Define the range that will be conditionally formatted (A2:A11)
+        CellArea dataArea = new CellArea
         {
-            StartRow = 0,
-            EndRow = 9,
+            StartRow = 1,
+            EndRow = 10,
             StartColumn = 0,
             EndColumn = 0
         };
-        fcc.AddArea(area);
+        fcc.AddArea(dataArea);
 
-        // Condition 1: values between 30 and 70 → yellow background
-        int conditionIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.Between, "30", "70");
-        FormatCondition condition = fcc[conditionIdx];
-        condition.Style.BackgroundColor = Color.Yellow;
+        // 1) Values between 40 and 80 → Yellow background
+        int condBetween = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.Between, "40", "80");
+        FormatCondition fcBetween = fcc[condBetween];
+        fcBetween.Style.BackgroundColor = Color.Yellow;
 
-        // Condition 2: values greater than 70 → green background, white bold font
-        conditionIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "70", null);
-        condition = fcc[conditionIdx];
-        condition.Style.BackgroundColor = Color.Green;
-        condition.Style.Font.Color = Color.White;
-        condition.Style.Font.IsBold = true;
+        // 2) Values greater than 80 → Green background, white bold font
+        int condGreater = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "80", null);
+        FormatCondition fcGreater = fcc[condGreater];
+        fcGreater.Style.BackgroundColor = Color.Green;
+        fcGreater.Style.Font.Color = Color.White;
+        fcGreater.Style.Font.IsBold = true;
 
-        // Save the workbook with merged areas optimization enabled
-        XlsSaveOptions saveOptions = new XlsSaveOptions();
-        saveOptions.MergeAreas = true;
-        workbook.Save("MergedConditionalFormatting.xls", saveOptions);
+        // 3) Values less than 40 → Red background
+        int condLess = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "40", null);
+        FormatCondition fcLess = fcc[condLess];
+        fcLess.Style.BackgroundColor = Color.Red;
+
+        // Save the workbook with merged header and conditional formatting applied
+        workbook.Save("MergedConditionalFormatting.xlsx");
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
@@ -43,19 +44,66 @@ namespace AsposeCellsSeriesReorder
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Add all three series at once (by column)
+                // Add all three series to the chart (by column)
                 chart.NSeries.Add("B1:D4", true);
+                // Set category (X) axis data
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Get the series collection
+                SeriesCollection seriesColl = chart.NSeries;
+
+                // Reorder series so that the series with the highest total value appears first
+                // Simple selection sort using SwapSeries
+                int count = seriesColl.Count;
+                for (int i = 0; i < count - 1; i++)
+                {
+                    // Find index of series with maximum sum from i to end
+                    int maxIdx = i;
+                    double maxSum = GetSeriesSum(seriesColl[i]);
+
+                    for (int j = i + 1; j < count; j++)
+                    {
+                        double sum = GetSeriesSum(seriesColl[j]);
+                        if (sum > maxSum)
+                        {
+                            maxSum = sum;
+                            maxIdx = j;
+                        }
+                    }
+
+                    // If the maximum is not already at position i, swap them
+                    if (maxIdx != i)
+                    {
+                        seriesColl.SwapSeries(i, maxIdx);
+                    }
+                }
 
                 // Save the workbook
-                string outputPath = "SeriesReorder.xlsx";
+                string outputPath = "ReorderedSeriesChart.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Helper method to calculate the sum of all point values in a series
+        private static double GetSeriesSum(Series series)
+        {
+            double sum = 0;
+            // PointValues returns an array of ChartDataValue objects
+            ChartDataValue[] values = series.PointValues;
+            if (values != null)
+            {
+                foreach (ChartDataValue v in values)
+                {
+                    // Use DoubleValue to get the numeric representation
+                    sum += v.DoubleValue;
+                }
+            }
+            return sum;
         }
     }
 }

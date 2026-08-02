@@ -1,10 +1,18 @@
+// Title: Validate Aspose.Cells Range.Address returns "A1:D4" after creating a range (C#)
+// Description: Creates a workbook, defines a range A1:D4 with Cells.CreateRange, reads the Range.Address property, compares it to the expected "A1:D4" string (case‑insensitive), outputs the result, and saves the file.
+// Keywords: Aspose.Cells | Range.Address | C# | A1:D4 | CreateRange | range address validation | unit test | address comparison
+// Common Searches: Aspose.Cells verify range address C# | Range.Address returns wrong format | how to compare Aspose range address with expected value | validate range address after creating range in Aspose.Cells | C# Aspose.Cells check A1:D4 address
+// Developer Intent: Confirm that the Range.Address property exactly matches the expected "A1:D4" address for a newly created range.
+// Use Cases: Unit‑test verification of range addresses before applying formatting or formulas. | Automated workbook generation that requires precise range references. | Debugging dynamic range adjustments where address mismatches can cause errors.
+// AI Prompts: Generate an xUnit test that asserts Range.Address equals "A1:D4" after calling Cells.CreateRange. | Provide a logging snippet that records the expected and actual range addresses when they differ. | Show how to expand the range to "E5" and re‑validate that Range.Address reflects the new address.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsRangeAddressValidation
 {
+    // Creates a workbook, defines a range A1:D4 with Cells.CreateRange, reads the Range.Address property, compares it to the expected "A1:D4" string (case‑insensitive), outputs the result, and saves the file.
     class Program
     {
         static void Main()
@@ -16,54 +24,31 @@ namespace AsposeCellsRangeAddressValidation
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Create a range covering cells A1 to D4
+                // Create a range that covers cells A1 to D4
                 AsposeRange range = cells.CreateRange("A1:D4");
 
-                // Verify that the Address property returns the expected A1:D4 string
-                const string expectedAddress = "A1:D4";
+                // Retrieve the address of the created range
                 string actualAddress = range.Address;
 
-                if (actualAddress != expectedAddress)
+                // Expected address string
+                const string expectedAddress = "A1:D4";
+
+                // Validate that the actual address matches the expected address
+                if (actualAddress.Equals(expectedAddress, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Address mismatch. Expected: {expectedAddress}, Actual: {actualAddress}");
+                    Console.WriteLine("Range address validation succeeded: " + actualAddress);
                 }
                 else
                 {
-                    Console.WriteLine($"Address correctly matches expected format: {actualAddress}");
+                    Console.WriteLine($"Range address validation failed. Expected: {expectedAddress}, Actual: {actualAddress}");
                 }
 
-                // Modify the range by moving it one row down and one column right
-                AsposeRange offsetRange = range.GetOffset(1, 1); // Should now be B2:E5
-
-                // Verify the new address
-                const string expectedOffsetAddress = "B2:E5";
-                string actualOffsetAddress = offsetRange.Address;
-
-                if (actualOffsetAddress != expectedOffsetAddress)
-                {
-                    Console.WriteLine($"Offset address mismatch. Expected: {expectedOffsetAddress}, Actual: {actualOffsetAddress}");
-                }
-                else
-                {
-                    Console.WriteLine($"Offset address correctly matches expected format: {actualOffsetAddress}");
-                }
-
-                // Determine output file path and ensure directory exists
-                string outputPath = "RangeAddressValidation.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                workbook.Save("RangeAddressValidation.xlsx");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

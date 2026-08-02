@@ -1,58 +1,73 @@
+// Title: C# Conditional Smart Marker in Aspose.Cells – Show Rows Only When Score Exceeds a Threshold
+// Description: Demonstrates how to use the &IF($Score>value) smart‑marker syntax with Aspose.Cells WorkbookDesigner. A template row is marked, a DataTable supplies employee scores, and only rows where the Score is greater than the defined limit are rendered in the final Excel file.
+// Keywords: Aspose.Cells C# conditional smart marker | smart marker &IF syntax | filter rows by numeric value Aspose | WorkbookDesigner threshold example | Excel row visibility based on score | DataTable smart markers | conditional row generation Aspose.Cells
+// Common Searches: Aspose.Cells hide rows with smart markers based on column value | C# &IF smart marker threshold example | How to filter Excel rows using conditional smart markers in Aspose | Conditional smart marker syntax for numeric columns | Aspose.Cells conditional row display C#
+// Developer Intent: Generate an Excel workbook where rows are created only for records whose Score column exceeds a specified threshold using Aspose.Cells conditional smart markers.
+// Use Cases: Performance report that lists employees with scores above a target. | Sales ledger that includes only transactions exceeding a sales quota. | Inventory list that shows items with quantity greater than the reorder level.
+// AI Prompts: Write C# code with Aspose.Cells that uses &IF($Column>value) smart markers to display rows only when a numeric field meets a custom threshold. | Explain the &IF syntax in Aspose.Cells smart markers and how to make the threshold configurable at runtime. | Provide troubleshooting steps when conditional smart markers do not filter rows as expected in a WorkbookDesigner workflow.
+
 using System;
 using System.Data;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-class ConditionalSmartMarkerExample
+namespace AsposeCellsConditionalSmartMarkerDemo
 {
-    static void Main()
+    // Demonstrates how to use the &IF($Score>value) smart‑marker syntax with Aspose.Cells WorkbookDesigner. A template row is marked, a DataTable supplies employee scores, and only rows where the Score is greater than the defined limit are rendered in the final Excel file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add header cells
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Amount");
-
-            // Insert smart markers in the template row (row 2)
-            // Product name is always displayed
-            sheet.Cells["A2"].PutValue("&=Products.ProductName");
-            // Amount is displayed only when it exceeds the threshold (e.g., 100)
-            sheet.Cells["B2"].PutValue("&IF(&=Amount>100, &=$Amount)");
-
-            // Define the smart marker range and give it the required name
-            Aspose.Cells.Range smartMarkerRange = sheet.Cells.CreateRange("A2:B2");
-            smartMarkerRange.Name = "_CellsSmartMarkers";
-
-            // Prepare the data source (DataTable) with sample data
-            DataTable dt = new DataTable("Products");
-            dt.Columns.Add("ProductName", typeof(string));
-            dt.Columns.Add("Amount", typeof(double));
-
-            dt.Rows.Add("Item A", 80);   // Below threshold – row will be hidden (empty cells)
-            dt.Rows.Add("Item B", 150);  // Above threshold – row will be shown
-            dt.Rows.Add("Item C", 120);  // Above threshold – row will be shown
-            dt.Rows.Add("Item D", 60);   // Below threshold – row will be hidden
-
-            // Set up the WorkbookDesigner, assign the data source, and process only the smart marker range
-            WorkbookDesigner designer = new WorkbookDesigner
+            try
             {
-                Workbook = workbook
-            };
-            designer.SetDataSource(dt);
-            // Process the defined range; true = preserve unrecognized markers
-            designer.Process(smartMarkerRange, true);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Save the resulting workbook
-            string outputPath = "ConditionalSmartMarkerOutput.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Add header row
+                cells["A1"].PutValue("Name");
+                cells["B1"].PutValue("Score");
+
+                // Row 2 acts as the template row for conditional smart markers.
+                // The syntax &IF($Score>80) ... &ENDIF ensures the row is displayed only when Score > 80.
+                cells["A2"].PutValue("&IF($Score>80)&=$Name&ENDIF");
+                cells["B2"].PutValue("&IF($Score>80)&=$Score&ENDIF");
+
+                // Define the range that contains the smart markers.
+                // Naming the range "_CellsSmartMarkers" tells the designer to process it.
+                AsposeRange smartRange = cells.CreateRange("A2:B2");
+                smartRange.Name = "_CellsSmartMarkers";
+
+                // Prepare sample data in a DataTable
+                DataTable dt = new DataTable("Employees");
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Score", typeof(int));
+
+                dt.Rows.Add("Alice", 95);   // Should appear
+                dt.Rows.Add("Bob", 67);     // Should be hidden
+                dt.Rows.Add("Charlie", 82); // Should appear
+                dt.Rows.Add("Diana", 74);   // Should be hidden
+
+                // Set the data source for the designer
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource(dt);
+
+                // Process the smart markers
+                designer.Process();
+
+                // Save the resulting workbook
+                string outputPath = "ConditionalSmartMarkerResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

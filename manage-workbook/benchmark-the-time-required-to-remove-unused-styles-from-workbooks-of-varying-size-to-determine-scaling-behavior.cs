@@ -1,84 +1,86 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
-class StyleRemovalBenchmark
+namespace AsposeCellsStyleBenchmark
 {
-    static void Main()
+    class Program
     {
-        // Define different workbook sizes to test.
-        var testCases = new (int rows, int cols, int styleCount)[]
+        static void Main()
         {
-            (100, 10, 100),   // Small workbook
-            (500, 20, 500),   // Medium workbook
-            (1000, 30, 1000)  // Large workbook
-        };
+            // Define workbook sizes to test (number of rows and columns)
+            int[] rowCounts = { 500, 1000, 2000 };
+            int colCount = 10; // fixed number of columns
 
-        foreach (var (rows, cols, styleCount) in testCases)
-        {
-            // Create a workbook populated with data and a pool of distinct styles.
-            Workbook wb = CreateWorkbook(rows, cols, styleCount);
-
-            // Delete half of the rows to make some styles unused.
-            wb.Worksheets[0].Cells.DeleteRows(rows / 2, rows / 2);
-
-            // Record the number of styles before removal.
-            int beforeCount = wb.CountOfStylesInPool;
-            Console.WriteLine($"Workbook {rows}x{cols}, styles before removal: {beforeCount}");
-
-            // Benchmark the RemoveUnusedStyles method.
-            Stopwatch sw = Stopwatch.StartNew();
-            wb.RemoveUnusedStyles();
-            sw.Stop();
-
-            // Record the number of styles after removal.
-            int afterCount = wb.CountOfStylesInPool;
-            Console.WriteLine($"After removal: {afterCount} styles, elapsed time: {sw.ElapsedMilliseconds} ms");
-
-            // Save the workbook to a memory stream (satisfies the save rule).
-            using (MemoryStream ms = new MemoryStream())
+            // For each size, create a workbook, apply many distinct styles,
+            // delete some rows to make styles unused, then benchmark RemoveUnusedStyles.
+            foreach (int rows in rowCounts)
             {
-                wb.Save(ms, SaveFormat.Xlsx);
-            }
+                // Create workbook and populate with data and unique styles
+                Workbook wb = CreateWorkbookWithUniqueStyles(rows, colCount);
 
-            Console.WriteLine();
-        }
-    }
+                // Record number of styles before removal
+                int styleCountBefore = wb.CountOfStylesInPool;
 
-    // Creates a workbook with the specified number of rows, columns, and distinct styles.
-    static Workbook CreateWorkbook(int rows, int cols, int styleCount)
-    {
-        Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
-        Cells cells = sheet.Cells;
+                // Delete half of the rows to make many styles unused
+                int rowsToDelete = rows / 2;
+                wb.Worksheets[0].Cells.DeleteRows(rowsToDelete, rows - rowsToDelete);
 
-        // Prepare a pool of distinct styles.
-        Style[] stylePool = new Style[styleCount];
-        Random rnd = new Random(0);
-        for (int i = 0; i < styleCount; i++)
-        {
-            Style style = wb.CreateStyle();
-            style.Font.Name = "Arial";
-            style.Font.Size = 10 + (i % 10);
-            style.Font.IsBold = (i % 2 == 0);
-            style.Font.Color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
-            stylePool[i] = style;
-        }
+                // Benchmark RemoveUnusedStyles
+                Stopwatch sw = Stopwatch.StartNew();
+                wb.RemoveUnusedStyles();
+                sw.Stop();
 
-        // Fill cells with data and assign a style from the pool.
-        for (int r = 0; r < rows; r++)
-        {
-            for (int c = 0; c < cols; c++)
-            {
-                Cell cell = cells[r, c];
-                cell.PutValue($"R{r}C{c}");
-                // Cycle through the style pool.
-                cell.SetStyle(stylePool[(r * cols + c) % styleCount]);
+                // Record number of styles after removal
+                int styleCountAfter = wb.CountOfStylesInPool;
+
+                // Output results
+                Console.WriteLine($"Rows: {rows}, Columns: {colCount}");
+                Console.WriteLine($"Styles before removal: {styleCountBefore}");
+                Console.WriteLine($"Styles after removal:  {styleCountAfter}");
+                Console.WriteLine($"RemoveUnusedStyles elapsed: {sw.ElapsedMilliseconds} ms");
+                Console.WriteLine(new string('-', 50));
+
+                // Optionally save the workbook for inspection (uses provided Save method)
+                string fileName = $"Benchmark_{rows}x{colCount}.xlsx";
+                wb.Save(fileName);
+                wb.Dispose();
             }
         }
 
-        return wb;
+        // Creates a workbook with the specified number of rows and columns.
+        // Each cell receives a distinct style to increase the style pool size.
+        static Workbook CreateWorkbookWithUniqueStyles(int rows, int cols)
+        {
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Apply a unique style to each cell
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    // Put some sample value
+                    cells[r, c].PutValue($"R{r}C{c}");
+
+                    // Create a new style
+                    Style style = wb.CreateStyle();
+
+                    // Vary font size and color based on row/column to ensure uniqueness
+                    style.Font.Size = 10 + (r % 10);
+                    style.Font.Color = System.Drawing.Color.FromArgb(
+                        255,
+                        (r * 5) % 256,
+                        (c * 15) % 256,
+                        ((r + c) * 20) % 256);
+
+                    // Apply the style to the cell
+                    cells[r, c].SetStyle(style);
+                }
+            }
+
+            return wb;
+        }
     }
 }

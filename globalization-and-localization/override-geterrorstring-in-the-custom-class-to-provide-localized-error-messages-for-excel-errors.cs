@@ -1,76 +1,49 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Custom globalization settings that provide localized error messages
+public class CustomErrorGlobalizationSettings : GlobalizationSettings
 {
-    // Custom globalization settings that provide localized error messages
-    public class CustomErrorGlobalizationSettings : GlobalizationSettings
+    // Override the method that returns the display string for an error value
+    public override string GetErrorValueString(string err)
     {
-        // Override to map default error strings to custom localized strings
-        public override string GetErrorValueString(string err)
+        // Map specific Excel error strings to custom, localized messages
+        return err switch
         {
-            // Map specific Excel error codes to custom messages
-            return err switch
-            {
-                "#DIV/0!" => "Custom Division Error",
-                "#VALUE!" => "Custom Type Mismatch",
-                "#NAME?" => "Custom Identifier Error",
-                "#N/A" => "Custom Not Available",
-                "#REF!" => "Custom Reference Error",
-                _ => base.GetErrorValueString(err) // Fallback to default behavior
-            };
-        }
+            "#DIV/0!" => "Custom Division Error",
+            "#VALUE!" => "Custom Type Mismatch",
+            "#NAME?" => "Custom Identifier Error",
+            "#N/A"   => "Custom Not Available",
+            _        => base.GetErrorValueString(err) // fallback to default behavior
+        };
     }
+}
 
-    public class GlobalizationSettingsGetErrorValueStringDemo
+public class Program
+{
+    public static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook (lifecycle start)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Apply the custom globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings = new CustomErrorGlobalizationSettings();
+        // Assign the custom globalization settings to the workbook
+        workbook.Settings.GlobalizationSettings = new CustomErrorGlobalizationSettings();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+        // Create a cell that will generate an error (division by zero)
+        Cell errorCell = sheet.Cells["A1"];
+        errorCell.Formula = "=1/0"; // This will produce the #DIV/0! error
 
-                // Create several error scenarios
-                cells["A1"].Formula = "=1/0";                     // #DIV/0!
-                cells["A2"].Formula = "=SUM(\"text\")";          // #VALUE!
-                cells["A3"].Formula = "=UNKNOWNFUNC()";          // #NAME?
-                cells["A4"].Formula = "=VLOOKUP(1,B1:C1,2,FALSE)"; // #N/A (if not found)
-                cells["A5"].Formula = "=INDIRECT(\"Z1000\")";    // #REF!
+        // Calculate formulas so the error is evaluated
+        workbook.CalculateFormula();
 
-                // Calculate formulas to generate the errors
-                workbook.CalculateFormula();
+        // Retrieve the custom error string using the overridden method
+        string customError = errorCell.DisplayStringValue; // or errorCell.StringValue
 
-                // Display the custom error strings for each cell
-                Console.WriteLine($"A1 error display: {cells["A1"].DisplayStringValue}");
-                Console.WriteLine($"A2 error display: {cells["A2"].DisplayStringValue}");
-                Console.WriteLine($"A3 error display: {cells["A3"].DisplayStringValue}");
-                Console.WriteLine($"A4 error display: {cells["A4"].DisplayStringValue}");
-                Console.WriteLine($"A5 error display: {cells["A5"].DisplayStringValue}");
+        // Output the custom error message to the console
+        Console.WriteLine("Custom error display: " + customError);
 
-                // Save the workbook to verify that custom settings do not affect file content
-                workbook.Save("CustomErrorGlobalizationDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public static class Program
-    {
-        public static void Main()
-        {
-            GlobalizationSettingsGetErrorValueStringDemo.Run();
-        }
+        // Save the workbook (lifecycle end)
+        workbook.Save("CustomErrorGlobalization.xlsx");
     }
 }

@@ -1,32 +1,27 @@
 using System;
 using Aspose.Cells;
-using System.Drawing;
 
-class Program
+class MailtoHyperlinkDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put placeholder text into the target cell
-        worksheet.Cells["A1"].PutValue("Send Email");
+        // Target cell for the hyperlink
+        string cellName = "A1";
 
-        // Add a mailto hyperlink to cell A1
-        // Parameters: cell name, rows in range, columns in range, hyperlink address
-        int hyperlinkIndex = worksheet.Hyperlinks.Add("A1", 1, 1, "mailto:john.doe@example.com");
+        // Mailto address that opens the default email client
+        string mailtoAddress = "mailto:john.doe@example.com";
 
-        // Optionally change the displayed text of the hyperlink
+        // Add the hyperlink to the specified cell
+        int hyperlinkIndex = worksheet.Hyperlinks.Add(cellName, 1, 1, mailtoAddress);
+
+        // Set custom display text for the hyperlink
         worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Email John Doe";
 
-        // Apply typical hyperlink styling (blue and underlined)
-        Style style = worksheet.Cells["A1"].GetStyle();
-        style.Font.Color = Color.Blue;
-        style.Font.Underline = FontUnderlineType.Single;
-        worksheet.Cells["A1"].SetStyle(style);
-
-        // Save the workbook
+        // Save the workbook to a file
         workbook.Save("MailtoHyperlink.xlsx");
     }
 }

@@ -1,47 +1,45 @@
+// Title: Recalculate All Formulas After Deleting a Row with Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to delete a row, automatically adjust formula references, and recalculate the entire workbook using Aspose.Cells in C#. The example creates a sheet, adds data, sets a SUM formula, removes the second row, runs workbook.CalculateFormula(), and saves the result.
+// Keywords: Aspose.Cells C# delete row | recalculate formulas .NET | update formula references Aspose.Cells | Workbook.CalculateFormula example | row deletion formula adjustment | Aspose.Cells tutorial | C# Excel automation
+// Common Searches: How to recalculate formulas after deleting a row in Aspose.Cells C# | Aspose.Cells update SUM range when a row is removed | C# delete row and refresh all Excel formulas with Aspose | Aspose.Cells recalculate workbook after row removal | Delete row and keep formulas correct Aspose.Cells .NET
+// Developer Intent: Refresh every formula in a workbook after a row has been removed.
+// Use Cases: Remove a specific row and ensure dependent calculations reflect the new range. | Perform bulk row deletions and trigger a single recalculation before exporting. | Maintain accurate totals in financial reports after dynamic row removal.
+// AI Prompts: Write C# code using Aspose.Cells that deletes rows and automatically recalculates all workbook formulas. | Show how to adjust formula references only for cells impacted by a row deletion in Aspose.Cells. | Provide an Aspose.Cells example that handles SUM formula updates when rows are removed in a .NET application.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaRecalcAfterDeletion
+// Demonstrates how to delete a row, automatically adjust formula references, and recalculate the entire workbook using Aspose.Cells in C#. The example creates a sheet, adds data, sets a SUM formula, removes the second row, runs workbook.CalculateFormula(), and saves the result.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Populate some sample data
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
-            cells["A4"].PutValue(40);
+        // Populate some sample data
+        cells["A1"].PutValue(10);
+        cells["A2"].PutValue(20);
+        cells["A3"].PutValue(30);
 
-            // Add formulas that depend on the data range A1:A4
-            cells["B1"].Formula = "=SUM(A1:A4)";   // Should be 100
-            cells["B2"].Formula = "=AVERAGE(A1:A4)"; // Should be 25
+        // Add a formula that sums the three values
+        cells["B1"].Formula = "=SUM(A1:A3)";
 
-            // Calculate formulas before deletion (optional, just to show initial state)
-            workbook.CalculateFormula();
+        // Initial calculation (optional, ensures formula has a value before deletion)
+        workbook.CalculateFormula();
 
-            Console.WriteLine("Before deletion:");
-            Console.WriteLine($"B1 = {cells["B1"].Value}"); // Expected 100
-            Console.WriteLine($"B2 = {cells["B2"].Value}"); // Expected 25
+        // Delete the second row (index 1) and update references in formulas
+        cells.DeleteRow(1, true);
 
-            // Delete the third row (index 2, zero‑based). Update references so formulas adjust.
-            cells.DeleteRow(2, true); // Row 3 (A3) is removed; range becomes A1:A3
+        // Recalculate all formulas after the deletion operation
+        workbook.CalculateFormula();
 
-            // Recalculate all formulas after the deletion
-            workbook.CalculateFormula();
+        // Display the updated result of the formula
+        Console.WriteLine("Formula result after deletion: " + cells["B1"].Value);
 
-            Console.WriteLine("\nAfter deletion of row 3:");
-            // The formulas now refer to the updated range A1:A3 (10,20,40)
-            Console.WriteLine($"B1 = {cells["B1"].Value}"); // Expected 70
-            Console.WriteLine($"B2 = {cells["B2"].Value}"); // Expected 23.333...
-
-            // Save the workbook to verify the results in Excel
-            workbook.Save("FormulaRecalcAfterDeletion.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("ResultAfterDeletion.xlsx");
     }
 }

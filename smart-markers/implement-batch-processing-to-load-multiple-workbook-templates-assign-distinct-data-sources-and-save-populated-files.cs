@@ -1,121 +1,67 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+namespace AsposeCellsBatchExample
 {
-    // Represents a single batch item: template file, data source name, data object, and output file.
-    public class BatchItem
+    // Simple POCO used as a data source for the templates
+    public class Person
     {
-        public string TemplatePath { get; set; }      // Path to the template workbook (contains smart markers)
-        public string DataSourceName { get; set; }    // Name used in smart markers, e.g. "&DataSourceName.Property"
-        public object DataSource { get; set; }        // The actual data object (List<T>, DataTable, etc.)
-        public string OutputPath { get; set; }        // Where the populated workbook will be saved
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 
-    public static class BatchProcessor
+    public class BatchProcessor
     {
-        // Processes a collection of BatchItem objects.
-        public static void ProcessTemplates(IEnumerable<BatchItem> items)
+        public void Run()
         {
-            foreach (var item in items)
+            // Paths of the template workbooks
+            string[] templateFiles = { "Template1.xlsx", "Template2.xlsx" };
+            // Corresponding output file names
+            string[] outputFiles = { "Result1.xlsx", "Result2.xlsx" };
+
+            // Distinct data sources for each template
+            var dataSources = new List<List<Person>>
             {
-                try
+                new List<Person>
                 {
-                    // Verify that the template file exists.
-                    if (!File.Exists(item.TemplatePath))
-                        throw new FileNotFoundException($"Template file not found: {item.TemplatePath}");
-
-                    // Load the template workbook.
-                    var templateWorkbook = new Workbook(item.TemplatePath);
-
-                    // Initialize WorkbookDesigner with the loaded workbook.
-                    var designer = new WorkbookDesigner(templateWorkbook);
-
-                    // Assign the distinct data source to the designer.
-                    designer.SetDataSource(item.DataSourceName, item.DataSource);
-
-                    // Process smart markers and populate the workbook.
-                    designer.Process();
-
-                    // Ensure the output directory exists.
-                    var outputDir = Path.GetDirectoryName(item.OutputPath);
-                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                        Directory.CreateDirectory(outputDir);
-
-                    // Save the populated workbook to the specified output path.
-                    designer.Workbook.Save(item.OutputPath);
-                }
-                catch (Exception ex)
+                    new Person { Name = "Alice", Age = 30 },
+                    new Person { Name = "Bob", Age = 25 }
+                },
+                new List<Person>
                 {
-                    Console.WriteLine($"Error processing batch item (Template: {item.TemplatePath}, Output: {item.OutputPath}): {ex.Message}");
+                    new Person { Name = "Charlie", Age = 35 },
+                    new Person { Name = "Diana", Age = 28 }
                 }
+            };
+
+            // Process each template
+            for (int i = 0; i < templateFiles.Length; i++)
+            {
+                // Load the template workbook (uses Workbook(string) constructor)
+                Workbook workbook = new Workbook(templateFiles[i]);
+
+                // Create a WorkbookDesigner and assign the loaded workbook
+                WorkbookDesigner designer = new WorkbookDesigner();
+                designer.Workbook = workbook;
+
+                // Set a distinct data source for the current workbook
+                designer.SetDataSource("Person", dataSources[i]);
+
+                // Populate the workbook by processing smart markers
+                designer.Process();
+
+                // Save the populated workbook (uses Workbook.Save(string))
+                designer.Workbook.Save(outputFiles[i]);
             }
         }
     }
 
-    // Example usage.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Prepare distinct data sources for each template.
-                var employees = new List<Employee>
-                {
-                    new Employee { Name = "John Doe", Age = 30, Department = "Sales" },
-                    new Employee { Name = "Jane Smith", Age = 28, Department = "HR" }
-                };
-
-                var products = new List<Product>
-                {
-                    new Product { Id = 101, Name = "Laptop", Price = 1200.00 },
-                    new Product { Id = 102, Name = "Smartphone", Price = 799.99 }
-                };
-
-                // Define batch items.
-                var batchItems = new List<BatchItem>
-                {
-                    new BatchItem
-                    {
-                        TemplatePath = "EmployeeTemplate.xlsx",
-                        DataSourceName = "Employees",
-                        DataSource = employees,
-                        OutputPath = "EmployeeReport.xlsx"
-                    },
-                    new BatchItem
-                    {
-                        TemplatePath = "ProductTemplate.xlsx",
-                        DataSourceName = "Products",
-                        DataSource = products,
-                        OutputPath = "ProductCatalog.xlsx"
-                    }
-                };
-
-                // Execute batch processing.
-                BatchProcessor.ProcessTemplates(batchItems);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            new BatchProcessor().Run();
         }
-    }
-
-    // Sample data classes used in the example.
-    public class Employee
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Department { get; set; }
-    }
-
-    public class Product
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double Price { get; set; }
     }
 }

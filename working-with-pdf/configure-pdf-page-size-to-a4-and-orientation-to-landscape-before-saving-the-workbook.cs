@@ -1,44 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfPageSetup
+namespace AsposeCellsPdfDemo
 {
-    public class ConfigurePdfPage
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Set default paper size to A4
-                workbook.Settings.PaperSize = PaperSizeType.PaperA4;
+            // Set the paper size for the whole workbook to A4
+            workbook.Settings.PaperSize = PaperSizeType.PaperA4;
 
-                // Set orientation to Landscape
-                workbook.Settings.SetPageOrientationType(PageOrientationType.Landscape);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Define output file path
-                string outputPath = "output.pdf";
+            // Set page orientation to Landscape
+            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-                // Save the workbook as PDF
-                workbook.Save(outputPath, SaveFormat.Pdf);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
+            // (Optional) Add some content to demonstrate the PDF output
+            sheet.Cells["A1"].PutValue("Sample PDF with A4 Landscape");
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ConfigurePdfPage.Run();
+            // Save the workbook as PDF
+            workbook.Save("Output_A4_Landscape.pdf", SaveFormat.Pdf);
         }
     }
 }

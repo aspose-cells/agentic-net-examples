@@ -6,15 +6,15 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartFillExample
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // (Optional) Add some sample data for the chart
+            // Add sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
@@ -32,10 +32,10 @@ namespace AsposeCellsChartFillExample
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Configure the chart area fill: solid color with 80% opacity (20% transparency)
-            chart.ChartArea.Area.FillFormat.FillType = FillType.Solid;
-            chart.ChartArea.Area.FillFormat.SolidFill.Color = Color.LightGray;
-            chart.ChartArea.Area.FillFormat.SolidFill.Transparency = 0.2; // 0 = opaque, 1 = fully transparent
+            // Configure the chart area to use a solid fill with 80% opacity (20% transparency)
+            chart.ChartArea.Area.FillFormat.FillType = FillType.Solid;                     // Use solid fill
+            chart.ChartArea.Area.FillFormat.SolidFill.Color = Color.LightGray;           // Choose a subtle color
+            chart.ChartArea.Area.FillFormat.SolidFill.Transparency = 0.2;                // 20% transparent = 80% opacity
 
             // Save the workbook
             workbook.Save("ChartWithSolidFill.xlsx");

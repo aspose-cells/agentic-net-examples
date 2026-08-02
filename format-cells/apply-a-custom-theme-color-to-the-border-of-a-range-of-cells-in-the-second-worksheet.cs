@@ -1,58 +1,54 @@
+// Title: Apply a Custom Theme Color to Outline Borders of a Range in the Second Worksheet (Aspose.Cells for .NET)
+// Description: C# example that creates a workbook, adds or selects the second worksheet, defines the range B2:D5, builds a CellsColor using the Accent2 theme, applies a thin outline border with that theme color, and saves the file as CustomThemeBorderDemo.xlsx using Aspose.Cells.
+// Keywords: Aspose.Cells theme border color | C# set outline border theme | apply custom theme color to range borders | second worksheet border styling Aspose | CellsColor ThemeColorType Accent2 | thin outline border Aspose.Cells
+// Common Searches: how to set a theme color for cell borders in Aspose.Cells | apply thin outline border with theme color to a range | border styling on second worksheet Aspose.Cells .NET | use ThemeColorType Accent2 for borders in C# | create CellsColor with theme in Aspose.Cells
+// Developer Intent: Style the outline borders of a specific cell range on the second worksheet using a workbook theme color.
+// Use Cases: Consistently brand tables on a secondary sheet by using the workbook’s Accent2 theme for borders. | Add a new worksheet to an existing workbook and immediately apply theme‑based borders to a data range before exporting. | Replace fixed RGB border colors with dynamic theme colors so the spreadsheet adapts to different Office themes.
+// AI Prompts: Generate C# code with Aspose.Cells to apply a thin outline border using ThemeColorType.Accent3 to range A1:C3 on the third worksheet. | Show how to adjust the tint of a CellsColor theme border to a lighter shade and apply it to the inside borders of a range. | Explain how to read the current workbook theme and use those colors for borders on multiple ranges in Aspose.Cells.
+
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System.Drawing;
 
-namespace AsposeCellsExamples
+// C# example that creates a workbook, adds or selects the second worksheet, defines the range B2:D5, builds a CellsColor using the Accent2 theme, applies a thin outline border with that theme color, and saves the file as CustomThemeBorderDemo.xlsx using Aspose.Cells.
+class ApplyCustomThemeBorder
 {
-    public class ApplyCustomThemeBorderToSecondWorksheet
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add a second worksheet (index 1)
-            workbook.Worksheets.Add();
-            Worksheet secondSheet = workbook.Worksheets[1];
-
-            // Define the range where the border will be applied
-            AsposeRange range = secondSheet.Cells.CreateRange("B2:D5");
-
-            // Create a CellsColor object and set its theme color (e.g., Accent2)
-            CellsColor themeBorderColor = workbook.CreateCellsColor();
-            themeBorderColor.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0);
-
-            // Apply an outline border with the theme color to the entire range
-            // Using Thin style for all four edges
-            range.SetOutlineBorders(CellBorderType.Thin, themeBorderColor);
-
-            // Optionally, put some sample data to visualize the border
-            for (int row = 1; row <= 4; row++)          // rows 2-5 (0‑based index)
+            // Ensure there is a second worksheet (index 1)
+            Worksheet worksheet;
+            if (workbook.Worksheets.Count > 1)
             {
-                for (int col = 1; col <= 3; col++)      // columns B-D (0‑based index)
-                {
-                    secondSheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
+                worksheet = workbook.Worksheets[1];
+            }
+            else
+            {
+                // Add a new worksheet and get it as the second sheet
+                int newIndex = workbook.Worksheets.Add();
+                worksheet = workbook.Worksheets[newIndex];
             }
 
+            // Define the range whose borders will be styled
+            Aspose.Cells.Range range = worksheet.Cells.CreateRange("B2:D5");
+
+            // Create a CellsColor object and assign a theme color (e.g., Accent2)
+            CellsColor themeBorderColor = workbook.CreateCellsColor();
+            themeBorderColor.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0); // No tint
+
+            // Apply the same thin border with the theme color to all outline edges of the range
+            range.SetOutlineBorders(CellBorderType.Thin, themeBorderColor);
+
             // Save the workbook
-            string outputPath = "CustomThemeBorder.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save("CustomThemeBorderDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

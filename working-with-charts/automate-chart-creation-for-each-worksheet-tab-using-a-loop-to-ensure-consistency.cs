@@ -2,59 +2,70 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsChartAutomation
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (contains a default sheet)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Remove the default sheet to avoid duplicate names
-            if (workbook.Worksheets.Count > 0)
-                workbook.Worksheets.RemoveAt(0);
+            // Add multiple worksheets (for demonstration)
+            Worksheet sheet1 = workbook.Worksheets[0]; // default sheet
+            sheet1.Name = "Sheet1";
 
-            // Add several worksheets with unique names
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
 
-            // Loop through each worksheet to add data and a chart
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            // Populate each worksheet with sample data
+            PopulateSampleData(sheet1);
+            PopulateSampleData(sheet2);
+            PopulateSampleData(sheet3);
+
+            // Loop through all worksheets and add a column chart to each
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet sheet = workbook.Worksheets[i];
-
-                // Populate sample data (Category / Value)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                for (int r = 2; r <= 6; r++)
-                {
-                    sheet.Cells[$"A{r}"].PutValue($"Item {r - 1}");
-                    sheet.Cells[$"B{r}"].PutValue((r - 1) * 10);
-                }
+                // Define the position of the chart (topRow, leftColumn, bottomRow, rightColumn)
+                int topRow = 5;
+                int leftColumn = 2;
+                int bottomRow = 25;
+                int rightColumn = 11;
 
                 // Add a column chart to the current worksheet
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIdx];
+                int chartIndex = sheet.Charts.Add(ChartType.Column, topRow, leftColumn, bottomRow, rightColumn);
+                Chart chart = sheet.Charts[chartIndex];
 
-                // Define the data range for the chart
-                chart.NSeries.Add("B2:B6", true);          // Values
-                chart.NSeries.CategoryData = "A2:A6";      // Categories
+                // Set the data range for the chart (assumes data is in A1:B5)
+                // First series values
+                chart.NSeries.Add("=Sheet" + (sheet.Index + 1) + "!$B$2:$B$5", true);
+                // Category (X) axis data
+                chart.NSeries.CategoryData = "=Sheet" + (sheet.Index + 1) + "!$A$2:$A$5";
 
-                // Set a title for clarity
-                chart.Title.Text = $"Chart for {sheet.Name}";
+                // Optional: give the chart a title
+                chart.Title.Text = $"Sample Chart for {sheet.Name}";
 
-                // Recalculate the chart layout before saving
+                // Recalculate the chart layout
                 chart.Calculate();
             }
 
-            // Save the workbook with all charts
+            // Save the workbook to a file
             workbook.Save("ChartsForAllSheets.xlsx", SaveFormat.Xlsx);
         }
-        catch (Exception ex)
+
+        // Helper method to fill a worksheet with simple sample data
+        private static void PopulateSampleData(Worksheet sheet)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Header
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+
+            // Sample rows
+            for (int i = 2; i <= 5; i++)
+            {
+                sheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
+                sheet.Cells[$"B{i}"].PutValue((i - 1) * 10); // 10, 20, 30, 40
+            }
         }
     }
 }

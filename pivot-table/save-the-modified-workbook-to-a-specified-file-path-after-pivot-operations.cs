@@ -2,35 +2,53 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class SavePivotWorkbookDemo
+namespace AsposeCellsPivotSaveDemo
 {
-    static void Main()
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        public static void Main()
+        {
+            // Define the output file path
+            string outputPath = "ModifiedPivotWorkbook.xlsx";
 
-        // Populate sample data for the pivot table
-        cells["A1"].Value = "Category";
-        cells["B1"].Value = "Amount";
-        cells["A2"].Value = "Food";
-        cells["B2"].Value = 100;
-        cells["A3"].Value = "Drink";
-        cells["B3"].Value = 150;
-        cells["A4"].Value = "Supplies";
-        cells["B4"].Value = 200;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Food");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Beverage");
+            sheet.Cells["B3"].PutValue(800);
+            sheet.Cells["A4"].PutValue("Electronics");
+            sheet.Cells["B4"].PutValue(1500);
 
-        // Refresh the pivot table to ensure it reflects the source data
-        sheet.RefreshPivotTables();
+            // Add a pivot table based on the sample data
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Save the modified workbook to the specified file path
-        workbook.Save("ModifiedPivotWorkbook.xlsx");
+            // Configure the pivot table: rows = Category, data = Sum of Amount
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+            // Calculate data for the newly created pivot table
+            pivotTable.CalculateData();
+
+            // Refresh all pivot tables in the worksheet (good practice after modifications)
+            sheet.RefreshPivotTables();
+
+            // Optionally, control whether pivot data is saved with the workbook
+            // pivotTable.SaveData = true; // default is true
+
+            // Save the modified workbook to the specified file path
+            workbook.Save(outputPath);
+
+            // Clean up resources
+            workbook.Dispose();
+
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
     }
 }

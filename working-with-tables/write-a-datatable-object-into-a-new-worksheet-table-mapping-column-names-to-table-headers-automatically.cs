@@ -2,41 +2,44 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsDataTableToTableDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a sample DataTable with column names and data
-        DataTable dt = new DataTable("Sample");
-        dt.Columns.Add("Product", typeof(string));
-        dt.Columns.Add("Quantity", typeof(int));
-        dt.Columns.Add("Price", typeof(double));
-
-        dt.Rows.Add("Apple", 10, 0.5);
-        dt.Rows.Add("Banana", 20, 0.3);
-        dt.Rows.Add("Cherry", 15, 1.2);
-
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Import the DataTable into the worksheet starting at cell A1.
-        // Set IsFieldNameShown = true so column names become table headers.
-        ImportTableOptions importOptions = new ImportTableOptions
+        static void Main()
         {
-            IsFieldNameShown = true
-        };
-        ws.Cells.ImportData(dt, 0, 0, importOptions);
+            // Create a new workbook and add a worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Calculate the range that contains the imported data (including header row)
-        int totalRows = dt.Rows.Count + 1; // +1 for the header row
-        int totalCols = dt.Columns.Count;
+            // Prepare a sample DataTable
+            DataTable dt = new DataTable("Sample");
+            dt.Columns.Add("Product", typeof(string));
+            dt.Columns.Add("Quantity", typeof(int));
+            dt.Columns.Add("Price", typeof(double));
 
-        // Add an Excel table (ListObject) over the imported range.
-        // The last argument indicates that the first row is a header.
-        ws.ListObjects.Add(0, 0, totalRows, totalCols, true);
+            dt.Rows.Add("Apple", 10, 0.5);
+            dt.Rows.Add("Banana", 20, 0.3);
+            dt.Rows.Add("Cherry", 15, 0.8);
 
-        // Save the workbook to a file.
-        wb.Save("DataTableToTable.xlsx");
+            // Set import options to show column names as headers
+            ImportTableOptions importOptions = new ImportTableOptions
+            {
+                IsFieldNameShown = true   // map column names to table headers
+            };
+
+            // Import the DataTable into the worksheet starting at cell A1 (row 0, column 0)
+            int rowsImported = cells.ImportData(dt, 0, 0, importOptions);
+
+            // Create an Excel table (ListObject) that covers the imported range
+            // The range includes the header row plus the imported data rows
+            int totalRows = rowsImported + 1; // +1 for header row
+            int totalColumns = dt.Columns.Count;
+            sheet.ListObjects.Add(0, 0, totalRows - 1, totalColumns - 1, true);
+
+            // Save the workbook
+            workbook.Save("DataTableToExcelTable.xlsx");
+        }
     }
 }

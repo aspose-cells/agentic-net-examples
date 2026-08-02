@@ -2,9 +2,9 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class AddSecondaryYAxisDemo
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
@@ -44,9 +44,8 @@ class AddSecondaryYAxisDemo
         secondaryAxis.MinValue = 0;
         secondaryAxis.MaxValue = 6000;
         secondaryAxis.MajorUnit = 1000;
-        secondaryAxis.IsVisible = true;
 
-        // Save the workbook with the chart
+        // Save the workbook to a file
         workbook.Save("ChartWithSecondaryYAxis.xlsx");
     }
 }

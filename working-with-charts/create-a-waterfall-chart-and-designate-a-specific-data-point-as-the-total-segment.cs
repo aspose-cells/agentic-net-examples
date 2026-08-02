@@ -1,44 +1,58 @@
+// Title: C# – Create a Waterfall Chart with a Total Segment using Aspose.Cells
+// Description: Demonstrates how to build a workbook, add month labels and values, insert a Waterfall chart, bind series and categories, and mark a specific point as a total segment via LayoutProperties.Subtotals, then save as WaterfallChart.xlsx.
+// Keywords: Aspose.Cells | C# waterfall chart | total segment | LayoutProperties.Subtotals | chart subtotal index | .NET charting | financial waterfall
+// Common Searches: Aspose.Cells set total bar waterfall chart C# | how to mark subtotal in Aspose.Cells waterfall | waterfall chart total segment .NET | LayoutProperties.Subtotals example | create waterfall chart Aspose.Cells
+// Developer Intent: Add a Waterfall chart to a workbook and define a chosen data point as the total segment.
+// Use Cases: Financial statements where the final month shows the cumulative total. | Sales performance analysis highlighting the overall result as a total bar. | Project cost breakdown with the last column representing the total expense.
+// AI Prompts: Generate C# code that creates a Waterfall chart in Aspose.Cells and sets the last point as a total segment. | Show how to assign multiple total segments in an Aspose.Cells Waterfall chart. | Explain customization options for the appearance of total bars in Aspose.Cells waterfall charts.
+
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class WaterfallChartDemo
+namespace AsposeCellsWaterfallDemo
 {
-    static void Main()
+    // Demonstrates how to build a workbook, add month labels and values, insert a Waterfall chart, bind series and categories, and mark a specific point as a total segment via LayoutProperties.Subtotals, then save as WaterfallChart.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Prepare sample data for the waterfall chart
-        // Column A – Category names, Column B – Values (positive for increase, negative for decrease)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-
-        string[] categories = { "Start", "Revenue", "Expense", "Profit" };
-        double[] values = { 0, 500, -200, 300 };
-
-        for (int i = 0; i < categories.Length; i++)
+        static void Main()
         {
-            sheet.Cells[i + 1, 0].PutValue(categories[i]);   // A2, A3, ...
-            sheet.Cells[i + 1, 1].PutValue(values[i]);      // B2, B3, ...
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the waterfall chart
+            // Category labels
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["A5"].PutValue("Apr");
+            sheet.Cells["A6"].PutValue("May");
+
+            // Corresponding values (positive and negative)
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(-5);
+            sheet.Cells["B4"].PutValue(15);
+            sheet.Cells["B5"].PutValue(-3);
+            sheet.Cells["B6"].PutValue(20);
+
+            // Add a Waterfall chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Waterfall, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIdx];
+
+            // Set the data range for the series and the category axis
+            chart.NSeries.Add("B2:B6", true);
+            chart.NSeries.CategoryData = "A2:A6";
+
+            // Designate the last data point (index 4, zero‑based) as a total segment
+            // using the Subtotals property of LayoutProperties
+            chart.NSeries[0].LayoutProperties.Subtotals = new int[] { 4 };
+
+            // Recalculate the chart to apply layout changes
+            chart.Calculate();
+
+            // Save the workbook with the waterfall chart
+            workbook.Save("WaterfallChart.xlsx");
         }
-
-        // Add a Waterfall chart to the worksheet (using the provided Add method)
-        int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Bind the data range to the chart
-        chart.NSeries.Add("B2:B5", true);          // Values
-        chart.NSeries.CategoryData = "A2:A5";      // Categories
-
-        // Designate the last data point (index 3) as a total segment
-        // The Subtotals property receives an array of zero‑based indices
-        chart.NSeries[0].LayoutProperties.Subtotals = new int[] { 3 };
-
-        // Optional: set a chart title
-        chart.Title.Text = "Waterfall Example";
-
-        // Save the workbook with the chart
-        workbook.Save("WaterfallChart.xlsx", SaveFormat.Xlsx);
     }
 }

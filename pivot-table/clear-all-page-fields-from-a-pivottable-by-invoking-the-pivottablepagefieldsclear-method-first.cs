@@ -1,46 +1,56 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class ClearPivotTablePageFields
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class ClearPivotTablePageFieldsDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Region");
-        sheet.Cells["B1"].PutValue("Product");
-        sheet.Cells["C1"].PutValue("Sales");
-        sheet.Cells["A2"].PutValue("North");
-        sheet.Cells["B2"].PutValue("Car");
-        sheet.Cells["C2"].PutValue(1000);
-        sheet.Cells["A3"].PutValue("South");
-        sheet.Cells["B3"].PutValue("Bike");
-        sheet.Cells["C3"].PutValue(800);
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Region");
+            sheet.Cells["C1"].PutValue("Sales");
 
-        // Add a pivot table that includes a page field (Region)
-        int ptIndex = sheet.PivotTables.Add("A1:C3", "E5", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[ptIndex];
+            sheet.Cells["A2"].PutValue("P1");
+            sheet.Cells["B2"].PutValue("North");
+            sheet.Cells["C2"].PutValue(1000);
 
-        // Add fields to the pivot table
-        pivotTable.AddFieldToArea(PivotFieldType.Page, "Region");   // page field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");   // row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");    // data field
+            sheet.Cells["A3"].PutValue("P2");
+            sheet.Cells["B3"].PutValue("South");
+            sheet.Cells["C3"].PutValue(1500);
 
-        // Build the pivot table
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            sheet.Cells["A4"].PutValue("P1");
+            sheet.Cells["B4"].PutValue("East");
+            sheet.Cells["C4"].PutValue(2000);
 
-        // Clear all page fields from the pivot table
-        pivotTable.PageFields.Clear();
+            // Add a pivot table with a page field (Region)
+            int pivotIndex = sheet.PivotTables.Add("A1:C4", "E1", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Recalculate after clearing page fields (optional but ensures consistency)
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivotTable.AddFieldToArea(PivotFieldType.Page, "Region");
 
-        // Save the workbook
-        workbook.Save("ClearPageFieldsDemo.xlsx");
+            // Refresh and calculate to build the pivot table
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Clear all page fields from the pivot table
+            pivotTable.PageFields.Clear();
+
+            // Recalculate after clearing page fields (optional)
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook
+            workbook.Save("ClearPivotTablePageFieldsDemo.xlsx");
+        }
     }
 }

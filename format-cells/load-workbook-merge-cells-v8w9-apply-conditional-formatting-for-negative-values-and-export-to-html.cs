@@ -1,67 +1,93 @@
+// Title: Merge V8:W9, Apply Red Conditional Formatting for Negative Values, and Export to HTML – Aspose.Cells C# Example
+// Description: A C# snippet that loads an existing workbook, merges the range V8:W9, adds a conditional‑formatting rule that paints cells red when the value is below zero, and saves the result as clean HTML using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells merge cells | C# conditional formatting negative values | export Excel to HTML Aspose | HtmlSaveOptions MergeAreas | red background conditional format | V8 W9 cell merge | Aspose.Cells .NET example
+// Common Searches: how to merge cells V8:W9 with Aspose.Cells C# | apply red conditional formatting for values < 0 in Aspose.Cells | save Excel workbook as HTML preserving formatting | Aspose.Cells conditional formatting HTML output | C# code to merge range and export to HTML
+// Developer Intent: Merge the V8:W9 range, highlight negative numbers with a red background, and generate an HTML file from the workbook.
+// Use Cases: Create a highlighted header in a financial report where negative figures appear in red, then share the report as a web page. | Convert an Excel dashboard to HTML while keeping merged header cells and loss‑indicating formatting. | Automate batch conversion of spreadsheets to HTML that retains visual cues such as merged cells and conditional styles.
+// AI Prompts: Generate C# code using Aspose.Cells to merge V8:W9, add a red background rule for values less than zero, and export the workbook to HTML with MergeAreas enabled. | Explain the effect of HtmlSaveOptions.MergeAreas on the HTML output when conditional formatting is applied in Aspose.Cells. | Provide a step‑by‑step guide to apply multiple conditional‑formatting rules to different ranges before saving the workbook as HTML with Aspose.Cells for .NET.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using System.Drawing;
 
-class WorkbookProcessor
+namespace AsposeCellsExample
 {
-    static void Main()
+    // A C# snippet that loads an existing workbook, merges the range V8:W9, adds a conditional‑formatting rule that paints cells red when the value is below zero, and saves the result as clean HTML using Aspose.Cells for .NET.
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Access the first worksheet (or modify as needed)
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Merge cells V8:W9
-        // Column V = 21 (zero‑based), Column W = 22
-        // Row 8 = index 7, Row 9 = index 8
-        cells.Merge(firstRow: 7, firstColumn: 21, totalRows: 2, totalColumns: 2);
-
-        // Apply conditional formatting for negative values on the used range
-        // Define the area to which the formatting will be applied (e.g., A1:Z100)
-        CellArea formatArea = new CellArea
+        static void Main()
         {
-            StartRow = 0,
-            StartColumn = 0,
-            EndRow = cells.MaxDataRow,
-            EndColumn = cells.MaxDataColumn
-        };
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.html";
 
-        // Add a new ConditionalFormatting collection to the worksheet
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-        // Associate the defined area with the conditional formatting
-        fcc.AddArea(formatArea);
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Add a condition: cell value less than 0 (negative numbers)
-        int conditionIndex = fcc.AddCondition(
-            type: FormatConditionType.CellValue,
-            operatorType: OperatorType.LessThan,
-            formula1: "0",
-            formula2: null);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-        // Retrieve the created condition and set its style (e.g., red background)
-        FormatCondition condition = fcc[conditionIndex];
-        Style style = workbook.CreateStyle();
-        style.ForegroundColor = Color.Red;
-        style.Pattern = BackgroundType.Solid;
-        condition.Style = style;
+                // -------------------------------------------------
+                // 1. Merge cells V8:W9 (V -> column 21, W -> column 22; rows 8-9 -> indices 7-8)
+                // -------------------------------------------------
+                cells.Merge(firstRow: 7, firstColumn: 21, totalRows: 2, totalColumns: 2);
 
-        // Prepare HTML save options (merge conditional formatting areas for compact HTML)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-        {
-            MergeAreas = true,                     // Merge CF and validation areas
-            ExportFormula = true,                  // Keep formulas in HTML (optional)
-            ExportActiveWorksheetOnly = true       // Export only the active sheet
-        };
+                // -------------------------------------------------
+                // 2. Apply conditional formatting for negative values on the same range V8:W9
+                // -------------------------------------------------
+                // Add a new conditional formatting rule to the worksheet
+                int cfIndex = sheet.ConditionalFormattings.Add();
 
-        // Save the workbook as HTML
-        string outputPath = "output.html";
-        workbook.Save(outputPath, htmlOptions);
+                // Define the target range V8:W9
+                CellArea area = new CellArea
+                {
+                    StartRow = 7,
+                    StartColumn = 21,
+                    EndRow = 8,
+                    EndColumn = 22
+                };
+                sheet.ConditionalFormattings[cfIndex].AddArea(area);
 
-        Console.WriteLine("Workbook processed and saved as HTML: " + outputPath);
+                // Add a condition: cell value less than 0
+                int conditionIndex = sheet.ConditionalFormattings[cfIndex].AddCondition(
+                    FormatConditionType.CellValue,
+                    OperatorType.LessThan,
+                    "0",
+                    null);
+
+                // Configure the style for the condition (red background)
+                FormatCondition condition = sheet.ConditionalFormattings[cfIndex][conditionIndex];
+                Style style = condition.Style;
+                style.ForegroundColor = Color.Red;
+                style.Pattern = BackgroundType.Solid;
+                condition.Style = style;
+
+                // -------------------------------------------------
+                // 3. Save the workbook as HTML
+                // -------------------------------------------------
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Merge conditional formatting areas before saving to keep HTML tidy
+                    MergeAreas = true
+                };
+
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook saved as HTML to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

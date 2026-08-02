@@ -1,25 +1,27 @@
-using System;
 using System.Drawing;
 using Aspose.Cells;
 
-class UpdateHyperlinkTheme
+namespace AsposeCellsHyperlinkThemeDemo
 {
-    static void Main()
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Change the theme color for hyperlinks to a dark gray (RGB 64,64,64)
-        workbook.SetThemeColor(ThemeColorType.Hyperlink, Color.FromArgb(64, 64, 64));
+            // Add a sample hyperlink to demonstrate the theme effect
+            // Parameters: cell name, row offset, column offset, hyperlink address
+            sheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
 
-        // Add a sample hyperlink to demonstrate the new theme color
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
-        // Set display text for the hyperlink
-        Hyperlink hyperlink = sheet.Hyperlinks[sheet.Hyperlinks.Count - 1];
-        hyperlink.TextToDisplay = "Example Site";
+            // Update the theme's hyperlink color to a dark gray
+            // ThemeColorType.Hyperlink corresponds to the hyperlink color in the theme
+            // Color.DarkGray provides a standard dark gray color
+            workbook.SetThemeColor(ThemeColorType.Hyperlink, Color.DarkGray);
 
-        // Save the workbook with the updated hyperlink theme color
-        workbook.Save("UpdatedHyperlinkTheme.xlsx");
+            // Save the workbook; all hyperlinks will now use the dark gray theme color
+            workbook.Save("HyperlinkThemeDemo.xlsx");
+        }
     }
 }

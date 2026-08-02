@@ -9,8 +9,8 @@ class ApplyDefaultEncryption
         string inputPath = "input.xlsx";
         string outputPath = "output_encrypted.xlsx";
 
-        // Preset password to be applied if the workbook is not encrypted
-        string presetPassword = "MySecret123";
+        // Preset password to be applied when encrypting
+        const string presetPassword = "MySecretPassword";
 
         // Load the workbook (no password needed for unencrypted files)
         LoadOptions loadOptions = new LoadOptions();
@@ -22,11 +22,14 @@ class ApplyDefaultEncryption
             // Apply password protection
             workbook.Settings.Password = presetPassword;
 
+            // Enable default encryption (encrypt with default password when structure/windows are locked)
+            workbook.Settings.IsDefaultEncrypted = true;
+
             // Optionally set stronger encryption options (e.g., AES 128-bit)
             workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
         }
 
-        // Save the workbook with the applied encryption
+        // Save the workbook with encryption applied
         workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

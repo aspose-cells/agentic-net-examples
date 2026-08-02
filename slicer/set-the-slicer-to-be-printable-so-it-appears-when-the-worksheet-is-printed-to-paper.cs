@@ -1,64 +1,44 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;   // For PivotFieldType
-using Aspose.Cells.Slicers; // For slicer support (optional)
+using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;
 
-namespace SlicerPrintableDemo
+class SetSlicerPrintable
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                var workbook = new Workbook();
-                var sheet = workbook.Worksheets[0];
-                var cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-                // Populate sample data for the pivot table
-                cells["A1"].Value = "Category";
-                cells["A2"].Value = "A";
-                cells["A3"].Value = "B";
-                cells["A4"].Value = "C";
+        // Populate sample data for the pivot table
+        cells["A1"].Value = "Category";
+        cells["A2"].Value = "A";
+        cells["A3"].Value = "B";
+        cells["A4"].Value = "A";
 
-                cells["B1"].Value = "Value";
-                cells["B2"].Value = 10;
-                cells["B3"].Value = 20;
-                cells["B4"].Value = 30;
+        cells["B1"].Value = "Value";
+        cells["B2"].Value = 10;
+        cells["B3"].Value = 20;
+        cells["B4"].Value = 30;
 
-                // Add a pivot table based on the data range
-                int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "MyPivot");
-                var pivot = sheet.PivotTables[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+        // Add a pivot table based on the data range
+        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "Pivot1");
+        PivotTable pivot = sheet.PivotTables[pivotIndex];
+        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+        pivot.RefreshData();
+        pivot.CalculateData();
 
-                // Add a slicer linked to the pivot table
-                int slicerIdx = sheet.Slicers.Add(pivot, "E1", "Category");
-                var slicer = sheet.Slicers[slicerIdx];
+        // Add a slicer linked to the pivot field "Category"
+        int slicerIndex = sheet.Slicers.Add(pivot, "E1", "Category");
+        Slicer slicer = sheet.Slicers[slicerIndex];
 
-                // Make the slicer printable so it appears on printed pages
-                slicer.Shape.IsPrintable = true;
+        // Ensure the slicer is printable by setting the underlying shape's IsPrintable property
+        slicer.Shape.IsPrintable = true;
 
-                // Define output file path
-                string outputPath = "SlicerPrintableDemo.xlsx";
-
-                // Ensure the output directory exists (prevents FileNotFoundException on save)
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("SlicerPrintable.xlsx");
     }
 }

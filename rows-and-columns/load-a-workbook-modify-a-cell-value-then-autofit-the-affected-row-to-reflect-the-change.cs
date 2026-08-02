@@ -1,28 +1,26 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+class Program
 {
-    class AutoFitRowExample
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your actual file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+        // Load an existing workbook (you can customize LoadOptions if needed)
+        LoadOptions loadOptions = new LoadOptions();
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Modify a cell value (e.g., B2)
-            worksheet.Cells["B2"].PutValue("This is a new, longer piece of text that should cause the row height to increase.");
+        // Modify the value of cell B2 (row index 1, column index 1)
+        worksheet.Cells["B2"].Value = "Updated long text that may need row height adjustment";
 
-            // Auto‑fit the row that contains the modified cell (row index is zero‑based, so B2 is row 1)
-            worksheet.AutoFitRow(1);
+        // Auto‑fit the row that contains the modified cell (row index 1)
+        worksheet.AutoFitRow(1);
 
-            // Save the updated workbook (replace with your desired output path)
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-        }
+        // Save the changes to a new file
+        workbook.Save("output.xlsx");
     }
 }
+
+// Author: Aspose.Cells .NET example – load, edit, auto‑fit row, and save.

@@ -1,89 +1,76 @@
+// Title: Duplicate Adjacent Columns While Preserving Merged Cells – Aspose.Cells for .NET (C#)
+// Description: This example shows how to copy a block of adjacent columns with Aspose.Cells' CopyColumns method, capture any merged cells in the source range, and re‑apply those merges to the destination columns so the layout remains unchanged. The workbook is saved as DuplicatedColumnsWithMergedCells.xlsx.
+// Keywords: Aspose.Cells CopyColumns | duplicate columns merged cells | preserve merged cells Aspose | C# Aspose.Cells copy columns | copy columns with merged cells .NET | Aspose.Cells merge handling | duplicate adjacent columns | CopyColumns merged area | Aspose.Cells example C#
+// Common Searches: copy columns keep merged cells Aspose.Cells C# | duplicate adjacent columns Aspose.Cells .NET | how to preserve merges when using CopyColumns | Aspose.Cells copy columns merged range example | C# copy columns with merged cells Aspose
+// Developer Intent: Copy a set of neighboring columns and retain all merged‑cell formatting in the copied area.
+// Use Cases: Replicate a header that spans multiple columns for a side‑by‑side report layout. | Duplicate a data section with a merged title to create comparison tables. | Generate a template where the same column group appears in several worksheet regions without losing merge definitions.
+// AI Prompts: Write C# code using Aspose.Cells to copy columns A‑B to D‑E and automatically preserve any merged cells. | Provide a method that extracts merged areas from a source column range, copies the columns with CopyColumns, and re‑creates the merges in the target range. | Explain how to calculate the column offset after CopyColumns and re‑merge cells to keep the original layout intact.
+
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsCopyColumnsWithMergedCells
+// This example shows how to copy a block of adjacent columns with Aspose.Cells' CopyColumns method, capture any merged cells in the source range, and re‑apply those merges to the destination columns so the layout remains unchanged. The workbook is saved as DuplicatedColumnsWithMergedCells.xlsx.
+class DuplicateColumnsWithMergedCells
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data
+            cells["A1"].PutValue("Header1");
+            cells["B1"].PutValue("Header2");
+            cells["C1"].PutValue("Header3");
+            cells["A2"].PutValue(100);
+            cells["B2"].PutValue(200);
+            cells["C2"].PutValue(300);
+
+            // Merge cells A1:B1 (spanning two columns)
+            cells.Merge(0, 0, 1, 2); // firstRow, firstColumn, totalRows, totalColumns
+
+            // Define source and destination columns (duplicate columns A and B to D and E)
+            int sourceColumnIndex = 0;      // Column A (zero‑based)
+            int columnNumber = 2;           // Number of columns to copy (A and B)
+            int destinationColumnIndex = 3; // Column D (zero‑based)
+
+            // Capture merged areas that intersect the source columns
+            List<CellArea> sourceMerges = new List<CellArea>();
+            foreach (CellArea area in cells.GetMergedAreas())
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // ------------------------------------------------------------
-                // Sample data: create two source columns (A and B) with a merged area
-                // ------------------------------------------------------------
-                cells["A1"].PutValue("Header1");
-                cells["B1"].PutValue("Header2");
-                cells["A2"].PutValue(100);
-                cells["B2"].PutValue(200);
-                cells["A3"].PutValue(300);
-                cells["B3"].PutValue(400);
-
-                // Merge cells A1:B2 (first two rows across the two columns)
-                cells.Merge(0, 0, 2, 2); // firstRow=0, firstColumn=0, totalRows=2, totalColumns=2
-
-                // ------------------------------------------------------------
-                // Remember the merged areas that belong to the source columns
-                // ------------------------------------------------------------
-                CellArea[] sourceMergedAreas = cells.GetMergedAreas();
-
-                // ------------------------------------------------------------
-                // Insert empty columns where the duplicated columns will be placed
-                // ------------------------------------------------------------
-                // Insert two new columns starting at index 2 (C).
-                cells.InsertColumns(2, 2);
-
-                // ------------------------------------------------------------
-                // Copy the two source columns (0 and 1) to the new location (starting at index 2)
-                // ------------------------------------------------------------
-                // Use the overload that copies data and formats.
-                cells.CopyColumns(cells, 0, 2, 2);
-
-                // ------------------------------------------------------------
-                // Replicate the merged cells for the copied columns
-                // ------------------------------------------------------------
-                foreach (CellArea area in sourceMergedAreas)
+                if (area.StartColumn >= sourceColumnIndex && area.StartColumn < sourceColumnIndex + columnNumber)
                 {
-                    // Check if the merged area is within the source column range (0‑1)
-                    if (area.StartColumn >= 0 && area.EndColumn <= 1)
-                    {
-                        // Offset for the destination columns
-                        int columnOffset = 2; // destination start column index
-
-                        // Calculate row/column span
-                        int rowCount = area.EndRow - area.StartRow + 1;
-                        int columnCount = area.EndColumn - area.StartColumn + 1;
-
-                        // Apply the merge in the destination location
-                        cells.Merge(area.StartRow, area.StartColumn + columnOffset, rowCount, columnCount);
-                    }
+                    sourceMerges.Add(area);
                 }
-
-                // ------------------------------------------------------------
-                // Save the workbook
-                // ------------------------------------------------------------
-                string outputPath = "CopyColumnsWithMergedCells.xlsx";
-
-                // Ensure the output directory exists (handle possible null)
-                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
+
+            // Copy the columns
+            cells.CopyColumns(cells, sourceColumnIndex, destinationColumnIndex, columnNumber);
+
+            // Re‑apply the merged cells in the destination range
+            int columnOffset = destinationColumnIndex - sourceColumnIndex;
+            foreach (CellArea srcArea in sourceMerges)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                CellArea destArea = srcArea;
+                destArea.StartColumn += columnOffset;
+                destArea.EndColumn += columnOffset;
+
+                int rowCount = destArea.EndRow - destArea.StartRow + 1;
+                int columnCount = destArea.EndColumn - destArea.StartColumn + 1;
+
+                cells.Merge(destArea.StartRow, destArea.StartColumn, rowCount, columnCount);
             }
+
+            // Save the workbook
+            workbook.Save("DuplicatedColumnsWithMergedCells.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

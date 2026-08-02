@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;      // For ListObject
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Rendering;   // For PdfSaveOptions
+using Aspose.Cells.Rendering;
+using Aspose.Cells.Tables; // For ListObject
 
-namespace SlicerPdfExport
+namespace ExportWorkbookWithSlicers
 {
     class Program
     {
@@ -16,6 +16,7 @@ namespace SlicerPdfExport
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "DataSheet";
 
                 // Populate sample data for a table
                 sheet.Cells["A1"].PutValue("Category");
@@ -29,35 +30,29 @@ namespace SlicerPdfExport
                 sheet.Cells["A5"].PutValue("C");
                 sheet.Cells["B5"].PutValue(40);
 
-                // Add a table that covers the data range (A1:B5)
+                // Add a table (ListObject) covering the data range (A1:B5)
                 int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
                 ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "DataTable"; // Friendly name
+                // Header row is shown by default; totals row is not needed
+                // (ShowHeader and ShowTotals properties are not available in this API version)
 
-                // Add a slicer linked to the first column of the table (Category)
-                // Position the slicer at D2 (row 1, column 3)
+                // Add a slicer linked to the first column of the table
+                // Position the slicer at cell D2 (row index 1, column index 3)
                 int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], 1, 3);
                 Slicer slicer = sheet.Slicers[slicerIndex];
-                slicer.Shape.IsPrintable = true; // Ensure slicer appears in PDF
+                slicer.Shape.IsPrintable = true; // Ensure slicer is printed
 
-                // Configure PDF save options to fit all content on a single page
+                // Configure PDF save options to force all content onto a single page per sheet
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
                     OnePagePerSheet = true,
                     AllColumnsInOnePagePerSheet = true
                 };
 
-                // Define output file path and ensure directory exists
-                string outputPath = "SlicersExport.pdf";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as PDF; slicer will appear on the same page as the data
+                // Save the workbook as PDF; slicer will appear on the same page as the worksheet content
+                string outputPath = "WorkbookWithSlicers.pdf";
                 workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {

@@ -1,37 +1,46 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsDataValidationDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define the validation range: entire column B (rows 1‑100)
-        int startRow = 0;          // Row 1 (zero‑based)
-        int endRow = 99;           // Row 100
-        int columnIndex = 1;       // Column B (0 = A)
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        CellArea area = CellArea.CreateCellArea(startRow, columnIndex, endRow, columnIndex);
+            // Define the range for the validation (e.g., column A rows 1 to 100)
+            // CellArea uses zero‑based indexes: row 0 = first row, column 0 = column A
+            CellArea validationArea = CellArea.CreateCellArea(0, 0, 99, 0);
 
-        // Add a validation to the worksheet for the defined area
-        int validationIndex = sheet.Validations.Add(area);
-        Validation validation = sheet.Validations[validationIndex];
+            // Add a new validation to the worksheet for the defined area
+            int validationIndex = worksheet.Validations.Add(validationArea);
+            Validation validation = worksheet.Validations[validationIndex];
 
-        // Set validation as a list with predefined values
-        validation.Type = ValidationType.List;
-        validation.Formula1 = "Apple,Banana,Cherry";
-        validation.InCellDropDown = true;          // Show drop‑down list in cells
-        validation.ShowInput = true;               // Show input message when cell is selected
-        validation.InputTitle = "Select Fruit";
-        validation.InputMessage = "Choose a fruit from the list.";
-        validation.ShowError = true;               // Show error dialog on invalid entry
-        validation.ErrorTitle = "Invalid Selection";
-        validation.ErrorMessage = "Please select a value from the provided list.";
+            // Set the validation type to List and provide the allowed values
+            validation.Type = ValidationType.List;
+            validation.Formula1 = "Option1,Option2,Option3";
 
-        // Save the workbook to a file
-        workbook.Save("ColumnListValidation.xlsx");
+            // Enable the in‑cell drop‑down so users can pick from the list
+            validation.InCellDropDown = true;
+
+            // Optional: show an input message when the cell is selected
+            validation.ShowInput = true;
+            validation.InputTitle = "Select an option";
+            validation.InputMessage = "Please choose one of the predefined options.";
+
+            // Optional: show an error message if an invalid value is entered
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid entry";
+            validation.ErrorMessage = "The value must be one of the predefined options.";
+            validation.AlertStyle = ValidationAlertType.Stop;
+
+            // Save the workbook to a file
+            workbook.Save("ColumnListValidation.xlsx");
+        }
     }
 }

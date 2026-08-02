@@ -1,27 +1,26 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Utility; // Aspose.Cells conversion utilities
 
+// Author: Aspose.Cells .NET example – XLSB to PDF with UTC CreatedTime
 class Program
 {
     static void Main()
     {
-        // Path to the source XLSB file
+        // Paths for source XLSB and target PDF
         string sourcePath = "input.xlsb";
+        string outputPath = "output.pdf";
 
-        // Path where the resulting PDF will be saved
-        string destPath = "output.pdf";
+        // Load options (can be default for XLSB)
+        LoadOptions loadOptions = new LoadOptions();
 
-        // Load options specifying that the source file is an XLSB workbook
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb);
-
-        // PDF save options with the creation time set to the current UTC timestamp
-        PdfSaveOptions saveOptions = new PdfSaveOptions
+        // PDF save options – set creation time to current UTC
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
             CreatedTime = DateTime.UtcNow
         };
 
-        // Convert the XLSB file to PDF using the conversion utility with the specified options
-        ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
+        // Perform conversion using Aspose.Cells utility
+        ConversionUtility.Convert(sourcePath, loadOptions, outputPath, pdfOptions);
     }
 }

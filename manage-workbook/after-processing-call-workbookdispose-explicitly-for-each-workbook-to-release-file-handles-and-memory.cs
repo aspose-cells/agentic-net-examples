@@ -1,34 +1,41 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsDisposeDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            // ------------------------------
+            // Create a new workbook, add data, save and dispose it.
+            // ------------------------------
+            Workbook workbook = new Workbook();                     // create workbook (rule: Workbook())
+            Worksheet sheet = workbook.Worksheets[0];              // access default worksheet
+            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");    // add sample data
+            sheet.Cells["B2"].PutValue(DateTime.Now);              // add another sample value
 
-        // Access the default worksheet and add some data
-        Worksheet ws = workbook.Worksheets[0];
-        ws.Cells["A1"].PutValue("Hello Aspose.Cells!");
+            // Save the workbook to a file (rule: Save(string))
+            string createdFile = "CreatedWorkbook.xlsx";
+            workbook.Save(createdFile);                            // save workbook
 
-        // Save the workbook to disk
-        workbook.Save("output.xlsx");
+            // Explicitly release resources
+            workbook.Dispose();                                    // dispose workbook
 
-        // Explicitly release unmanaged resources for this workbook
-        workbook.Dispose();
+            // ------------------------------
+            // Load an existing workbook, modify it, save and dispose it.
+            // ------------------------------
+            // Ensure the file exists; for demo purposes we reuse the file we just created.
+            Workbook loadedWorkbook = new Workbook(createdFile);   // load workbook (rule: Workbook(string))
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+            loadedSheet.Cells["C3"].PutValue("Added after load"); // modify workbook
 
-        // Load the previously saved workbook
-        Workbook loadedWb = new Workbook("output.xlsx");
+            // Save the modified workbook (rule: Save(string, SaveFormat))
+            string modifiedFile = "ModifiedWorkbook.xlsx";
+            loadedWorkbook.Save(modifiedFile, SaveFormat.Xlsx);   // save with format
 
-        // Modify the loaded workbook
-        Worksheet loadedWs = loadedWb.Worksheets[0];
-        loadedWs.Cells["B2"].PutValue("Modified");
-
-        // Save the modified workbook
-        loadedWb.Save("output_modified.xlsx");
-
-        // Explicitly release resources for the loaded workbook
-        loadedWb.Dispose();
+            // Explicitly release resources
+            loadedWorkbook.Dispose();                              // dispose loaded workbook
+        }
     }
 }

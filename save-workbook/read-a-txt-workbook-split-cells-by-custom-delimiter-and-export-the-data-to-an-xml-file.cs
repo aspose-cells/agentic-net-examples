@@ -1,35 +1,37 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTxtToXmlDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // ---------- Load the TXT file ----------
-            // Create load options with a custom delimiter (e.g., '|')
-            TxtLoadOptions loadOptions = new TxtLoadOptions();
-            loadOptions.Separator = '|';               // custom delimiter character
-            // Load the TXT file into a workbook
-            Workbook workbook = new Workbook("input.txt", loadOptions);
+        // Path to the source TXT file
+        string txtPath = "input.txt";
 
-            // ---------- Split the text in the first column ----------
-            Worksheet sheet = workbook.Worksheets[0];
-            // Determine how many rows contain data in column A
-            int totalRows = sheet.Cells.MaxDataRow + 1; // zero‑based index + 1
-            // Create split options (same delimiter as used for loading)
-            TxtLoadOptions splitOptions = new TxtLoadOptions();
-            splitOptions.Separator = '|';
-            // Perform TextToColumns on column A (row 0, column 0)
-            sheet.Cells.TextToColumns(0, 0, totalRows, splitOptions);
+        // Custom delimiter used in the TXT file (e.g., pipe character)
+        string customDelimiter = "|";
 
-            // ---------- Export the workbook data to XML ----------
-            // The workbook must contain an XML map. For this demo we assume a map named "Map1" exists.
-            // Export the XML data linked to that map.
-            workbook.ExportXml("Map1", "output.xml");
+        // Load the TXT file with the custom delimiter
+        TxtLoadOptions loadOptions = new TxtLoadOptions();
+        loadOptions.SeparatorString = customDelimiter; // set string delimiter
+        Workbook workbook = new Workbook(txtPath, loadOptions);
 
-            Console.WriteLine("TXT file processed, columns split, and XML exported to 'output.xml'.");
-        }
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Determine how many rows contain data in column A (index 0)
+        int totalRows = sheet.Cells.MaxDataRow + 1; // +1 because rows are zero‑based
+
+        // Split the content of column A into multiple columns using the same delimiter
+        // Parameters: start row, start column, number of rows to process, load options (contains delimiter)
+        sheet.Cells.TextToColumns(0, 0, totalRows, loadOptions);
+
+        // Export the worksheet data to an XML file.
+        // Assumes an XML map named "MyMap" has been defined in the workbook.
+        string xmlMapName = "MyMap";
+        string xmlOutputPath = "output.xml";
+        workbook.ExportXml(xmlMapName, xmlOutputPath);
+
+        Console.WriteLine("Data has been split and exported to XML successfully.");
     }
 }

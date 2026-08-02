@@ -1,8 +1,17 @@
+// Title: C# – Print cell E3 formula and its SUM result using Aspose.Cells for .NET
+// Description: The sample creates a workbook, writes 10 to A1 and 20 to A2, sets the formula "=SUM(A1:A2)" in cell E3, triggers calculation, and outputs both the formula text and the evaluated value (30) to the console.
+// Keywords: Aspose.Cells | C# | .NET | cell formula retrieval | calculate workbook formulas | console output | SUM function | worksheet.Cells | Workbook.CalculateFormula | E3 cell
+// Common Searches: Aspose.Cells get formula text after calculation | C# print formula and result from Excel cell | Aspose.Cells display evaluated value in console | How to read cell formula with Aspose.Cells .NET | Sum formula example Aspose.Cells C#
+// Developer Intent: Show the formula stored in a specific cell and its computed value in a console application.
+// Use Cases: Debugging spreadsheet logic by logging formulas and results. | Generating quick console reports of key calculation cells. | Automated unit tests that verify formula outcomes.
+// AI Prompts: Generate code to iterate over a range and print each cell's formula with its calculated value using Aspose.Cells. | Provide a C# example that writes a cell's formula and result to a text file instead of the console. | Explain how to format the printed result as currency when displaying a formula's value.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaDemo
 {
+    // The sample creates a workbook, writes 10 to A1 and 20 to A2, sets the formula "=SUM(A1:A2)" in cell E3, triggers calculation, and outputs both the formula text and the evaluated value (30) to the console.
     class Program
     {
         static void Main()
@@ -10,27 +19,20 @@ namespace AsposeCellsFormulaDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Populate some cells that will be used in the formula
-            cells["A1"].PutValue(10);
-            cells["B1"].PutValue(20);
-            cells["C1"].PutValue(30);
+            // Prepare some data that the formula will use
+            worksheet.Cells["A1"].PutValue(10);
+            worksheet.Cells["A2"].PutValue(20);
 
-            // Set a formula in cell E3 that sums A1, B1 and C1
-            // The formula string must start with '=' and use commas as delimiters
-            cells["E3"].Formula = "=SUM(A1, B1, C1)";
+            // Set a formula in cell E3
+            worksheet.Cells["E3"].Formula = "=SUM(A1:A2)";
 
             // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Retrieve the updated formula and its calculated value
-            string updatedFormula = cells["E3"].Formula;
-            object calculatedValue = cells["E3"].Value;
-
-            // Output the results to the console
-            Console.WriteLine("Updated formula in E3: " + updatedFormula);
-            Console.WriteLine("Calculated value in E3: " + calculatedValue);
+            // Output the formula text and its calculated value
+            Console.WriteLine("Formula in E3: " + worksheet.Cells["E3"].Formula);
+            Console.WriteLine("Calculated value in E3: " + worksheet.Cells["E3"].Value);
         }
     }
 }

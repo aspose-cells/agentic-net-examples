@@ -6,22 +6,22 @@ class Program
     static void Main()
     {
         // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
 
-        // Add sample data to column A (index 0) with varying lengths
-        cells["A1"].PutValue("Short");
-        cells["A2"].PutValue("This is a longer piece of text that will cause the column to expand");
-        cells["A3"].PutValue("Medium length");
+        // Sample data to demonstrate auto‑fit
+        sheet.Cells[0, 0].Value = "This is a relatively long piece of text that will trigger auto‑fit.";
+        sheet.Cells[1, 0].Value = "Short";
 
-        // Auto‑fit column A for rows 0 to 2 (zero‑based indices)
-        worksheet.AutoFitColumn(0, 0, 2);
+        // Auto‑fit column 0 (imprecise)
+        sheet.AutoFitColumn(0);
 
-        // Fine‑tune the column width to an exact pixel value (e.g., 150 pixels)
-        cells.SetColumnWidthPixel(0, 150);
+        // Fine‑tune the column width to an exact pixel value (e.g., 120 pixels)
+        sheet.Cells.SetColumnWidthPixel(0, 120);
 
-        // Save the workbook to a file
-        workbook.Save("AutoFitAndFineTuneColumn.xlsx");
+        // Save the workbook
+        wb.Save("AutoFitFineTuned.xlsx");
     }
 }
+
+// Author note: This example shows how to auto‑fit a column and then adjust its width precisely using SetColumnWidthPixel.

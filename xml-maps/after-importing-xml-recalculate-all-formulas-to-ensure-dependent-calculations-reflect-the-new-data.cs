@@ -1,33 +1,24 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlImportAndRecalc
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (empty)
-            Workbook workbook = new Workbook();
+        // Create a new workbook instance
+        Workbook workbook = new Workbook();
 
-            // Path to the XML file to be imported
-            string xmlPath = "data.xml";
+        // Import XML data into the first worksheet starting at cell A1
+        // Adjust the file path as needed; the sheet name must exist or will be created
+        workbook.ImportXml("data.xml", "Sheet1", 0, 0);
 
-            // Import XML data into the first worksheet starting at cell A1
-            // This uses the provided ImportXml method (string, string, int, int)
-            workbook.ImportXml(xmlPath, "Sheet1", 0, 0);
+        // Recalculate all formulas so that any dependent cells reflect the newly imported data
+        workbook.CalculateFormula();
 
-            // Recalculate all formulas in the workbook so that any dependent
-            // calculations reflect the newly imported data.
-            // This uses the provided CalculateFormula method.
-            workbook.CalculateFormula();
+        // Refresh pivot tables and charts if they exist (optional but ensures full consistency)
+        workbook.Worksheets.RefreshAll();
 
-            // Optionally, save the workbook to verify the results
-            string outputPath = "ResultAfterImport.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"XML imported and formulas recalculated. Workbook saved to '{outputPath}'.");
-        }
+        // Save the updated workbook
+        workbook.Save("Result.xlsx");
     }
 }

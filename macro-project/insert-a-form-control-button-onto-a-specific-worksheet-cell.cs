@@ -1,27 +1,24 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class InsertFormControlButton
+class InsertButtonDemo
 {
-    static void Main()
+    public static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Target cell where the button will be placed (e.g., B2)
-        int targetRow = 1;      // Row index (zero‑based)
-        int targetColumn = 1;   // Column index (zero‑based)
+        // Add a Form Control button anchored to cell B2 (row index 1, column index 1)
+        // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
+        Button button = sheet.Shapes.AddButton(1, 0, 1, 0, 30, 100);
+        button.Text = "Press Me";
 
-        // Add a Form Control button anchored to the target cell.
-        // Parameters: topRow, top offset (pixels), leftColumn, left offset (pixels), height (pixels), width (pixels)
-        Button button = sheet.Shapes.AddButton(targetRow, 0, targetColumn, 0, 30, 100);
-        button.Text = "Click Me";
+        // Optionally link the button's value to a cell (e.g., C3)
+        button.LinkedCell = "C3";
 
-        // Optional: assign a macro to the button
-        // button.MacroName = "MyMacro";
-
-        // Save the workbook
-        workbook.Save("FormButton.xlsx");
+        // Save the workbook with the button
+        workbook.Save("ButtonInCell.xlsx");
     }
 }

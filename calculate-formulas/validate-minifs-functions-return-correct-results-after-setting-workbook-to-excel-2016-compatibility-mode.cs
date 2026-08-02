@@ -1,55 +1,55 @@
 using System;
 using Aspose.Cells;
 
-class MinifsValidation
+namespace AsposeCellsMinifsValidation
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
 
-        // Set compatibility mode for Excel 2016 (disable older compatibility checks)
-        wb.Settings.CheckCompatibility = false;
+            // Set workbook to allow newer functions (Excel 2016+)
+            // Disabling compatibility check ensures functions like MINIFS are retained.
+            workbook.Settings.CheckCompatibility = false;
 
-        // Access the first worksheet and its cells
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Populate sample data
-        // Column A contains numeric values
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue(30);
-        cells["A4"].PutValue(40);
+            // Populate sample data
+            // Column A: Values to evaluate
+            // Column B: Criteria values
+            double[] values = { 5, 12, 8, 20, 15 };
+            double[] criteria = { 7, 12, 9, 20, 5 };
 
-        // Column B contains criteria strings
-        cells["B1"].PutValue("X");
-        cells["B2"].PutValue("Y");
-        cells["B3"].PutValue("X");
-        cells["B4"].PutValue("Y");
+            for (int i = 0; i < values.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(values[i]);   // A2:A6
+                cells[i + 1, 1].PutValue(criteria[i]); // B2:B6
+            }
 
-        // Apply MINIFS formula: minimum of A where B = "X"
-        cells["C1"].Formula = "=MINIFS(A1:A4,B1:B4,\"X\")";
+            // Set MINIFS formula:
+            // =MINIFS(A2:A6, B2:B6, ">=10")
+            // This should return the minimum value in A2:A6 where corresponding B2:B6 >= 10.
+            cells["C2"].Formula = "=MINIFS(A2:A6, B2:B6, \">=10\")";
 
-        // Calculate formulas
-        wb.CalculateFormula();
+            // Calculate formulas (lifecycle rule)
+            workbook.CalculateFormula();
 
-        // Validate the result (expected 10)
-        double result = cells["C1"].DoubleValue;
-        Console.WriteLine("MINIFS result (original workbook): " + result);
+            // Retrieve and display the result
+            double result = cells["C2"].DoubleValue;
+            Console.WriteLine("MINIFS result (expected 12): " + result);
 
-        // Save the workbook
-        string filePath = "MinifsValidation.xlsx";
-        wb.Save(filePath);
+            // Simple validation
+            if (Math.Abs(result - 12) < 0.0001)
+                Console.WriteLine("Validation passed.");
+            else
+                Console.WriteLine("Validation failed.");
 
-        // Load the workbook back
-        Workbook wbLoaded = new Workbook(filePath);
-
-        // Recalculate after loading
-        wbLoaded.CalculateFormula();
-
-        // Validate the result again
-        double loadedResult = wbLoaded.Worksheets[0].Cells["C1"].DoubleValue;
-        Console.WriteLine("MINIFS result (loaded workbook): " + loadedResult);
+            // Save the workbook (lifecycle rule)
+            workbook.Save("MinifsValidation.xlsx");
+        }
     }
 }

@@ -1,8 +1,16 @@
+// Title: Add Curved WordArt (Arch Up Curve) to an Excel Sheet with Aspose.Cells for .NET (C#)
+// Description: Shows how to create a workbook, insert a WordArt text‑effect shape, apply the ArchUpCurve preset, and save the result as CurvedWordArt.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | WordArt | Curved text | ArchUpCurve | TextEffectFormat | Excel shape | preset shape | programmatic WordArt | Excel automation
+// Common Searches: Aspose.Cells add WordArt C# | Curved WordArt ArchUpCurve Aspose.Cells | Set TextEffectFormat preset shape in Excel via C# | Create text effect shape with Aspose.Cells | Adjust curvature of WordArt programmatically
+// Developer Intent: Create a WordArt shape with a built‑in curved preset and store it in an Excel workbook.
+// Use Cases: Design a decorative header for financial reports using ArchUpCurve WordArt. | Add a curved banner to a dashboard worksheet to highlight key performance indicators. | Automate the insertion of stylized titles into template workbooks for mass document generation.
+// AI Prompts: Provide C# code that changes the curvature of an ArchUpCurve WordArt shape by modifying its TextEffectFormat.Adjustments collection in Aspose.Cells. | Show an example that loops through all MsoPresetTextEffectShape values and applies a selected shape to a WordArt object. | Explain how to read and update the font name, size, bold, and italic properties of a WordArt shape after setting its preset shape.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
+// Shows how to create a workbook, insert a WordArt text‑effect shape, apply the ArchUpCurve preset, and save the result as CurvedWordArt.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -15,45 +23,28 @@ class Program
             ShapeCollection shapes = worksheet.Shapes;
 
             // Add a WordArt (text effect) shape
-            // Parameters: effect, text, font name, size, bold, italic,
-            // topRow, top offset, leftColumn, left offset, height, width
             Shape wordArt = shapes.AddTextEffect(
-                MsoPresetTextEffect.TextEffect1,
-                "Curved Text",
-                "Arial",
-                36,
-                false,
-                false,
-                2, 0,   // topRow, top offset
-                2, 0,   // leftColumn, left offset
-                200,    // height (pixels)
-                400);   // width (pixels)
+                MsoPresetTextEffect.TextEffect1,   // preset text effect
+                "Curved Text",                     // text
+                "Arial",                           // font name
+                36,                                // font size
+                false,                             // bold
+                false,                             // italic
+                2, 0,                              // top row, top offset
+                2, 0,                              // left column, left offset
+                200,                               // height (pixels)
+                400);                              // width (pixels)
 
-            // Set the preset shape to a curved WordArt style (ArchUpCurve)
+            // Apply a built‑in curved WordArt shape
             TextEffectFormat textEffect = wordArt.TextEffect;
             textEffect.PresetShape = MsoPresetTextEffectShape.ArchUpCurve;
 
-            // NOTE: Adjustments property is not available in all Aspose.Cells versions.
-            // If needed, curvature can be modified via Adjustments when supported.
-            // The following block is omitted to maintain compatibility.
-
-            // Define output file path
-            string outputPath = "CurvedWordArt.xlsx";
-
-            // Ensure the directory exists (handle cases where outputPath has no directory part)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the WordArt shape
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook
+            workbook.Save("CurvedWordArt.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

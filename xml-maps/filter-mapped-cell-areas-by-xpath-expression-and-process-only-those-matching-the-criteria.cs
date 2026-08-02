@@ -2,42 +2,69 @@ using System;
 using System.Collections;
 using Aspose.Cells;
 
-class FilterMappedCellAreas
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class FilterMappedCellAreasDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Sample XML containing a namespace and two <Item> elements
-        string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-            <ns1:Root xmlns:ns1='http://example.com'>
-                <ns1:Data>
-                    <ns1:Item>Value1</ns1:Item>
-                    <ns1:Item>Value2</ns1:Item>
-                </ns1:Data>
-            </ns1:Root>";
-
-        // Import the XML into the worksheet; this creates an XML map automatically
-        workbook.ImportXml(xml, worksheet.Name, 0, 0);
-
-        // Retrieve the first (and only) XML map created by ImportXml
-        XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
-
-        // XPath expression that points to the XML elements we want to process
-        string xpath = "/ns1:Root/ns1:Data/ns1:Item";
-
-        // Query the worksheet for cell areas that are mapped to the specified XPath
-        ArrayList mappedAreas = worksheet.XmlMapQuery(xpath, xmlMap);
-
-        // Apply an auto‑filter to each cell area that matches the XPath
-        foreach (CellArea area in mappedAreas)
+        public static void Main()
         {
-            worksheet.Filter(area);
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Save the workbook with the applied filters
-        workbook.Save("FilteredMappedAreas.xlsx");
+        public static void Run()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Sample XML that will be imported as an XML map
+            string xml = @"<?xml version='1.0' encoding='UTF-8'?>
+                <ns1:Root xmlns:ns1='http://example.com'>
+                    <ns1:Data>
+                        <ns1:Item>Value1</ns1:Item>
+                        <ns1:Item>Value2</ns1:Item>
+                    </ns1:Data>
+                </ns1:Root>";
+
+            // Import the XML into the worksheet starting at cell A1.
+            // This creates an XML map automatically.
+            workbook.ImportXml(xml, "Sheet1", 0, 0);
+
+            // Retrieve the created XML map (the first one)
+            XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
+
+            // Define the XPath expression to locate the desired XML nodes
+            string xpath = "/ns1:Root/ns1:Data/ns1:Item";
+
+            // Query the worksheet for cell areas that are mapped to the XPath
+            ArrayList mappedAreas = worksheet.XmlMapQuery(xpath, xmlMap);
+
+            // Apply an AutoFilter to each mapped area, if any
+            if (mappedAreas.Count > 0)
+            {
+                foreach (CellArea area in mappedAreas)
+                {
+                    worksheet.Filter(area);
+                }
+
+                Console.WriteLine($"Applied filter to {mappedAreas.Count} mapped cell area(s).");
+            }
+            else
+            {
+                Console.WriteLine("No cell areas were mapped to the specified XPath.");
+            }
+
+            // Save the workbook to verify the filter was set
+            workbook.Save("FilteredMappedAreas.xlsx");
+        }
     }
 }

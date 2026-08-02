@@ -1,86 +1,70 @@
+// Title: Batch add a standard pivot table to Excel files and save as ODS with Aspose.Cells (C#)
+// Description: Iterates through all *.xlsx files in a given folder, loads each workbook with Aspose.Cells, determines the used range on the first worksheet, inserts a pivot table named "StandardPivot" at cell F1 (first column as row field, second column as data field), refreshes the pivot, and saves the result as an ODS file preserving the pivot using OdsSaveOptions.
+// Keywords: Aspose.Cells C# pivot table batch | add pivot to multiple workbooks | convert Excel to ODS with pivots | OdsSaveOptions PreservePivotTables | automate pivot creation Aspose | C# folder processing Excel files | standardized pivot layout | LibreOffice ODS export Aspose
+// Common Searches: how to add a pivot table to many Excel files using Aspose.Cells | batch convert .xlsx to .ods while keeping pivots | C# code for creating pivot tables programmatically | Aspose.Cells ODS export with pivot tables | automate pivot table insertion across workbooks
+// Developer Intent: Automatically insert the same pivot table into every Excel workbook in a directory and export each file to ODS format without losing the pivot data.
+// Use Cases: Standardize monthly sales reports by adding a predefined pivot to each department's spreadsheet before sharing with LibreOffice users. | Migrate a legacy archive of Excel workbooks to ODS while retaining analytical pivot tables for downstream analysis. | Run a nightly job that enriches dozens of workbooks with a uniform pivot layout and stores the results as ODS for compliance archiving.
+// AI Prompts: Write C# code that uses Aspose.Cells to add a pivot table to every workbook in a folder and save each as ODS with pivots preserved. | Explain the role of OdsSaveOptions.IgnorePivotTables and how to configure it to keep pivot tables during Excel‑to‑ODS conversion. | Provide error‑handling patterns for empty source ranges, missing worksheets, or file‑access issues in a batch pivot‑creation script.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
+// Iterates through all *.xlsx files in a given folder, loads each workbook with Aspose.Cells, determines the used range on the first worksheet, inserts a pivot table named "StandardPivot" at cell F1 (first column as row field, second column as data field), refreshes the pivot, and saves the result as an ODS file preserving the pivot using OdsSaveOptions.
 class BatchPivotToOds
 {
     static void Main()
     {
         // Folder containing source Excel workbooks
-        string inputFolder = @"C:\InputFolder";
+        string inputFolder = @"C:\InputWorkbooks";
         // Folder where ODS files will be saved
-        string outputFolder = @"C:\OutputFolder";
+        string outputFolder = @"C:\OutputOds";
 
-        // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
-        {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
-        }
 
         // Process each .xlsx file in the input folder
         foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            try
-            {
-                // Ensure the file exists before loading
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
+            // Load the workbook (uses Workbook(string) constructor)
+            Workbook workbook = new Workbook(filePath);
 
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
+            // Work with the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Work with the first worksheet (customize as needed)
-                Worksheet ws = workbook.Worksheets[0];
+            // Determine the used range to use as the pivot source
+            int maxRow = worksheet.Cells.MaxDataRow;      // zero‑based
+            int maxCol = worksheet.Cells.MaxDataColumn;   // zero‑based
+            string sourceRange = $"A1:{CellIndexToName(maxRow, maxCol)}";
 
-                // Determine the used range to serve as the pivot source
-                int lastRow = ws.Cells.MaxDataRow;      // zero‑based index of last row with data
-                int lastCol = ws.Cells.MaxDataColumn;   // zero‑based index of last column with data
-                string sourceRange = $"A1:{CellIndexToName(lastRow, lastCol)}";
+            // Destination cell for the new pivot table
+            string destCell = "F1";
 
-                // Destination cell for the new pivot table
-                string destCell = "F1";
+            // Add a standardized pivot table (PivotTableCollection.Add)
+            int pivotIndex = worksheet.PivotTables.Add(sourceRange, destCell, "StandardPivot");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-                // Add a standardized pivot table
-                int pivotIndex = ws.PivotTables.Add(sourceRange, destCell, "StandardPivot");
-                PivotTable pivot = ws.PivotTables[pivotIndex];
+            // Configure the pivot: first column as row field, second column as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
 
-                // Configure the pivot: first column as row field, second column as data field
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);
+            // Refresh the pivot table in the worksheet (Worksheet.RefreshPivotTables)
+            worksheet.RefreshPivotTables();
 
-                // Refresh the pivot table to ensure it reflects the source data
-                ws.RefreshPivotTables();
+            // Prepare ODS save options to include pivot tables (OdsSaveOptions.IgnorePivotTables)
+            OdsSaveOptions saveOptions = new OdsSaveOptions();
+            saveOptions.IgnorePivotTables = false; // ensure pivot tables are saved
 
-                // Prepare ODS save options to include pivot tables
-                OdsSaveOptions saveOptions = new OdsSaveOptions
-                {
-                    IgnorePivotTables = false // include pivot tables in the ODS file
-                };
+            // Build the output file path with .ods extension
+            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+            string outputPath = Path.Combine(outputFolder, fileNameWithoutExt + ".ods");
 
-                // Build the output file path with .ods extension
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-                string outPath = Path.Combine(outputFolder, fileNameWithoutExt + ".ods");
-
-                // Save the workbook as ODS
-                workbook.Save(outPath, saveOptions);
-                Console.WriteLine($"Converted: {filePath} -> {outPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
+            // Save the workbook as ODS using the save options (Workbook.Save)
+            workbook.Save(outputPath, saveOptions);
         }
     }
 
-    // Helper method: converts zero‑based row/column indices to an Excel cell address (e.g., 0,0 -> A1)
+    // Helper: converts zero‑based row/column indices to an Excel cell address (e.g., 0,0 -> A1)
     static string CellIndexToName(int row, int col)
     {
         // Convert column index to letters

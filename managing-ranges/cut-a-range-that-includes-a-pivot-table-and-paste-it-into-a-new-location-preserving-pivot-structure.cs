@@ -9,7 +9,7 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data that will be used for the pivot table
+        // Populate sample data for the pivot table
         worksheet.Cells["A1"].PutValue("Category");
         worksheet.Cells["B1"].PutValue("Amount");
         worksheet.Cells["A2"].PutValue("Fruits");
@@ -17,23 +17,18 @@ class Program
         worksheet.Cells["A3"].PutValue("Vegetables");
         worksheet.Cells["B3"].PutValue(2500);
 
-        // Add a pivot table at cell D1 (top‑left corner of the report)
+        // Add a pivot table starting at cell D1
         int pivotIndex = worksheet.PivotTables.Add("A1:B3", "D1", "SalesPivot");
         PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-        // Configure the pivot table
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-        pivotTable.CalculateData(); // Populate the pivot table with data
+        pivotTable.CalculateData();
 
-        // Move the entire pivot table to a new location.
-        // Row and column indices are zero‑based. Here we move it to cell B5 (row 4, column 1).
-        pivotTable.MoveTo(4, 1);
-
-        // Refresh the worksheet to ensure the pivot table reflects its new position
-        worksheet.RefreshPivotTables();
+        // Move (cut) the pivot table to a new location, preserving its structure
+        pivotTable.MoveTo("G5");          // Destination cell for the upper‑left corner
+        pivotTable.CalculateData();      // Recalculate after moving
 
         // Save the workbook
-        workbook.Save("PivotTableMoved.xlsx");
+        workbook.Save("PivotCutPasteDemo.xlsx");
     }
 }

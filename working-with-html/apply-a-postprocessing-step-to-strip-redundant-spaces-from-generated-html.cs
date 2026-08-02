@@ -1,37 +1,32 @@
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
+// Author: Aspose.Cells .NET example – loads HTML, removes redundant spaces, and saves cleaned HTML.
 class Program
 {
     static void Main()
     {
-        // Create a workbook and add a cell with redundant spaces
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("   This    text   has   redundant   spaces   ");
+        // Sample HTML containing redundant spaces
+        string html = "<p>   This    text   has   redundant   spaces   </p>";
 
-        // Save the workbook as HTML (original version with spaces)
-        string originalHtmlPath = "original.html";
-        workbook.Save(originalHtmlPath, new HtmlSaveOptions());
-
-        // Load the generated HTML with DeleteRedundantSpaces enabled
+        // Configure load options to delete redundant spaces during import
         HtmlLoadOptions loadOptions = new HtmlLoadOptions
         {
             DeleteRedundantSpaces = true
         };
 
-        Workbook cleanedWorkbook;
-        using (FileStream fs = new FileStream(originalHtmlPath, FileMode.Open, FileAccess.Read))
+        // Convert the HTML string to a memory stream for loading
+        byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+        using (MemoryStream stream = new MemoryStream(htmlBytes))
         {
-            cleanedWorkbook = new Workbook(fs, loadOptions);
+            // Load the HTML into a workbook using the specified options
+            Workbook workbook = new Workbook(stream, loadOptions);
+
+            // Save the workbook back to HTML; the output will have redundant spaces removed
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            workbook.Save("output.html", saveOptions);
         }
-
-        // Save the cleaned HTML
-        string cleanedHtmlPath = "cleaned.html";
-        cleanedWorkbook.Save(cleanedHtmlPath, new HtmlSaveOptions());
-
-        Console.WriteLine($"Original HTML saved to: {originalHtmlPath}");
-        Console.WriteLine($"Cleaned HTML saved to: {cleanedHtmlPath}");
     }
 }

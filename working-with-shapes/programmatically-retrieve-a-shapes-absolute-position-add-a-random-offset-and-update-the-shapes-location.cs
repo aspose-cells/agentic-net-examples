@@ -1,49 +1,51 @@
+// Title: Aspose.Cells for .NET – Retrieve Shape Position, Apply Random Pixel Offset, and Update Location
+// Description: Demonstrates how to read a shape's absolute X/Y pixel coordinates, generate a random offset (‑20 to +20 px), adjust the coordinates, and save the workbook using Aspose.Cells in C#.
+// Keywords: Aspose.Cells shape position | C# move Excel shape | shape X Y properties Aspose.Cells | apply random offset to shape | update shape location programmatically | Aspose.Cells rectangle coordinates | Excel shape manipulation .NET
+// Common Searches: How to get and set shape X Y coordinates with Aspose.Cells | Add random pixel offset to an Excel shape using C# | Move a rectangle shape programmatically in Aspose.Cells | Retrieve absolute position of a shape in Aspose.Cells .NET | Change shape location after creation in Aspose.Cells
+// Developer Intent: Read a shape's absolute coordinates, add a random pixel offset, and write the new position back to the shape.
+// Use Cases: Automatically disperse shapes to avoid overlap in generated reports | Create a scattered visual effect for decorative elements in Excel worksheets | Shift markers or icons based on data‑driven calculations
+// AI Prompts: Generate C# code that reads a shape's X and Y values with Aspose.Cells, adds a specified offset, and updates the shape's position. | Write a reusable method for Aspose.Cells .NET that accepts a Shape object and offset values, then moves the shape accordingly. | Provide an example that creates a rectangle, computes random offsets within a given range, applies them to the shape, and saves the workbook.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapePositionAdjustment
+namespace AsposeCellsShapeOffsetDemo
 {
-    public class Program
+    // Demonstrates how to read a shape's absolute X/Y pixel coordinates, generate a random offset (‑20 to +20 px), adjust the coordinates, and save the workbook using Aspose.Cells in C#.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Access the first worksheet
+            // Create a new workbook (using the standard creation rule)
+            Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Ensure there is at least one shape; otherwise add a sample rectangle
-            if (worksheet.Shapes.Count == 0)
-            {
-                // AddRectangle parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
-                worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 50);
-            }
+            // Add a rectangle shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left x offset, upper left y offset, width, height
+            Shape shape = worksheet.Shapes.AddRectangle(5, 5, 0, 0, 100, 50);
 
-            // Retrieve the first shape
-            Shape shape = worksheet.Shapes[0];
+            // Retrieve the shape's current absolute position (X and Y are offsets from worksheet borders in pixels)
+            int originalX = shape.X;
+            int originalY = shape.Y;
 
-            // Get the shape's current absolute position (pixels from worksheet borders)
-            int currentX = shape.X; // Horizontal offset from left border
-            int currentY = shape.Y; // Vertical offset from top border
+            Console.WriteLine($"Original Position -> X: {originalX}, Y: {originalY}");
 
-            // Generate random offsets (e.g., between -20 and +20 pixels)
+            // Generate random offsets (for example, between -20 and +20 pixels)
             Random rnd = new Random();
             int offsetX = rnd.Next(-20, 21);
             int offsetY = rnd.Next(-20, 21);
 
-            // Apply the random offsets to the shape's position
-            shape.X = currentX + offsetX;
-            shape.Y = currentY + offsetY;
+            Console.WriteLine($"Random Offsets -> X: {offsetX}, Y: {offsetY}");
 
-            // Optional: output the before/after positions to console for verification
-            Console.WriteLine($"Original Position: X={currentX}, Y={currentY}");
-            Console.WriteLine($"Offset Applied:   X={offsetX}, Y={offsetY}");
-            Console.WriteLine($"New Position:     X={shape.X}, Y={shape.Y}");
+            // Apply the offsets to the shape's position
+            shape.X = originalX + offsetX;
+            shape.Y = originalY + offsetY;
 
-            // Save the workbook with the updated shape position
-            workbook.Save("output.xlsx");
+            Console.WriteLine($"Updated Position -> X: {shape.X}, Y: {shape.Y}");
+
+            // Save the workbook (using the standard save rule)
+            workbook.Save("ShapeOffsetDemo.xlsx");
         }
     }
 }

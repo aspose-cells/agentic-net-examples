@@ -26,20 +26,22 @@ class Program
         int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = worksheet.Charts[chartIndex];
 
-        // Set the data range for the chart
-        chart.SetChartDataRange("A1:B4", true);
+        // Set the data source for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-        // Example modification: set a chart title
-        chart.Title.Text = "Fruit Sales";
+        // Modify the chart (e.g., set a title)
+        chart.Title.Text = "Sales Chart";
 
-        // Ensure the output directory exists
-        string outputDir = "output";
+        // Prepare the output directory
+        string outputDir = Path.Combine(Environment.CurrentDirectory, "output");
         Directory.CreateDirectory(outputDir);
 
-        // Save the chart as a PNG image; the file extension determines the format
-        string imagePath = Path.Combine(outputDir, "FruitSalesChart.png");
-        chart.ToImage(imagePath);
+        // Render the chart to a PNG image and save it
+        string imagePath = Path.Combine(outputDir, "SalesChart.png");
+        chart.ToImage(imagePath, ImageType.Png);
 
-        Console.WriteLine($"Chart image saved to: {imagePath}");
+        // Optionally save the workbook for reference
+        workbook.Save(Path.Combine(outputDir, "WorkbookWithChart.xlsx"));
     }
 }

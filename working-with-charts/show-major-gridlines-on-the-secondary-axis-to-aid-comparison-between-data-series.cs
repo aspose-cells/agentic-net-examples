@@ -1,49 +1,55 @@
-using System.Drawing;
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-class ShowSecondaryAxisMajorGridlines
+namespace AsposeCellsSecondaryAxisGridlines
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
 
-        worksheet.Cells["B1"].PutValue("Series 1");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Primary series values
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        worksheet.Cells["C1"].PutValue("Series 2");
-        worksheet.Cells["C2"].PutValue(200);
-        worksheet.Cells["C3"].PutValue(400);
-        worksheet.Cells["C4"].PutValue(600);
+            // Secondary series values (larger magnitude)
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["C2"].PutValue(500);
+            sheet.Cells["C3"].PutValue(800);
+            sheet.Cells["C4"].PutValue(1200);
 
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Add two series: first on primary axis, second on secondary axis
-        chart.NSeries.Add("B2:B4", true); // primary series
-        chart.NSeries.Add("C2:C4", true); // secondary series
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add both series to the chart
+            chart.NSeries.Add("B2:B4", true);   // Primary series
+            chart.NSeries.Add("C2:C4", true);   // Secondary series
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Plot the second series on the secondary value axis
-        chart.NSeries[1].PlotOnSecondAxis = true;
+            // Plot the second series on the secondary value axis
+            chart.NSeries[1].PlotOnSecondAxis = true;
 
-        // Enable major gridlines on the secondary value axis
-        chart.SecondValueAxis.MajorGridLines.IsVisible = true;
-        // Optional: set gridline color for better visibility
-        chart.SecondValueAxis.MajorGridLines.Color = Color.Blue;
+            // Enable major gridlines on the secondary value axis for better comparison
+            chart.SecondValueAxis.MajorGridLines.IsVisible = true;
+            // Optional: set gridline color to distinguish it
+            chart.SecondValueAxis.MajorGridLines.Color = Color.Blue;
 
-        // Save the workbook
-        workbook.Save("SecondaryAxisMajorGridlines.xlsx");
+            // Save the workbook
+            workbook.Save("ChartWithSecondaryAxisMajorGridlines.xlsx");
+        }
     }
 }

@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace SmartMarkerExample
+namespace AsposeCellsSmartMarkerDemo
 {
-    // DTO class representing a person
-    public class Person
+    // DTO class representing an employee
+    public class EmployeeDto
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public string City { get; set; }
+        public string Department { get; set; }
 
-        public Person(string name, int age, string city)
+        public EmployeeDto(string name, int age, string department)
         {
             Name = name;
             Age = age;
-            City = city;
+            Department = department;
         }
     }
 
@@ -23,38 +23,39 @@ namespace SmartMarkerExample
     {
         public static void Main()
         {
-            // 1. Create a list of DTO objects
-            List<Person> persons = new List<Person>
-            {
-                new Person("John Doe", 30, "New York"),
-                new Person("Jane Smith", 28, "London"),
-                new Person("Sam Brown", 35, "Sydney")
-            };
-
-            // 2. Create a new workbook (or load a template if you have one)
+            // Create a new workbook that will act as the template
             Workbook workbook = new Workbook();
-
-            // 3. Insert smart markers into the worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            // Header row
+
+            // Define header cells
             sheet.Cells["A1"].PutValue("Name");
             sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["C1"].PutValue("City");
-            // Data row with smart markers (the variable name is "Person")
-            sheet.Cells["A2"].PutValue("&=$Person.Name");
-            sheet.Cells["B2"].PutValue("&=$Person.Age");
-            sheet.Cells["C2"].PutValue("&=$Person.City");
+            sheet.Cells["C1"].PutValue("Department");
 
-            // 4. Initialize WorkbookDesigner and bind the IEnumerable data source
+            // Insert smart markers that reference the "Employee" data source
+            sheet.Cells["A2"].PutValue("&=$Employee.Name");
+            sheet.Cells["B2"].PutValue("&=$Employee.Age");
+            sheet.Cells["C2"].PutValue("&=$Employee.Department");
+
+            // Prepare a list of DTO objects (IEnumerable) to be used as the data source
+            List<EmployeeDto> employees = new List<EmployeeDto>
+            {
+                new EmployeeDto("John Doe", 30, "Sales"),
+                new EmployeeDto("Jane Smith", 28, "Marketing"),
+                new EmployeeDto("Mike Johnson", 35, "IT")
+            };
+
+            // Initialize the WorkbookDesigner with the template workbook
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            // Use the overload SetDataSource(string, object) where the object is an IEnumerable
-            designer.SetDataSource("Person", persons);
 
-            // 5. Process the smart markers
+            // Bind the list to the smart marker variable "Employee" using the IEnumerable overload
+            designer.SetDataSource("Employee", employees);
+
+            // Process the smart markers and populate the worksheet with data
             designer.Process();
 
-            // 6. Save the populated workbook
-            workbook.Save("SmartMarkersFromDTO.xlsx");
+            // Save the populated workbook
+            workbook.Save("EmployeesSmartMarkers.xlsx");
         }
     }
 }

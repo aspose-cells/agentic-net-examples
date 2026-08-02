@@ -1,46 +1,67 @@
+// Title: Add a “Pending review” comment to every cell in the named range “ReviewNotes” using Aspose.Cells for .NET (C#)
+// Description: This example loads an existing workbook, finds the named range "ReviewNotes", calculates its boundaries, iterates through each cell in the range, adds a comment with the text "Pending review", and saves the updated file. It demonstrates safe file handling, named‑range lookup, and comment creation with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | named range | add comment | Excel comment | ReviewNotes | cell iteration | Excel automation | pending review | batch comment
+// Common Searches: Aspose.Cells add comment to all cells in a named range | C# add pending review comment to Excel range | How to loop through cells of a named range with Aspose.Cells | Add comment to Excel cells using Aspose.Cells .NET | Set comment for each cell in ReviewNotes range
+// Developer Intent: Insert a "Pending review" comment into every cell that belongs to the named range "ReviewNotes" in an Excel workbook.
+// Use Cases: Flag cells that require validation during a data‑quality audit. | Automatically annotate generated report sections so reviewers can see pending items. | Prepare a template with review notes before distributing it to stakeholders.
+// AI Prompts: Generate C# code with Aspose.Cells that adds a custom comment to each cell of a specified named range and saves the workbook. | Show an alternative Aspose.Cells technique to apply the same comment to a named range without explicit loops. | Explain how to detect existing comments and update them only when the "Pending review" note is missing.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-class AddCommentsToNamedRange
+// This example loads an existing workbook, finds the named range "ReviewNotes", calculates its boundaries, iterates through each cell in the range, adds a comment with the text "Pending review", and saves the updated file. It demonstrates safe file handling, named‑range lookup, and comment creation with Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the existing workbook
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the named range "ReviewNotes"
-            Name namedRange = workbook.Worksheets.Names["ReviewNotes"];
-            if (namedRange == null)
+            // Locate the named range "ReviewNotes"
+            Name reviewName = null;
+            foreach (Name n in workbook.Worksheets.Names)
+            {
+                if (n.Text == "ReviewNotes")
+                {
+                    reviewName = n;
+                    break;
+                }
+            }
+
+            if (reviewName == null)
             {
                 Console.WriteLine("Named range 'ReviewNotes' not found.");
                 return;
             }
 
-            // Get the Range object that the name refers to (use fully qualified name to avoid ambiguity)
-            Aspose.Cells.Range range = namedRange.GetRange();
+            // Get the range object and its worksheet
+            Aspose.Cells.Range reviewRange = reviewName.GetRange();
+            Worksheet sheet = reviewRange.Worksheet;
 
-            // Obtain the worksheet that contains the range
-            Worksheet sheet = workbook.Worksheets[namedRange.SheetIndex];
+            // Determine the boundaries of the range
+            int startRow = reviewRange.FirstRow;
+            int startCol = reviewRange.FirstColumn;
+            int endRow = startRow + reviewRange.RowCount - 1;
+            int endCol = startCol + reviewRange.ColumnCount - 1;
 
-            // Iterate through each cell in the range and add a comment
-            for (int row = range.FirstRow; row < range.FirstRow + range.RowCount; row++)
+            // Add a comment to each cell in the range
+            for (int row = startRow; row <= endRow; row++)
             {
-                for (int col = range.FirstColumn; col < range.FirstColumn + range.ColumnCount; col++)
+                for (int col = startCol; col <= endCol; col++)
                 {
-                    // Add a comment to the current cell
                     int commentIndex = sheet.Comments.Add(row, col);
                     Comment comment = sheet.Comments[commentIndex];
                     comment.Note = "Pending review";
@@ -49,11 +70,10 @@ class AddCommentsToNamedRange
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,78 +1,62 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotExpandCollapseDemo
 {
-    public class PivotTableShowExpandCollapseDemo
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet and name it
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(200);
-                sheet.Cells["A4"].PutValue("A");
-                sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("B");
-                sheet.Cells["B5"].PutValue(250);
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("SubCategory");
+            sheet.Cells["C1"].PutValue("Amount");
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            sheet.Cells["A2"].PutValue("Food");
+            sheet.Cells["B2"].PutValue("Fruit");
+            sheet.Cells["C2"].PutValue(120);
 
-                // Configure the pivot table fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
+            sheet.Cells["A3"].PutValue("Food");
+            sheet.Cells["B3"].PutValue("Vegetables");
+            sheet.Cells["C3"].PutValue(80);
 
-                // Enable drill‑down and visual expand/collapse buttons
-                pivotTable.EnableDrilldown = true;
-                pivotTable.ShowDrill = true; // Shows the expand/collapse field buttons
+            sheet.Cells["A4"].PutValue("Beverage");
+            sheet.Cells["B4"].PutValue("Tea");
+            sheet.Cells["C4"].PutValue(50);
 
-                // Refresh and calculate the pivot table data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+            sheet.Cells["A5"].PutValue("Beverage");
+            sheet.Cells["B5"].PutValue("Coffee");
+            sheet.Cells["C5"].PutValue(70);
 
-                // Define output file path
-                string outputPath = "PivotTableShowExpandCollapseDemo.xlsx";
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // If the file already exists, delete it to avoid IOException
-                if (File.Exists(outputPath))
-                {
-                    File.Delete(outputPath);
-                }
+            // Configure fields: Category as row, SubCategory as row, Amount as data
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "SubCategory");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log any runtime errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+            // Enable drilldown functionality (optional but often used together)
+            pivotTable.EnableDrilldown = true;
 
-    // Entry point required for console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PivotTableShowExpandCollapseDemo.Run();
+            // Show expand/collapse buttons in the pivot table
+            pivotTable.ShowDrill = true;
+
+            // Refresh and calculate the pivot table to apply changes
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook to a file
+            workbook.Save("PivotTableShowExpandCollapse.xlsx");
         }
     }
 }

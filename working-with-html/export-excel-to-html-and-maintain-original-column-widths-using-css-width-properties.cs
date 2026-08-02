@@ -1,33 +1,39 @@
+// Title: Export Excel to HTML with Exact Column Widths using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, optionally sets column widths, configures HtmlSaveOptions (WidthScalable = false, FormatDataIgnoreColumnWidth = false) and saves the file as HTML where each column is rendered with a fixed pixel width via CSS.
+// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | preserve column width | HtmlSaveOptions | WidthScalable false | FormatDataIgnoreColumnWidth | CSS width export
+// Common Searches: Aspose.Cells keep column width when exporting to HTML | HTML export with fixed column sizes using Aspose.Cells .NET | How to retain Excel column widths in generated HTML | Aspose.Cells HtmlSaveOptions column width settings
+// Developer Intent: Generate an HTML representation of an Excel workbook that maintains the original column widths using CSS width attributes.
+// Use Cases: Create web‑ready reports that mirror the layout of the source spreadsheet. | Provide an accurate HTML preview of Excel data in a web application. | Produce email‑compatible HTML tables where column dimensions must stay consistent.
+// AI Prompts: Show how to export column widths as percentages instead of pixels with Aspose.Cells. | Give a code sample that writes the HTML to a MemoryStream and returns it from an ASP.NET Core controller while preserving widths. | Explain how to attach a custom CSS class to the generated table without affecting column‑width preservation.
+
 using System;
 using Aspose.Cells;
 
-class ExportExcelToHtml
+// Loads an Excel workbook, optionally sets column widths, configures HtmlSaveOptions (WidthScalable = false, FormatDataIgnoreColumnWidth = false) and saves the file as HTML where each column is rendered with a fixed pixel width via CSS.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load an existing Excel workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Set custom column widths (in characters)
-        worksheet.Cells.SetColumnWidth(0, 20); // Column A
-        worksheet.Cells.SetColumnWidth(1, 30); // Column B
+        // Example: set custom column widths to demonstrate preservation
+        // (optional – remove if widths are already defined in the source file)
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.SetColumnWidth(0, 20); // Column A width
+        sheet.Cells.SetColumnWidth(1, 30); // Column B width
 
-        // Add sample data to demonstrate column width preservation
-        worksheet.Cells["A1"].PutValue("Short");
-        worksheet.Cells["B1"].PutValue("This is a longer text that should respect the column width when exported to HTML.");
+        // Configure HTML save options to keep original column widths
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Configure HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        // Export column widths as fixed pixel values (CSS width) – default behavior,
+        // but set explicitly for clarity.
+        htmlOptions.WidthScalable = false;
 
-        // Export column widths as fixed CSS width values (default behavior)
-        // Setting WidthScalable to false ensures pixel‑based widths are used.
-        saveOptions.WidthScalable = false;
+        // Ensure cell content respects column width (do not ignore it).
+        htmlOptions.FormatDataIgnoreColumnWidth = false;
 
-        // Keep the original Excel behavior for overflowing data
-        saveOptions.FormatDataIgnoreColumnWidth = false;
-
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("ExportedWithColumnWidths.html", saveOptions);
+        // Save the workbook as an HTML file with the above options.
+        workbook.Save("output.html", htmlOptions);
     }
 }

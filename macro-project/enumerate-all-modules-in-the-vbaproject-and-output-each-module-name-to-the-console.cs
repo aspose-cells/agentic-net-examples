@@ -2,33 +2,28 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class Program
+namespace AsposeCellsVbaModuleEnumeration
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (macro-enabled)
-        Workbook workbook = new Workbook();
-
-        // Access the VBA project of the workbook
-        VbaProject vbaProject = workbook.VbaProject;
-
-        // Add sample modules (optional, just to ensure there are modules to enumerate)
-        int idx1 = vbaProject.Modules.Add(VbaModuleType.Procedural, "Module1");
-        vbaProject.Modules[idx1].Codes = "Sub Macro1()\nEnd Sub";
-
-        int idx2 = vbaProject.Modules.Add(VbaModuleType.Class, "ClassModule");
-        vbaProject.Modules[idx2].Codes = "Public Sub ClassMethod()\nEnd Sub";
-
-        // Get the collection of modules
-        VbaModuleCollection modules = vbaProject.Modules;
-
-        // Enumerate all modules and output each module name to the console
-        for (int i = 0; i < modules.Count; i++)
+        static void Main(string[] args)
         {
-            Console.WriteLine(modules[i].Name);
-        }
+            // Load an existing macro-enabled workbook (replace with your file path)
+            string inputPath = "input.xlsm";
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as a macro-enabled file (optional)
-        workbook.Save("EnumeratedModules.xlsm", SaveFormat.Xlsm);
+            // Access the VBA project associated with the workbook
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Get the collection of VBA modules
+            VbaModuleCollection modules = vbaProject.Modules;
+
+            // Enumerate each module and output its name to the console
+            for (int i = 0; i < modules.Count; i++)
+            {
+                VbaModule module = modules[i];
+                Console.WriteLine($"Module {i + 1}: {module.Name}");
+            }
+        }
     }
 }

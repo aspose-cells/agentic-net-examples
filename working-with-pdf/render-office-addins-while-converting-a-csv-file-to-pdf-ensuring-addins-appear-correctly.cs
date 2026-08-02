@@ -1,74 +1,41 @@
+// Title: C# – Convert CSV to PDF with Aspose.Cells while preserving Office add‑ins (charts, images)
+// Description: This Aspose.Cells for .NET example loads a CSV file using LoadOptions (LoadFormat.Csv), sets up PdfSaveOptions, and calls ConversionUtility.Convert to generate a PDF that retains any embedded Office add‑ins such as charts, pictures, or shapes.
+// Keywords: Aspose.Cells CSV to PDF | preserve add‑ins PDF conversion | PdfSaveOptions charts images | ConversionUtility example .NET | load CSV Aspose.Cells
+// Common Searches: Aspose.Cells keep charts when converting CSV to PDF | C# convert CSV to PDF with embedded objects | PdfSaveOptions preserve images Aspose.Cells | How to retain Office add‑ins in PDF output | Sample code CSV to PDF Aspose.Cells .NET
+// Developer Intent: Convert a CSV file to PDF in C# and ensure that any Office add‑ins (e.g., charts, pictures, shapes) are rendered in the resulting document.
+// Use Cases: Create printable reports from CSV data that include Excel charts. | Batch‑process inventory CSV files into PDF catalogs while keeping product images. | Generate PDF invoices from CSV exports that contain a company logo embedded as an add‑in.
+// AI Prompts: Write C# code using Aspose.Cells to convert a CSV file to PDF and verify that embedded charts appear correctly. | Show how to configure PdfSaveOptions to keep images and shapes during CSV‑to‑PDF conversion. | Explain best practices for converting large CSV files with ConversionUtility while preserving all add‑ins.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 using Aspose.Cells.Saving;
 
-namespace AsposeCellsAddInPdfConversion
+// This Aspose.Cells for .NET example loads a CSV file using LoadOptions (LoadFormat.Csv), sets up PdfSaveOptions, and calls ConversionUtility.Convert to generate a PDF that retains any embedded Office add‑ins such as charts, pictures, or shapes.
+class CsvToPdfWithAddIns
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input CSV file and output PDF file paths
+        string csvPath = "input.csv";
+        string pdfPath = "output.pdf";
+
+        // Create a sample CSV file if it does not exist
+        if (!System.IO.File.Exists(csvPath))
         {
-            try
-            {
-                // Paths for the source CSV file and the output PDF file
-                string csvPath = "data.csv";
-                string pdfPath = "result.pdf";
-
-                // -----------------------------------------------------------------
-                // 1. Create a sample CSV file (in real scenarios the file already exists)
-                // -----------------------------------------------------------------
-                File.WriteAllText(csvPath,
-                    "Product,Price,Quantity\n" +
-                    "Apple,1.5,100\n" +
-                    "Banana,0.75,150\n" +
-                    "Orange,1.25,120");
-
-                // Ensure the CSV file exists before proceeding
-                if (!File.Exists(csvPath))
-                    throw new FileNotFoundException("CSV source file not found.", csvPath);
-
-                // -----------------------------------------------------------------
-                // 2. Load the CSV file into a workbook.
-                //    LoadOptions with LoadFormat.Csv tells Aspose.Cells to treat the file as CSV.
-                // -----------------------------------------------------------------
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
-                Workbook workbook = new Workbook(); // empty workbook
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-                // -----------------------------------------------------------------
-                // 3. Save the workbook as PDF.
-                //    PdfSaveOptions can be used to fine‑tune the PDF output.
-                // -----------------------------------------------------------------
-                PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-                // Example: embed all fonts (property may not be available in older versions)
-                // pdfSaveOptions.EmbedStandardFonts = true; // Uncomment if supported
-
-                // Use ConversionUtility to apply both load and save options
-                ConversionUtility.Convert(csvPath, loadOptions, pdfPath, pdfSaveOptions);
-
-                // -----------------------------------------------------------------
-                // 4. Verify the conversion result.
-                // -----------------------------------------------------------------
-                Console.WriteLine(File.Exists(pdfPath)
-                    ? $"CSV file successfully converted to PDF: {pdfPath}"
-                    : "PDF conversion failed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up temporary CSV file (optional)
-                string csvPath = "data.csv";
-                if (File.Exists(csvPath))
-                {
-                    try { File.Delete(csvPath); } catch { /* ignore cleanup errors */ }
-                }
-            }
+            System.IO.File.WriteAllText(csvPath,
+                "Product,Price,Quantity\nApple,1.20,100\nBanana,0.80,150\nCherry,2.00,75");
         }
+
+        // LoadOptions specify that the source file is a CSV file
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+
+        // PdfSaveOptions control PDF rendering; add‑ins (charts, images, etc.) are kept by default
+        PdfSaveOptions saveOptions = new PdfSaveOptions();
+
+        // Convert the CSV file to PDF while preserving any embedded objects (add‑ins)
+        ConversionUtility.Convert(csvPath, loadOptions, pdfPath, saveOptions);
+
+        Console.WriteLine($"Conversion completed: '{csvPath}' → '{pdfPath}'");
     }
 }

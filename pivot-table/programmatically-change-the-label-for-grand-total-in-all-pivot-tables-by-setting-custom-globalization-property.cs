@@ -3,76 +3,51 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Settings;
 
-namespace AsposeCellsPivotGrandTotalCustomization
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Q1");
+        sheet.Cells["C1"].PutValue("Q2");
+        sheet.Cells["A2"].PutValue("Electronics");
+        sheet.Cells["B2"].PutValue(1500);
+        sheet.Cells["C2"].PutValue(2200);
+        sheet.Cells["A3"].PutValue("Clothing");
+        sheet.Cells["B3"].PutValue(900);
+        sheet.Cells["C3"].PutValue(1300);
+
+        // Add a pivot table based on the sample data
+        int pivotIndex = sheet.PivotTables.Add("A1:C3", "E4", "PivotTable1");
+        PivotTable pivot = sheet.PivotTables[pivotIndex];
+        pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category
+        pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Q1
+        pivot.AddFieldToArea(PivotFieldType.Data, 2);  // Q2
+
+        // Create custom globalization settings to change the Grand Total label
+        SettablePivotGlobalizationSettings customSettings = new SettablePivotGlobalizationSettings();
+        customSettings.SetTextOfGrandTotal("My Custom Grand Total");
+
+        // Assign the custom settings to the workbook's globalization settings
+        workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
+        workbook.Settings.GlobalizationSettings.PivotSettings = customSettings;
+
+        // Refresh and calculate all pivot tables in the workbook to apply the new label
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-
-            // Populate sample data for pivot tables
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Region");
-            dataSheet.Cells["C1"].PutValue("Sales");
-
-            dataSheet.Cells["A2"].PutValue("Electronics");
-            dataSheet.Cells["B2"].PutValue("North");
-            dataSheet.Cells["C2"].PutValue(1200);
-
-            dataSheet.Cells["A3"].PutValue("Electronics");
-            dataSheet.Cells["B3"].PutValue("South");
-            dataSheet.Cells["C3"].PutValue(1500);
-
-            dataSheet.Cells["A4"].PutValue("Furniture");
-            dataSheet.Cells["B4"].PutValue("North");
-            dataSheet.Cells["C4"].PutValue(800);
-
-            dataSheet.Cells["A5"].PutValue("Furniture");
-            dataSheet.Cells["B5"].PutValue("South");
-            dataSheet.Cells["C5"].PutValue(950);
-
-            // Add first pivot table
-            Worksheet pivotSheet1 = workbook.Worksheets.Add("Pivot1");
-            int pivotIndex1 = pivotSheet1.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-            PivotTable pivotTable1 = pivotSheet1.PivotTables[pivotIndex1];
-            pivotTable1.AddFieldToArea(PivotFieldType.Row, 0);      // Category
-            pivotTable1.AddFieldToArea(PivotFieldType.Column, 1);   // Region
-            pivotTable1.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
-
-            // Add second pivot table (different layout)
-            Worksheet pivotSheet2 = workbook.Worksheets.Add("Pivot2");
-            int pivotIndex2 = pivotSheet2.PivotTables.Add("A1:C5", "E3", "PivotTable2");
-            PivotTable pivotTable2 = pivotSheet2.PivotTables[pivotIndex2];
-            pivotTable2.AddFieldToArea(PivotFieldType.Row, 1);      // Region
-            pivotTable2.AddFieldToArea(PivotFieldType.Column, 0);   // Category
-            pivotTable2.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
-
-            // Create custom globalization settings
-            GlobalizationSettings globalization = new GlobalizationSettings();
-
-            // Use SettablePivotGlobalizationSettings to change the Grand Total label
-            SettablePivotGlobalizationSettings pivotSettings = new SettablePivotGlobalizationSettings();
-            pivotSettings.SetTextOfGrandTotal("My Custom Grand Total");
-
-            // Assign the customized pivot settings to the workbook's globalization settings
-            globalization.PivotSettings = pivotSettings;
-            workbook.Settings.GlobalizationSettings = globalization;
-
-            // Refresh and calculate all pivot tables to apply the new label
-            foreach (Worksheet ws in workbook.Worksheets)
+            foreach (PivotTable pt in ws.PivotTables)
             {
-                foreach (PivotTable pt in ws.PivotTables)
-                {
-                    pt.RefreshData();
-                    pt.CalculateData();
-                }
+                pt.RefreshData();
+                pt.CalculateData();
             }
-
-            // Save the workbook
-            workbook.Save("PivotGrandTotalCustom.xlsx");
         }
+
+        // Save the workbook
+        workbook.Save("CustomGrandTotal.xlsx");
     }
 }

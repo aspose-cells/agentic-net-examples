@@ -1,73 +1,53 @@
 using System;
-using System.Data;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-class InsertHyperlinksViaSmartMarkers
+namespace AsposeCellsSmartMarkerHyperlinkDemo
 {
-    static void Main()
+    // Simple data class containing a URL and optional display text
+    public class LinkInfo
     {
-        try
+        public string Url { get; set; }
+        public string DisplayText { get; set; }
+    }
+
+    public class Program
+    {
+        public static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and obtain the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Prepare the template with smart markers
-            //    Column A will hold the display text, Column B will hold the URL
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Link");
+            // Place a smart marker in cell A2 that will be replaced by the URL value
+            sheet.Cells["A2"].PutValue("&=Url");
 
-            // Smart markers: &=$Data.DisplayText and &=$Data.Url
-            sheet.Cells["A2"].PutValue("&=$Data.DisplayText");
-            sheet.Cells["B2"].PutValue("&=$Data.Url");
+            // Prepare a data source with dynamic URLs
+            List<LinkInfo> links = new List<LinkInfo>
+            {
+                new LinkInfo { Url = "https://www.aspose.com", DisplayText = "Aspose Home" },
+                new LinkInfo { Url = "https://github.com/aspose-cells", DisplayText = "Aspose Cells GitHub" }
+            };
 
-            // 3. Create a data source (DataTable) with dynamic URL fields
-            DataTable dt = new DataTable("Data");
-            dt.Columns.Add("DisplayText", typeof(string));
-            dt.Columns.Add("Url", typeof(string));
-
-            dt.Rows.Add("Aspose Home", "https://www.aspose.com");
-            dt.Rows.Add("GitHub", "https://github.com");
-            dt.Rows.Add("Stack Overflow", "https://stackoverflow.com");
-
-            // 4. Set up WorkbookDesigner and bind the data source
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
-            designer.SetDataSource("Data", dt);
-
-            // 5. Process the smart markers – this populates the cells with display text and URLs
+            // Use WorkbookDesigner to process the smart marker
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource("Links", links);
+            // The smart marker will be processed for the first item in the collection
             designer.Process();
 
-            // 6. After processing, add hyperlinks to the display cells using the URLs from column B
-            //    Loop through the populated rows (starting from row 2)
-            for (int row = 1; row <= dt.Rows.Count; row++)
-            {
-                // Cell with display text (Column A)
-                Cell displayCell = sheet.Cells[row, 0];
+            // After processing, the cell A2 now contains the URL string.
+            // Add a hyperlink to that cell using the same URL.
+            string url = sheet.Cells["A2"].StringValue;
+            int hyperlinkIndex = sheet.Hyperlinks.Add("A2", 1, 1, url);
+            Hyperlink hyperlink = sheet.Hyperlinks[hyperlinkIndex];
+            // Set the display text (optional)
+            hyperlink.TextToDisplay = links[0].DisplayText;
+            // Set a screen tip (optional)
+            hyperlink.ScreenTip = "Click to open " + links[0].DisplayText;
 
-                // Corresponding URL cell (Column B)
-                string url = sheet.Cells[row, 1].StringValue;
-
-                // Add hyperlink to the display cell
-                // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
-                sheet.Hyperlinks.Add(displayCell.Row, displayCell.Column, 1, 1, url);
-
-                // Optionally, clear the URL cell if you don't want it visible
-                sheet.Cells[row, 1].PutValue(string.Empty);
-            }
-
-            // 7. Save the workbook (using the standard save lifecycle)
-            string outputPath = "HyperlinksViaSmartMarkers.xlsx";
-
-            // Ensure we can write to the path (no need for File.Exists check when creating a new file)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Save the workbook to an XLSX file
+            workbook.Save("SmartMarkerHyperlinkDemo.xlsx");
         }
     }
 }

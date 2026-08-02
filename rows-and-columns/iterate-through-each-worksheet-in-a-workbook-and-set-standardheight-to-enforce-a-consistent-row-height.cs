@@ -1,47 +1,25 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – set consistent row height across all worksheets
+class Program
 {
-    public class SetStandardRowHeightForAllSheets
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Define the desired standard row height (in points)
+        double desiredHeight = 20.0;
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
-            {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Add an extra worksheet for demonstration purposes
-                workbook.Worksheets.Add();
-
-                // Desired standard row height in points
-                double desiredHeight = 20.0;
-
-                // Set the standard height for each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.Cells.StandardHeight = desiredHeight;
-                }
-
-                // Save the workbook to verify the changes
-                string outputPath = "AllSheetsStandardHeight.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Set the default row height for the current worksheet
+            sheet.Cells.StandardHeight = desiredHeight;
         }
-    }
 
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetStandardRowHeightForAllSheets.Run();
-        }
+        // Save the workbook to a file
+        workbook.Save("ConsistentRowHeight.xlsx");
     }
 }

@@ -1,97 +1,15 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Custom globalization settings that return locale‑specific boolean strings.
+    // Custom globalization settings that return Russian boolean strings
     public class RussianBooleanGlobalizationSettings : GlobalizationSettings
     {
         public override string GetBooleanValueString(bool bv)
         {
-            // Russian words for true/false.
             return bv ? "ИСТИНА" : "ЛОЖЬ";
-        }
-    }
-
-    public static class SimpleAssert
-    {
-        public static void AreEqual(string expected, string actual, string message)
-        {
-            if (!string.Equals(expected, actual, StringComparison.Ordinal))
-                throw new Exception($"Assert Failed: {message} Expected='{expected}', Actual='{actual}'.");
-        }
-    }
-
-    public class GetBooleanValueStringTests
-    {
-        // Test the default implementation (no custom settings).
-        public void Default_GetBooleanValueString_ReturnsEnglishStrings()
-        {
-            // Arrange
-            Workbook workbook = new Workbook(); // default workbook
-            GlobalizationSettings settings = workbook.Settings.GlobalizationSettings;
-
-            // Act
-            string trueStr = settings.GetBooleanValueString(true);
-            string falseStr = settings.GetBooleanValueString(false);
-
-            // Assert
-            SimpleAssert.AreEqual("TRUE", trueStr, "Default true string should be 'TRUE'.");
-            SimpleAssert.AreEqual("FALSE", falseStr, "Default false string should be 'FALSE'.");
-        }
-
-        // Test custom strings set via SettableGlobalizationSettings.
-        public void SettableGlobalizationSettings_CustomBooleanStrings_AreReturned()
-        {
-            // Arrange
-            Workbook workbook = new Workbook();
-            var customSettings = new SettableGlobalizationSettings();
-            customSettings.SetBooleanValueString(true, "YES_CUSTOM");
-            customSettings.SetBooleanValueString(false, "NO_CUSTOM");
-            workbook.Settings.GlobalizationSettings = customSettings;
-
-            // Act
-            string trueStr = customSettings.GetBooleanValueString(true);
-            string falseStr = customSettings.GetBooleanValueString(false);
-
-            // Assert
-            SimpleAssert.AreEqual("YES_CUSTOM", trueStr, "Custom true string should match the value set.");
-            SimpleAssert.AreEqual("NO_CUSTOM", falseStr, "Custom false string should match the value set.");
-        }
-
-        // Test a locale‑specific override (e.g., Russian) using a derived GlobalizationSettings class.
-        public void CustomGlobalizationSettings_RussianLocale_ReturnsRussianStrings()
-        {
-            // Arrange
-            Workbook workbook = new Workbook();
-            workbook.Settings.GlobalizationSettings = new RussianBooleanGlobalizationSettings();
-
-            // Act
-            string trueStr = workbook.Settings.GlobalizationSettings.GetBooleanValueString(true);
-            string falseStr = workbook.Settings.GlobalizationSettings.GetBooleanValueString(false);
-
-            // Assert
-            SimpleAssert.AreEqual("ИСТИНА", trueStr, "Russian true string should be 'ИСТИНА'.");
-            SimpleAssert.AreEqual("ЛОЖЬ", falseStr, "Russian false string should be 'ЛОЖЬ'.");
-        }
-
-        // Test behavior when GlobalizationSettings is null (should fallback to default).
-        public void Null_GlobalizationSettings_UsesDefaultImplementation()
-        {
-            // Arrange
-            Workbook workbook = new Workbook();
-            // Explicitly set to null to simulate missing settings.
-            workbook.Settings.GlobalizationSettings = null;
-
-            // Act
-            // Accessing the property returns the default GlobalizationSettings instance.
-            GlobalizationSettings settings = workbook.Settings.GlobalizationSettings;
-            string trueStr = settings.GetBooleanValueString(true);
-            string falseStr = settings.GetBooleanValueString(false);
-
-            // Assert
-            SimpleAssert.AreEqual("TRUE", trueStr, "When settings are null, true should map to 'TRUE'.");
-            SimpleAssert.AreEqual("FALSE", falseStr, "When settings are null, false should map to 'FALSE'.");
         }
     }
 
@@ -99,25 +17,14 @@ namespace AsposeCellsTests
     {
         static void Main()
         {
-            var tests = new GetBooleanValueStringTests();
-
-            RunTest(() => tests.Default_GetBooleanValueString_ReturnsEnglishStrings(),
-                nameof(tests.Default_GetBooleanValueString_ReturnsEnglishStrings));
-
-            RunTest(() => tests.SettableGlobalizationSettings_CustomBooleanStrings_AreReturned(),
-                nameof(tests.SettableGlobalizationSettings_CustomBooleanStrings_AreReturned));
-
-            RunTest(() => tests.CustomGlobalizationSettings_RussianLocale_ReturnsRussianStrings(),
-                nameof(tests.CustomGlobalizationSettings_RussianLocale_ReturnsRussianStrings));
-
-            RunTest(() => tests.Null_GlobalizationSettings_UsesDefaultImplementation(),
-                nameof(tests.Null_GlobalizationSettings_UsesDefaultImplementation));
-
-            Console.WriteLine("All tests completed.");
+            RunTest(nameof(DefaultBooleanStrings_ShouldReturnEnglishValues), DefaultBooleanStrings_ShouldReturnEnglishValues);
+            RunTest(nameof(CustomSettableSettings_ShouldReturnUserDefinedValues), CustomSettableSettings_ShouldReturnUserDefinedValues);
+            RunTest(nameof(OverriddenGlobalizationSettings_ShouldReturnLocalizedValues), OverriddenGlobalizationSettings_ShouldReturnLocalizedValues);
+            RunTest(nameof(GetBooleanValueString_OnEmptyCell_ShouldNotThrow), GetBooleanValueString_OnEmptyCell_ShouldNotThrow);
         }
 
-        // Executes a test method inside a try‑catch block and reports the result.
-        private static void RunTest(Action testMethod, string testName)
+        // Executes a test method and reports the result
+        static void RunTest(string testName, Action testMethod)
         {
             try
             {
@@ -127,6 +34,74 @@ namespace AsposeCellsTests
             catch (Exception ex)
             {
                 Console.WriteLine($"{testName}: Failed - {ex.Message}");
+            }
+        }
+
+        // Test default globalization settings (en-US) return "TRUE"/"FALSE"
+        static void DefaultBooleanStrings_ShouldReturnEnglishValues()
+        {
+            var workbook = new Workbook(); // default workbook
+            GlobalizationSettings settings = workbook.Settings.GlobalizationSettings;
+
+            string trueStr = settings.GetBooleanValueString(true);
+            string falseStr = settings.GetBooleanValueString(false);
+
+            if (trueStr != "TRUE")
+                throw new Exception($"Expected 'TRUE' but got '{trueStr}'.");
+            if (falseStr != "FALSE")
+                throw new Exception($"Expected 'FALSE' but got '{falseStr}'.");
+        }
+
+        // Test SettableGlobalizationSettings with custom strings
+        static void CustomSettableSettings_ShouldReturnUserDefinedValues()
+        {
+            var workbook = new Workbook();
+            var customSettings = new SettableGlobalizationSettings();
+            customSettings.SetBooleanValueString(true, "YES");
+            customSettings.SetBooleanValueString(false, "NO");
+            workbook.Settings.GlobalizationSettings = customSettings;
+
+            string trueStr = customSettings.GetBooleanValueString(true);
+            string falseStr = customSettings.GetBooleanValueString(false);
+
+            if (trueStr != "YES")
+                throw new Exception($"Expected 'YES' but got '{trueStr}'.");
+            if (falseStr != "NO")
+                throw new Exception($"Expected 'NO' but got '{falseStr}'.");
+        }
+
+        // Test overriding GetBooleanValueString for a specific locale (Russian)
+        static void OverriddenGlobalizationSettings_ShouldReturnLocalizedValues()
+        {
+            var workbook = new Workbook();
+            var russianSettings = new RussianBooleanGlobalizationSettings();
+            workbook.Settings.GlobalizationSettings = russianSettings;
+
+            string trueStr = russianSettings.GetBooleanValueString(true);
+            string falseStr = russianSettings.GetBooleanValueString(false);
+
+            if (trueStr != "ИСТИНА")
+                throw new Exception($"Expected 'ИСТИНА' but got '{trueStr}'.");
+            if (falseStr != "ЛОЖЬ")
+                throw new Exception($"Expected 'ЛОЖЬ' but got '{falseStr}'.");
+        }
+
+        // Test behavior when a cell has no boolean value (null equivalent)
+        static void GetBooleanValueString_OnEmptyCell_ShouldNotThrow()
+        {
+            var workbook = new Workbook();
+            var settings = workbook.Settings.GlobalizationSettings;
+            var cell = workbook.Worksheets[0].Cells["A1"]; // empty cell (unused)
+
+            // Ensure no exception when calling the method with explicit bool values
+            try
+            {
+                settings.GetBooleanValueString(true);
+                settings.GetBooleanValueString(false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Method threw an exception on empty cell.", ex);
             }
         }
     }

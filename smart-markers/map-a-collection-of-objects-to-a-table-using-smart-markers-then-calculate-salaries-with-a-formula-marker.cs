@@ -8,57 +8,56 @@ namespace SmartMarkerSalaryDemo
     public class Employee
     {
         public string Name { get; set; }
-        public double Hours { get; set; }
-        public double Rate { get; set; }
+        public double Salary { get; set; }
+        public double Bonus { get; set; }
     }
 
     public class Program
     {
         public static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // 1. Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // 2. Set up the template with smart markers
+            // 2. Build a simple template with smart markers
             // Header row
             cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Hours");
-            cells["C1"].PutValue("Rate");
-            cells["D1"].PutValue("Salary");
+            cells["B1"].PutValue("Salary");
+            cells["C1"].PutValue("Bonus");
+            cells["D1"].PutValue("Total");
 
-            // Row that will be repeated for each Employee object
-            // Smart markers reference the data source name "Employees"
+            // Data row with smart markers
+            // &=$Employees.Name will be replaced by each employee's Name
+            // &=$Employees.Salary will be replaced by each employee's Salary
+            // &=$Employees.Bonus will be replaced by each employee's Bonus
             cells["A2"].PutValue("&=$Employees.Name");
-            cells["B2"].PutValue("&=$Employees.Hours");
-            cells["C2"].PutValue("&=$Employees.Rate");
-            // Formula marker: Salary = Hours * Rate
-            cells["D2"].Formula = "=B2*C2";
+            cells["B2"].PutValue("&=$Employees.Salary");
+            cells["C2"].PutValue("&=$Employees.Bonus");
+            // Formula marker to calculate total compensation
+            cells["D2"].Formula = "=B2+C2";
 
-            // 3. Prepare a collection of Employee objects
+            // 3. Prepare a collection of objects
             List<Employee> employees = new List<Employee>
             {
-                new Employee { Name = "Alice", Hours = 40, Rate = 25 },
-                new Employee { Name = "Bob",   Hours = 35, Rate = 30 },
-                new Employee { Name = "Carol", Hours = 45, Rate = 22 }
+                new Employee { Name = "John Doe", Salary = 50000, Bonus = 5000 },
+                new Employee { Name = "Jane Smith", Salary = 62000, Bonus = 6200 },
+                new Employee { Name = "Bob Johnson", Salary = 47000, Bonus = 4700 }
             };
 
-            // 4. Create a WorkbookDesigner, assign the workbook, and set the data source
+            // 4. Set the collection as a data source for the smart marker named "Employees"
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            // Bind the collection to the name used in smart markers
             designer.SetDataSource("Employees", employees);
-            // Ensure that formulas (Salary) are repeated for each generated row
-            designer.RepeatFormulasWithSubtotal = true;
 
-            // 5. Process the smart markers to populate the table
+            // 5. Process the smart markers (lifecycle rule: process)
             designer.Process();
 
-            // 6. Calculate all formulas so that Salary values are evaluated
+            // 6. Calculate all formulas, including the Total column (lifecycle rule: calculate)
             workbook.CalculateFormula();
 
-            // 7. Save the resulting workbook
-            workbook.Save("EmployeesSalary.xlsx");
+            // 7. Save the result (lifecycle rule: save)
+            workbook.Save("EmployeesSalaryReport.xlsx");
         }
     }
 }

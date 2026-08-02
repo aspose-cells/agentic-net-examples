@@ -1,74 +1,78 @@
+// Title: Aspose.Cells .NET: Set Manual Calculation, Batch Rename Named Ranges with Regex, Restore Automatic Mode & Recalculate
+// Description: Demonstrates how to switch a workbook to manual calculation, rename all defined names using a regular‑expression pattern (e.g., add a "New_" prefix and replace spaces with underscores), then revert to automatic mode, trigger a full formula recalculation, and save the file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | automatic calculation mode | rename named ranges | batch rename defined names | regex rename | regular expression | Workbook.CalculateFormula | performance optimization | named range prefix | spaces to underscores
+// Common Searches: Aspose.Cells set calculation mode manual | batch rename named ranges regex C# | how to rename defined names without recalculating | restore automatic calculation after renaming names Aspose.Cells | force formula recalculation after changing named ranges
+// Developer Intent: Temporarily disable automatic formula calculation, rename all workbook named ranges using a regex pattern, then re‑enable automatic calculation and recalculate formulas.
+// Use Cases: Improve performance by turning off automatic calculation while performing bulk renaming of named ranges. | Standardize naming conventions across a workbook with regex‑based transformations (e.g., prefix and replace spaces). | Ensure formulas reference the new names correctly by switching back to automatic mode and invoking CalculateFormula.
+// AI Prompts: Generate C# code with Aspose.Cells that sets the calculation mode to Manual, renames every named range by adding "New_" and converting spaces to underscores using Regex, then switches back to Automatic and recalculates all formulas. | Explain how to batch rename defined names in Aspose.Cells without triggering intermediate formula recalculations, and why manual mode improves speed. | Show how to validate that formulas correctly reference the renamed named ranges after calling Workbook.CalculateFormula.
+
 using System;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsRenameNamedRanges
 {
+    // Demonstrates how to switch a workbook to manual calculation, rename all defined names using a regular‑expression pattern (e.g., add a "New_" prefix and replace spaces with underscores), then revert to automatic mode, trigger a full formula recalculation, and save the file with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (lifecycle rule: create)
+                // -------------------------------------------------
+                // 1. Create a new workbook (or load an existing one)
+                // -------------------------------------------------
                 Workbook workbook = new Workbook();
 
-                // -------------------------------------------------
-                // Sample data: create some named ranges to rename
-                // -------------------------------------------------
+                // Add sample data and some named ranges for demonstration
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Name = "Sheet1";
-
-                // Populate sample cells
                 sheet.Cells["A1"].PutValue(10);
                 sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["B1"].PutValue(30);
-                sheet.Cells["B2"].PutValue(40);
+                sheet.Cells["A3"].PutValue(30);
 
-                // Define named ranges (names must be valid Excel identifiers – no spaces)
-                int idx1 = workbook.Worksheets.Names.Add("TotalSales");
-                workbook.Worksheets.Names[idx1].RefersTo = "=Sheet1!$A$1:$A$2";
+                // Create a few named ranges with **valid** names (no spaces)
+                int idx1 = workbook.Worksheets.Names.Add("Total_Sales");
+                workbook.Worksheets.Names[idx1].RefersTo = "=Sheet1!$A$1:$A$3";
 
-                int idx2 = workbook.Worksheets.Names.Add("QuarterlyReport");
-                workbook.Worksheets.Names[idx2].RefersTo = "=Sheet1!$B$1:$B$2";
-
-                int idx3 = workbook.Worksheets.Names.Add("YearlySummary");
-                workbook.Worksheets.Names[idx3].RefersTo = "=Sheet1!$A$1:$B$2";
+                int idx2 = workbook.Worksheets.Names.Add("Average_Score");
+                workbook.Worksheets.Names[idx2].RefersTo = "=Sheet1!$A$1:$A$3";
 
                 // -------------------------------------------------
-                // 1. Set calculation mode to Manual
+                // 2. Switch calculation mode to Manual
                 // -------------------------------------------------
                 workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
                 // -------------------------------------------------
-                // 2. Batch rename named ranges using a regex pattern
-                //    Example pattern: replace capital letters with underscores and prepend "New_"
+                // 3. Batch rename named ranges using a regex pattern
+                //    Example: replace spaces with underscores and prepend "New_"
                 // -------------------------------------------------
-                // This pattern inserts an underscore before each capital letter (except the first)
-                Regex renamePattern = new Regex("(?<!^)([A-Z])");
+                string pattern = @"\s+";
+                string replacement = "_";
 
                 foreach (Name name in workbook.Worksheets.Names)
                 {
-                    string original = name.Text;                     // e.g., "TotalSales"
-                    string withUnderscores = renamePattern.Replace(original, "_$1"); // "Total_Sales"
-                    string newName = "New_" + withUnderscores;       // "New_Total_Sales"
-                    name.Text = newName;
+                    // Apply regex replacement to the existing name text
+                    string newName = "New_" + Regex.Replace(name.Text, pattern, replacement);
+                    name.Text = newName; // rename the defined name
                 }
 
                 // -------------------------------------------------
-                // 3. Switch calculation mode back to Automatic
+                // 4. Switch calculation mode back to Automatic
                 // -------------------------------------------------
                 workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
                 // -------------------------------------------------
-                // 4. Recalculate all formulas in the workbook
+                // 5. Recalculate all formulas in the workbook
                 // -------------------------------------------------
                 workbook.CalculateFormula();
 
                 // -------------------------------------------------
-                // Save the workbook (lifecycle rule: save)
+                // 6. Save the workbook
                 // -------------------------------------------------
-                workbook.Save("RenamedNamedRanges.xlsx");
+                string outputPath = "RenamedNamedRanges.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {

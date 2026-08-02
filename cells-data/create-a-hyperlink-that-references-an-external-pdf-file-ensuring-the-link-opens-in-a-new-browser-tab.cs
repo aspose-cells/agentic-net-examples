@@ -7,20 +7,20 @@ class CreatePdfHyperlink
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Set the display text for the hyperlink
-        worksheet.Cells["A1"].PutValue("Open PDF Document");
+        sheet.Cells["A1"].PutValue("Open PDF");
 
-        // Add a hyperlink to an external PDF file (opens in a new tab when saved as HTML)
-        // Parameters: start cell, total rows, total columns, address of the PDF
-        worksheet.Hyperlinks.Add("A1", 1, 1, "https://example.com/document.pdf");
+        // Add a hyperlink to an external PDF file (opens when clicked)
+        // Parameters: start cell, rows, columns, address of the PDF
+        sheet.Hyperlinks.Add("A1", 1, 1, "https://example.com/document.pdf");
 
-        // Configure HTML save options to use target="_blank" (new browser tab)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.LinkTargetType = HtmlLinkTargetType.Blank;
+        // Configure HTML save options so that links open in a new browser tab/window
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        saveOptions.LinkTargetType = HtmlLinkTargetType.Blank; // _blank target
 
         // Save the workbook as an HTML file with the specified options
-        workbook.Save("PdfHyperlink.html", htmlOptions);
+        workbook.Save("PdfLink.html", saveOptions);
     }
 }

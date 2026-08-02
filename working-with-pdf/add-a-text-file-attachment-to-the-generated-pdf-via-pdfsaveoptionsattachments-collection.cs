@@ -1,9 +1,19 @@
+// Title: Add a Text File Attachment to a PDF Using Aspose.Cells C#
+// Description: Demonstrates how to create a workbook, generate a temporary text file, embed it as an OLE object, enable attachment embedding with PdfSaveOptions, and save the workbook as a PDF that contains the text file as an attachment. The sample also cleans up the temporary file after saving.
+// Keywords: Aspose.Cells PDF attachment C# | PdfSaveOptions.Attachments collection | embed text file in PDF Aspose.Cells | C# add OLE object to PDF | Aspose.Cells save workbook as PDF with attachment | PDF embed file Aspose.Cells example
+// Common Searches: how to embed a text file in a PDF with Aspose.Cells C# | Aspose.Cells PdfSaveOptions Attachments example | add OLE object as PDF attachment using Aspose.Cells | C# generate PDF with embedded files Aspose.Cells | Aspose.Cells embed attachment in exported PDF
+// Developer Intent: Embed a plain‑text file inside the PDF produced from an Aspose.Cells workbook.
+// Use Cases: Attach a log or audit file to a PDF report generated from spreadsheet data. | Include terms‑and‑conditions or policy documents with a PDF invoice created from Excel. | Provide supplemental CSV or TXT data as an embedded file within a PDF summary.
+// AI Prompts: Write C# code that adds multiple files to PdfSaveOptions.Attachments instead of using OLE objects. | Explain when to use PdfSaveOptions.EmbedAttachments versus the Attachments collection in Aspose.Cells. | Show how to customize the icon displayed for an OLE object that becomes a PDF attachment.
+
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsAttachmentDemo
 {
+    // Demonstrates how to create a workbook, generate a temporary text file, embed it as an OLE object, enable attachment embedding with PdfSaveOptions, and save the workbook as a PDF that contains the text file as an attachment. The sample also cleans up the temporary file after saving.
     class Program
     {
         static void Main()
@@ -15,28 +25,25 @@ namespace AsposeCellsAttachmentDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 sheet.Cells["A1"].PutValue("PDF with Text File Attachment");
 
-                // Prepare a temporary text file to be attached
-                string tempTxtPath = Path.Combine(Path.GetTempPath(), "Attachment.txt");
-                File.WriteAllText(tempTxtPath, "This is the content of the attached text file.");
+                // Prepare a simple text file to be attached
+                string txtFilePath = "SampleAttachment.txt";
+                File.WriteAllText(txtFilePath, "This is the content of the attached text file.");
 
-                // Ensure the temporary file exists before reading it
-                if (!File.Exists(tempTxtPath))
-                    throw new FileNotFoundException("Temporary attachment file not found.", tempTxtPath);
+                // Ensure the text file exists before adding it as an OLE object
+                if (!File.Exists(txtFilePath))
+                    throw new FileNotFoundException("Attachment file not found.", txtFilePath);
 
-                // Add the text file as an OLE object (attachment) to the worksheet
-                // Row, Column, Width, Height are arbitrary values for placement
-                int oleIndex = sheet.OleObjects.Add(5, 0, 200, 200, File.ReadAllBytes(tempTxtPath));
+                // Add the text file as an OLE object to the worksheet
+                // Parameters: upper left row, column, height, width, file bytes
+                int oleIndex = sheet.OleObjects.Add(5, 0, 200, 200, File.ReadAllBytes(txtFilePath));
 
-                // Set the OLE object to display as an icon
+                // Display the OLE object as an icon
                 sheet.OleObjects[oleIndex].DisplayAsIcon = true;
-
-                // (Optional) Set file format type – using Unknown if specific type is unavailable
-                sheet.OleObjects[oleIndex].FileFormatType = FileFormatType.Unknown;
 
                 // Configure PDF save options to embed OLE attachments
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    EmbedAttachments = true // Enables embedding of the OLE object into the PDF
+                    EmbedAttachments = true // Enables embedding of OLE objects as PDF attachments
                 };
 
                 // Save the workbook as PDF with the attachment embedded
@@ -44,10 +51,7 @@ namespace AsposeCellsAttachmentDemo
                 workbook.Save(outputPdf, pdfOptions);
 
                 // Clean up the temporary text file
-                if (File.Exists(tempTxtPath))
-                {
-                    File.Delete(tempTxtPath);
-                }
+                File.Delete(txtFilePath);
             }
             catch (Exception ex)
             {

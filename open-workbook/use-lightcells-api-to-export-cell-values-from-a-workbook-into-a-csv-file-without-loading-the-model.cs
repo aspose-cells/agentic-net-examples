@@ -1,43 +1,36 @@
-using System;
-using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Utility;
+// Title: Export Excel to CSV with Aspose.Cells LightCells ConversionUtility (C#) without loading the workbook model
+// Description: Shows how to convert an existing XLSX file to a CSV file using Aspose.Cells.Utility.ConversionUtility, which employs the LightCells engine to export cell values while keeping memory usage minimal.
+// Keywords: Aspose.Cells | C# | LightCells | ConversionUtility | XLSX to CSV | export cell values | memory‑efficient conversion | streaming Excel to CSV | large workbook conversion | no workbook model load
+// Common Searches: Aspose.Cells convert xlsx to csv without loading workbook | LightCells export Excel to CSV C# | ConversionUtility example for CSV export | memory‑low Excel to CSV conversion Aspose | how to use Aspose.Cells Utility ConversionUtility
+// Developer Intent: Convert an existing Excel workbook to a CSV file while avoiding the overhead of loading the full workbook model into memory.
+// Use Cases: Generate CSV reports from massive Excel files on a server with limited RAM. | Process user‑uploaded spreadsheets to CSV for downstream analytics without full model parsing. | Automate batch conversions in cloud services where memory consumption must stay low.
+// AI Prompts: Provide C# code that uses Aspose.Cells.Utility.ConversionUtility to convert an XLSX file to CSV without opening the workbook model. | Explain how LightCells in Aspose.Cells enables low‑memory Excel‑to‑CSV conversion. | Show a streaming approach for converting large Excel files to CSV with Aspose.Cells LightCells API.
 
-class ExportToCsvWithoutLoadingModel
-{
-    static void Main()
-    {
-        // Path to the existing Excel workbook (can be large)
-        string sourceWorkbookPath = "large_input.xlsx";
+// Example: Export cell values from an existing workbook to a CSV file
+// without manually loading the workbook model, using Aspose.Cells ConversionUtility.
 
-        // Desired CSV output file path
-        string csvOutputPath = "exported_output.csv";
+// Create a sample workbook and save it as XLSX (this part is just for demonstration;
+// in real scenarios the source file already exists).
+var sourcePath = "sample.xlsx";
+var csvPath = "exported.csv";
 
-        try
-        {
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourceWorkbookPath))
-                throw new FileNotFoundException($"Source workbook not found: {sourceWorkbookPath}");
+var workbook = new Aspose.Cells.Workbook();
+var sheet = workbook.Worksheets[0];
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(csvOutputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+// Populate some data
+sheet.Cells["A1"].PutValue("Name");
+sheet.Cells["B1"].PutValue("Age");
+sheet.Cells["A2"].PutValue("John");
+sheet.Cells["B2"].PutValue(30);
+sheet.Cells["A3"].PutValue("Alice");
+sheet.Cells["B3"].PutValue(25);
 
-            // LoadOptions specify the format of the source file.
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+// Save the workbook (model is loaded only here for the demo)
+workbook.Save(sourcePath, Aspose.Cells.SaveFormat.Xlsx);
 
-            // TxtSaveOptions constructor sets the desired save format (CSV).
-            TxtSaveOptions csvSaveOptions = new TxtSaveOptions(SaveFormat.Csv);
+// Convert the XLSX file to CSV.
+// ConversionUtility handles the conversion internally without requiring the caller
+// to load the workbook model into memory.
+Aspose.Cells.Utility.ConversionUtility.Convert(sourcePath, csvPath);
 
-            // Perform the conversion in streaming mode without loading the full workbook model.
-            ConversionUtility.Convert(sourceWorkbookPath, loadOptions, csvOutputPath, csvSaveOptions);
-
-            Console.WriteLine($"Workbook '{sourceWorkbookPath}' has been exported to CSV at '{csvOutputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during conversion: {ex.Message}");
-        }
-    }
-}
+// At this point 'exported.csv' contains the cell values from the original workbook.

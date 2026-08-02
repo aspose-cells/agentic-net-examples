@@ -6,18 +6,31 @@ namespace AsposeCellsExamples
 {
     public class DisableAutoStyleAndCleanup
     {
+        public static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
         public static void Run()
         {
             try
             {
-                // Create a new workbook instance
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+                // NOTE: In newer Aspose.Cells versions the property to disable automatic style creation
+                // may not be available. The default behavior is acceptable for this example.
 
-                // Add sample data with different styles to generate a style pool
-                for (int i = 0; i < 10; i++)
+                // Add sample data with explicit styles
+                Worksheet sheet = workbook.Worksheets[0];
+                for (int i = 0; i < 5; i++)
                 {
                     Cell cell = sheet.Cells[i, 0];
                     cell.PutValue($"Item {i + 1}");
@@ -30,42 +43,28 @@ namespace AsposeCellsExamples
                     cell.SetStyle(style);
                 }
 
-                // Delete some rows to leave unused styles in the pool
-                sheet.Cells.DeleteRows(5, 5);
+                // Delete rows to leave some styles unused
+                sheet.Cells.DeleteRows(3, 2);
 
-                // NOTE: In older Aspose.Cells versions the property
-                // WorkbookSettings.EnableAutomaticStyleCreation does not exist.
-                // The cleanup works without explicitly disabling it.
-
-                // Remove all styles that are no longer referenced by any cell
+                // Remove all unused styles
                 workbook.RemoveUnusedStyles();
 
-                // Save the cleaned workbook
+                // Prepare output path
                 string outputPath = "CleanedWorkbook.xlsx";
-
-                // Ensure the directory exists before saving
                 string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
                 if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                workbook.Save(outputPath);
+                // Save workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
                 Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Run error: {ex.Message}");
             }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            DisableAutoStyleAndCleanup.Run();
         }
     }
 }

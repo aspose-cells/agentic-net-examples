@@ -1,65 +1,83 @@
+// Title: Refresh a Query Table After Changing Its SQL Command with Aspose.Cells for .NET
+// Description: This example loads a workbook, retrieves the first query table, updates the linked ExternalConnection's SQL statement, enables formatting preservation and column‑width auto‑adjust, refreshes all external connections, and saves the result to a new file.
+// Keywords: Aspose.Cells query table refresh | modify external connection SQL | C# Workbook.RefreshAll | preserve formatting after refresh | adjust column width .NET | update query table data programmatically
+// Common Searches: change SQL command of a query table using Aspose.Cells | how to refresh query tables after editing the command in C# | keep cell formatting when refreshing external connections | auto‑fit columns after query table refresh .NET | Aspose.Cells refresh all connections example
+// Developer Intent: Update a query table's SQL query and reload its data programmatically.
+// Use Cases: Switch a query table to retrieve only active records, refresh, and keep the original styling. | Batch‑update multiple query tables' commands in one workbook and refresh them in a single call. | Save a refreshed workbook with columns automatically resized to accommodate new data.
+// AI Prompts: Write C# code that changes a query table's SQL command, calls Workbook.RefreshAll, and saves the workbook while preserving formatting with Aspose.Cells. | Explain how ExternalConnection.Command interacts with Workbook.RefreshAll when updating query tables. | Suggest robust error‑handling for missing input files, absent query tables, or invalid SQL statements in an Aspose.Cells workflow.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsQueryTableRefreshDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    // This example loads a workbook, retrieves the first query table, updates the linked ExternalConnection's SQL statement, enables formatting preservation and column‑width auto‑adjust, refreshes all external connections, and saves the result to a new file.
+    public class RefreshQueryTableDemo
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                // Load the workbook that contains a query table
+            // Verify that the input workbook exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook that contains a query table.
                 Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed).
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Ensure there is at least one query table
+                // Ensure there is at least one query table in the worksheet.
                 if (worksheet.QueryTables.Count == 0)
                 {
                     Console.WriteLine("No query tables found in the worksheet.");
                     return;
                 }
 
-                // Get the first query table
+                // Get the first query table.
                 QueryTable queryTable = worksheet.QueryTables[0];
 
-                // Access the external connection linked to the query table
-                ExternalConnection extConn = queryTable.ExternalConnection;
-                if (extConn is DBConnection dbConn)
-                {
-                    // Modify the underlying SQL command
-                    dbConn.Command = "SELECT Id, Name, Price FROM Products WHERE Price > 100";
+                // Obtain the external connection linked to the query table.
+                ExternalConnection connection = queryTable.ExternalConnection;
 
-                    // Refresh the query table – Aspose.Cells versions prior to 23.x do not expose a Refresh method.
-                    // If the Refresh method is available in your version, uncomment the line below:
-                    // queryTable.Refresh();
+                // Modify the SQL command text to reflect the updated query.
+                connection.Command = "SELECT * FROM dbo.YourTable WHERE Status = 'Active'";
 
-                    Console.WriteLine("Query table command updated.");
-                }
-                else
-                {
-                    Console.WriteLine("The query table does not use a DBConnection that can be modified.");
-                }
+                // Preserve formatting and adjust column width after refresh.
+                queryTable.PreserveFormatting = true;
+                queryTable.AdjustColumnWidth = true;
 
-                // Save the workbook with the (potentially) updated data
+                // Refresh all external connections (including the query table) to apply the new command.
+                workbook.RefreshAll();
+
+                // Save the workbook with the refreshed data.
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as \"{outputPath}\".");
+                Console.WriteLine($"Query table refreshed and workbook saved as '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Runtime error: {ex.Message}");
             }
         }
     }

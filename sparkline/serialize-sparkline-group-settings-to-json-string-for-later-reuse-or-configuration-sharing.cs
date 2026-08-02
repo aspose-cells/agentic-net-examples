@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
@@ -29,30 +28,51 @@ class SparklineGroupJsonSerialization
             EndColumn = 4
         };
 
-        // Add a sparkline group (Line type) with the data range and location
+        // Add a sparkline group with a line type
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Add a sparkline to the group
+        // Configure various group settings
+        group.ShowHighPoint = true;
+        group.ShowLowPoint = true;
+        group.ShowFirstPoint = true;
+        group.ShowLastPoint = true;
+        group.ShowMarkers = true;
+        group.PlotRightToLeft = false;
+        group.LineWeight = 1.5;
+        group.PresetStyle = SparklinePresetStyleType.Style3;
+        group.Type = SparklineType.Line;
+
+        // Set colors using CellsColor objects
+        CellsColor seriesColor = workbook.CreateCellsColor();
+        seriesColor.Color = System.Drawing.Color.Orange;
+        group.SeriesColor = seriesColor;
+
+        CellsColor highPointColor = workbook.CreateCellsColor();
+        highPointColor.Color = System.Drawing.Color.Green;
+        group.HighPointColor = highPointColor;
+
+        CellsColor lowPointColor = workbook.CreateCellsColor();
+        lowPointColor.Color = System.Drawing.Color.Red;
+        group.LowPointColor = lowPointColor;
+
+        // Add a sparkline to the group (required for the group to be valid)
         group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
 
-        // Configure some visual settings of the sparkline group
-        CellsColor seriesColor = workbook.CreateCellsColor();
-        seriesColor.Color = Color.Orange;
-        group.SeriesColor = seriesColor;
-        group.ShowMarkers = true;
-        group.LineWeight = 2.0;
-        group.PresetStyle = SparklinePresetStyleType.Style3;
-
         // Prepare JSON save options
-        JsonSaveOptions jsonOptions = new JsonSaveOptions();
+        JsonSaveOptions jsonOptions = new JsonSaveOptions
+        {
+            // Export the whole workbook as JSON; the sparkline group settings will be included
+            ExportEmptyCells = false,
+            SkipEmptyRows = true,
+            Indent = "  "
+        };
 
-        // Save the workbook (including sparkline settings) to a memory stream as JSON
+        // Save the workbook to a memory stream using the JSON options
         using (MemoryStream ms = new MemoryStream())
         {
             workbook.Save(ms, jsonOptions);
-
-            // Convert the JSON bytes to a string for reuse or sharing
+            // Convert the stream content to a UTF‑8 string
             string jsonString = Encoding.UTF8.GetString(ms.ToArray());
 
             // Output the JSON string (could be stored, transmitted, etc.)

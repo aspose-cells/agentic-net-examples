@@ -1,71 +1,71 @@
+// Title: Aspose.Cells C# – Create a Table with a Totals Row and Plot the Total in a Column Chart
+// Description: Demonstrates how to build an Excel workbook with a ListObject (A1:B4), enable the totals row, set the Sales column to TotalsCalculation.Sum, and add a column chart whose series is bound directly to the totals cell (e.g., Sheet1!$B$5). The workbook is saved as TableTotalsChart.xlsx.
+// Keywords: Aspose.Cells | C# | ListObject | Excel table with totals row | TotalsCalculation.Sum | column chart from totals cell | chart series from cell address | TableTotalsChart example | Aspose.Cells chart binding | GitHub Aspose.Cells sample
+// Common Searches: Aspose.Cells add totals row to table | C# chart series using totals row cell | Create column chart from summed column value Aspose.Cells | ListObject TotalsCalculation.Sum example | Bind chart to table totals cell Aspose
+// Developer Intent: Generate a worksheet table with an automatic sum row and visualize that aggregate value in a column chart using Aspose.Cells for .NET.
+// Use Cases: Produce a sales report where the grand total appears as a single column in a chart for instant visual insight. | Automate monthly dashboards by linking table totals directly to charts, removing manual range calculations. | Create concise executive summaries that highlight aggregated metrics from data tables via chart series.
+// AI Prompts: Write C# code with Aspose.Cells to create a ListObject, enable a totals row, set TotalsCalculation.Sum for a column, and bind the totals cell to a column chart series. | Explain how to retrieve the address of a totals‑row cell in Aspose.Cells and use it with Chart.NSeries.Add for dynamic chart data. | Suggest formatting options for the totals row and chart title after linking the total value in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Tables;
 
-class TableTotalsChartExample
+namespace AsposeCellsTableTotalsChart
 {
-    static void Main()
+    // Demonstrates how to build an Excel workbook with a ListObject (A1:B4), enable the totals row, set the Sales column to TotalsCalculation.Sum, and add a column chart whose series is bound directly to the totals cell (e.g., Sheet1!$B$5). The workbook is saved as TableTotalsChart.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate header and sample data (3 data rows)
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(30);
+                // Populate header and data
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Sales");
 
-            // Create a table (ListObject) that includes the header and data rows (A1:B4)
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-            int tableIndex = sheet.ListObjects.Add(0, 0, 3, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "MyTable";          // Optional: give the table a name
-            table.ShowTotals = true;                // Enable the totals row
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["A3"].PutValue("Orange");
+                sheet.Cells["B3"].PutValue(150);
+                sheet.Cells["A4"].PutValue("Banana");
+                sheet.Cells["B4"].PutValue(90);
 
-            // Set the totals calculation for the "Value" column (second column, index 1)
-            table.ListColumns[1].TotalsCalculation = TotalsCalculation.Sum;
+                // Create a table that includes the header and data rows (A1:B4)
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
+                ListObject table = sheet.ListObjects[tableIndex];
+                table.DisplayName = "SalesTable";          // Optional: give the table a friendly name
+                table.ShowTotals = true;                    // Enable the totals row
 
-            // Determine the address of the totals row cells for the two columns
-            // Totals row is placed immediately after the data rows.
-            int totalsRowIndex = table.StartRow + table.DataRange.RowCount; // zero‑based index
+                // Set the totals calculation for the "Sales" column (second column, index 1)
+                table.ListColumns[1].TotalsCalculation = TotalsCalculation.Sum;
 
-            // Column letters for the two columns
-            string valueColumnLetter = CellsHelper.ColumnIndexToName(table.StartColumn + 1); // "B"
-            string categoryColumnLetter = CellsHelper.ColumnIndexToName(table.StartColumn); // "A"
+                // Add a column chart positioned below the table
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Build the A1‑style references for the totals row cells
-            string valueCellRef = $"=Sheet1!${valueColumnLetter}${totalsRowIndex + 1}";
-            string categoryCellRef = $"=Sheet1!${categoryColumnLetter}${totalsRowIndex + 1}";
+                // Use the totals row cell of the "Sales" column as the data source for the series
+                // Totals row is placed immediately after the data range
+                int totalsRowIndex = table.DataRange.FirstRow + table.DataRange.RowCount; // zero‑based index
+                string totalsCellAddress = sheet.Cells[totalsRowIndex, 1].Name; // column B (index 1)
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add the series using the cell address (e.g., =Sheet1!$B$5)
+                chart.NSeries.Add($"=Sheet1!{totalsCellAddress}", true);
 
-            // Use the totals row as the data source for the series
-            chart.NSeries.Add(valueCellRef, true);          // Series values from totals row
-            chart.NSeries[0].Name = "Total";                // Optional series name
-            chart.NSeries.CategoryData = categoryCellRef;   // Category label from totals row
+                // Optional: give the series a name
+                chart.NSeries[0].Name = "Total Sales";
 
-            // Optional: set a chart title
-            chart.Title.Text = "Totals Row Chart";
-
-            // Save the workbook
-            string outputPath = "TableTotalsChart.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save("TableTotalsChart.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

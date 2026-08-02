@@ -2,31 +2,34 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class Program
+namespace AsposeCellsHeaderDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate enough rows to generate multiple PDF pages (optional)
-        for (int i = 0; i < 200; i++)
+        static void Main()
         {
-            worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data (optional, just to have content in the sheet)
+            sheet.Cells["A1"].PutValue("Sample data for PDF export");
+
+            // Access the page setup of the worksheet
+            PageSetup pageSetup = sheet.PageSetup;
+
+            // Ensure header/footer margins align with page margins (default is true)
+            pageSetup.IsHFAlignMargins = true;
+
+            // Set the center header (section 1) with the desired text
+            // This will appear at the top center of each PDF page
+            pageSetup.SetHeader(1, "My Centered Header");
+
+            // Create PDF save options (optional customizations can be added here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF file; the header will be rendered on each page
+            workbook.Save("HeaderCentered.pdf", pdfOptions);
         }
-
-        // Set the header text in the center section (section index 1)
-        // This places the text at the top center of every printed page
-        worksheet.PageSetup.SetHeader(1, "My Centered Header");
-
-        // Align header margins with page margins (default is true, kept for clarity)
-        worksheet.PageSetup.IsHFAlignMargins = true;
-
-        // Create PDF save options (default options are sufficient for header rendering)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Save the workbook as a PDF; the header will appear centered on each page
-        workbook.Save("CenteredHeader.pdf", pdfOptions);
     }
 }

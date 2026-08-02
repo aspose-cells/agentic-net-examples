@@ -1,32 +1,24 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate some sample data (optional, just for demonstration)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Fruits");
-        sheet.Cells["A3"].PutValue("Vegetables");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(50);
-        sheet.Cells["B3"].PutValue(30);
-
-        // Configure PDF conversion options
+        // Create PDF save options
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Embed TrueType fonts in the PDF (required for proper font rendering)
+        // Embed all standard Windows fonts into the PDF
         pdfOptions.EmbedStandardWindowsFonts = true;
 
-        // Retain slicer formatting and document structure in the PDF
+        // Retain slicer formatting by exporting the document structure
         pdfOptions.ExportDocumentStructure = true;
 
-        // Save the workbook as a PDF using the configured options
+        // Save the workbook as PDF with the specified options
         workbook.Save("output.pdf", pdfOptions);
     }
 }

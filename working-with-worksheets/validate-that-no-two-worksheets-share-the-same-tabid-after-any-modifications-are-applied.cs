@@ -1,119 +1,94 @@
+// Title: C# – Validate Unique Worksheet TabId Values in Aspose.Cells
+// Description: Creates a workbook, adds three sheets, intentionally sets duplicate TabId values, then scans all worksheets with a HashSet to report any repeated TabId and confirms uniqueness before saving the file.
+// Keywords: Aspose.Cells TabId validation | C# duplicate worksheet TabId | unique worksheet TabId Aspose | .NET Excel TabId conflict | detect repeated TabId cells
+// Common Searches: Aspose.Cells check duplicate TabId C# | how to ensure unique worksheet TabId in .NET | C# code to find repeated TabId in Excel workbook | validate worksheet TabId uniqueness before save | detect TabId conflicts Aspose.Cells
+// Developer Intent: Verify that no two worksheets share the same TabId after any changes.
+// Use Cases: Run the validator after adding or renaming sheets to catch TabId collisions before exporting. | Integrate the check into an automated Excel report generator to prevent UI tab errors. | Extend the sample to automatically reassign new TabId values when duplicates are found.
+// AI Prompts: Generate C# code that automatically assigns new unique TabId values to worksheets with duplicates in an Aspose.Cells workbook. | Show how to log duplicate TabId detections to a file instead of the console using Aspose.Cells. | Create an NUnit test that confirms ValidateUniqueTabIds correctly identifies and reports duplicate TabId entries.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsTabIdValidation
 {
-    class Program
+    // Creates a workbook, adds three sheets, intentionally sets duplicate TabId values, then scans all worksheets with a HashSet to report any repeated TabId and confirms uniqueness before saving the file.
+    public class TabIdValidator
     {
-        static void Main(string[] args)
+        public static void Run()
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Add a few worksheets
-                Worksheet sheet1 = workbook.Worksheets[0]; // default first sheet
+                // Access the default first worksheet
+                Worksheet sheet1 = workbook.Worksheets[0];
                 sheet1.Name = "Sheet1";
+
+                // Add a second worksheet
                 Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+
+                // Add a third worksheet
                 Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
 
-                // Set TabId values (intentionally create a duplicate for demonstration)
-                sheet1.TabId = 101;
-                sheet2.TabId = 102;
-                sheet3.TabId = 101; // duplicate TabId
+                // Intentionally set duplicate TabId values for demonstration
+                sheet1.TabId = 100;
+                sheet2.TabId = 200;
+                sheet3.TabId = 100; // Duplicate of sheet1
 
-                // Validate that all TabId values are unique
-                try
-                {
-                    ValidateUniqueTabIds(workbook);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Console.WriteLine($"Validation error: {ex.Message}");
-                    // Resolve duplicate by assigning a new unique TabId
-                    ResolveDuplicateTabIds(workbook);
-                    Console.WriteLine("Duplicate TabIds have been resolved.");
-                }
+                // Validate that all worksheets have unique TabId values
+                ValidateUniqueTabIds(workbook);
 
-                // Save the workbook if the target path is writable
-                string outputPath = "ValidatedWorkbook.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                }
+                // Save the workbook (adjust the path as needed)
+                workbook.Save("TabIdValidationResult.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred during validation: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Checks that no two worksheets in the given workbook share the same TabId.
-        /// Throws InvalidOperationException if a duplicate is found.
-        /// </summary>
-        /// <param name="workbook">The workbook to validate.</param>
-        static void ValidateUniqueTabIds(Workbook workbook)
+        private static void ValidateUniqueTabIds(Workbook workbook)
         {
+            // Use a HashSet to track encountered TabId values
             HashSet<int> seenTabIds = new HashSet<int>();
+            bool duplicateFound = false;
 
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                int tabId = sheet.TabId;
+                int currentTabId = sheet.TabId;
 
-                // If the TabId has already been encountered, it's a duplicate
-                if (!seenTabIds.Add(tabId))
+                // Check if the TabId has already been seen
+                if (!seenTabIds.Add(currentTabId))
                 {
-                    string message = $"Duplicate TabId detected: {tabId} on worksheet \"{sheet.Name}\".";
-                    throw new InvalidOperationException(message);
+                    // Duplicate detected
+                    duplicateFound = true;
+                    Console.WriteLine($"Duplicate TabId detected: Worksheet \"{sheet.Name}\" has TabId {currentTabId} which is already used.");
                 }
             }
 
-            Console.WriteLine("All worksheet TabId values are unique.");
+            if (!duplicateFound)
+            {
+                Console.WriteLine("All worksheets have unique TabId values.");
+            }
+            else
+            {
+                // Optionally, resolve duplicates by assigning new unique TabIds
+                // Here we simply report the issue; resolution logic can be added as needed.
+                Console.WriteLine("Validation completed: duplicates exist.");
+            }
         }
+    }
 
-        /// <summary>
-        /// Resolves duplicate TabId values by assigning new unique identifiers.
-        /// </summary>
-        /// <param name="workbook">The workbook to fix.</param>
-        static void ResolveDuplicateTabIds(Workbook workbook)
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            HashSet<int> usedIds = new HashSet<int>();
-            int nextId = 1;
-
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Find the next unused TabId
-                while (usedIds.Contains(nextId))
-                {
-                    nextId++;
-                }
-
-                // If current TabId is already used, assign a new one
-                if (!usedIds.Add(sheet.TabId))
-                {
-                    sheet.TabId = nextId;
-                    usedIds.Add(nextId);
-                    nextId++;
-                }
-                else
-                {
-                    // Current TabId is unique, keep it
-                    // Ensure nextId starts above the highest used value
-                    if (sheet.TabId >= nextId)
-                    {
-                        nextId = sheet.TabId + 1;
-                    }
-                }
-            }
+            TabIdValidator.Run();
         }
     }
 }

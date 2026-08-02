@@ -3,89 +3,91 @@ using System.Text;
 using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsMultiThreadReadingDemo
+class MultiThreadReadingDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and obtain the Cells collection of the first worksheet
+        Workbook workbook = new Workbook();
+        Cells cells = workbook.Worksheets[0].Cells;
+
+        // Enable multi‑thread reading on the Cells collection
+        cells.MultiThreadReading = true;
+
+        // Populate the worksheet with sample data (e.g., 1000 rows × 10 columns)
+        int totalRows = 1000;
+        int totalCols = 10;
+        for (int r = 0; r < totalRows; r++)
         {
-            // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
-
-            // Populate the worksheet with sample data (1000 rows, 1 column)
-            int totalRows = 1000;
-            for (int i = 0; i < totalRows; i++)
+            for (int c = 0; c < totalCols; c++)
             {
-                // Store a simple integer value in each cell
-                cells[i, 0].PutValue(i);
+                cells[r, c].PutValue($"R{r}C{c}");
             }
-
-            // Enable multi‑thread reading on the cells collection
-            cells.MultiThreadReading = true;
-
-            // Number of threads that will read cells concurrently
-            int threadCount = 5;
-            // Each thread will perform this many read operations
-            int readsPerThread = 200;
-
-            // Variables to track completion and errors
-            int completedThreads = 0;
-            StringBuilder errorLog = new StringBuilder();
-
-            // Launch the threads
-            for (int t = 0; t < threadCount; t++)
-            {
-                Thread thread = new Thread(() =>
-                {
-                    try
-                    {
-                        // Each thread uses its own Random instance to avoid contention
-                        Random rnd = new Random(Thread.CurrentThread.ManagedThreadId);
-                        for (int r = 0; r < readsPerThread; r++)
-                        {
-                            // Choose a random row index within the populated range
-                            int rowIndex = rnd.Next(0, totalRows);
-                            // Read the cell value (thread‑safe because MultiThreadReading is true)
-                            object value = cells[rowIndex, 0].Value;
-                            Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{rowIndex},0] = {value}");
-                        }
-
-                        // Signal successful completion of this thread
-                        Interlocked.Increment(ref completedThreads);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Record any exception that occurs during reading
-                        lock (errorLog)
-                        {
-                            errorLog.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
-                        }
-                    }
-                });
-
-                thread.Start();
-            }
-
-            // Wait until all threads have finished
-            while (Volatile.Read(ref completedThreads) < threadCount)
-            {
-                Thread.Sleep(100);
-            }
-
-            // Report any errors that were captured
-            if (errorLog.Length > 0)
-            {
-                Console.WriteLine("Errors occurred during multi‑thread reading:");
-                Console.WriteLine(errorLog.ToString());
-            }
-            else
-            {
-                Console.WriteLine("All threads completed successfully without errors.");
-            }
-
-            // (Optional) Save the workbook to verify that data remains intact
-            workbook.Save("MultiThreadReadingResult.xlsx");
         }
+
+        // Define how many threads will read cells concurrently
+        int threadCount = 5;
+        // Define how many random reads each thread will perform
+        int readsPerThread = 200;
+
+        // Variables to track completion and collect any errors
+        int finishedThreads = 0;
+        StringBuilder errorLog = new StringBuilder();
+        object errorLock = new object();
+
+        // Launch the threads
+        for (int i = 0; i < threadCount; i++)
+        {
+            Thread t = new Thread(() =>
+            {
+                try
+                {
+                    // Each thread uses its own Random instance to avoid contention
+                    Random rnd = new Random(Guid.NewGuid().GetHashCode());
+
+                    for (int j = 0; j < readsPerThread; j++)
+                    {
+                        int row = rnd.Next(totalRows);
+                        int col = rnd.Next(totalCols);
+                        object value = cells[row, col].Value; // Read cell value
+                        Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{row},{col}] = {value}");
+                    }
+
+                    // Signal successful completion
+                    Interlocked.Increment(ref finishedThreads);
+                }
+                catch (Exception ex)
+                {
+                    // Record any exception that occurs inside the thread
+                    lock (errorLock)
+                    {
+                        errorLog.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
+                    }
+                }
+            });
+
+            t.IsBackground = true;
+            t.Start();
+        }
+
+        // Wait until all threads have finished
+        while (Volatile.Read(ref finishedThreads) < threadCount)
+        {
+            Thread.Sleep(100);
+        }
+
+        // Report results
+        if (errorLog.Length > 0)
+        {
+            Console.WriteLine("Errors occurred during execution:");
+            Console.WriteLine(errorLog.ToString());
+        }
+        else
+        {
+            Console.WriteLine("All threads completed successfully.");
+        }
+
+        // Save the workbook (demonstrates the required save operation)
+        workbook.Save("MultiThreadReadingDemo.xlsx");
     }
 }

@@ -1,54 +1,36 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace SampleApp
+class PreserveXmlMapsReadOnly
 {
-    class PreserveXmlMapsReadOnly
+    static void Main()
     {
-        // Custom LoadFilter that tells the loader to include XML maps (and all other data)
-        private class XmlMapLoadFilter : LoadFilter
+        // Create LoadOptions and assign a custom LoadFilter that includes XmlMap data.
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = new XmlMapLoadFilter();
+
+        // Open the workbook with the specified LoadOptions.
+        // This loads the workbook in a read‑only manner (no modifications are made).
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+        // Verify that XML maps have been preserved.
+        Console.WriteLine("Number of XML maps: " + workbook.Worksheets.XmlMaps.Count);
+        foreach (XmlMap map in workbook.Worksheets.XmlMaps)
         {
-            public override void StartSheet(Worksheet sheet)
-            {
-                // Load everything for the sheet, ensuring XmlMap data is preserved
-                this.LoadDataFilterOptions = LoadDataFilterOptions.All | LoadDataFilterOptions.XmlMap;
-            }
+            Console.WriteLine($"Map Name: {map.Name}");
         }
 
-        static void Main()
+        // Optionally save a copy of the workbook (the original XML maps remain intact).
+        workbook.Save("output_copy.xlsx");
+    }
+
+    // Custom LoadFilter that ensures XmlMap data is loaded together with the rest of the workbook.
+    private class XmlMapLoadFilter : LoadFilter
+    {
+        public override void StartSheet(Worksheet sheet)
         {
-            string filePath = "SampleWithXmlMaps.xlsx";
-
-            // Prevent FileNotFoundException by checking file existence first
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            try
-            {
-                // Create LoadOptions and attach the custom filter
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    LoadFilter = new XmlMapLoadFilter()
-                };
-
-                // Open the workbook with the specified options (read‑only – we simply do not modify or save it)
-                Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // Verify that XML maps have been loaded
-                Console.WriteLine("XML maps loaded: " + workbook.Worksheets.XmlMaps.Count);
-                foreach (XmlMap map in workbook.Worksheets.XmlMaps)
-                {
-                    Console.WriteLine($"Map Name: {map.Name}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Load all sheet data and explicitly include XML maps.
+            LoadDataFilterOptions = LoadDataFilterOptions.All | LoadDataFilterOptions.XmlMap;
         }
     }
 }

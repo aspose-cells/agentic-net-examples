@@ -1,46 +1,52 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsRowDuplicationDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – duplicate rows and verify formula updates
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate three rows of data in column A
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue(30);
+            // Populate sample data in column A
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+            sheet.Cells["A4"].PutValue(40);
 
-        // Set a formula in B1 that sums the three values above
-        cells["B1"].Formula = "=SUM(A1:A3)";
+            // Add formulas in column B that reference the same row in column A
+            sheet.Cells["B1"].Formula = "=A1*2";
+            sheet.Cells["B2"].Formula = "=A2*2";
+            sheet.Cells["B3"].Formula = "=A3*2";
+            sheet.Cells["B4"].Formula = "=A4*2";
 
-        // Calculate the initial formula result
-        workbook.CalculateFormula();
+            // Insert two blank rows after the second row (index 2, zero‑based)
+            // updateReference = true ensures existing formulas adjust to the insertion
+            sheet.Cells.InsertRows(2, 2, true);
 
-        Console.WriteLine("Before copying rows:");
-        Console.WriteLine($"B1 value = {cells["B1"].Value}"); // Expected 60
+            // Copy rows 0 and 1 (first two rows) to the newly inserted rows starting at index 2
+            // This duplicates the rows while preserving relative formula references
+            sheet.Cells.CopyRows(sheet.Cells, 0, 2, 2);
 
-        // Insert two blank rows after the original data to make space for the copy
-        // Row index is zero‑based; inserting at index 3 creates rows 4 and 5 (A4, A5)
-        cells.InsertRows(3, 2);
+            // Verify that formulas in the copied rows have been updated correctly
+            Console.WriteLine("Original formulas:");
+            Console.WriteLine($"B1: {sheet.Cells["B1"].Formula}");
+            Console.WriteLine($"B2: {sheet.Cells["B2"].Formula}");
 
-        // Copy the three source rows (0‑2) to the new destination starting at row index 3
-        // This will duplicate the rows and adjust any relative references in formulas
-        cells.CopyRows(cells, 0, 3, 3);
+            Console.WriteLine("\nCopied formulas after duplication:");
+            Console.WriteLine($"B3: {sheet.Cells["B3"].Formula}");
+            Console.WriteLine($"B4: {sheet.Cells["B4"].Formula}");
 
-        // Recalculate formulas after the copy operation
-        workbook.CalculateFormula();
+            // Expected output:
+            // B3 formula should be "=A3*2"
+            // B4 formula should be "=A4*2"
 
-        Console.WriteLine("\nAfter copying rows:");
-        // Verify that the formula in the copied row (B4) has been updated to reference the new range
-        Console.WriteLine($"B4 formula = {cells["B4"].Formula}"); // Expected "=SUM(A4:A6)"
-        Console.WriteLine($"B4 value   = {cells["B4"].Value}");   // Expected 60 (same sum as original)
-
-        // Save the workbook to verify the result in Excel
-        workbook.Save("CopyRowsFormulaDemo.xlsx");
+            // Save the workbook to verify visually if needed
+            workbook.Save("RowDuplicationResult.xlsx");
+        }
     }
 }

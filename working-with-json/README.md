@@ -4,7 +4,7 @@ description: Import JSON into Excel cells and export worksheet ranges to JSON in
 product: Aspose.Cells for .NET
 category: working-with-json
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-07-30
 ---
 
 # Import and Export Excel JSON in C# with Aspose.Cells

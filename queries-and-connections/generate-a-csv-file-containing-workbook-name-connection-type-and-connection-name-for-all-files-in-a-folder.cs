@@ -1,59 +1,86 @@
 using System;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class WorkbookConnectionsCsvGenerator
+namespace AsposeCellsExamples
 {
-    static void Main()
+    class WorkbookConnectionsCsvReport
     {
-        // Folder containing the Excel files
-        string folderPath = @"C:\InputWorkbooks";
-
-        // Output CSV file path
-        string outputCsvPath = @"C:\Output\WorkbookConnections.csv";
-
-        // Create a new workbook that will hold the CSV data
-        Workbook csvWorkbook = new Workbook(); // create rule
-        Worksheet sheet = csvWorkbook.Worksheets[0];
-
-        // Write CSV header
-        int currentRow = 0;
-        sheet.Cells[currentRow, 0].PutValue("Workbook Name");
-        sheet.Cells[currentRow, 1].PutValue("Connection Type");
-        sheet.Cells[currentRow, 2].PutValue("Connection Name");
-        currentRow++;
-
-        // Get all files in the folder (you can filter extensions as needed)
-        string[] files = Directory.GetFiles(folderPath)
-                                  .Where(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
-                                              f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
-                                              f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase) ||
-                                              f.EndsWith(".xlsb", StringComparison.OrdinalIgnoreCase))
-                                  .ToArray();
-
-        foreach (string filePath in files)
+        static void Main()
         {
-            // Load each workbook (load rule)
-            Workbook wb = new Workbook(filePath);
+            // Folder containing the Excel files to process
+            string folderPath = @"C:\ExcelFiles";
 
-            // Iterate through its external data connections
-            foreach (ExternalConnection conn in wb.DataConnections)
+            // Output CSV file path
+            string outputCsvPath = Path.Combine(folderPath, "WorkbookConnectionsReport.csv");
+
+            // Create a new workbook that will hold the report data
+            Workbook reportWorkbook = new Workbook();
+
+            // Get the first (and only) worksheet in the report workbook
+            Worksheet sheet = reportWorkbook.Worksheets[0];
+
+            // Write header row
+            sheet.Cells["A1"].PutValue("Workbook Name");
+            sheet.Cells["B1"].PutValue("Connection Type");
+            sheet.Cells["C1"].PutValue("Connection Name");
+
+            int currentRow = 1; // zero‑based index; row 1 is the second row (after header)
+
+            // Iterate through all files in the specified folder
+            foreach (string filePath in Directory.GetFiles(folderPath))
             {
-                // Connection type (class name) and connection name
-                string connectionType = conn.GetType().Name;
-                string connectionName = conn.Name;
+                // Consider only Excel files (you can extend the filter as needed)
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm" && extension != ".xlsb")
+                    continue;
 
-                // Write a row to the CSV workbook
-                sheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
-                sheet.Cells[currentRow, 1].PutValue(connectionType);
-                sheet.Cells[currentRow, 2].PutValue(connectionName);
-                currentRow++;
+                // Load the workbook using the provided constructor (load rule)
+                Workbook wb = new Workbook(filePath);
+
+                // Access the collection of external data connections (property rule)
+                ExternalConnectionCollection connections = wb.DataConnections;
+
+                // If there are no connections, still record the workbook name with empty fields
+                if (connections.Count == 0)
+                {
+                    sheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
+                    sheet.Cells[currentRow, 1].PutValue(string.Empty);
+                    sheet.Cells[currentRow, 2].PutValue(string.Empty);
+                    currentRow++;
+                }
+                else
+                {
+                    // Iterate through each connection and write its details
+                    for (int i = 0; i < connections.Count; i++)
+                    {
+                        ExternalConnection conn = connections[i];
+
+                        // Workbook name (file name only)
+                        sheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
+
+                        // Connection type – use the runtime type name
+                        sheet.Cells[currentRow, 1].PutValue(conn.GetType().Name);
+
+                        // Connection name – most connection types expose a Name property
+                        sheet.Cells[currentRow, 2].PutValue(conn.Name);
+
+                        currentRow++;
+                    }
+                }
+
+                // Dispose the loaded workbook (optional, as it implements IDisposable)
+                wb.Dispose();
             }
-        }
 
-        // Save the result as CSV (save rule)
-        csvWorkbook.Save(outputCsvPath, SaveFormat.Csv);
+            // Save the report workbook as CSV using the provided Save method (save rule)
+            reportWorkbook.Save(outputCsvPath, SaveFormat.Csv);
+
+            // Clean up
+            reportWorkbook.Dispose();
+
+            Console.WriteLine($"Connection report generated at: {outputCsvPath}");
+        }
     }
 }

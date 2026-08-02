@@ -3,50 +3,32 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomEngineDemo
 {
-    // Custom calculation engine that implements a user‑defined function MYFUNC
-    public class MyCustomEngine : AbstractCalculationEngine
+    // Custom calculation engine that implements a user‑defined function CUSTOMSUM
+    public class CustomEngine : AbstractCalculationEngine
     {
-        // This method is called for each custom function encountered during calculation
         public override void Calculate(CalculationData data)
         {
-            // Check for the custom function name (case‑insensitive)
-            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+            // Handle only the custom function name (case‑insensitive)
+            if (data.FunctionName.Equals("CUSTOMSUM", StringComparison.OrdinalIgnoreCase))
             {
-                // Expect exactly two parameters
-                if (data.ParamCount == 2)
-                {
-                    // Retrieve the first parameter value
-                    object param1 = data.GetParamValue(0);
-                    // Retrieve the second parameter value
-                    object param2 = data.GetParamValue(1);
+                double sum = 0;
 
-                    // Convert parameters to double (they may be numeric or ReferredArea)
-                    double val1 = ConvertToDouble(param1);
-                    double val2 = ConvertToDouble(param2);
-
-                    // Example logic: return the product of the two parameters
-                    data.CalculatedValue = val1 * val2;
-                }
-                else
+                // Iterate through all parameters passed to the function
+                for (int i = 0; i < data.ParamCount; i++)
                 {
-                    // Incorrect number of arguments – return a #VALUE! error
-                    data.CalculatedValue = "#VALUE!";
+                    object param = data.GetParamValue(i);
+
+                    // The parameter may be a numeric value (double, int, etc.)
+                    if (param is double d)
+                        sum += d;
+                    else if (param is int iVal)
+                        sum += iVal;
+                    // Add more type checks if needed (e.g., decimal, long)
                 }
+
+                // Set the calculated result – this will be written back to the cell
+                data.CalculatedValue = sum;
             }
-            // For all other functions the default engine will be used automatically
-        }
-
-        // Helper to extract a double from supported parameter types
-        private double ConvertToDouble(object param)
-        {
-            if (param is double d)
-                return d;
-
-            if (param is ReferredArea ra)
-                return Convert.ToDouble(ra.GetValue(0, 0));
-
-            // Fallback conversion
-            return Convert.ToDouble(param);
         }
     }
 
@@ -54,49 +36,35 @@ namespace AsposeCellsCustomEngineDemo
     {
         static void Main()
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add sample data
-            // -------------------------------------------------
+            // -------------------- Create workbook --------------------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Simple numeric values
-            cells["A1"].PutValue(5);
-            cells["A2"].PutValue(10);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
 
-            // Formula that uses the custom function MYFUNC
-            cells["A3"].Formula = "=MYFUNC(A1, A2)";
+            // Use the custom function in a formula
+            sheet.Cells["B1"].Formula = "=CUSTOMSUM(A1,A2)";
 
-            // Formula that uses a built‑in function (to show default handling)
-            cells["B1"].Formula = "=SUM(A1:A2)";
-
-            // -------------------------------------------------
-            // 2. Configure calculation options with the custom engine
-            // -------------------------------------------------
+            // -------------------- Set calculation options --------------------
             CalculationOptions options = new CalculationOptions
             {
-                CustomEngine = new MyCustomEngine(),
-                // Optional: ignore errors during calculation
+                // Register the custom engine so that CalculateFormula uses it
+                CustomEngine = new CustomEngine(),
+                // Optional: keep default behavior for other settings
                 IgnoreError = true,
-                // Optional: ensure dependent cells are calculated recursively
                 Recursive = true
             };
 
-            // -------------------------------------------------
-            // 3. Evaluate all formulas in the workbook using the custom engine
-            // -------------------------------------------------
+            // -------------------- Calculate all formulas --------------------
+            // This evaluates every formula in the workbook using the custom engine
             workbook.CalculateFormula(options);
 
-            // -------------------------------------------------
-            // 4. Output the results to the console
-            // -------------------------------------------------
-            Console.WriteLine("Result of MYFUNC(A1, A2) in A3: " + cells["A3"].Value);
-            Console.WriteLine("Result of SUM(A1:A2) in B1: " + cells["B1"].Value);
+            // -------------------- Output result --------------------
+            Console.WriteLine("Result of CUSTOMSUM(A1,A2) in B1: " + sheet.Cells["B1"].Value);
 
-            // -------------------------------------------------
-            // 5. Save the workbook (optional)
-            // -------------------------------------------------
+            // -------------------- Save workbook --------------------
             workbook.Save("CustomEngineResult.xlsx");
         }
     }

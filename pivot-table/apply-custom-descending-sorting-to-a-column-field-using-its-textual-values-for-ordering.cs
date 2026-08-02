@@ -1,53 +1,37 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsCustomTextSort
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Populate sample data with a header and textual values
+            cells["A1"].PutValue("Category");   // Header
+            cells["A2"].PutValue("Banana");
+            cells["A3"].PutValue("Apple");
+            cells["A4"].PutValue("Cherry");
+            cells["A5"].PutValue("Date");
 
-                // Populate sample data (first row as header)
-                cells["A1"].PutValue("Category");
-                cells["A2"].PutValue("Banana");
-                cells["A3"].PutValue("Apple");
-                cells["A4"].PutValue("Cherry");
-                cells["A5"].PutValue("Date");
+            // Configure the DataSorter to sort column A in descending order
+            DataSorter sorter = workbook.DataSorter;
+            sorter.HasHeaders = true;                     // First row is a header
+            sorter.AddKey(0, SortOrder.Descending);       // Column index 0 (A), descending
 
-                // Get the DataSorter object
-                DataSorter sorter = workbook.DataSorter;
+            // Define the range that includes the header and data rows
+            CellArea sortArea = CellArea.CreateCellArea("A1", "A5");
 
-                // Indicate that the range contains a header row
-                sorter.HasHeaders = true;
+            // Perform the sort
+            sorter.Sort(cells, sortArea);
 
-                // Add a sort key for column A (index 0) with descending order
-                sorter.AddKey(0, SortOrder.Descending);
-
-                // Define the range to be sorted (including header)
-                CellArea sortArea = CellArea.CreateCellArea("A1", "A5");
-
-                // Perform the sort
-                sorter.Sort(worksheet.Cells, sortArea);
-
-                // Save the workbook
-                string outputPath = "SortedByTextDescending.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook (lifecycle: save)
+            workbook.Save("CustomTextDescendingSort.xlsx");
         }
     }
 }

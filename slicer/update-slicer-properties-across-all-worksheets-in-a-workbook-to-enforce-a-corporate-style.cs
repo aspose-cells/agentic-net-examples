@@ -1,13 +1,13 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Pivot;
 
 class UpdateSlicerStyle
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load the existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
         // Define corporate style settings
@@ -17,40 +17,34 @@ class UpdateSlicerStyle
         int corporateHeightPixel = 150;
         bool corporateLockedPosition = true;
         bool corporateShowCaption = true;
+        bool corporateShowAllItems = false;
 
-        // Iterate through all worksheets
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
             // Access the slicer collection of the current worksheet
             SlicerCollection slicers = sheet.Slicers;
 
-            // Apply corporate style to each slicer
+            // Apply corporate style to each slicer on the worksheet
             for (int i = 0; i < slicers.Count; i++)
             {
                 Slicer slicer = slicers[i];
 
-                // Set built‑in style
+                // Set the desired properties
                 slicer.StyleType = corporateStyle;
-
-                // Set number of columns
                 slicer.NumberOfColumns = corporateColumns;
-
-                // Set size in pixels
                 slicer.WidthPixel = corporateWidthPixel;
                 slicer.HeightPixel = corporateHeightPixel;
-
-                // Lock position to prevent user moving/resizing
                 slicer.LockedPosition = corporateLockedPosition;
-
-                // Ensure caption visibility matches corporate policy
                 slicer.ShowCaption = corporateShowCaption;
+                slicer.ShowAllItems = corporateShowAllItems;
 
-                // Refresh slicer to apply changes to linked pivot tables
+                // Refresh the slicer to apply changes to linked PivotTables
                 slicer.Refresh();
             }
         }
 
-        // Save the modified workbook
+        // Save the modified workbook (replace with your desired output path)
         workbook.Save("OutputWorkbook.xlsx");
     }
 }

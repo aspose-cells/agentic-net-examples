@@ -1,34 +1,29 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsBuiltInPropertyDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Define the file path for the workbook
-            string filePath = "BuiltInTitleDemo.xlsx";
+        // ---------- Create ----------
+        // Initialize a new workbook instance
+        Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // Create a new workbook and set the Title property
-            // -------------------------------------------------
-            Workbook workbook = new Workbook(); // create a new workbook
-            workbook.BuiltInDocumentProperties.Title = "Sample Document Title"; // set Title
+        // Set the built‑in Title property
+        workbook.BuiltInDocumentProperties.Title = "Sample Document Title";
 
-            // Save the workbook to disk
-            workbook.Save(filePath, SaveFormat.Xlsx);
+        // Save the workbook to disk (required before loading)
+        string filePath = "sample.xlsx";
+        workbook.Save(filePath, SaveFormat.Xlsx);
 
-            // -------------------------------------------------
-            // Load the workbook from the saved file
-            // -------------------------------------------------
-            Workbook loadedWorkbook = new Workbook(filePath); // load the workbook
+        // ---------- Load ----------
+        // Load the previously saved workbook from the file
+        Workbook loadedWorkbook = new Workbook(filePath);
 
-            // Retrieve the Title built‑in property for verification
-            string retrievedTitle = loadedWorkbook.BuiltInDocumentProperties.Title;
+        // Retrieve the Title built‑in property for verification
+        string loadedTitle = loadedWorkbook.BuiltInDocumentProperties.Title;
 
-            // Output the retrieved Title to the console
-            Console.WriteLine("Retrieved Title: " + retrievedTitle);
-        }
+        // Output the retrieved title
+        Console.WriteLine("Loaded Title: " + loadedTitle);
     }
 }

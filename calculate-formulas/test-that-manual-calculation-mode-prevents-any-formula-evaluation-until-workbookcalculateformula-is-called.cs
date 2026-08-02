@@ -1,43 +1,42 @@
 using System;
 using Aspose.Cells;
 
-namespace ManualCalculationModeTest
+namespace ManualCalcModeTest
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate some data
-            cells["A1"].PutValue(10);
-            cells["B1"].PutValue(20);
+            // Put some values
+            cells["A1"].PutValue(5);
+            cells["B1"].PutValue(10);
 
-            // Set a formula that depends on the above cells
+            // Set a formula that depends on the above values
             cells["C1"].Formula = "=A1+B1";
 
-            // Set calculation mode to Manual – formulas will not be evaluated automatically
+            // Set calculation mode to Manual
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-            // At this point the formula result has not been calculated.
-            // The cell's Value will be null (or default) because no calculation has occurred.
-            Console.WriteLine("Before CalculateFormula:");
-            Console.WriteLine($"C1.Value = {cells["C1"].Value ?? "null"}"); // Expected: null
+            // At this point, the formula should NOT be evaluated automatically
+            Console.WriteLine("Before manual calculation:");
+            Console.WriteLine($"C1 value (expected empty or 0): {cells["C1"].Value ?? "null"}");
 
-            // Explicitly calculate all formulas in the workbook
+            // Perform manual calculation
             workbook.CalculateFormula();
 
-            // After calculation the formula result should be available.
-            Console.WriteLine("\nAfter CalculateFormula:");
-            Console.WriteLine($"C1.Value = {cells["C1"].Value}"); // Expected: 30
+            // After calculation, the formula result should be available
+            Console.WriteLine("After manual calculation:");
+            Console.WriteLine($"C1 value (expected 15): {cells["C1"].Value}");
 
-            // Optional: Save the workbook to verify that the setting is persisted
-            string filePath = "ManualCalcModeDemo.xlsx";
-            workbook.Save(filePath, SaveFormat.Xlsx);
-            Console.WriteLine($"\nWorkbook saved to '{filePath}'.");
+            // Save the workbook (optional, demonstrates that saving does not trigger calculation)
+            workbook.Save("ManualCalcModeTest.xlsx");
         }
     }
 }

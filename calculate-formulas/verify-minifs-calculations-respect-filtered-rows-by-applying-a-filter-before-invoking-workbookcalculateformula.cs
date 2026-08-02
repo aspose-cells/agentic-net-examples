@@ -1,70 +1,50 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMinifsFilterDemo
+class MinIfsFilteredDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate header
+        cells["A1"].PutValue("Category");
+        cells["B1"].PutValue("Value");
+
+        // Populate sample data (rows 2‑7)
+        string[] categories = { "A", "B", "A", "B", "A", "B" };
+        int[] values = { 10, 20, 5, 30, 15, 25 };
+        for (int i = 0; i < categories.Length; i++)
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // 2. Populate sample data
-            // Header row
-            cells["A1"].PutValue("Value");
-            cells["B1"].PutValue("Category");
-
-            // Rows 2-11: Values 1-10, Category alternates between "X" and "Y"
-            for (int i = 0; i < 10; i++)
-            {
-                int row = i + 1; // zero‑based index (row 2 in Excel)
-                cells[row, 0].PutValue(i + 1);                     // Column A: 1..10
-                cells[row, 1].PutValue((i % 2 == 0) ? "X" : "Y"); // Column B: X,Y alternating
-            }
-
-            // 3. Insert MINIFS formula in C1:
-            // =MINIFS(A2:A11, B2:B11, "X")
-            cells["C1"].Formula = "=MINIFS(A2:A11,B2:B11,\"X\")";
-
-            // 4. Calculate formulas without any filter
-            workbook.CalculateFormula();
-
-            // Capture the result before filtering
-            double resultWithoutFilter = cells["C1"].DoubleValue;
-            Console.WriteLine($"MINIFS result without filter: {resultWithoutFilter}");
-
-            // 5. Apply an AutoFilter to hide rows where Category = "X"
-            // Set the filter range to include headers and data rows
-            sheet.AutoFilter.SetRange(0, 0, 10); // rows 0‑10 (A1:B11)
-
-            // Filter column B (field index 1) for "Y" – this will hide all "X" rows
-            sheet.AutoFilter.Filter(1, "Y");
-            // Refresh to apply the filter
-            sheet.AutoFilter.Refresh();
-
-            // 6. Re‑calculate formulas after the filter is applied
-            workbook.CalculateFormula();
-
-            // Capture the result after filtering
-            double resultWithFilter = cells["C1"].DoubleValue;
-            Console.WriteLine($"MINIFS result after filtering out \"X\" rows: {resultWithFilter}");
-
-            // 7. Verify that the filtered result respects hidden rows
-            // Expected: since no visible rows meet the criteria "X", MINIFS should return 0
-            if (Math.Abs(resultWithFilter) < 1e-9)
-            {
-                Console.WriteLine("Verification passed: MINIFS ignored hidden rows.");
-            }
-            else
-            {
-                Console.WriteLine("Verification failed: MINIFS did not respect the filter.");
-            }
-
-            // 8. Save the workbook for visual inspection (optional)
-            workbook.Save("MinifsFilterDemo.xlsx");
+            cells[i + 1, 0].PutValue(categories[i]); // Column A
+            cells[i + 1, 1].PutValue(values[i]);    // Column B
         }
+
+        // Set MINIFS formula: minimum Value where Category = "A"
+        cells["D1"].Formula = "=MINIFS(B2:B7, A2:A7, \"A\")";
+
+        // Apply an AutoFilter to the data range and filter for Category = "A"
+        worksheet.AutoFilter.Range = "A1:B7";          // Define the filter range (including header)
+        worksheet.AutoFilter.Filter(0, "A");          // Column index 0 (Category) = "A"
+        worksheet.AutoFilter.Refresh();               // Apply the filter (hides non‑matching rows)
+
+        // Calculate all formulas after the filter has been applied
+        workbook.CalculateFormula();
+
+        // Output the MINIFS result – it should consider only the visible rows (Category = "A")
+        Console.WriteLine("MINIFS result (visible rows only): " + cells["D1"].Value);
+
+        // Optional: display which rows are hidden after filtering
+        for (int row = 1; row <= 6; row++) // rows 2‑7 in the sheet (zero‑based index)
+        {
+            bool isHidden = cells.Rows[row].IsHidden;
+            Console.WriteLine($"Row {row + 1} hidden: {isHidden}");
+        }
+
+        // Save the workbook to verify the filter and formula visually (optional)
+        workbook.Save("MinIfsFilteredDemo.xlsx");
     }
 }

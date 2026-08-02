@@ -8,49 +8,42 @@ namespace AsposeCellsSmartMarkerExample
     // Simple data model: a contact with a list of phone numbers
     public class Contact
     {
-        public string Name { get; set; }
-        public List<string> Number { get; set; }
+        public List<string> number { get; set; } = new List<string>();
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // 1. Create a new workbook (template)
+            // 1. Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Place a smart marker that references a nested list.
-            //    The syntax contacts[0].Number will fetch the first phone number of the first contact.
-            //    The marker must start with "&=" to be recognized by Aspose.Cells.
-            sheet.Cells["A1"].PutValue("&=contacts[0].Number");
+            // 2. Insert a smart marker that references the first contact's phone numbers
+            //    The syntax contacts[0].number tells the designer to iterate over the nested list.
+            sheet.Cells["A1"].PutValue("&=contacts[0].number");
 
-            // 3. Prepare sample data
-            var contacts = new List<Contact>
-            {
-                new Contact
-                {
-                    Name = "John Doe",
-                    Number = new List<string> { "123-456-7890", "098-765-4321" }
-                },
-                new Contact
-                {
-                    Name = "Jane Smith",
-                    Number = new List<string> { "555-111-2222" }
-                }
-            };
+            // 3. Prepare sample data: a list of contacts, each containing a list of phone numbers
+            List<Contact> contacts = new List<Contact>();
 
-            // 4. Initialize WorkbookDesigner, assign the workbook and set the data source
+            Contact contact1 = new Contact();
+            contact1.number.Add("555-0101");
+            contact1.number.Add("555-0102");
+            contacts.Add(contact1);
+
+            Contact contact2 = new Contact();
+            contact2.number.Add("555-0201");
+            contacts.Add(contact2);
+
+            // 4. Set up the WorkbookDesigner, assign the data source, and process the smart markers
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook
             };
             designer.SetDataSource("contacts", contacts);
+            designer.Process(); // lifecycle rule: process smart markers
 
-            // 5. Process the smart markers to populate the data
-            designer.Process();
-
-            // 6. Save the result
+            // 5. Save the result (lifecycle rule: save)
             workbook.Save("SmartMarker_NestedList_Output.xlsx");
         }
     }

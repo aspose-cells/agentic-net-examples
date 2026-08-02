@@ -1,93 +1,46 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-class UpdateExternalReference
+namespace UpdateExternalReference
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Input and output workbook paths
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
+            // Load the workbook that contains the external reference
+            Workbook workbook = new Workbook("OriginalWorkbook.xlsx");
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+            // Define old and new file paths (adjust as needed)
+            string oldPath = @"C:\OldFolder\ExternalData.xlsx";
+            string newPath = @"D:\NewFolder\ExternalData.xlsx";
 
-            // Load the workbook that contains the external named range
-            Workbook workbook = new Workbook(inputPath);
-
-            // Name of the external named range to be updated
-            const string namedRangeName = "MyExternalRange";
-
-            // New folder where the external file has been moved
-            const string newFolder = @"D:\NewPath";
-
-            // Retrieve the named range object; ensure it exists
-            Name namedRange = workbook.Worksheets.Names[namedRangeName];
-            if (namedRange == null)
-                throw new InvalidOperationException($"Named range '{namedRangeName}' not found.");
-
-            // Get all areas referred by this name (including external links)
-            ReferredArea[] referredAreas = namedRange.GetReferredAreas(false);
-
-            // Iterate through each referred area to locate external links
-            foreach (ReferredArea area in referredAreas)
+            // ----- Update ExternalLink objects -----
+            // Each external link stores its data source (file path). Replace the old path with the new one.
+            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+            for (int i = 0; i < externalLinks.Count; i++)
             {
-                if (area.IsExternalLink)
+                ExternalLink link = externalLinks[i];
+                if (!string.IsNullOrEmpty(link.DataSource) && link.DataSource.Contains(oldPath))
                 {
-                    // The external file name (e.g., "External.xlsx")
-                    string externalFileName = area.ExternalFileName;
+                    // Update the data source to the new location
+                    link.DataSource = link.DataSource.Replace(oldPath, newPath);
+                }
+            }
 
-                    // Build the new full path for the external file
-                    string newFullPath = Path.Combine(newFolder, externalFileName);
-
-                    // Update the matching ExternalLink in the workbook's collection
-                    ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-                    if (externalLinks != null)
-                    {
-                        for (int i = 0; i < externalLinks.Count; i++)
-                        {
-                            ExternalLink link = externalLinks[i];
-                            if (Path.GetFileName(link.DataSource)
-                                    .Equals(externalFileName, StringComparison.OrdinalIgnoreCase))
-                            {
-                                link.DataSource = newFullPath;
-                                link.OriginalDataSource = newFullPath;
-                            }
-                        }
-                    }
-
-                    // Update the named range's RefersTo formula to use the new path
-                    string oldRefersTo = namedRange.RefersTo;
-                    string updatedRefersTo = oldRefersTo;
-
-                    // Locate the path segment inside single quotes and replace it
-                    int firstQuote = oldRefersTo.IndexOf('\'');
-                    int exclam = oldRefersTo.IndexOf('!', firstQuote);
-                    if (firstQuote >= 0 && exclam > firstQuote)
-                    {
-                        string oldPathSegment = oldRefersTo.Substring(firstQuote + 1, exclam - firstQuote - 1);
-                        updatedRefersTo = oldRefersTo.Replace(oldPathSegment, newFullPath);
-                    }
-                    else
-                    {
-                        // Fallback: replace just the file name if the full pattern is not found
-                        updatedRefersTo = oldRefersTo.Replace(externalFileName, newFullPath);
-                    }
-
+            // ----- Update Named Ranges that refer to the external file -----
+            // Named ranges store their reference as a formula string (e.g., "='[ExternalData.xlsx]Sheet1'!$A$1").
+            // Replace occurrences of the old path within those formulas.
+            foreach (Name namedRange in workbook.Worksheets.Names)
+            {
+                if (!string.IsNullOrEmpty(namedRange.RefersTo) && namedRange.RefersTo.Contains(oldPath))
+                {
+                    string updatedRefersTo = namedRange.RefersTo.Replace(oldPath, newPath);
                     namedRange.RefersTo = updatedRefersTo;
                 }
             }
 
             // Save the modified workbook
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            workbook.Save("UpdatedWorkbook.xlsx");
         }
     }
 }

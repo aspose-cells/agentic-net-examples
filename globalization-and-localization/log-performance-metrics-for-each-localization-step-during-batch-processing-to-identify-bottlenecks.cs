@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsPerformanceLogging
@@ -10,100 +9,69 @@ namespace AsposeCellsPerformanceLogging
     {
         static void Main()
         {
-            try
+            // Prepare a list of locales to be applied (localization steps)
+            var locales = new List<string> { "en", "de", "fr", "es", "zh" };
+
+            // Create a workbook (creation rule)
+            Workbook workbook = new Workbook();
+
+            // Add some sample data and a formula that will be used after localization
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["B1"].PutValue(5);
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(15);
+            sheet.Cells["A1"].Formula = "=SUM(B1:B3)";
+
+            // Container for performance results
+            var performanceLog = new List<string>();
+
+            // Iterate through each localization step
+            foreach (string locale in locales)
             {
-                // Stopwatch to measure each step
-                Stopwatch sw = new Stopwatch();
+                // Start timing this localization step
+                Stopwatch sw = Stopwatch.StartNew();
 
-                // 1. Load workbook (template)
-                const string templatePath = "Template.xlsx"; // replace with actual template path
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
+                // Apply localization settings
+                SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
+                // Example: map the built‑in function name "SUM" to a locale‑specific name.
+                // In a real scenario the local name would be the actual translation.
+                string localSumName = GetLocalSumName(locale);
+                globalization.SetLocalBuiltInName("SUM", localSumName, true);
+                workbook.Settings.GlobalizationSettings = globalization;
 
-                sw.Start();
-                Workbook workbook = new Workbook(templatePath);
+                // Force recalculation to ensure the formula uses the new settings
+                workbook.CalculateFormula();
+
+                // Stop timing
                 sw.Stop();
-                Console.WriteLine($"Load workbook: {sw.ElapsedMilliseconds} ms");
-                sw.Reset();
 
-                // 2. Prepare data source for smart markers
-                sw.Start();
-                var employees = new List<Employee>
-                {
-                    new Employee { Name = "John Doe", Age = 30, Department = "Sales" },
-                    new Employee { Name = "Jane Smith", Age = 28, Department = "HR" }
-                };
-                sw.Stop();
-                Console.WriteLine($"Prepare data source: {sw.ElapsedMilliseconds} ms");
-                sw.Reset();
-
-                // 3. Set up WorkbookDesigner and assign data source
-                sw.Start();
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    LineByLine = false // using range smart markers
-                };
-                designer.SetDataSource("Employees", employees);
-                sw.Stop();
-                Console.WriteLine($"Configure designer & set data source: {sw.ElapsedMilliseconds} ms");
-                sw.Reset();
-
-                // 4. Process smart markers (localization step)
-                sw.Start();
-                designer.Process(); // processes all smart markers in the defined range
-                sw.Stop();
-                Console.WriteLine($"Process smart markers: {sw.ElapsedMilliseconds} ms");
-                sw.Reset();
-
-                // 5. Optional: calculate formulas with a custom monitor to log each cell calculation
-                sw.Start();
-                CalculationOptions calcOptions = new CalculationOptions
-                {
-                    CalculationMonitor = new PerformanceCalculationMonitor()
-                };
-                workbook.CalculateFormula(calcOptions);
-                sw.Stop();
-                Console.WriteLine($"Calculate formulas: {sw.ElapsedMilliseconds} ms");
-                sw.Reset();
-
-                // 6. Save the resulting workbook
-                const string resultPath = "Result.xlsx"; // replace with desired output path
-                sw.Start();
-                workbook.Save(resultPath);
-                sw.Stop();
-                Console.WriteLine($"Save workbook: {sw.ElapsedMilliseconds} ms");
+                // Record the elapsed time for this locale
+                performanceLog.Add($"Locale: {locale}, TimeMs: {sw.ElapsedMilliseconds}");
             }
-            catch (Exception ex)
+
+            // Output performance metrics
+            Console.WriteLine("Localization Performance Metrics:");
+            foreach (string entry in performanceLog)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine(entry);
             }
-        }
-    }
 
-    // Sample data class used for smart markers
-    public class Employee
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Department { get; set; }
-    }
-
-    // Custom calculation monitor to log each cell calculation (optional performance insight)
-    public class PerformanceCalculationMonitor : AbstractCalculationMonitor
-    {
-        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            // Placeholder for per‑cell timing if needed
+            // Save the workbook (save rule)
+            workbook.Save("LocalizedResult.xlsx");
         }
 
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
+        // Helper method to return a mock local name for the SUM function based on locale.
+        // In practice you would use the actual translated function name.
+        static string GetLocalSumName(string locale)
         {
-            // Log after each cell is calculated (commented out to avoid excessive output)
-            // Console.WriteLine($"Calculated Sheet{sheetIndex} Row{rowIndex} Col{columnIndex}");
+            return locale switch
+            {
+                "de" => "SUMME",      // German
+                "fr" => "SOMME",      // French
+                "es" => "SUMA",       // Spanish
+                "zh" => "求和",        // Chinese
+                _ => "SUM",           // Default (English)
+            };
         }
     }
 }

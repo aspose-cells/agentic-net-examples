@@ -1,99 +1,86 @@
+// Title: C# Batch Spreadsheet Conversion with Aspose.Cells and Summary Report
+// Description: A C# sample that processes a list of source‑destination file pairs, checks each source, converts workbooks using Aspose.Cells.Utility.ConversionUtility to formats such as PDF, XLSX, or CSV, records success or error, and writes a comma‑separated report (ConversionReport.txt) summarizing the operation.
+// Keywords: Aspose.Cells | C# batch conversion | ConversionUtility | Excel to PDF | XLS to XLSX | CSV to XLSX | conversion log | summary report | file conversion automation | error handling
+// Common Searches: Aspose.Cells batch convert Excel files C# | How to generate a conversion log with Aspose.Cells | Convert multiple spreadsheets to PDF using .NET | Record failures during Aspose.Cells conversion | Create a summary report after batch workbook conversion
+// Developer Intent: Convert a collection of spreadsheet files to various target formats and produce a concise report that indicates which conversions succeeded and which failed.
+// Use Cases: Automate the conversion of monthly financial statements from .xlsx to PDF while keeping an audit trail. | Migrate legacy .xls workbooks to .xlsx and capture files that cannot be processed. | Transform a batch of .csv data exports into .xlsx worksheets and generate a status report for each file.
+// AI Prompts: Rewrite the example to output the conversion summary as JSON instead of CSV. | Add parallel processing with Task.WhenAll while preserving per‑file error handling and report generation. | Show how to apply custom PDF export options (e.g., page size, image quality) for each job in the batch.
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsBatchConversion
+namespace BatchConversionExample
 {
-    public class BatchConversion
+    // A C# sample that processes a list of source‑destination file pairs, checks each source, converts workbooks using Aspose.Cells.Utility.ConversionUtility to formats such as PDF, XLSX, or CSV, records success or error, and writes a comma‑separated report (ConversionReport.txt) summarizing the operation.
+    public class Converter
     {
-        // Performs batch conversion of Excel files to the specified format
-        // and generates a plain‑text summary report.
-        public static void Run(string[] sourceFiles, string targetExtension)
+        // Entry point for the batch conversion process
+        public static void Run()
         {
-            if (sourceFiles == null || sourceFiles.Length == 0)
+            // Define the batch of files to convert (source -> destination)
+            var conversionJobs = new List<(string source, string destination)>
             {
-                Console.WriteLine("No source files provided.");
-                return;
-            }
+                ("InputFiles/Report1.xlsx", "OutputFiles/Report1.pdf"),
+                ("InputFiles/Data1.xls", "OutputFiles/Data1.xlsx"),
+                ("InputFiles/Chart.csv", "OutputFiles/Chart.xlsx"),
+                // Add more jobs as needed
+            };
 
-            // Ensure the target extension starts with a dot (e.g., ".pdf")
-            if (!targetExtension.StartsWith("."))
-                targetExtension = "." + targetExtension;
+            // Prepare a StringBuilder to collect the summary report
+            var reportBuilder = new StringBuilder();
+            reportBuilder.AppendLine("Source File,Destination File,Status,Message");
 
-            var report = new StringBuilder();
-            report.AppendLine("Batch Conversion Report");
-            report.AppendLine($"Run at: {DateTime.Now}");
-            report.AppendLine(new string('=', 40));
-
-            foreach (var sourcePath in sourceFiles)
+            foreach (var job in conversionJobs)
             {
-                // Validate source file existence
-                if (!File.Exists(sourcePath))
-                {
-                    report.AppendLine($"{sourcePath} -> N/A : Source file not found");
-                    continue;
-                }
-
-                // Build destination path by replacing the extension
-                string destPath = Path.ChangeExtension(sourcePath, targetExtension);
-
                 try
                 {
-                    // Convert using Aspose.Cells utility
-                    ConversionUtility.Convert(sourcePath, destPath);
+                    // Ensure the source file exists before attempting conversion
+                    if (!File.Exists(job.source))
+                        throw new FileNotFoundException("Source file not found.", job.source);
 
-                    // Verify that the destination file was created
-                    if (File.Exists(destPath))
-                        report.AppendLine($"{sourcePath} -> {destPath} : Success");
-                    else
-                        report.AppendLine($"{sourcePath} -> {destPath} : Failed (output missing)");
+                    // Perform the conversion using Aspose.Cells.Utility.ConversionUtility
+                    ConversionUtility.Convert(job.source, job.destination);
+
+                    // Record successful conversion
+                    reportBuilder.AppendLine($"{job.source},{job.destination},Success,");
                 }
                 catch (Exception ex)
                 {
-                    // Capture any conversion error
-                    report.AppendLine($"{sourcePath} -> {destPath} : Failed ({ex.Message})");
+                    // Record failure with the exception message
+                    string safeMessage = ex.Message.Replace("\"", "\"\"");
+                    reportBuilder.AppendLine($"{job.source},{job.destination},Failure,\"{safeMessage}\"");
                 }
             }
 
-            // Write the report to a text file in the same folder as the first source file
-            string reportDir = Path.GetDirectoryName(sourceFiles[0]) ?? Directory.GetCurrentDirectory();
-            string reportPath = Path.Combine(reportDir, "ConversionReport.txt");
-
+            // Write the summary report to a text file
+            string reportPath = "ConversionReport.txt";
             try
             {
-                File.WriteAllText(reportPath, report.ToString());
-                Console.WriteLine($"Conversion completed. Report saved to: {reportPath}");
+                File.WriteAllText(reportPath, reportBuilder.ToString());
+                Console.WriteLine($"Conversion summary report generated at: {Path.GetFullPath(reportPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unable to write report file: {ex.Message}");
+                Console.WriteLine($"Failed to write the summary report: {ex.Message}");
             }
         }
     }
 
-    class Program
+    // Program entry point required for compilation
+    public class Program
     {
-        // Entry point required for console application
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
-                // Example usage: convert all .xlsx files in a folder to .pdf
-                string inputFolder = @"C:\InputFolder";
-
-                if (!Directory.Exists(inputFolder))
-                {
-                    Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                    return;
-                }
-
-                string[] files = Directory.GetFiles(inputFolder, "*.xlsx");
-                BatchConversion.Run(files, ".pdf");
+                Converter.Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

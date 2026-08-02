@@ -8,40 +8,48 @@ namespace AsposeCellsMergeWithFormula
     {
         static void Main()
         {
-            // Create sample data table
+            // 1. Prepare data source with Quantity and UnitPrice columns
             DataTable dt = new DataTable("Products");
             dt.Columns.Add("Product", typeof(string));
             dt.Columns.Add("Quantity", typeof(int));
             dt.Columns.Add("UnitPrice", typeof(double));
 
-            dt.Rows.Add("Apple", 5, 1.2);
-            dt.Rows.Add("Banana", 8, 0.8);
-            dt.Rows.Add("Cherry", 12, 2.5);
+            dt.Rows.Add("Apple", 5, 1.20);
+            dt.Rows.Add("Banana", 8, 0.75);
+            dt.Rows.Add("Cherry", 12, 2.10);
 
-            // Create a new workbook and set up the template with smart markers
+            // 2. Create a new workbook that will serve as the template
             Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
+            Worksheet ws = wb.Worksheets[0];
 
-            // Header row with smart markers for data binding
-            sheet.Cells["A1"].PutValue("&=$Product");
-            sheet.Cells["B1"].PutValue("&=$Quantity");
-            sheet.Cells["C1"].PutValue("&=$UnitPrice");
-            sheet.Cells["D1"].PutValue("Total");
+            // Header row
+            ws.Cells["A1"].PutValue("Product");
+            ws.Cells["B1"].PutValue("Quantity");
+            ws.Cells["C1"].PutValue("Unit Price");
+            ws.Cells["D1"].PutValue("Total Price");
 
-            // First data row formula (will be repeated for each merged row)
-            // B column = Quantity, C column = UnitPrice
-            sheet.Cells["D2"].Formula = "=B2*C2";
+            // Template row with smart markers for data merge
+            ws.Cells["A2"].PutValue("&=$Product");      // Smart marker for product name
+            ws.Cells["B2"].PutValue("&=$Quantity");    // Smart marker for quantity
+            ws.Cells["C2"].PutValue("&=$UnitPrice");   // Smart marker for unit price
 
-            // Bind the data source and process the template
+            // Formula that calculates total price (Quantity * UnitPrice)
+            // This formula will be repeated for each merged row
+            ws.Cells["D2"].Formula = "=B2*C2";
+
+            // 3. Configure WorkbookDesigner to repeat formulas for each data row
             WorkbookDesigner designer = new WorkbookDesigner(wb);
             designer.SetDataSource(dt);
+            designer.RepeatFormulasWithSubtotal = true; // ensures the formula in D2 is copied to all rows
+
+            // 4. Process the template (merge data and copy formulas)
             designer.Process();
 
-            // Calculate all formulas after the merge
+            // 5. Calculate all formulas so that Total Price values are populated
             wb.CalculateFormula();
 
-            // Save the result
-            wb.Save("MergedWithTotal.xlsx");
+            // 6. Save the resulting workbook
+            wb.Save("MergedWithTotalPrice.xlsx");
         }
     }
 }

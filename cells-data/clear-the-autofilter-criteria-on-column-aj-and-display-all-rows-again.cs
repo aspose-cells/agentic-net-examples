@@ -1,53 +1,31 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 class ClearAutoFilterOnColumnAJ
 {
     static void Main()
     {
-        const string inputPath = "InputWorkbook.xlsx";
-        const string outputPath = "OutputWorkbook.xlsx";
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        try
-        {
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Determine the last row that contains data
+        int lastDataRow = worksheet.Cells.MaxDataRow; // zero‑based index
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Ensure the AutoFilter range includes column AJ (column index 35)
+        // Build the range string like "A1:AJ{lastRow+1}"
+        string autoFilterRange = $"A1:AJ{lastDataRow + 1}";
+        worksheet.AutoFilter.Range = autoFilterRange;
 
-            // If an AutoFilter exists and has any filter columns, clear it
-            if (worksheet.AutoFilter != null && worksheet.AutoFilter.FilterColumns.Count > 0)
-            {
-                // Clear all AutoFilter criteria (including column AJ)
-                worksheet.AutoFilter.ShowAll();
+        // Clear any filter criteria on column AJ and display all rows again
+        worksheet.AutoFilter.ShowAll();
 
-                // Refresh the AutoFilter to apply changes (optional but recommended)
-                worksheet.AutoFilter.Refresh();
-            }
+        // Refresh the filter to apply the change immediately
+        worksheet.AutoFilter.Refresh();
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook with the filters cleared
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the modified workbook
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,32 +1,30 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsQueryTableUtility
+namespace QueryTableUtility
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the Excel file to be examined.
-            // You can change this to any valid .xlsx/.xls file path.
-            string inputPath = "input.xlsx";
+            // Determine the source workbook path (first argument or default)
+            string sourcePath = args.Length > 0 ? args[0] : "input.xlsx";
 
-            // Load the workbook from the specified file.
-            Workbook workbook = new Workbook(inputPath);
+            // Load the workbook (load rule)
+            Workbook workbook = new Workbook(sourcePath);
 
-            // Iterate through all worksheets in the workbook.
+            // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Check if the worksheet contains any query tables.
-                if (sheet.QueryTables.Count > 0)
+                // Check if the worksheet contains any query tables
+                if (sheet.QueryTables != null && sheet.QueryTables.Count > 0)
                 {
-                    // Output the name of the worksheet that has query tables.
+                    // Output the worksheet name
                     Console.WriteLine($"Worksheet with QueryTables: {sheet.Name}");
                 }
             }
 
-            // Optionally, save the workbook (no changes made in this utility).
-            // This demonstrates the required save lifecycle rule.
+            // Save the workbook (save rule) – no changes made, just demonstrating the rule usage
             workbook.Save("output.xlsx");
         }
     }

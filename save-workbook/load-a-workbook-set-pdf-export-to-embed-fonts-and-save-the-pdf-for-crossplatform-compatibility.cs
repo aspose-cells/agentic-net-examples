@@ -2,38 +2,29 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class PdfExportWithEmbeddedFonts
+namespace AsposeCellsPdfExport
 {
-    static void Main()
+    class Program
     {
-        // Path to the source Excel workbook
-        string excelPath = "input.xlsx";
-
-        // Path for the resulting PDF file
-        string pdfPath = "output.pdf";
-
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(excelPath);
-
-        // Configure PDF save options to embed fonts and ensure cross‑platform rendering
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        static void Main()
         {
-            // Embed TrueType fonts (ASCII range) – required for proper display on other platforms
-            EmbedStandardWindowsFonts = true,
+            // Load an existing Excel workbook
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Use Identity encoding for all embedded fonts (covers Unicode characters)
-            FontEncoding = PdfFontEncoding.Identity,
+            // Configure PDF save options to embed fonts for cross‑platform compatibility
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Try to use the workbook's default font when a cell's font is missing or unsupported
-            CheckWorkbookDefaultFont = true,
+            // Ensure TrueType fonts are embedded (required for ASCII characters 32‑127)
+            pdfOptions.EmbedStandardWindowsFonts = true;
 
-            // Specify a fallback font (e.g., Arial) for Unicode characters not covered by cell styles
-            DefaultFont = "Arial"
-        };
+            // Use Identity encoding so all embedded fonts are correctly referenced
+            pdfOptions.FontEncoding = PdfFontEncoding.Identity;
 
-        // Save the workbook as a PDF using the configured options
-        workbook.Save(pdfPath, pdfOptions);
+            // Optionally set a default font to handle Unicode characters without explicit font styling
+            pdfOptions.DefaultFont = "Arial";
 
-        Console.WriteLine("PDF saved with embedded fonts at: " + pdfPath);
+            // Save the workbook as a PDF using the configured options
+            workbook.Save("output.pdf", pdfOptions);
+        }
     }
 }

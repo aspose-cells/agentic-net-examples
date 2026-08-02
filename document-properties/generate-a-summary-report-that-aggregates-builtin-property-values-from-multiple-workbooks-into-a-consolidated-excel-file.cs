@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace ConsolidatedSummaryReport
+namespace AsposeCellsSummaryReport
 {
     class Program
     {
@@ -11,78 +11,88 @@ namespace ConsolidatedSummaryReport
         {
             try
             {
-                // List of source workbook file paths
+                // List of source workbook file paths to aggregate
                 List<string> sourceFiles = new List<string>
                 {
-                    @"C:\Data\Workbook1.xlsx",
-                    @"C:\Data\Workbook2.xlsx",
-                    @"C:\Data\Workbook3.xlsx"
-                    // Add more paths as needed
+                    "Workbook1.xlsx",
+                    "Workbook2.xlsx",
+                    "Workbook3.xlsx"
+                    // Add more file paths as needed
                 };
 
-                // Create a new workbook that will hold the consolidated summary
-                Workbook summaryWorkbook = new Workbook();
+                // Validate that at least one source file is provided
+                if (sourceFiles.Count == 0)
+                {
+                    Console.WriteLine("No source files provided.");
+                    return;
+                }
 
-                // Use the first worksheet as the summary sheet
+                // Verify the first workbook exists to obtain built‑in property names
+                if (!File.Exists(sourceFiles[0]))
+                {
+                    Console.WriteLine($"File not found: {sourceFiles[0]}");
+                    return;
+                }
+
+                // Load the first workbook to retrieve the list of built‑in property names
+                List<string> propertyNames = new List<string>();
+                using (Workbook firstWorkbook = new Workbook(sourceFiles[0]))
+                {
+                    foreach (var prop in firstWorkbook.BuiltInDocumentProperties)
+                    {
+                        propertyNames.Add(prop.Name);
+                    }
+                }
+
+                // Create a new workbook that will hold the consolidated summary
+                Workbook summaryWorkbook = new Workbook(); // uses the provided constructor rule
                 Worksheet summarySheet = summaryWorkbook.Worksheets[0];
 
-                // Write header row
-                summarySheet.Cells[0, 0].PutValue("Workbook");
-                summarySheet.Cells[0, 1].PutValue("Property");
-                summarySheet.Cells[0, 2].PutValue("Value");
+                // Write header row: FileName + each property name
+                int headerRow = 0;
+                summarySheet.Cells[headerRow, 0].PutValue("FileName");
+                for (int i = 0; i < propertyNames.Count; i++)
+                {
+                    summarySheet.Cells[headerRow, i + 1].PutValue(propertyNames[i]);
+                }
 
-                int currentRow = 1; // start after header
-
+                // Iterate over each source workbook and copy property values
+                int currentRow = 1;
                 foreach (string filePath in sourceFiles)
                 {
-                    // Skip missing files to avoid FileNotFoundException
                     if (!File.Exists(filePath))
                     {
-                        Console.WriteLine($"File not found: {filePath}");
+                        Console.WriteLine($"Skipping missing file: {filePath}");
                         continue;
                     }
 
-                    try
+                    using (Workbook srcWorkbook = new Workbook(filePath))
                     {
-                        // Load each source workbook
-                        Workbook sourceWorkbook = new Workbook(filePath);
+                        // Write the file name
+                        summarySheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
 
-                        // Get the file name for display
-                        string workbookName = Path.GetFileName(filePath);
-
-                        // Iterate through built‑in document properties
-                        foreach (var prop in sourceWorkbook.BuiltInDocumentProperties)
+                        // Write each built‑in property value
+                        for (int i = 0; i < propertyNames.Count; i++)
                         {
-                            // Write workbook name, property name, and property value to the summary sheet
-                            summarySheet.Cells[currentRow, 0].PutValue(workbookName);
-                            summarySheet.Cells[currentRow, 1].PutValue(prop.Name);
-                            summarySheet.Cells[currentRow, 2].PutValue(prop.Value?.ToString() ?? string.Empty);
-                            currentRow++;
+                            string propName = propertyNames[i];
+                            // Retrieve the property; if missing, write empty string
+                            object value = srcWorkbook.BuiltInDocumentProperties[propName]?.Value ?? string.Empty;
+                            summarySheet.Cells[currentRow, i + 1].PutValue(value);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        // Log errors for individual workbooks but continue processing others
-                        Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                    }
-                }
 
-                // Ensure the output directory exists
-                string outputPath = @"C:\Data\ConsolidatedSummary.xlsx";
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
+                    currentRow++;
                 }
 
                 // Save the consolidated summary workbook
-                summaryWorkbook.Save(outputPath);
-                Console.WriteLine($"Consolidated summary saved to: {outputPath}");
+                string outputPath = "ConsolidatedSummary.xlsx";
+                summaryWorkbook.Save(outputPath); // save rule
+
+                Console.WriteLine($"Summary report saved to: {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

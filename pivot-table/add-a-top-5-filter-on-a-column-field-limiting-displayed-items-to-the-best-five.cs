@@ -3,24 +3,23 @@ using Aspose.Cells;
 
 namespace AsposeCellsTop5FilterDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data (header + 10 numeric values)
-            cells["A1"].PutValue("Score");
+            // Populate sample data (header + 10 numeric rows)
+            sheet.Cells["A1"].PutValue("Score");
             for (int i = 2; i <= 11; i++)
             {
                 // Example values; you can replace with your own data
-                cells[$"A{i}"].PutValue(100 - (i - 2) * 7);
+                sheet.Cells[i - 1, 0].PutValue(100 - (i - 2) * 7);
             }
 
-            // Define the autofilter range (including the header row)
+            // Define the autofilter range (including header)
             sheet.AutoFilter.Range = "A1:A11";
 
             // Apply a Top 5 filter on the first column (field index 0)

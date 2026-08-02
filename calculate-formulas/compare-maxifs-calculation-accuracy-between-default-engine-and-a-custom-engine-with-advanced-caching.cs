@@ -1,128 +1,128 @@
+// Title: Compare Aspose.Cells MAXIFS Results: Default vs Custom Caching Engine (C#)
+// Description: Creates a workbook with two numeric columns, applies a MAXIFS formula (A where B > 2), calculates it first with Aspose.Cells' built‑in engine, then with a custom AbstractCalculationEngine that caches results, and finally checks that both outcomes match before saving the file.
+// Keywords: Aspose.Cells | MAXIFS | custom calculation engine | C# | formula caching | AbstractCalculationEngine | performance comparison | AccessCache | Excel formula evaluation
+// Common Searches: Aspose.Cells custom MAXIFS engine example | compare default and custom formula calculation in .NET | how to cache MAXIFS results with Aspose.Cells | implement AbstractCalculationEngine for Excel functions | use AccessCache with custom calculation engine
+// Developer Intent: Confirm that a user‑defined MAXIFS engine with in‑memory caching returns the same value as the library's native engine.
+// Use Cases: Benchmark performance gains from caching complex formulas on large sheets | Extend MAXIFS logic (e.g., additional operators) while preserving existing results | Standardize calculation behavior across multiple workbooks in automated reporting
+// AI Prompts: Write a C# unit test that validates MaxIfsCustomEngine produces identical results to the default engine for varied data ranges and criteria. | Provide a thread‑safe version of MaxIfsCustomEngine that supports multiple criteria pairs using ConcurrentDictionary for caching. | Explain how to integrate a custom calculation engine into a high‑throughput Aspose.Cells pipeline, covering cache lifecycle, error handling, and parallel processing.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace MaxIfsComparison
+namespace MaxIfsComparisonDemo
 {
-    // Custom calculation engine that processes built‑in functions and caches MAXIFS results
-    public class CachingEngine : AbstractCalculationEngine
+    // Custom calculation engine that processes the built‑in MAXIFS function
+    // and uses a simple in‑memory cache to avoid repeated calculations.
+    // Creates a workbook with two numeric columns, applies a MAXIFS formula (A where B > 2), calculates it first with Aspose.Cells' built‑in engine, then with a custom AbstractCalculationEngine that caches results, and finally checks that both outcomes match before saving the file.
+    public class MaxIfsCustomEngine : AbstractCalculationEngine
     {
-        private readonly bool _processBuiltIn;
-        // Simple in‑memory cache: key -> result
+        // Enable processing of built‑in functions.
+        public override bool ProcessBuiltInFunctions => true;
+
+        // Cache key: concatenated string of range addresses and criteria.
         private static readonly Dictionary<string, double> _cache = new Dictionary<string, double>();
-
-        public CachingEngine(bool processBuiltIn)
-        {
-            _processBuiltIn = processBuiltIn;
-        }
-
-        public override bool ProcessBuiltInFunctions => _processBuiltIn;
 
         public override void Calculate(CalculationData data)
         {
-            // Handle only the MAXIFS function; let the default engine process everything else
+            // Only handle MAXIFS; other functions fall back to the default engine.
             if (!data.FunctionName.Equals("MAXIFS", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            // Build a cache key from all parameters
-            string key = BuildCacheKey(data);
-            if (_cache.TryGetValue(key, out double cachedResult))
+            // Build a cache key from all parameters.
+            var keyParts = new List<string>();
+            for (int i = 0; i < data.ParamCount; i++)
+            {
+                // For range parameters we use the address; for criteria we use the literal text.
+                if (data.GetParamValue(i) is ReferredArea area)
+                {
+                    keyParts.Add(area.StartRow + ":" + area.StartColumn + "-" + area.EndRow + ":" + area.EndColumn);
+                }
+                else
+                {
+                    keyParts.Add(data.GetParamText(i));
+                }
+            }
+            string cacheKey = string.Join("|", keyParts);
+
+            // Return cached result if present.
+            if (_cache.TryGetValue(cacheKey, out double cachedResult))
             {
                 data.CalculatedValue = cachedResult;
                 return;
             }
 
-            // Parameter layout (simplified):
-            // 0 – range to evaluate (ReferredArea)
-            // 1 – criteria_range (ReferredArea)
-            // 2 – criteria (string or numeric)
+            // MAXIFS syntax: MAXIFS(max_range, criteria_range1, criteria1, [criteria_range2, criteria2]…)
+            // For simplicity we support only one criteria pair.
             if (data.ParamCount < 3)
             {
                 data.CalculatedValue = "#VALUE!";
                 return;
             }
 
-            // Get the areas
-            ReferredArea evalArea = (ReferredArea)data.GetParamValue(0);
-            ReferredArea criteriaArea = (ReferredArea)data.GetParamValue(1);
-            object criteriaObj = data.GetParamValue(2);
-            string criteria = criteriaObj?.ToString() ?? string.Empty;
+            // Parameter 0: range to evaluate for maximum.
+            ReferredArea maxRange = (ReferredArea)data.GetParamValue(0);
+            // Parameter 1: criteria range.
+            ReferredArea criteriaRange = (ReferredArea)data.GetParamValue(1);
+            // Parameter 2: criteria string (e.g., ">2").
+            string criteria = data.GetParamText(2).Trim('\"');
 
-            double max = double.MinValue;
+            double maxValue = double.MinValue;
             bool anyMatch = false;
 
-            // Iterate over the intersecting cells of evalArea and criteriaArea
-            for (int r = 0; r <= evalArea.EndRow - evalArea.StartRow; r++)
+            // Iterate over the cells of the criteria range; assume same size as maxRange.
+            for (int r = criteriaRange.StartRow; r <= criteriaRange.EndRow; r++)
             {
-                for (int c = 0; c <= evalArea.EndColumn - evalArea.StartColumn; c++)
+                for (int c = criteriaRange.StartColumn; c <= criteriaRange.EndColumn; c++)
                 {
-                    object critValObj = criteriaArea.GetValue(r, c);
-                    if (critValObj == null) continue;
+                    object critObj = criteriaRange.GetValue(r, c);
+                    double critVal = Convert.ToDouble(critObj);
 
-                    if (CriteriaMatches(critValObj, criteria))
+                    // Evaluate the criteria expression.
+                    bool meets = EvaluateCriteria(critVal, criteria);
+                    if (meets)
                     {
-                        object evalValObj = evalArea.GetValue(r, c);
-                        if (evalValObj == null) continue;
-
-                        if (double.TryParse(evalValObj.ToString(), out double evalVal))
-                        {
-                            anyMatch = true;
-                            if (evalVal > max) max = evalVal;
-                        }
+                        anyMatch = true;
+                        // Corresponding cell in maxRange.
+                        int offsetRow = r - criteriaRange.StartRow;
+                        int offsetCol = c - criteriaRange.StartColumn;
+                        int targetRow = maxRange.StartRow + offsetRow;
+                        int targetCol = maxRange.StartColumn + offsetCol;
+                        object maxObj = maxRange.GetValue(targetRow, targetCol);
+                        double maxVal = Convert.ToDouble(maxObj);
+                        if (maxVal > maxValue)
+                            maxValue = maxVal;
                     }
                 }
             }
 
-            data.CalculatedValue = anyMatch ? (object)max : (object)double.NaN;
-            // Store in cache for future calls with the same parameters
-            _cache[key] = anyMatch ? max : double.NaN;
+            data.CalculatedValue = anyMatch ? (object)maxValue : "#N/A";
+
+            // Store result in cache.
+            _cache[cacheKey] = anyMatch ? maxValue : double.NaN;
         }
 
-        // Simple criteria evaluator supporting >, >=, <, <=, =, <> operators
-        private bool CriteriaMatches(object cellValue, string criteria)
+        // Very simple criteria evaluator supporting >, >=, <, <=, = and <> operators.
+        private bool EvaluateCriteria(double value, string criteria)
         {
-            if (cellValue == null) return false;
+            if (string.IsNullOrEmpty(criteria))
+                return false;
 
-            // Trim whitespace
-            criteria = criteria.Trim();
-
-            // Numeric comparison
-            if (double.TryParse(cellValue.ToString(), out double cellNumber) &&
-                double.TryParse(criteria.TrimStart('>', '<', '=', '!'), out double critNumber))
-            {
-                if (criteria.StartsWith(">=")) return cellNumber >= critNumber;
-                if (criteria.StartsWith("<=")) return cellNumber <= critNumber;
-                if (criteria.StartsWith("<>")) return cellNumber != critNumber;
-                if (criteria.StartsWith(">"))  return cellNumber > critNumber;
-                if (criteria.StartsWith("<"))  return cellNumber < critNumber;
-                if (criteria.StartsWith("="))  return Math.Abs(cellNumber - critNumber) < 1e-9;
-                // If no operator, treat as equality
-                return Math.Abs(cellNumber - critNumber) < 1e-9;
-            }
-
-            // String comparison (only equality supported)
+            if (criteria.StartsWith(">="))
+                return value >= double.Parse(criteria.Substring(2));
+            if (criteria.StartsWith("<="))
+                return value <= double.Parse(criteria.Substring(2));
+            if (criteria.StartsWith("<>"))
+                return value != double.Parse(criteria.Substring(2));
+            if (criteria.StartsWith(">"))
+                return value > double.Parse(criteria.Substring(1));
+            if (criteria.StartsWith("<"))
+                return value < double.Parse(criteria.Substring(1));
             if (criteria.StartsWith("="))
-                return cellValue.ToString().Equals(criteria.Substring(1), StringComparison.OrdinalIgnoreCase);
-            return cellValue.ToString().Equals(criteria, StringComparison.OrdinalIgnoreCase);
-        }
+                return value == double.Parse(criteria.Substring(1));
 
-        private string BuildCacheKey(CalculationData data)
-        {
-            // Concatenate the address of each ReferredArea and the criteria text
-            var parts = new List<string>();
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object param = data.GetParamValue(i);
-                if (param is ReferredArea ra)
-                {
-                    parts.Add($"{ra.StartRow}:{ra.StartColumn}-{ra.EndRow}:{ra.EndColumn}");
-                }
-                else
-                {
-                    parts.Add(param?.ToString() ?? "null");
-                }
-            }
-            return string.Join("|", parts);
+            // If no operator, treat as equality.
+            return value == double.Parse(criteria);
         }
 
         public override bool ForceRecalculate(string functionName) => false;
@@ -132,60 +132,58 @@ namespace MaxIfsComparison
     {
         static void Main()
         {
-            // Create a workbook and populate data
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            // ---------- Create workbook and populate data ----------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Values to evaluate
-            ws.Cells["A1"].PutValue(10);
-            ws.Cells["A2"].PutValue(20);
-            ws.Cells["A3"].PutValue(30);
-            ws.Cells["A4"].PutValue(40);
-            ws.Cells["A5"].PutValue(50);
+            // Max range (A1:A5)
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].PutValue(5);
+            cells["A4"].PutValue(30);
+            cells["A5"].PutValue(25);
 
-            // Corresponding criteria values
-            ws.Cells["B1"].PutValue(1);
-            ws.Cells["B2"].PutValue(4);
-            ws.Cells["B3"].PutValue(5);
-            ws.Cells["B4"].PutValue(2);
-            ws.Cells["B5"].PutValue(6);
+            // Criteria range (B1:B5)
+            cells["B1"].PutValue(1);
+            cells["B2"].PutValue(3);
+            cells["B3"].PutValue(2);
+            cells["B4"].PutValue(4);
+            cells["B5"].PutValue(5);
 
-            // Formula using MAXIFS: max of A where B > 3
-            ws.Cells["C1"].Formula = "=MAXIFS(A1:A5,B1:B5,\">3\")";
+            // Formula cell using MAXIFS: find max in A where corresponding B > 2
+            cells["C1"].Formula = "=MAXIFS(A1:A5, B1:B5, \">2\")";
 
             // ---------- Default engine calculation ----------
-            wb.CalculateFormula(); // uses built‑in engine
-            object defaultResult = ws.Cells["C1"].Value;
+            workbook.CalculateFormula(); // uses built‑in engine
+            object defaultResult = cells["C1"].Value;
             Console.WriteLine($"Default engine MAXIFS result: {defaultResult}");
 
             // ---------- Custom engine with caching ----------
-            // Enable access cache for formula calculation to improve performance
-            wb.StartAccessCache(AccessCacheOptions.CalculateFormula);
+            // Start access cache for formula calculation to improve performance
+            workbook.StartAccessCache(AccessCacheOptions.CalculateFormula);
 
-            var customEngine = new CachingEngine(processBuiltIn: true);
-            var calcOptions = new CalculationOptions { CustomEngine = customEngine };
+            CalculationOptions options = new CalculationOptions
+            {
+                CustomEngine = new MaxIfsCustomEngine(),
+                IgnoreError = true,
+                Recursive = true
+            };
 
             // Re‑calculate using the custom engine
-            wb.CalculateFormula(calcOptions);
-            object customResult = ws.Cells["C1"].Value;
-            Console.WriteLine($"Custom caching engine MAXIFS result: {customResult}");
+            workbook.CalculateFormula(options);
+            object customResult = cells["C1"].Value;
+            Console.WriteLine($"Custom engine MAXIFS result: {customResult}");
 
             // Close the access cache
-            wb.CloseAccessCache(AccessCacheOptions.CalculateFormula);
+            workbook.CloseAccessCache(AccessCacheOptions.CalculateFormula);
 
-            // Compare results
-            if (defaultResult is double d1 && customResult is double d2)
-            {
-                double diff = Math.Abs(d1 - d2);
-                Console.WriteLine($"Difference between engines: {diff}");
-            }
-            else
-            {
-                Console.WriteLine("One of the results is not a numeric value.");
-            }
+            // ---------- Comparison ----------
+            bool areEqual = Equals(defaultResult, customResult);
+            Console.WriteLine($"Results are equal: {areEqual}");
 
-            // Save the workbook (lifecycle rule)
-            wb.Save("MaxIfsComparison.xlsx");
+            // Save workbook (lifecycle rule)
+            workbook.Save("MaxIfsComparisonResult.xlsx");
         }
     }
 }

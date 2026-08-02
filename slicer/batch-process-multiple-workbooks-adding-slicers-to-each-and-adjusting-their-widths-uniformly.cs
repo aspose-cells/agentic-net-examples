@@ -1,54 +1,65 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace BatchSlicerProcessor
+class BatchSlicerProcessor
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Input workbook files to process
+        string[] inputFiles = new string[]
         {
-            // Folder containing source workbooks
-            string sourceFolder = @"C:\InputWorkbooks";
-            // Folder where processed workbooks will be saved
-            string outputFolder = @"C:\OutputWorkbooks";
+            "Workbook1.xlsx",
+            "Workbook2.xlsx",
+            "Workbook3.xlsx"
+        };
 
-            // Ensure output folder exists
-            Directory.CreateDirectory(outputFolder);
+        // Folder where processed workbooks will be saved
+        string outputFolder = "ProcessedWorkbooks";
 
-            // Uniform slicer column width (in points)
-            double uniformColumnWidth = 100.0;
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
 
-            // Process each .xlsx file in the source folder
-            foreach (string inputPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+        // Uniform column width for all slicers (in points)
+        double uniformColumnWidth = 80.0;
+
+        foreach (string inputPath in inputFiles)
+        {
+            // Load the workbook from file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Work with the first worksheet (adjust as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Proceed only if the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count > 0)
             {
-                // Load existing workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Get the first pivot table in the worksheet
+                PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Work with the first worksheet (adjust as needed)
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Use the first base field of the pivot table for the slicer
+                string baseFieldName = pivotTable.BaseFields[0].Name;
 
-                // -------------------------------------------------
-                // Create a simple table if the worksheet has no tables
-                // (rows 0-4, columns 0-1) – this ensures a data source for the slicer
-                // -------------------------------------------------
-                int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = worksheet.ListObjects[tableIndex];
+                // Add a slicer anchored at cell "A1"
+                int slicerIndex = worksheet.Slicers.Add(pivotTable, "A1", baseFieldName);
 
-                // Add a slicer for the first column of the table at cell E1
-                int slicerIndex = worksheet.Slicers.Add(table, 0, "E1");
+                // Retrieve the newly added slicer
                 Slicer slicer = worksheet.Slicers[slicerIndex];
 
-                // Apply the uniform column width to the slicer
+                // Set the column width uniformly
                 slicer.ColumnWidth = uniformColumnWidth;
-
-                // Save the modified workbook to the output folder
-                string fileName = Path.GetFileName(inputPath);
-                string outputPath = Path.Combine(outputFolder, fileName);
-                workbook.Save(outputPath);
             }
+
+            // Determine the output file path
+            string outputPath = Path.Combine(outputFolder, Path.GetFileName(inputPath));
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+
+            // Release resources
+            workbook.Dispose();
         }
     }
 }

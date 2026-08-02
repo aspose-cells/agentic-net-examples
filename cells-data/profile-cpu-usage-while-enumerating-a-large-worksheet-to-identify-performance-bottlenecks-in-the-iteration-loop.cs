@@ -3,59 +3,63 @@ using System.Collections;
 using System.Diagnostics;
 using Aspose.Cells;
 
-class ProfileWorksheetEnumeration
+namespace AsposeCellsPerformanceProfiling
 {
-    static void Main()
+    class Program
     {
-        // Load a large workbook (replace with the actual file path)
-        string inputPath = "LargeWorkbook.xlsx";
-        Workbook workbook = new Workbook(inputPath); // load
-
-        // Access the first worksheet and its cells collection
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Start cache for cells data to improve read‑only access performance
-        workbook.StartAccessCache(AccessCacheOptions.CellsData);
-
-        // Stopwatch to measure total enumeration time
-        Stopwatch totalTimer = Stopwatch.StartNew();
-
-        // Get the cells enumerator
-        IEnumerator enumerator = cells.GetEnumerator();
-
-        long processedCells = 0;
-        // Stopwatch to measure time for each batch (e.g., every 100,000 cells)
-        Stopwatch batchTimer = Stopwatch.StartNew();
-
-        while (enumerator.MoveNext())
+        static void Main()
         {
-            // Cast the current object to Cell
-            Cell cell = (Cell)enumerator.Current;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Example processing: read the cell value (no modification)
-            var value = cell.Value;
-
-            processedCells++;
-
-            // Report progress every 100,000 cells
-            if (processedCells % 100_000 == 0)
+            // Fill a large range with sample data (e.g., 10000 rows x 50 columns)
+            int totalRows = 10000;
+            int totalCols = 50;
+            for (int r = 0; r < totalRows; r++)
             {
-                batchTimer.Stop();
-                Console.WriteLine($"{processedCells} cells processed in {batchTimer.Elapsed.TotalSeconds:F2} seconds");
-                batchTimer.Restart();
+                for (int c = 0; c < totalCols; c++)
+                {
+                    cells[r, c].PutValue(r * totalCols + c);
+                }
             }
+
+            // Optional: enable cache for cell data access to see its impact
+            // Comment out the following two lines to compare without caching
+            workbook.StartAccessCache(AccessCacheOptions.CellsData);
+            // Note: after enumeration, close the cache
+            try
+            {
+                // Prepare a stopwatch to measure elapsed time
+                Stopwatch sw = Stopwatch.StartNew();
+
+                // Get the cells enumerator
+                IEnumerator enumerator = cells.GetEnumerator();
+
+                // Iterate through all instantiated cells
+                while (enumerator.MoveNext())
+                {
+                    // Cast the current object to Cell
+                    Cell cell = (Cell)enumerator.Current;
+
+                    // Simulate some work – read the value (this is the part we profile)
+                    var value = cell.Value;
+                }
+
+                sw.Stop();
+
+                // Output the profiling result
+                Console.WriteLine($"Enumerated {cells.CountLarge} cells in {sw.Elapsed.TotalSeconds:F2} seconds.");
+            }
+            finally
+            {
+                // Close the cache if it was started
+                workbook.CloseAccessCache(AccessCacheOptions.CellsData);
+            }
+
+            // Save the workbook (demonstrates usage of the required save rule)
+            workbook.Save("LargeWorksheetProfiled.xlsx");
         }
-
-        totalTimer.Stop();
-
-        Console.WriteLine($"Total cells processed: {processedCells}");
-        Console.WriteLine($"Total enumeration time: {totalTimer.Elapsed.TotalSeconds:F2} seconds");
-
-        // Close the cache after the read‑only operation is finished
-        workbook.CloseAccessCache(AccessCacheOptions.CellsData);
-
-        // Save the workbook (no changes made, just demonstrating the save lifecycle)
-        workbook.Save("ProcessedWorkbook.xlsx");
     }
 }

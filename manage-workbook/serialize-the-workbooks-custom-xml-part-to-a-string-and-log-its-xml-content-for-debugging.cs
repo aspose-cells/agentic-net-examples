@@ -3,24 +3,31 @@ using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Markup;
 
-class Program
+namespace AsposeCellsCustomXmlDebug
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-        // Add a sample custom XML part
-        string xmlData = "<root><item>Sample</item></root>";
-        byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlData);
-        int partIndex = wb.CustomXmlParts.Add(xmlBytes, null);
-        CustomXmlPart customPart = wb.CustomXmlParts[partIndex];
+            // Prepare sample XML data
+            string xmlData = "<root><item>DebugValue</item></root>";
+            byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlData);
 
-        // Serialize the custom XML part to a string
-        string xmlContent = Encoding.UTF8.GetString(customPart.Data);
+            // Add the custom XML part to the workbook (no schema provided)
+            int partIndex = wb.CustomXmlParts.Add(xmlBytes, null);
 
-        // Log the XML content for debugging
-        Console.WriteLine("Custom XML Part Content:");
-        Console.WriteLine(xmlContent);
+            // Retrieve the added custom XML part
+            CustomXmlPart customPart = wb.CustomXmlParts[partIndex];
+
+            // Convert the stored byte[] back to a string for debugging
+            string xmlContent = Encoding.UTF8.GetString(customPart.Data);
+
+            // Log the XML content
+            Console.WriteLine("Custom XML Part Content:");
+            Console.WriteLine(xmlContent);
+        }
     }
 }

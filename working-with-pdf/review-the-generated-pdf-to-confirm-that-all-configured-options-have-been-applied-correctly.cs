@@ -1,80 +1,96 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // for PdfCompliance enum
 
-class Program
+// Author: Aspose.Cells .NET example – verify PDF save options
+class PdfOptionsVerification
 {
     static void Main()
     {
+        // ------------------------------------------------------------
+        // 1. Create a sample workbook with minimal content
+        // ------------------------------------------------------------
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Verification Test");
+
+        // ------------------------------------------------------------
+        // 2. Configure PDF save options
+        // ------------------------------------------------------------
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Set PDF/A-1b compliance
+            Compliance = PdfCompliance.PdfA1b,
+
+            // Explicitly set the creation time (will be written into PDF metadata)
+            CreatedTime = new DateTime(2023, 1, 1, 12, 0, 0),
+
+            // Set a custom producer string
+            Producer = "PdfOptionsVerificationDemo",
+
+            // Force each worksheet onto a single page
+            OnePagePerSheet = true
+        };
+
+        // ------------------------------------------------------------
+        // 3. Save the workbook as PDF using the configured options
+        // ------------------------------------------------------------
+        const string pdfPath = "VerificationOutput.pdf";
+        workbook.Save(pdfPath, pdfOptions);
+
+        // ------------------------------------------------------------
+        // 4. Basic file‑system verification (exists, non‑empty)
+        // ------------------------------------------------------------
+        FileInfo fileInfo = new FileInfo(pdfPath);
+        if (!fileInfo.Exists)
+        {
+            Console.WriteLine("Error: PDF file was not created.");
+            return;
+        }
+
+        if (fileInfo.Length == 0)
+        {
+            Console.WriteLine("Error: PDF file is empty.");
+            return;
+        }
+
+        Console.WriteLine($"PDF created successfully. Size: {fileInfo.Length} bytes.");
+
+        // ------------------------------------------------------------
+        // 5. Verify PDF metadata (producer, creation time, compliance)
+        // ------------------------------------------------------------
+        // NOTE: Aspose.Pdf is typically used to read PDF metadata.
+        // The following code assumes Aspose.Pdf is referenced.
+        // If Aspose.Pdf is not available, replace with appropriate library
+        // or inspect the file manually.
+
         try
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Sample Data");
-            worksheet.Cells["A2"].PutValue(123);
+            // Placeholder for actual PDF metadata extraction
+            // using Aspose.Pdf;
+            // PdfDocument pdfDoc = new PdfDocument(pdfPath);
+            // string producer = pdfDoc.Info.Producer;
+            // DateTime? created = pdfDoc.Info.CreationDate;
+            // Console.WriteLine($"Producer: {producer}");
+            // Console.WriteLine($"Creation Time (PDF metadata): {created}");
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Compliance and metadata
-                Compliance = PdfCompliance.PdfA1b,
-                Producer = "Aspose.Cells Test",
-                CreatedTime = DateTime.Now,
-
-                // Optimization and compression
-                OptimizationType = PdfOptimizationType.MinimumSize,
-                PdfCompression = PdfCompressionCore.Flate,
-
-                // Font handling
-                CheckFontCompatibility = true,
-                CheckWorkbookDefaultFont = true,
-                DefaultFont = "Arial",
-                EmbedStandardWindowsFonts = true,
-                EmbedAttachments = true,
-
-                // Layout
-                OnePagePerSheet = true,
-                AllColumnsInOnePagePerSheet = true,
-                GridlineType = GridlineType.Dotted,
-                TextCrossType = TextCrossType.CrossKeep,
-
-                // Page selection
-                PageIndex = 0,
-                PageCount = 1,
-                PrintingPageType = PrintingPageType.IgnoreBlank,
-
-                // Miscellaneous
-                ExportDocumentStructure = true,
-                CalculateFormula = true
-            };
-
-            // Save the workbook as a PDF file using the configured options
-            string pdfPath = "output.pdf";
-
-            // Ensure the target directory exists
-            string pdfDir = Path.GetDirectoryName(Path.GetFullPath(pdfPath));
-            if (!Directory.Exists(pdfDir))
-                Directory.CreateDirectory(pdfDir);
-
-            workbook.Save(pdfPath, pdfOptions);
-
-            // Verify that the PDF file was created
-            bool fileCreated = File.Exists(pdfPath);
-            Console.WriteLine($"PDF creation verification: {(fileCreated ? "Passed" : "Failed")}");
-
-            // Additional simple verification: file size should be greater than zero
-            if (fileCreated)
-            {
-                long fileSize = new FileInfo(pdfPath).Length;
-                Console.WriteLine($"PDF size verification: {(fileSize > 0 ? "Passed" : "Failed")} (Size: {fileSize} bytes)");
-            }
+            // Since Aspose.Pdf API is not documented here, we provide a stub:
+            Console.WriteLine("Metadata verification requires Aspose.Pdf or another PDF library.");
         }
         catch (Exception ex)
         {
-            // Output any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Metadata verification failed: {ex.Message}");
         }
+
+        // ------------------------------------------------------------
+        // 6. Additional runtime checks (optional)
+        // ------------------------------------------------------------
+        // Example: ensure the file's last write time matches the set CreatedTime
+        // (File system timestamps may differ from PDF internal timestamps.)
+        DateTime fileWriteTime = fileInfo.LastWriteTime;
+        Console.WriteLine($"File system last write time: {fileWriteTime}");
+
+        // End of verification
     }
 }

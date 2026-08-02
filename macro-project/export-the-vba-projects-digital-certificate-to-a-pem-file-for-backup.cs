@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
@@ -11,39 +11,40 @@ class ExportVbaCertificate
         // Path to the workbook that contains a signed VBA project
         string workbookPath = "SignedWorkbook.xlsm";
 
-        // Destination path for the exported PEM file
+        // Path where the PEM file will be saved
         string pemFilePath = "VbaCertificate.pem";
 
         // Load the workbook (uses Aspose.Cells lifecycle rule)
         Workbook workbook = new Workbook(workbookPath);
 
-        // Access the VBA project associated with the workbook
+        // Get the VBA project from the workbook
         VbaProject vbaProject = workbook.VbaProject;
 
-        // Verify that the VBA project is signed and certificate data is present
+        // Verify that the VBA project is signed and certificate data exists
         if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
         {
-            // Create an X509Certificate2 instance from the raw certificate bytes
-            X509Certificate2 certificate = new X509Certificate2(vbaProject.CertRawData);
+            // Convert the raw certificate bytes to a Base64 string
+            string base64Cert = Convert.ToBase64String(vbaProject.CertRawData);
 
-            // Export the certificate to DER format and then encode it as Base64 with line breaks
-            string base64Cert = Convert.ToBase64String(
-                certificate.Export(X509ContentType.Cert),
-                Base64FormattingOptions.InsertLineBreaks);
+            // Build the PEM formatted string (64‑character lines)
+            StringBuilder pemBuilder = new StringBuilder();
+            pemBuilder.AppendLine("-----BEGIN CERTIFICATE-----");
+            const int lineLength = 64;
+            for (int i = 0; i < base64Cert.Length; i += lineLength)
+            {
+                int chunkSize = Math.Min(lineLength, base64Cert.Length - i);
+                pemBuilder.AppendLine(base64Cert.Substring(i, chunkSize));
+            }
+            pemBuilder.AppendLine("-----END CERTIFICATE-----");
 
-            // Build the PEM representation
-            string pemContent = "-----BEGIN CERTIFICATE-----\n" +
-                                base64Cert +
-                                "\n-----END CERTIFICATE-----";
+            // Write the PEM content to a file
+            File.WriteAllText(pemFilePath, pemBuilder.ToString());
 
-            // Write the PEM content to the specified file
-            File.WriteAllText(pemFilePath, pemContent);
-
-            Console.WriteLine($"Certificate exported successfully to: {pemFilePath}");
+            Console.WriteLine($"VBA project certificate exported to: {pemFilePath}");
         }
         else
         {
-            Console.WriteLine("The VBA project is not signed or certificate data is unavailable.");
+            Console.WriteLine("The workbook does not contain a signed VBA project or the certificate data is unavailable.");
         }
     }
 }

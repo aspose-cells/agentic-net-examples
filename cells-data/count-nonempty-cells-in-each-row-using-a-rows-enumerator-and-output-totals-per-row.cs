@@ -9,17 +9,17 @@ class Program
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
         // Populate sample data
-        cells["A1"].PutValue("Header");
-        cells["B1"].PutValue("Value1");
-        cells["C1"].PutValue(123);
-        cells["A2"].PutValue("Row2Col1");
-        cells["C2"].PutValue(456);
-        cells["A3"].PutValue("OnlyOne");
+        worksheet.Cells["A1"].PutValue("Header");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["A2"].PutValue(10);
+        worksheet.Cells["C2"].PutValue(20);
+        worksheet.Cells["B3"].PutValue("Text");
+        worksheet.Cells["D4"].PutValue(5.5);
+        // Row 5 is left empty intentionally
 
-        // Enumerate through all rows that contain data
+        // Enumerate through rows using the Rows collection enumerator
         IEnumerator rowEnumerator = worksheet.Cells.Rows.GetEnumerator();
         while (rowEnumerator.MoveNext())
         {
@@ -31,18 +31,18 @@ class Program
             while (cellEnumerator.MoveNext())
             {
                 Cell cell = (Cell)cellEnumerator.Current;
-                // Count cells that have a non‑null value
-                if (cell != null && cell.Value != null)
+                // Count cells that contain a non‑null value
+                if (cell.Value != null)
                 {
                     nonEmptyCellCount++;
                 }
             }
 
             // Output the count for the current row (row index is zero‑based)
-            Console.WriteLine($"Row {row.Index + 1}: {nonEmptyCellCount} non‑empty cells");
+            Console.WriteLine($"Row {row.Index + 1}: {nonEmptyCellCount} non‑empty cell(s)");
         }
 
-        // Save the workbook (optional, just to demonstrate lifecycle usage)
+        // Save the workbook (optional, just to demonstrate saving)
         workbook.Save("CountNonEmptyCellsPerRow.xlsx");
     }
 }

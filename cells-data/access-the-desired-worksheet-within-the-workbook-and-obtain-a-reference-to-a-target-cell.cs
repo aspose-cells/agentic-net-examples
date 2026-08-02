@@ -1,26 +1,31 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAccessCellDemo
+namespace AsposeCellsDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (in‑memory)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet in the workbook
+            // Access the first worksheet using the WorksheetCollection indexer
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Obtain a reference to a target cell (e.g., cell B2)
+            // Obtain a reference to a target cell (e.g., B2) using the Cells indexer by name
             Cell targetCell = worksheet.Cells["B2"];
 
-            // Example: put a value into the target cell
+            // Optionally put a value into the cell to demonstrate that we have a valid reference
             targetCell.PutValue("Hello Aspose!");
 
-            // Save the workbook to verify the changes (lifecycle: save)
-            workbook.Save("AccessCellDemo.xlsx");
+            // Display the worksheet name and cell address/value
+            Console.WriteLine("Worksheet: " + worksheet.Name);
+            Console.WriteLine("Cell Address: " + targetCell.Name);
+            Console.WriteLine("Cell Value: " + targetCell.StringValue);
+
+            // Save the workbook to verify the changes (uses the standard Save method)
+            workbook.Save("DemoOutput.xlsx");
         }
     }
 }

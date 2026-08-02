@@ -1,42 +1,36 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Vba;
 
-class ExtractVbaDescription
+namespace AsposeCellsVbaMetadataDemo
 {
-    static void Main()
+    class Program
     {
-        // Path to the macro-enabled workbook
-        string filePath = "sample_with_macro.xlsm";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"File not found: {Path.GetFullPath(filePath)}");
-            return;
-        }
+            // Path to the macro‑enabled workbook (must contain VBA project)
+            string inputPath = "input.xlsm";
 
-        try
-        {
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(filePath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Check if the workbook contains a VBA project
-            if (workbook.HasMacro && workbook.VbaProject != null)
+            // Verify that the workbook actually contains a VBA project
+            if (!workbook.HasMacro || workbook.VbaProject == null)
             {
-                // Use the VBA project's Name property as its description
-                string vbaDescription = workbook.VbaProject.Name;
-                Console.WriteLine("VBA Project Description (Name): " + vbaDescription);
+                Console.WriteLine("The specified workbook does not contain a VBA project.");
+                return;
             }
-            else
-            {
-                Console.WriteLine("The workbook does not contain a VBA project.");
-            }
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine("An error occurred: " + ex.Message);
+
+            // Extract the VBA project's description.
+            // Aspose.Cells does not expose a dedicated Description property,
+            // but the Name property typically holds the project description.
+            string vbaProjectDescription = workbook.VbaProject.Name;
+
+            // Output the extracted description
+            Console.WriteLine($"VBA Project Description (Name): {vbaProjectDescription}");
+
+            // (Optional) Save the workbook if any modifications were made.
+            // workbook.Save("output.xlsm", SaveFormat.Xlsm);
         }
     }
 }

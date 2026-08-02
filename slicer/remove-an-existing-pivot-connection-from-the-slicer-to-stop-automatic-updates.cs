@@ -8,7 +8,7 @@ namespace AsposeCellsExamples
 {
     public class RemoveSlicerPivotConnectionDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
@@ -31,35 +31,37 @@ namespace AsposeCellsExamples
             dataSheet.Cells["A1"].PutValue("Product");
             dataSheet.Cells["A2"].PutValue("Apple");
             dataSheet.Cells["A3"].PutValue("Banana");
+            dataSheet.Cells["A4"].PutValue("Orange");
             dataSheet.Cells["B1"].PutValue("Sales");
-            dataSheet.Cells["B2"].PutValue(100);
-            dataSheet.Cells["B3"].PutValue(200);
+            dataSheet.Cells["B2"].PutValue(120);
+            dataSheet.Cells["B3"].PutValue(150);
+            dataSheet.Cells["B4"].PutValue(200);
 
-            // Add a worksheet to host the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Add a worksheet to host the pivot table and slicer
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotSheet");
 
             // Create a pivot table based on the data range
-            PivotTableCollection pivotTables = pivotSheet.PivotTables;
-            int pivotIndex = pivotTables.Add("=Data!A1:B3", "A3", "TestPivotTable");
-            PivotTable pivotTable = pivotTables[pivotIndex];
-
-            // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales column
+            PivotTableCollection pivots = pivotSheet.PivotTables;
+            int pivotIndex = pivots.Add("Data!A1:B4", "C3", "SalesPivot");
+            PivotTable pivotTable = pivots[pivotIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales field
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Add a slicer linked to the pivot table (field index 0 = Product)
-            int slicerIndex = pivotSheet.Slicers.Add(pivotTable, "E3", 0);
+            // Add a slicer linked to the pivot table (field: Product)
+            int slicerIndex = pivotSheet.Slicers.Add(pivotTable, "E3", "Product");
             Slicer slicer = pivotSheet.Slicers[slicerIndex];
 
             // Remove the pivot connection from the slicer to stop automatic updates
             slicer.RemovePivotConnection(pivotTable);
 
-            // Save the workbook
+            // Define output file path
             string outputPath = "RemoveSlicerPivotConnection_out.xlsx";
+
+            // Save the workbook (overwrite if exists)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
         }
     }
 }

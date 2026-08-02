@@ -1,58 +1,52 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedFormulaDemo
+namespace AsposeCellsNamedRangeRefersToDemo
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet (default name is "Sheet1")
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-            // Populate some sample data in column A
-            for (int i = 0; i < 10; i++)
+            // Populate some sample data in column A (A1:A5)
+            for (int i = 0; i < 5; i++)
             {
-                sheet.Cells[i, 0].PutValue(i + 1); // A1:A10 = 1..10
+                sheet.Cells[i, 0].PutValue(i + 1); // Values 1,2,3,4,5
             }
 
             // -----------------------------------------------------------------
-            // 1. Create a named formula "TotalSum" that calculates the sum of A1:A10
+            // 1. Define a named formula "MyFormula" that calculates the sum of A1:A5
             // -----------------------------------------------------------------
-            int totalSumIndex = sheet.Workbook.Worksheets.Names.Add("TotalSum");
-            Name totalSumName = sheet.Workbook.Worksheets.Names[totalSumIndex];
-            // RefersTo can contain a formula that returns a value
-            totalSumName.RefersTo = "=SUM(Sheet1!$A$1:$A$10)";
+            int formulaNameIndex = workbook.Worksheets.Names.Add("MyFormula");
+            // RefersTo must start with '=' and can contain any valid formula
+            workbook.Worksheets.Names[formulaNameIndex].RefersTo = "=SUM(Sheet1!$A$1:$A$5)";
 
             // -----------------------------------------------------------------
-            // 2. Create another named range "SumRange" that refers to the result
-            //    of the named formula "TotalSum". This demonstrates using a named
-            //    formula inside the RefersTo property of another name.
+            // 2. Define a named range "MyRange" whose RefersTo points to the named formula
+            //    This demonstrates using a named formula as the reference of another name.
             // -----------------------------------------------------------------
-            int sumRangeIndex = sheet.Workbook.Worksheets.Names.Add("SumRange");
-            Name sumRangeName = sheet.Workbook.Worksheets.Names[sumRangeIndex];
-            // The RefersTo property can reference another name by using its name
-            sumRangeName.RefersTo = "=TotalSum";
+            int rangeNameIndex = workbook.Worksheets.Names.Add("MyRange");
+            // The RefersTo property can reference another name directly
+            workbook.Worksheets.Names[rangeNameIndex].RefersTo = "=MyFormula";
 
             // -----------------------------------------------------------------
-            // 3. Use the "SumRange" name in a worksheet formula
+            // 3. Use the named range in a worksheet formula
             // -----------------------------------------------------------------
-            // Place the result in cell B1
-            sheet.Cells["B1"].Formula = "=SumRange";
+            // Cell B1 will display the result of the named formula via the named range
+            sheet.Cells["B1"].Formula = "=MyRange";
 
             // Calculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Display the calculated value of B1 (should be 55)
-            Console.WriteLine("Calculated value of B1 (SumRange): " + sheet.Cells["B1"].Value);
+            // Output the calculated value to the console
+            Console.WriteLine("Result of MyRange (which refers to MyFormula): " + sheet.Cells["B1"].Value);
 
-            // -----------------------------------------------------------------
-            // 4. Save the workbook to verify the named formulas are persisted
-            // -----------------------------------------------------------------
-            workbook.Save("NamedFormulaDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save("NamedRangeRefersToDemo.xlsx");
         }
     }
 }

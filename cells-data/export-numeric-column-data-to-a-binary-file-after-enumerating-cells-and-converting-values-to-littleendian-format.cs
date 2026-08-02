@@ -2,63 +2,54 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBinaryExport
+namespace ExportNumericColumnToBinary
 {
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate column A with numeric values (including a header)
+            cells["A1"].PutValue("Header"); // non‑numeric, will be skipped
+            for (int i = 0; i < 10; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                // Rows are zero‑based; row 1 corresponds to cell A2
+                cells[i + 1, 0].PutValue(i * 1.5); // example numeric data
+            }
 
-                // Populate numeric data in column A (index 0)
-                for (int i = 0; i < 10; i++)
+            // Path of the binary file to write
+            string binaryFilePath = "numericColumn.bin";
+
+            // Open a binary writer (writes in little‑endian by default)
+            using (FileStream fs = new FileStream(binaryFilePath, FileMode.Create, FileAccess.Write))
+            using (BinaryWriter writer = new BinaryWriter(fs))
+            {
+                // Iterate through all used rows in column A
+                int maxRow = cells.MaxDataRow; // last row that contains data
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Example values: 1.0, 2.0, ..., 10.0
-                    cells[i, 0].PutValue(i + 1);
-                }
-
-                // Determine the last row that contains data in the column (zero‑based)
-                int lastRow = cells.MaxDataRow;
-
-                // Path of the binary file to write
-                string binaryFilePath = "NumericColumnData.bin";
-
-                // Write numeric values to a binary file (little‑endian)
-                using (FileStream fs = new FileStream(binaryFilePath, FileMode.Create, FileAccess.Write))
-                using (BinaryWriter writer = new BinaryWriter(fs))
-                {
-                    for (int row = 0; row <= lastRow; row++)
+                    Cell cell = cells[row, 0]; // column 0 = A
+                    // Process only numeric cells
+                    if (cell.Type == CellValueType.IsNumeric)
                     {
-                        Cell cell = cells[row, 0];
-
-                        // Process only numeric cells
-                        if (cell.Type == CellValueType.IsNumeric)
+                        double numericValue = cell.DoubleValue;
+                        // Convert to little‑endian byte array (BitConverter uses little‑endian on Windows)
+                        byte[] bytes = BitConverter.GetBytes(numericValue);
+                        // Ensure little‑endian order (swap if running on big‑endian platform)
+                        if (!BitConverter.IsLittleEndian)
                         {
-                            double value = cell.DoubleValue;
-                            byte[] bytes = BitConverter.GetBytes(value);
-
-                            // Ensure little‑endian order regardless of platform
-                            if (!BitConverter.IsLittleEndian)
-                            {
-                                Array.Reverse(bytes);
-                            }
-
-                            writer.Write(bytes);
+                            Array.Reverse(bytes);
                         }
+                        writer.Write(bytes);
                     }
                 }
+            }
 
-                Console.WriteLine($"Numeric column data exported to binary file: {binaryFilePath}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Numeric column data exported to binary file: {binaryFilePath}");
         }
     }
 }

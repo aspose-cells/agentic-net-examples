@@ -1,95 +1,42 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsPdfExport
 {
-    // Sample data class used as a data source for smart markers
-    public class SalesRecord
+    class Program
     {
-        public string Category { get; set; } = string.Empty;
-        public double Amount { get; set; }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
-            try
-            {
-                // 1. Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+            // Load a workbook that contains smart markers and charts
+            Workbook workbook = new Workbook("template.xlsx");
 
-                // 2. Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Prepare a sample data source (DataTable) for smart markers
+            DataTable dt = new DataTable("Products");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Quantity", typeof(int));
+            dt.Columns.Add("Price", typeof(double));
 
-                // 3. Populate the worksheet with sample data and smart markers
-                // Header row
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
+            dt.Rows.Add("Apple", 50, 0.5);
+            dt.Rows.Add("Banana", 30, 0.3);
+            dt.Rows.Add("Cherry", 20, 0.8);
 
-                // Smart marker rows – these will be replaced by the data source during processing
-                sheet.Cells["A2"].PutValue("&=$Sales.Category");
-                sheet.Cells["B2"].PutValue("&=$Sales.Amount");
-                sheet.Cells["A3"].PutValue("&=$Sales.Category");
-                sheet.Cells["B3"].PutValue("&=$Sales.Amount");
-                sheet.Cells["A4"].PutValue("&=$Sales.Category");
-                sheet.Cells["B4"].PutValue("&=$Sales.Amount");
-                sheet.Cells["A5"].PutValue("&=$Sales.Category");
-                sheet.Cells["B5"].PutValue("&=$Sales.Amount");
-                sheet.Cells.CreateRange("A2:B5").Name = "_CellsSmartMarkers";
+            // Create a WorkbookDesigner, assign the workbook and set the data source
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource("Products", dt);
 
-                // 4. Add a column chart that will reference the data range (initially empty)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 15);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries.CategoryData = "A2:A5";
-                chart.Title.Text = "Sales by Category";
+            // Process smart markers – this populates the worksheet and updates chart data ranges
+            designer.Process();
 
-                // 5. Prepare the data source for smart markers
-                List<SalesRecord> sales = new List<SalesRecord>
-                {
-                    new SalesRecord { Category = "Fruits",     Amount = 1200 },
-                    new SalesRecord { Category = "Vegetables", Amount = 850 },
-                    new SalesRecord { Category = "Beverages",  Amount = 430 },
-                    new SalesRecord { Category = "Snacks",     Amount = 670 }
-                };
+            // Configure PDF save options to preserve document structure (charts, graphics, etc.)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            pdfOptions.ExportDocumentStructure = true;   // retain charts and graphics
+            pdfOptions.CalculateFormula = true;         // ensure formulas are evaluated before saving
 
-                // 6. Process smart markers (lifecycle rule: use WorkbookDesigner.Process)
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Sales", sales);
-                designer.Process(); // populates the smart marker range and updates the chart data
-
-                // 7. Configure PDF save options to preserve charts and document structure
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    ExportDocumentStructure = true, // retain document structure (charts, graphics)
-                    RefreshChartCache = true,       // ensure chart data is up‑to‑date
-                    CalculateFormula = true         // calculate any formulas before saving
-                };
-
-                // 8. Save the populated workbook to PDF (lifecycle rule: save)
-                string outputPath = "SmartMarkersOutput.pdf";
-
-                // Ensure we can write to the target location
-                try
-                {
-                    workbook.Save(outputPath, pdfOptions);
-                    Console.WriteLine($"Workbook with smart markers exported to PDF successfully: {Path.GetFullPath(outputPath)}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.Error.WriteLine($"Error saving PDF: {saveEx.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // General runtime safety
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the populated workbook as PDF
+            workbook.Save("output.pdf", pdfOptions);
         }
     }
 }

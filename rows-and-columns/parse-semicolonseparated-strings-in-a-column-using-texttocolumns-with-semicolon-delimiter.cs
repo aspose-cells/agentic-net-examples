@@ -1,44 +1,31 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTextToColumnsDemo
+// Author: Aspose.Cells .NET example – split semicolon‑delimited text into columns
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate column A with semicolon‑separated strings
-            cells["A1"].PutValue("Apple;Red;1.2");
-            cells["A2"].PutValue("Banana;Yellow;0.8");
-            cells["A3"].PutValue("Cherry;Red;0.2");
+        // Populate column A with semicolon‑separated values
+        sheet.Cells["A1"].PutValue("John;Doe;30");
+        sheet.Cells["A2"].PutValue("Jane;Smith;28");
 
-            // Configure TextToColumns options to use semicolon as the delimiter
-            TxtLoadOptions options = new TxtLoadOptions();
-            options.Separator = ';';               // character delimiter
-            // options.SeparatorString = ";";      // alternatively, string delimiter
+        // Set up text load options to use semicolon as the delimiter
+        TxtLoadOptions options = new TxtLoadOptions();
+        options.Separator = ';'; // semicolon delimiter
 
-            // Apply TextToColumns starting from row 0, column 0 (A1)
-            // totalRows = number of rows to process (3 in this example)
-            int totalColumnsCreated = cells.TextToColumns(0, 0, 3, options);
+        // Split the text in column A (row 0, column 0) for the first 2 rows
+        sheet.Cells.TextToColumns(0, 0, 2, options);
 
-            // Output the result to the console for verification
-            Console.WriteLine($"Columns created: {totalColumnsCreated}");
-            for (int row = 0; row < 3; row++)
-            {
-                Console.WriteLine(
-                    $"Row {row + 1}: " +
-                    $"{cells[row, 0].StringValue}, " +   // Fruit name
-                    $"{cells[row, 1].StringValue}, " +   // Color
-                    $"{cells[row, 2].StringValue}");    // Weight
-            }
+        // Verify the split results (optional)
+        Console.WriteLine("B1: " + sheet.Cells["B1"].StringValue); // Expected: Doe
+        Console.WriteLine("C2: " + sheet.Cells["C2"].StringValue); // Expected: 28
 
-            // Save the workbook (optional)
-            workbook.Save("SemicolonSplitResult.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("SemicolonSplit.xlsx");
     }
 }

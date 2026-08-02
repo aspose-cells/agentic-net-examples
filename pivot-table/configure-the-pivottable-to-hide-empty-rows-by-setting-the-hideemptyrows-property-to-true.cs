@@ -1,72 +1,55 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
 
-namespace AsposeCellsExamples
+class HideEmptyRowsPivotDemo
 {
-    public class HideEmptyRowsDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
+        // Populate sample data with some empty rows
+        dataSheet.Cells["A1"].PutValue("Category");
+        dataSheet.Cells["B1"].PutValue("Product");
+        dataSheet.Cells["C1"].PutValue("Sales");
 
-                // Populate sample data (including some empty rows)
-                dataSheet.Cells["A1"].Value = "Category";
-                dataSheet.Cells["B1"].Value = "Product";
-                dataSheet.Cells["C1"].Value = "Sales";
+        dataSheet.Cells["A2"].PutValue("Electronics");
+        dataSheet.Cells["B2"].PutValue("TV");
+        dataSheet.Cells["C2"].PutValue(1000);
 
-                dataSheet.Cells["A2"].Value = "Electronics";
-                dataSheet.Cells["B2"].Value = "TV";
-                dataSheet.Cells["C2"].Value = 1000;
+        dataSheet.Cells["A3"].PutValue("Electronics");
+        // Empty product and sales rows
+        dataSheet.Cells["B3"].PutValue("");
+        dataSheet.Cells["C3"].PutValue("");
 
-                dataSheet.Cells["A3"].Value = "Electronics";
-                dataSheet.Cells["B3"].Value = "";   // empty row
-                dataSheet.Cells["C3"].Value = "";
+        dataSheet.Cells["A4"].PutValue("Furniture");
+        dataSheet.Cells["B4"].PutValue("Chair");
+        dataSheet.Cells["C4"].PutValue(500);
 
-                dataSheet.Cells["A4"].Value = "Furniture";
-                dataSheet.Cells["B4"].Value = "Chair";
-                dataSheet.Cells["C4"].Value = 500;
+        dataSheet.Cells["A5"].PutValue("Furniture");
+        // Empty product and sales rows
+        dataSheet.Cells["B5"].PutValue("");
+        dataSheet.Cells["C5"].PutValue("");
 
-                dataSheet.Cells["A5"].Value = "Furniture";
-                dataSheet.Cells["B5"].Value = "";   // empty row
-                dataSheet.Cells["C5"].Value = "";
+        // Add a pivot table on the same sheet
+        PivotTableCollection pivots = dataSheet.PivotTables;
+        int pivotIndex = pivots.Add("A1:C5", "E3", "PivotTable1");
+        PivotTable pivot = pivots[pivotIndex];
 
-                // Add a pivot table based on the data range
-                PivotTableCollection pivotTables = dataSheet.PivotTables;
-                int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = pivotTables[pivotIndex];
+        // Add fields to the pivot table
+        pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivot.AddFieldToArea(PivotFieldType.Row, "Product");
+        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+        // Hide empty rows by disabling inclusion of empty rows
+        pivot.ShowEmptyRow = false;
 
-                // Hide empty rows in the pivot table.
-                // The ShowEmptyRow property controls inclusion of empty rows.
-                // Setting it to false hides empty rows.
-                pivotTable.ShowEmptyRow = false;
+        // Calculate the pivot data
+        pivot.CalculateData();
 
-                // Calculate the pivot table data
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("HideEmptyRowsDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                // Log or display the exception details
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("PivotTableHideEmptyRows.xlsx");
     }
 }

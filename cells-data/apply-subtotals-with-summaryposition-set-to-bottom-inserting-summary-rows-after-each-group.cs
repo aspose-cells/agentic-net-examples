@@ -1,63 +1,59 @@
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsSubtotalDemo
+class SubtotalBottomDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Add header row
+        cells["A1"].PutValue("Category");
+        cells["B1"].PutValue("Item");
+        cells["C1"].PutValue("Amount");
+
+        // Sample data to be subtotaled
+        object[,] data = new object[,]
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            { "A", "Item1", 100 },
+            { "A", "Item2", 150 },
+            { "B", "Item3", 200 },
+            { "B", "Item4", 250 },
+            { "A", "Item5", 120 }
+        };
 
-            // Sample data header
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Item");
-            cells["C1"].PutValue("Amount");
-
-            // Sample data rows
-            object[,] data = new object[,]
-            {
-                { "Fruit", "Apple", 120 },
-                { "Fruit", "Banana", 80 },
-                { "Fruit", "Orange", 150 },
-                { "Vegetable", "Carrot", 60 },
-                { "Vegetable", "Potato", 90 },
-                { "Vegetable", "Tomato", 110 }
-            };
-
-            // Populate the worksheet starting from row 2 (zero‑based index 1)
-            for (int r = 0; r < data.GetLength(0); r++)
-                for (int c = 0; c < data.GetLength(1); c++)
-                    cells[r + 1, c].PutValue(data[r, c]);
-
-            // Define the range that contains the data (including header)
-            CellArea area = CellArea.CreateCellArea("A1", "C7");
-
-            // Apply subtotals:
-            // - Group by the first column (Category) -> index 0
-            // - Use SUM function
-            // - Subtotal the third column (Amount) -> index 2
-            // - Replace existing subtotals: false
-            // - Add page breaks between groups: false
-            // - Place summary rows below the data: true (bottom)
-            cells.Subtotal(
-                area,
-                0,                                 // groupBy column index
-                ConsolidationFunction.Sum,         // subtotal function
-                new int[] { 2 },                   // columns to subtotal
-                false,                             // replace existing subtotals
-                false,                             // page breaks between groups
-                true                               // summaryBelowData (bottom)
-            );
-
-            // Ensure the outline also positions summary rows below detail rows
-            worksheet.Outline.SummaryRowBelow = true;
-
-            // Save the workbook
-            workbook.Save("SubtotalBottomPosition.xlsx");
+        // Populate the worksheet with the sample data (starting from row 2)
+        for (int i = 0; i < data.GetLength(0); i++)
+        {
+            cells[i + 1, 0].PutValue(data[i, 0]); // Category
+            cells[i + 1, 1].PutValue(data[i, 1]); // Item
+            cells[i + 1, 2].PutValue(data[i, 2]); // Amount
         }
+
+        // Define the cell area that includes the header and all data rows (A1:C6)
+        CellArea area = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = data.GetLength(0), // 5 data rows + header = row index 5
+            EndColumn = 2
+        };
+
+        // Apply subtotals:
+        // - Group by the first column (Category) -> index 0
+        // - Use SUM function on the third column (Amount) -> index 2
+        // - Replace existing subtotals (true)
+        // - Do not insert page breaks (false)
+        // - Place summary rows below the data (true)
+        cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 }, true, false, true);
+
+        // Ensure the outline setting also places summary rows below the detail rows
+        sheet.Outline.SummaryRowBelow = true;
+
+        // Save the workbook to a file
+        workbook.Save("SubtotalBottomDemo.xlsx");
     }
 }

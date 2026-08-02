@@ -6,34 +6,38 @@ class RemoveExternalConnectionByDescription
 {
     static void Main()
     {
-        // Path to the workbook that contains external connections
-        string inputPath = "InputWorkbook.xlsx";
-        // Path where the modified workbook will be saved
-        string outputPath = "OutputWorkbook.xlsx";
-        // Description value of the connection to be removed
-        string targetDescription = "Obsolete connection";
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook
-        Workbook workbook = new Workbook(inputPath);
+        // Description of the external connection to be removed
+        string targetDescription = "Target connection description";
 
         // Get the collection of external connections
         ExternalConnectionCollection connections = workbook.DataConnections;
 
-        // Iterate backwards so that removal does not affect the loop index
-        for (int i = connections.Count - 1; i >= 0; i--)
+        // Find the index of the connection with the specified description
+        int indexToRemove = -1;
+        for (int i = 0; i < connections.Count; i++)
         {
-            ExternalConnection conn = connections[i];
-            // Check the ConnectionDescription property
-            if (conn.ConnectionDescription == targetDescription)
+            if (connections[i].ConnectionDescription == targetDescription)
             {
-                // Remove the connection at the found index
-                connections.RemoveAt(i);
-                Console.WriteLine($"Removed connection with description: \"{targetDescription}\" at index {i}");
+                indexToRemove = i;
+                break;
             }
         }
 
+        // Remove the connection if it was found
+        if (indexToRemove >= 0)
+        {
+            connections.RemoveAt(indexToRemove);
+            Console.WriteLine($"Removed external connection with description: \"{targetDescription}\"");
+        }
+        else
+        {
+            Console.WriteLine($"No external connection found with description: \"{targetDescription}\"");
+        }
+
         // Save the modified workbook
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to \"{outputPath}\"");
+        workbook.Save("output.xlsx");
     }
 }

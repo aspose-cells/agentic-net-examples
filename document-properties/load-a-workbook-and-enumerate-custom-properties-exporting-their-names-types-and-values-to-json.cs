@@ -9,19 +9,19 @@ class ExportCustomPropertiesToJson
 {
     static void Main()
     {
-        // Path to the Excel workbook to be processed
+        // Path to the existing workbook
         string workbookPath = "input.xlsx";
 
-        // Load the workbook from the specified file
+        // Load the workbook from file
         Workbook workbook = new Workbook(workbookPath);
 
         // Prepare a list to hold property information
         var properties = new List<object>();
 
-        // Enumerate all custom document properties
+        // Enumerate custom document properties
         foreach (DocumentProperty prop in workbook.CustomDocumentProperties)
         {
-            // Capture name, type (as string), and value of each property
+            // Capture name, type, and value of each property
             properties.Add(new
             {
                 Name = prop.Name,
@@ -30,13 +30,13 @@ class ExportCustomPropertiesToJson
             });
         }
 
-        // Serialize the list to JSON with indentation for readability
+        // Serialize the list to JSON with indentation
         string json = JsonSerializer.Serialize(properties, new JsonSerializerOptions { WriteIndented = true });
 
-        // Write the JSON output to a file
-        string outputPath = "customProperties.json";
-        File.WriteAllText(outputPath, json);
+        // Write JSON to a file
+        string jsonPath = "customProperties.json";
+        File.WriteAllText(jsonPath, json);
 
-        Console.WriteLine($"Custom properties exported to {outputPath}");
+        Console.WriteLine($"Custom properties exported to {jsonPath}");
     }
 }

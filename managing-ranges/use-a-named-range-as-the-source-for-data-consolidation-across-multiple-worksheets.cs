@@ -1,97 +1,82 @@
+// Title: Consolidate Data from Multiple Worksheets into a Pivot Table Using Named Ranges – Aspose.Cells for .NET
+// Description: This example creates a workbook with two sheets, defines named ranges (Data1, Data2) that point to each sheet's A1:B4 area, and builds a single pivot table on Sheet1 using those ranges as the source. The pivot groups by "Category" and sums "Value", then saves the file as ConsolidatedPivot.xlsx.
+// Keywords: Aspose.Cells | C# | named range | pivot table | multiple worksheets | data consolidation | Excel automation | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells named range pivot source | consolidate worksheets into one pivot table .NET | use named ranges for pivot table Aspose | pivot table from multiple sheets Aspose.Cells | C# Aspose.Cells data consolidation example
+// Developer Intent: Generate a pivot table that pulls data from several worksheets by referencing named ranges.
+// Use Cases: Merge regional sales sheets into a single pivot report using named ranges. | Create a financial summary that aggregates quarterly figures stored on separate tabs. | Build an inventory dashboard that consolidates stock counts from multiple department sheets.
+// AI Prompts: Add more named ranges to the source array for the consolidated pivot table in Aspose.Cells. | Change the pivot calculation from Sum to Average for the "Value" field using Aspose.Cells. | Show how to refresh the consolidated pivot after modifying the source worksheets.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsConsolidationDemo
+// This example creates a workbook with two sheets, defines named ranges (Data1, Data2) that point to each sheet's A1:B4 area, and builds a single pivot table on Sheet1 using those ranges as the source. The pivot groups by "Category" and sums "Value", then saves the file as ConsolidatedPivot.xlsx.
+class ConsolidateUsingNamedRanges
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-                // -------------------------------------------------
-                // Worksheet 1 – fill sample data and create a name
-                // -------------------------------------------------
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "SalesQ1";
+            // ---------- Worksheet 1 ----------
+            Worksheet ws1 = wb.Worksheets[0];
+            ws1.Name = "Sheet1";
 
-                // Header
-                sheet1.Cells["A1"].PutValue("Product");
-                sheet1.Cells["B1"].PutValue("Units");
+            // Populate data in Sheet1
+            ws1.Cells["A1"].PutValue("Category");
+            ws1.Cells["B1"].PutValue("Value");
+            ws1.Cells["A2"].PutValue("A");
+            ws1.Cells["B2"].PutValue(10);
+            ws1.Cells["A3"].PutValue("B");
+            ws1.Cells["B3"].PutValue(20);
+            ws1.Cells["A4"].PutValue("C");
+            ws1.Cells["B4"].PutValue(30);
 
-                // Data
-                sheet1.Cells["A2"].PutValue("Apple");
-                sheet1.Cells["B2"].PutValue(120);
-                sheet1.Cells["A3"].PutValue("Banana");
-                sheet1.Cells["B3"].PutValue(85);
-                sheet1.Cells["A4"].PutValue("Cherry");
-                sheet1.Cells["B4"].PutValue(60);
+            // ---------- Worksheet 2 ----------
+            Worksheet ws2 = wb.Worksheets.Add("Sheet2");
 
-                // Define a named range that covers the data (including header)
-                int nameIdx1 = workbook.Worksheets.Names.Add("Q1Data");
-                Name q1Name = workbook.Worksheets.Names[nameIdx1];
-                q1Name.RefersTo = "=SalesQ1!$A$1:$B$4";
+            // Populate data in Sheet2
+            ws2.Cells["A1"].PutValue("Category");
+            ws2.Cells["B1"].PutValue("Value");
+            ws2.Cells["A2"].PutValue("A");
+            ws2.Cells["B2"].PutValue(15);
+            ws2.Cells["A3"].PutValue("B");
+            ws2.Cells["B3"].PutValue(25);
+            ws2.Cells["A4"].PutValue("C");
+            ws2.Cells["B4"].PutValue(35);
 
-                // -------------------------------------------------
-                // Worksheet 2 – fill sample data and create a name
-                // -------------------------------------------------
-                Worksheet sheet2 = workbook.Worksheets.Add("SalesQ2");
+            // ---------- Create Named Ranges ----------
+            // Named range "Data1" refers to Sheet1!A1:B4
+            int nameIdx1 = wb.Worksheets.Names.Add("Data1");
+            wb.Worksheets.Names[nameIdx1].RefersTo = "=Sheet1!$A$1:$B$4";
 
-                // Header
-                sheet2.Cells["A1"].PutValue("Product");
-                sheet2.Cells["B1"].PutValue("Units");
+            // Named range "Data2" refers to Sheet2!A1:B4
+            int nameIdx2 = wb.Worksheets.Names.Add("Data2");
+            wb.Worksheets.Names[nameIdx2].RefersTo = "=Sheet2!$A$1:$B$4";
 
-                // Data
-                sheet2.Cells["A2"].PutValue("Apple");
-                sheet2.Cells["B2"].PutValue(150);
-                sheet2.Cells["A3"].PutValue("Banana");
-                sheet2.Cells["B3"].PutValue(95);
-                sheet2.Cells["A4"].PutValue("Cherry");
-                sheet2.Cells["B4"].PutValue(70);
+            // Retrieve the address strings (without the leading '=') for use as source data
+            string range1 = wb.Worksheets.Names["Data1"].RefersTo.TrimStart('=');
+            string range2 = wb.Worksheets.Names["Data2"].RefersTo.TrimStart('=');
+            string[] sourceData = new string[] { range1, range2 };
 
-                // Define a named range for the second sheet
-                int nameIdx2 = workbook.Worksheets.Names.Add("Q2Data");
-                Name q2Name = workbook.Worksheets.Names[nameIdx2];
-                q2Name.RefersTo = "=SalesQ2!$A$1:$B$4";
+            // ---------- Create Pivot Table Using Consolidated Ranges ----------
+            // Destination cell D3 corresponds to row index 2, column index 3 (zero‑based)
+            PivotTableCollection pivots = ws1.PivotTables;
+            int pivotIdx = pivots.Add(sourceData, false, null, 2, 3, "ConsolidatedPivot");
+            PivotTable pivot = pivots[pivotIdx];
 
-                // -------------------------------------------------
-                // Use the named ranges as source for consolidation
-                // -------------------------------------------------
-                // Build a single source string for consolidation (comma‑separated ranges)
-                string consolidationSource = $"{q1Name.RefersTo.TrimStart('=')},{q2Name.RefersTo.TrimStart('=')}";
+            // Configure pivot fields: Category as row field, Value as data field (sum)
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
 
-                // Destination cell for the consolidated pivot table (E5)
-                int destRow = 4;      // zero‑based row index
-                int destColumn = 4;   // zero‑based column index
-                string destCell = CellsHelper.CellIndexToName(destRow, destColumn);
-
-                // Add the pivot table using the consolidation source string
-                PivotTableCollection pivots = sheet1.PivotTables;
-                int pivotIdx = pivots.Add(consolidationSource, destRow, destColumn, destCell);
-
-                PivotTable pivot = pivots[pivotIdx];
-                pivot.Name = "ConsolidatedPivot";
-
-                // Configure the pivot fields
-                pivot.AddFieldToArea(PivotFieldType.Row, "Product");   // Row field – Product
-                pivot.AddFieldToArea(PivotFieldType.Data, "Units");    // Data field – Units (sum)
-
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ConsolidatedPivotDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // ---------- Save Workbook ----------
+            wb.Save("ConsolidatedPivot.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

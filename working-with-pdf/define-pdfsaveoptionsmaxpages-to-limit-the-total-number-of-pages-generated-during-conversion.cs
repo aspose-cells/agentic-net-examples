@@ -5,16 +5,24 @@ class Program
 {
     static void Main()
     {
-        // Load an existing Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook and add some data to generate multiple pages
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        for (int i = 0; i < 500; i++)
+        {
+            sheet.Cells[i, 0].Value = $"Row {i + 1}";
+        }
 
-        // Create PDF save options
+        // Initialize PDF save options
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Limit the conversion to a maximum of 5 pages
-        pdfOptions.PageCount = 5; // Equivalent to a MaxPages setting
+        // Limit the total number of pages saved.
+        // The Aspose.Cells API provides the PageCount property for this purpose.
+        // There is no MaxPages property in the current version.
+        pdfOptions.PageCount = 5; // Save only the first 5 pages
 
-        // Save the workbook to PDF using the configured options
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the workbook as PDF with the page limitation applied
+        workbook.Save("LimitedPagesOutput.pdf", pdfOptions);
     }
 }
+// Author: Aspose.Cells .NET example – limits PDF output to a maximum number of pages.

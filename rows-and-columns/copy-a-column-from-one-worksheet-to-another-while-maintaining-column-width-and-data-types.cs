@@ -3,46 +3,41 @@ using Aspose.Cells;
 
 namespace AsposeCellsColumnCopyDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
         {
-            // ---------- Create source workbook and populate a column ----------
+            // Create source workbook and populate a column with various data types
             Workbook srcWorkbook = new Workbook();
             Worksheet srcSheet = srcWorkbook.Worksheets[0];
+            Cells srcCells = srcSheet.Cells;
 
-            // Set column width (in characters) for column A
-            srcSheet.Cells.SetColumnWidth(0, 25); // 25 characters wide
+            // Sample data in column B (index 1)
+            srcCells[0, 1].PutValue(123);          // Integer
+            srcCells[1, 1].PutValue(45.67);        // Double
+            srcCells[2, 1].PutValue(true);         // Boolean
+            srcCells[3, 1].PutValue(DateTime.Now); // DateTime
+            srcCells[4, 1].PutValue("Text value"); // String
 
-            // Populate different data types in column A
-            srcSheet.Cells["A1"].PutValue("Text");                     // string
-            srcSheet.Cells["A2"].PutValue(12345);                     // integer
-            srcSheet.Cells["A3"].PutValue(123.456);                   // double
-            srcSheet.Cells["A4"].PutValue(DateTime.Now);              // DateTime
-            srcSheet.Cells["A5"].PutValue(true);                      // boolean
+            // Set column width (in characters) for the source column
+            srcSheet.Cells.SetColumnWidth(1, 25); // 25 characters wide
 
-            // ---------- Create destination workbook ----------
+            // Create destination workbook (empty)
             Workbook destWorkbook = new Workbook();
             Worksheet destSheet = destWorkbook.Worksheets[0];
+            Cells destCells = destSheet.Cells;
 
-            // ---------- Prepare paste options ----------
-            PasteOptions pasteOptions = new PasteOptions
-            {
-                // Copy everything (values, formats, column widths, etc.)
-                PasteType = PasteType.All
-            };
+            // Copy the entire column (data + formats) from source to destination
+            // Parameters: source cells, source column index, destination column index
+            destCells.CopyColumn(srcCells, 1, 0); // Copy source column B to destination column A
 
-            // ---------- Copy the column ----------
-            // Parameters: sourceCells, sourceColumnIndex, destinationColumnIndex, columnNumber, pasteOptions
-            destSheet.Cells.CopyColumns(
-                srcSheet.Cells,   // source cells
-                0,                // source column index (A)
-                0,                // destination column index (A)
-                1,                // number of columns to copy
-                pasteOptions);   // paste options
+            // Preserve the column width by copying the width value explicitly
+            double srcColumnWidth = srcSheet.Cells.GetColumnWidth(1);
+            destSheet.Cells.SetColumnWidth(0, srcColumnWidth);
 
-            // ---------- Save the destination workbook ----------
-            destWorkbook.Save("ColumnCopyResult.xlsx");
+            // Save the result workbook
+            destWorkbook.Save("ColumnCopyWithWidth.xlsx", SaveFormat.Xlsx);
         }
     }
 }

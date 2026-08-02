@@ -2,53 +2,43 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsRichTextReplaceDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    // Demonstrates replacing a portion of rich‑text in a cell using Cell.SetCharacters
+    class ReplaceRichTextPortionDemo
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access cell A1 and set initial rich text
-            Cell cell = worksheet.Cells["A1"];
-            cell.Value = "Hello World";
+            // 2. Access a cell and set an initial rich‑text value
+            Cell cell = sheet.Cells["A1"];
+            cell.Value = "Hello World!";
 
-            // Apply formatting to the first part "Hello"
-            FontSetting helloSetting = cell.Characters(0, 5);
-            helloSetting.Font.IsBold = true;
-            helloSetting.Font.Color = Color.Red;
+            // 3. Define the new text that will replace the original portion ("World")
+            string newPortion = "Aspose";
 
-            // Apply formatting to the second part "World"
-            FontSetting worldSetting = cell.Characters(6, 5);
-            worldSetting.Font.IsItalic = true;
-            worldSetting.Font.Color = Color.Blue;
+            // 4. Build the final string for the cell (replace "World" with "Aspose")
+            //    Original: "Hello World!"
+            //    Result:   "Hello Aspose!"
+            string finalText = cell.StringValue.Replace("World", newPortion);
+            cell.Value = finalText; // update cell content
 
-            // ----- Replace "World" with "Aspose" using SetCharacters -----
-            // New text for the cell
-            string newText = "Hello Aspose";
-            cell.Value = newText;
+            // 5. Create a FontSetting for the replaced portion to preserve formatting
+            //    The replaced text starts at index 6 (after "Hello ") and has length equal to newPortion.Length
+            FontSetting replacedSetting = new FontSetting(6, newPortion.Length, workbook.Worksheets);
+            // Example formatting: make the new portion bold and blue
+            replacedSetting.Font.IsBold = true;
+            replacedSetting.Font.Color = Color.Blue;
 
-            // Create new FontSetting array reflecting the new text portions
-            FontSetting[] newSettings = new FontSetting[2];
+            // 6. Apply the FontSetting array to the cell using SetCharacters
+            FontSetting[] settings = new FontSetting[] { replacedSetting };
+            cell.SetCharacters(settings);
 
-            // Keep the original formatting for "Hello"
-            newSettings[0] = new FontSetting(0, 5, workbook.Worksheets);
-            newSettings[0].Font.IsBold = true;
-            newSettings[0].Font.Color = Color.Red;
-
-            // Apply formatting for the new word "Aspose"
-            newSettings[1] = new FontSetting(6, 6, workbook.Worksheets); // "Aspose" length is 6
-            newSettings[1].Font.IsItalic = true;
-            newSettings[1].Font.Color = Color.Blue;
-
-            // Set the new character formatting to the cell
-            cell.SetCharacters(newSettings);
-
-            // Save the workbook
-            workbook.Save("RichTextReplaceDemo.xlsx");
+            // 7. Save the workbook (output file)
+            workbook.Save("ReplaceRichTextPortionDemo.xlsx");
         }
     }
 }

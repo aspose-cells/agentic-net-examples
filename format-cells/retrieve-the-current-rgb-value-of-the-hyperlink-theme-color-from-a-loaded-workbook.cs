@@ -2,20 +2,20 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsHyperlinkThemeColorDemo
+class RetrieveHyperlinkThemeColor
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Retrieve the theme color for Hyperlink
-            Color hyperlinkColor = workbook.GetThemeColor(ThemeColorType.Hyperlink);
+        // Retrieve the theme color for Hyperlink
+        Color hyperlinkColor = workbook.GetThemeColor(ThemeColorType.Hyperlink);
 
-            // Output the RGB components of the retrieved color
-            Console.WriteLine($"Hyperlink Theme Color - A:{hyperlinkColor.A}, R:{hyperlinkColor.R}, G:{hyperlinkColor.G}, B:{hyperlinkColor.B}");
-        }
+        // Display the RGB components of the Hyperlink theme color
+        Console.WriteLine($"Hyperlink Theme Color - R:{hyperlinkColor.R}, G:{hyperlinkColor.G}, B:{hyperlinkColor.B}");
+
+        // Save the workbook (no modifications made, just to follow lifecycle rules)
+        workbook.Save("output.xlsx");
     }
 }

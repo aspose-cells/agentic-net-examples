@@ -11,45 +11,37 @@ namespace AsposeCellsChartStyleDemo
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B4"].PutValue(30);
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
+                // Add a column chart
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIdx];
 
                 // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", false);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Apply the predefined built‑in chart style #20 (Style20)
-                // Chart.Style expects an integer between 1 and 48.
+                // Apply the predefined built‑in chart style #20 (valid values 1‑48)
                 chart.Style = 20;
 
                 // Define output file path
                 string outputPath = "ChartWithStyle20.xlsx";
 
-                // Ensure the directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook with the styled chart
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
@@ -58,7 +50,7 @@ namespace AsposeCellsChartStyleDemo
         }
     }
 
-    // Entry point for the application
+    // Entry point required for console application
     public class Program
     {
         public static void Main(string[] args)

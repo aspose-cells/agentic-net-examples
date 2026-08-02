@@ -1,71 +1,67 @@
+// Title: Update external workbook links after moving files – Aspose.Cells for .NET example
+// Description: Demonstrates how to create an external workbook, reference it from a main workbook, move the source file, change the ExternalLink.DataSource, refresh linked data with UpdateLinkedDataSource, and recalculate formulas to verify the new value.
+// Keywords: Aspose.Cells external link update | change external workbook path .NET | Refresh linked formulas Aspose.Cells | UpdateLinkedDataSource example | ExternalLink.DataSource C#
+// Common Searches: how to change external link path in Aspose.Cells | refresh formulas after moving Excel file Aspose | update external workbook reference .NET | Aspose.Cells recalculate after external file rename | C# example for updating external workbook links
+// Developer Intent: Confirm that formulas referencing an external workbook continue to return correct values after the source file location is changed.
+// Use Cases: Modify ExternalLink.DataSource to point to a new file location. | Call UpdateLinkedDataSource to reload data from the moved workbook. | Recalculate formulas to ensure linked cells reflect the updated source.
+// AI Prompts: Show C# code that changes the data source of an external link in Aspose.Cells and refreshes linked formulas. | Provide a step‑by‑step example verifying that a formula referencing an external workbook returns the correct value after the source file is moved. | Explain how UpdateLinkedDataSource works with multiple external workbooks in Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ExternalLinkUpdateDemo
+// Demonstrates how to create an external workbook, reference it from a main workbook, move the source file, change the ExternalLink.DataSource, refresh linked data with UpdateLinkedDataSource, and recalculate formulas to verify the new value.
+class VerifyExternalLinkUpdate
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // -----------------------------------------------------------------
-            // Step 1: Create the original external workbook (ExternalOld.xlsx)
-            // -----------------------------------------------------------------
-            Workbook externalOld = new Workbook();
-            Worksheet extOldSheet = externalOld.Worksheets[0];
-            extOldSheet.Name = "Sheet1";
-            extOldSheet.Cells["A1"].PutValue("Old Value");
-            externalOld.Save("ExternalOld.xlsx");
+        // ------------------------------------------------------------
+        // 1. Create an external workbook and write a value to A1
+        // ------------------------------------------------------------
+        Workbook externalWb = new Workbook();
+        externalWb.Worksheets[0].Cells["A1"].PutValue("Original Value");
+        string originalPath = Path.Combine(Directory.GetCurrentDirectory(), "ExternalOriginal.xlsx");
+        externalWb.Save(originalPath); // save rule
 
-            // -----------------------------------------------------------------
-            // Step 2: Create the main workbook that references the external file
-            // -----------------------------------------------------------------
-            Workbook mainWorkbook = new Workbook();
-            Worksheet mainSheet = mainWorkbook.Worksheets[0];
-            // Formula points to the old external workbook
-            mainSheet.Cells["A1"].Formula = "=[ExternalOld.xlsx]Sheet1!A1";
+        // ------------------------------------------------------------
+        // 2. Create the main workbook that references the external file
+        // ------------------------------------------------------------
+        Workbook mainWb = new Workbook();
+        Worksheet mainSheet = mainWb.Worksheets[0];
 
-            // Ensure the external link is registered (Aspose does this automatically)
-            Console.WriteLine("Initial external link count: " + mainWorkbook.Worksheets.ExternalLinks.Count);
+        // Formula that points to the external workbook (file name only)
+        mainSheet.Cells["A1"].Formula = $"='[{Path.GetFileName(originalPath)}]Sheet1'!A1";
 
-            // -----------------------------------------------------------------
-            // Step 3: Change the external link path to a new file (ExternalNew.xlsx)
-            // -----------------------------------------------------------------
-            // Create the new external workbook with updated data
-            Workbook externalNew = new Workbook();
-            Worksheet extNewSheet = externalNew.Worksheets[0];
-            extNewSheet.Name = "Sheet1";
-            extNewSheet.Cells["A1"].PutValue("New Value");
-            externalNew.Save("ExternalNew.xlsx");
+        // Register the external link so Aspose knows where to look for the source file
+        mainWb.Worksheets.ExternalLinks.Add(originalPath, new string[] { "Sheet1" });
 
-            // Update the DataSource of the existing external link to point to the new file
-            if (mainWorkbook.Worksheets.ExternalLinks.Count > 0)
-            {
-                ExternalLink link = mainWorkbook.Worksheets.ExternalLinks[0];
-                // Optionally also update OriginalDataSource for completeness
-                link.OriginalDataSource = link.OriginalDataSource?.Replace("ExternalOld.xlsx", "ExternalNew.xlsx");
-                link.DataSource = "ExternalNew.xlsx";
-                Console.WriteLine("External link updated to: " + link.DataSource);
-            }
+        // Calculate to obtain the initial value from the original external workbook
+        mainWb.CalculateFormula();
+        Console.WriteLine("Initial value: " + mainSheet.Cells["A1"].StringValue);
 
-            // -----------------------------------------------------------------
-            // Step 4: Refresh the linked data source and recalculate formulas
-            // -----------------------------------------------------------------
-            // Provide the new external workbook to UpdateLinkedDataSource
-            mainWorkbook.UpdateLinkedDataSource(new Workbook[] { externalNew });
+        // ------------------------------------------------------------
+        // 3. Simulate moving the external workbook to a new location
+        // ------------------------------------------------------------
+        string newPath = Path.Combine(Directory.GetCurrentDirectory(), "ExternalNew.xlsx");
+        externalWb.Save(newPath); // save the same content under a new name
 
-            // Recalculate formulas so that A1 reflects the new external value
-            mainWorkbook.CalculateFormula();
+        // Update the external link's data source to point to the new file location
+        ExternalLink extLink = mainWb.Worksheets.ExternalLinks[0];
+        extLink.DataSource = newPath; // change path
 
-            // -----------------------------------------------------------------
-            // Step 5: Verify the updated value
-            // -----------------------------------------------------------------
-            string updatedValue = mainSheet.Cells["A1"].StringValue;
-            Console.WriteLine("Updated value in main workbook cell A1: " + updatedValue);
+        // Load the new external workbook instance
+        Workbook newExternalWb = new Workbook(newPath);
 
-            // -----------------------------------------------------------------
-            // Step 6: Save the main workbook (optional)
-            // -----------------------------------------------------------------
-            mainWorkbook.Save("MainWorkbook_Updated.xlsx");
-        }
+        // Tell the main workbook to refresh its external data from the new source
+        mainWb.UpdateLinkedDataSource(new Workbook[] { newExternalWb });
+
+        // Recalculate formulas after the link update
+        mainWb.CalculateFormula();
+        Console.WriteLine("Updated value after path change: " + mainSheet.Cells["A1"].StringValue);
+
+        // ------------------------------------------------------------
+        // 4. Save the main workbook (demonstrates the save rule)
+        // ------------------------------------------------------------
+        mainWb.Save("MainWorkbookResult.xlsx");
     }
 }

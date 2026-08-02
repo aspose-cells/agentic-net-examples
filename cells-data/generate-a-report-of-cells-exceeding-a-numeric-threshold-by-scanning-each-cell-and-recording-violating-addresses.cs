@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
@@ -6,32 +7,28 @@ class ThresholdReport
 {
     static void Main()
     {
-        // Load the source workbook (replace with actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
-        Worksheet sourceSheet = workbook.Worksheets[0];
+
+        // Work with the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Define the numeric threshold
         double threshold = 100.0;
 
-        // List to hold addresses of cells that exceed the threshold
+        // List to store addresses of cells that exceed the threshold
         List<string> violatingAddresses = new List<string>();
 
-        // Determine the used range of the worksheet
-        int maxRow = sourceSheet.Cells.MaxDataRow;
-        int maxCol = sourceSheet.Cells.MaxDataColumn;
-
-        // Scan each cell within the used range
-        for (int row = 0; row <= maxRow; row++)
+        // Enumerate all cells in the worksheet
+        IEnumerator enumerator = worksheet.Cells.GetEnumerator();
+        while (enumerator.MoveNext())
         {
-            for (int col = 0; col <= maxCol; col++)
-            {
-                Cell cell = sourceSheet.Cells[row, col];
+            Cell cell = (Cell)enumerator.Current;
 
-                // Check if the cell contains a numeric value greater than the threshold
-                if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue > threshold)
-                {
-                    violatingAddresses.Add(cell.Name);
-                }
+            // Check if the cell contains a numeric value and exceeds the threshold
+            if (cell.IsNumericValue && cell.DoubleValue > threshold)
+            {
+                violatingAddresses.Add(cell.Name); // Store the cell address (e.g., "B5")
             }
         }
 
@@ -40,18 +37,13 @@ class ThresholdReport
         Worksheet reportSheet = workbook.Worksheets[reportIndex];
         reportSheet.Name = "ThresholdReport";
 
-        // Write header row
-        reportSheet.Cells[0, 0].PutValue("Cell Address");
-        reportSheet.Cells[0, 1].PutValue("Value");
+        // Write header
+        reportSheet.Cells[0, 0].PutValue($"Cells exceeding threshold {threshold}");
 
-        // Populate the report with violating cell information
+        // Write each violating address into the report sheet
         for (int i = 0; i < violatingAddresses.Count; i++)
         {
-            string address = violatingAddresses[i];
-            Cell srcCell = sourceSheet.Cells[address];
-
-            reportSheet.Cells[i + 1, 0].PutValue(address);
-            reportSheet.Cells[i + 1, 1].PutValue(srcCell.DoubleValue);
+            reportSheet.Cells[i + 1, 0].PutValue(violatingAddresses[i]);
         }
 
         // Save the workbook with the report

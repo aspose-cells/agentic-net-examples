@@ -1,30 +1,59 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportXmlExample
+namespace AsposeCellsExamples
 {
-    class Program
+    public class ExportXmlMapDemo
     {
-        static void Main()
+        public static void Main()
         {
-            // Load an existing workbook that contains an XML map
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
-
-            // Ensure that at least one XML map is present
-            if (workbook.Worksheets.XmlMaps.Count > 0)
+            try
             {
-                // Retrieve the first XML map
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
-
-                // Export the XML data linked by this map to a separate file
-                // This preserves the original schema structure defined in the map
-                workbook.ExportXml(xmlMap.Name, "ExportedData.xml");
-
-                Console.WriteLine("XML data exported successfully to ExportedData.xml");
+                Run();
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No XML maps found in the workbook.");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "exported.xml";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook that contains XML maps
+                Workbook workbook = new Workbook(inputPath);
+
+                // Ensure that at least one XML map is present
+                if (workbook.Worksheets.XmlMaps.Count > 0)
+                {
+                    // Get the first XML map (or select by name/index as needed)
+                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
+
+                    // Export the XML data linked to this map
+                    workbook.ExportXml(xmlMap.Name, outputPath);
+
+                    Console.WriteLine($"XML map '{xmlMap.Name}' exported successfully to '{outputPath}'.");
+                }
+                else
+                {
+                    Console.WriteLine("No XML maps found in the workbook.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
         }
     }

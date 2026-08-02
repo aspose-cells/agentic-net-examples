@@ -1,17 +1,28 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace RemoveAllPivotTables
 {
-    static void Main(string[] args)
+    class Program
     {
-        // Load the workbook from a file (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main(string[] args)
+        {
+            // Path to the source workbook (replace with your actual file path)
+            string inputPath = "input.xlsx";
 
-        // Remove all pivot tables from every worksheet in the workbook
-        workbook.Worksheets.ClearPivottables();
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook to a new file (replace with desired output path)
-        workbook.Save("output.xlsx");
+            // Remove all pivot tables from every worksheet in the workbook
+            workbook.Worksheets.ClearPivottables();
+
+            // Path to save the modified workbook (replace with desired output path)
+            string outputPath = "output_without_pivots.xlsx";
+
+            // Save the workbook after clearing pivot tables
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine("All pivot tables have been removed and the workbook saved to: " + outputPath);
+        }
     }
 }

@@ -2,19 +2,16 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class RefreshPivotAfterLoad
+class Program
 {
     static void Main()
     {
-        // Path to the source workbook
-        string sourcePath = "input.xlsx";
-
-        // Create load options and enable parsing of pivot cached records
+        // Define load options and enable parsing of pivot cached records
         LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
         loadOptions.ParsingPivotCachedRecords = true;
 
         // Load the workbook with the specified options
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
         // Refresh all pivot tables in the workbook
         workbook.Worksheets.RefreshPivotTables();

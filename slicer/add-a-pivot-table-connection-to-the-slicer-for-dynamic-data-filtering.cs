@@ -13,33 +13,27 @@ class Program
 
         // Populate sample data for the pivot table
         cells["A1"].Value = "Category";
-        cells["B1"].Value = "Product";
-        cells["C1"].Value = "Sales";
-
-        cells["A2"].Value = "Electronics";
-        cells["B2"].Value = "Laptop";
-        cells["C2"].Value = 1200;
-
-        cells["A3"].Value = "Electronics";
-        cells["B3"].Value = "Phone";
-        cells["C3"].Value = 800;
-
-        cells["A4"].Value = "Furniture";
-        cells["B4"].Value = "Chair";
-        cells["C4"].Value = 150;
+        cells["B1"].Value = "Amount";
+        cells["A2"].Value = "A";
+        cells["B2"].Value = 10;
+        cells["A3"].Value = "B";
+        cells["B3"].Value = 20;
+        cells["A4"].Value = "A";
+        cells["B4"].Value = 30;
+        cells["A5"].Value = "B";
+        cells["B5"].Value = 40;
 
         // Add a pivot table based on the data range
-        PivotTableCollection pivotTables = sheet.PivotTables;
-        int pivotIndex = pivotTables.Add("A1:C4", "E1", "SalesPivot");
-        PivotTable pivot = pivotTables[pivotIndex];
+        PivotTableCollection pivots = sheet.PivotTables;
+        int pivotIndex = pivots.Add("A1:B5", "D2", "MyPivotTable");
+        PivotTable pivot = pivots[pivotIndex];
         pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
         pivot.RefreshData();
         pivot.CalculateData();
 
-        // Add a slicer for the "Category" field (placed at cell F1 -> row 0, column 5)
-        int slicerIndex = sheet.Slicers.Add(pivot, 0, 5, "Category");
+        // Add a slicer linked to the "Category" field of the pivot table
+        int slicerIndex = sheet.Slicers.Add(pivot, "F2", "Category");
         Slicer slicer = sheet.Slicers[slicerIndex];
 
         // Connect the slicer to the pivot table for dynamic filtering

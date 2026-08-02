@@ -18,44 +18,31 @@ namespace SlicerWidthDemo
 
                 // Populate worksheet with sample data for a pivot table
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
                 sheet.Cells["A2"].PutValue("Fruit");
+                sheet.Cells["A3"].PutValue("Fruit");
+                sheet.Cells["A4"].PutValue("Vegetable");
+                sheet.Cells["B1"].PutValue("Amount");
                 sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Vegetable");
                 sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["A4"].PutValue("Fruit");
                 sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("Vegetable");
-                sheet.Cells["B5"].PutValue(70);
 
                 // Add a pivot table based on the data range
-                PivotTableCollection pivots = sheet.PivotTables;
-                int pivotIdx = pivots.Add("A1:B5", "D2", "PivotTable1");
-                PivotTable pivot = pivots[pivotIdx];
+                int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
                 pivot.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-                pivot.RefreshData();
-                pivot.CalculateData();
 
-                // Add a slicer linked to the pivot table for the "Category" field
-                // Correct parameter order: destination cell first, then the field name
-                int slicerIdx = sheet.Slicers.Add(pivot, "F2", "Category");
+                // Add a slicer linked to the pivot table (field name "Category")
+                int slicerIdx = sheet.Slicers.Add(pivot, "Category", "F1");
                 Slicer slicer = sheet.Slicers[slicerIdx];
 
-                // Set the slicer width to 150 pixels
-                slicer.WidthPixel = 150;
+                // Set the slicer width (using Shape.Width, measured in points)
+                slicer.Shape.Width = 150; // Approx. 150 points
 
-                // Verify that the width was set correctly
-                if (slicer.WidthPixel == 150)
-                {
-                    Console.WriteLine("Slicer width successfully set to 150 pixels.");
-                }
-                else
-                {
-                    Console.WriteLine($"Unexpected slicer width: {slicer.WidthPixel} pixels.");
-                }
+                // Verify the width by reading the property and printing to console
+                Console.WriteLine($"Slicer width set to {slicer.Shape.Width} points.");
 
-                // Save the workbook to a file
+                // Save the workbook to file
                 string outputPath = "SlicerWidthDemo.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");

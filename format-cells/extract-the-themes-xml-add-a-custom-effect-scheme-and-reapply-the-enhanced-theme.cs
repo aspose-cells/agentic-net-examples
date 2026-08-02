@@ -1,107 +1,88 @@
+// Title: Create and Apply a Custom Effect Scheme with Aspose.Cells for .NET (C#)
+// Description: This example shows how to read the current workbook theme name, define a 12‑color custom effect scheme, replace the existing theme using Aspose.Cells' CustomTheme method, style a cell with an Accent theme color, and save the workbook with the new theme applied.
+// Keywords: Aspose.Cells | C# | .NET | CustomTheme | workbook theme | effect scheme | ThemeColor | Accent1 | Excel theme customization | color palette | cell styling
+// Common Searches: Aspose.Cells apply custom theme colors C# | How to change workbook theme with Aspose.Cells | Create custom effect scheme in Aspose.Cells .NET | Set cell font using ThemeColor Accent1 after custom theme | Retrieve current theme name Aspose.Cells workbook
+// Developer Intent: Define a custom 12‑color effect scheme and apply it as a new theme to an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Replace the default Excel theme with a brand‑specific color palette via CustomTheme. | Demonstrate the new theme by formatting a cell’s font with an Accent theme color. | Generate workbooks that retain the custom theme when opened in Microsoft Excel.
+// AI Prompts: Write C# code that extracts the current theme name from an Aspose.Cells workbook and applies a custom effect scheme using a 12‑color array. | Show how to set a cell’s font color to ThemeColor Accent3 after a custom theme has been applied with Aspose.Cells. | Explain how to access the internal theme XML of an Excel file using Aspose.Cells package parts when the public API does not expose it.
+
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
 namespace AsposeCellsThemeEnhancement
 {
+    // This example shows how to read the current workbook theme name, define a 12‑color custom effect scheme, replace the existing theme using Aspose.Cells' CustomTheme method, style a cell with an Accent theme color, and save the workbook with the new theme applied.
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // lifecycle: create
+
+            // Access the first worksheet for demonstration purposes
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // -----------------------------------------------------------------
+            // Step 1: Extract current theme information
+            // -----------------------------------------------------------------
+            // Aspose.Cells provides the theme name via the Theme property.
+            // Direct access to the theme's XML is not exposed through the API,
+            // so we capture the theme name as the available metadata.
+            string currentThemeName = workbook.Theme;
+            Console.WriteLine("Current theme name: " + currentThemeName);
+
+            // Placeholder: If XML extraction were required, it would involve
+            // accessing the internal theme part of the workbook package.
+            // This is not available via the public API, so we proceed with
+            // enhancing the theme using the supported methods.
+
+            // -----------------------------------------------------------------
+            // Step 2: Define a custom effect scheme (custom colors)
+            // -----------------------------------------------------------------
+            // The CustomTheme method expects an array of 12 colors that map to
+            // the standard theme slots (Background1, Text1, ..., FollowedHyperlink).
+            Color[] customColors = new Color[]
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                Color.FromArgb(255, 255, 255), // Background1 (white)
+                Color.FromArgb(0, 0, 0),       // Text1 (black)
+                Color.FromArgb(240, 240, 240), // Background2 (light gray)
+                Color.FromArgb(80, 80, 80),    // Text2 (dark gray)
+                Color.FromArgb(255, 99, 71),   // Accent1 (tomato)
+                Color.FromArgb(60, 179, 113),  // Accent2 (medium sea green)
+                Color.FromArgb(30, 144, 255),  // Accent3 (dodger blue)
+                Color.FromArgb(255, 215, 0),   // Accent4 (gold)
+                Color.FromArgb(218, 112, 214), // Accent5 (orchid)
+                Color.FromArgb(255, 165, 0),   // Accent6 (orange)
+                Color.FromArgb(0, 0, 255),     // Hyperlink (blue)
+                Color.FromArgb(255, 0, 0)      // FollowedHyperlink (red)
+            };
 
-                // -----------------------------------------------------------------
-                // 1. Extract current theme information (the theme name is accessible)
-                // -----------------------------------------------------------------
-                string originalThemeName = workbook.Theme; // Returns the default theme name
-                Console.WriteLine($"Original Theme: {originalThemeName}");
+            // -----------------------------------------------------------------
+            // Step 3: Apply the custom theme to the workbook
+            // -----------------------------------------------------------------
+            // The CustomTheme method replaces the existing theme with the
+            // provided color scheme while preserving the theme name.
+            workbook.CustomTheme("EnhancedCustomTheme", customColors);
 
-                // -----------------------------------------------------------------
-                // 2. Define a custom effect scheme by adding a WordArt shape with a
-                //    specific text effect. This demonstrates adding a custom effect
-                //    to the workbook.
-                // -----------------------------------------------------------------
-                Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the theme name has been updated
+            Console.WriteLine("New theme name after customization: " + workbook.Theme);
 
-                // Add a WordArt shape (TextEffect) to the worksheet
-                // Parameters: preset, text, font name, font size, bold, italic,
-                // upperLeftRow, upperLeftColumn, top, left, height, width
-                Shape wordArt = sheet.Shapes.AddTextEffect(
-                    MsoPresetTextEffect.TextEffect1, // initial effect (will be changed)
-                    "Custom Effect",                 // text
-                    "Calibri",                       // font name
-                    48,                              // font size
-                    false,                           // bold
-                    false,                           // italic
-                    0, 0,                            // upper left cell
-                    0, 0,                            // top & left offset (in points)
-                    100, 300);                       // height & width (in points)
+            // -----------------------------------------------------------------
+            // Step 4: Demonstrate the applied theme on a cell
+            // -----------------------------------------------------------------
+            Cell demoCell = sheet.Cells["A1"];
+            demoCell.PutValue("Theme with Custom Effect Scheme");
+            Style demoStyle = workbook.CreateStyle();
+            // Use Accent1 from the custom theme for the font color
+            demoStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+            demoStyle.Font.Size = 14;
+            demoCell.SetStyle(demoStyle);
 
-                // Modify the text effect to a different preset (e.g., TextEffect10)
-                wordArt.TextEffect.SetTextEffect(MsoPresetTextEffect.TextEffect10);
-                // Additional formatting for the WordArt
-                wordArt.TextEffect.FontBold = true;
-                wordArt.TextEffect.FontItalic = false;
-                wordArt.TextEffect.FontSize = 36;
-
-                // -----------------------------------------------------------------
-                // 3. Create a custom theme by specifying 12 theme colors.
-                //    The order of colors follows the Aspose.Cells documentation.
-                // -----------------------------------------------------------------
-                Color[] customColors = new Color[]
-                {
-                    Color.FromArgb(255, 255, 255), // Background1 (white)
-                    Color.FromArgb(0, 0, 0),       // Text1 (black)
-                    Color.FromArgb(240, 240, 240), // Background2 (light gray)
-                    Color.FromArgb(80, 80, 80),    // Text2 (dark gray)
-                    Color.FromArgb(255, 0, 0),     // Accent1 (red)
-                    Color.FromArgb(0, 255, 0),     // Accent2 (green)
-                    Color.FromArgb(0, 0, 255),     // Accent3 (blue)
-                    Color.FromArgb(255, 165, 0),   // Accent4 (orange)
-                    Color.FromArgb(128, 0, 128),   // Accent5 (purple)
-                    Color.FromArgb(0, 255, 255),   // Accent6 (cyan)
-                    Color.FromArgb(0, 0, 255),     // Hyperlink (blue)
-                    Color.FromArgb(255, 0, 0)      // Followed Hyperlink (red)
-                };
-
-                // Apply the custom theme (lifecycle rule: method usage)
-                workbook.CustomTheme("MyEnhancedTheme", customColors);
-
-                // -----------------------------------------------------------------
-                // 4. Demonstrate the new theme by applying an accent color to a cell.
-                // -----------------------------------------------------------------
-                Cell themedCell = sheet.Cells["A5"];
-                themedCell.PutValue("Themed Cell");
-                Style themedStyle = workbook.CreateStyle();
-                // Use Accent1 from the custom theme
-                themedStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
-                themedStyle.Font.Size = 14;
-                themedCell.SetStyle(themedStyle);
-
-                // -----------------------------------------------------------------
-                // 5. Save the workbook with the enhanced theme (lifecycle rule: save)
-                // -----------------------------------------------------------------
-                string outputPath = "EnhancedThemeWorkbook.xlsx";
-
-                // Ensure the directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved with custom theme and effect scheme at '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // -----------------------------------------------------------------
+            // Step 5: Save the enhanced workbook
+            // -----------------------------------------------------------------
+            workbook.Save("EnhancedThemeWorkbook.xlsx"); // lifecycle: save
         }
     }
 }

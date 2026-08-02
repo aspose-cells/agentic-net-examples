@@ -36,16 +36,17 @@ namespace AsposeCellsTextureFillDemo
             chart.NSeries.CategoryData = "A2:A5";
 
             // Apply a texture fill to the chart area using a wood grain image
-            // Ensure the chart area uses texture fill type
+            // First, set the fill type to Texture
             chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
 
-            // Load the wood grain image bytes (replace with actual file path)
-            string imagePath = Path.Combine(Environment.CurrentDirectory, "wood_grain.png");
+            // Load the wood grain image into a byte array (replace with your actual image path)
+            string imagePath = Path.Combine(Environment.CurrentDirectory, "wood_grain.jpg");
             if (File.Exists(imagePath))
             {
                 byte[] imageData = File.ReadAllBytes(imagePath);
+                // Assign the image data to the TextureFill object
                 chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
-                // Optional: tile the texture for a seamless look
+                // Optionally enable tiling so the texture repeats if the area is larger than the image
                 chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
             }
             else

@@ -4,154 +4,96 @@ using System.Xml;
 using System.Xml.Schema;
 using Aspose.Cells;
 
-namespace AsposeCellsRibbonXmlValidation
+class RibbonXmlValidationDemo
 {
-    class Program
+    static void Main()
     {
-        // Simple XSD for the custom UI schema (subset for demonstration)
-        private const string CustomUiSchema = @"
-        <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
-                   targetNamespace='http://schemas.microsoft.com/office/2006/01/customui'
-                   xmlns='http://schemas.microsoft.com/office/2006/01/customui'
-                   elementFormDefault='qualified'>
+        try
+        {
+            // Sample Ribbon XML that will be applied to the workbook
+            string ribbonXml =
+                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                "  <ribbon>" +
+                "    <tabs>" +
+                "      <tab id=\"customTab\" label=\"My Tab\">" +
+                "        <group id=\"customGroup\" label=\"My Group\">" +
+                "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
+                "        </group>" +
+                "      </tab>" +
+                "    </tabs>" +
+                "  </ribbon>" +
+                "</customUI>";
 
-          <xs:element name='customUI'>
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name='ribbon' minOccurs='0' maxOccurs='1'>
-                  <xs:complexType>
-                    <xs:sequence>
-                      <xs:element name='tabs' minOccurs='0' maxOccurs='1'>
-                        <xs:complexType>
-                          <xs:sequence>
-                            <xs:element name='tab' minOccurs='0' maxOccurs='unbounded'>
-                              <xs:complexType>
-                                <xs:sequence>
-                                  <xs:element name='group' minOccurs='0' maxOccurs='unbounded'>
-                                    <xs:complexType>
-                                      <xs:sequence>
-                                        <xs:element name='button' minOccurs='0' maxOccurs='unbounded' />
-                                      </xs:sequence>
-                                      <xs:attribute name='id' type='xs:string' use='required' />
-                                      <xs:attribute name='label' type='xs:string' use='required' />
-                                    </xs:complexType>
-                                  </xs:element>
-                                </xs:sequence>
-                                <xs:attribute name='id' type='xs:string' use='required' />
-                                <xs:attribute name='label' type='xs:string' use='required' />
-                              </xs:complexType>
-                            </xs:element>
-                          </xs:sequence>
-                        </xs:complexType>
-                      </xs:element>
-                    </xs:sequence>
-                  </xs:complexType>
-                </xs:element>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+            // Path to the Office Open XML Custom UI schema (XSD). 
+            string schemaPath = "customUI.xsd";
 
-        </xs:schema>";
+            // Ensure the schema file exists before validation
+            if (!File.Exists(schemaPath))
+            {
+                Console.WriteLine($"Schema file not found: {schemaPath}");
+                return;
+            }
 
-        static void Main()
+            // Validate the Ribbon XML against the schema
+            if (!ValidateXmlAgainstSchema(ribbonXml, schemaPath))
+            {
+                Console.WriteLine("Ribbon XML validation failed. The workbook will not be created.");
+                return;
+            }
+
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Apply the validated Ribbon XML (feature rule: use RibbonXml property)
+            workbook.RibbonXml = ribbonXml;
+
+            // Save the workbook as a macro-enabled file to retain the Ribbon UI (lifecycle rule: save)
+            string outputPath = "ValidatedRibbonWorkbook.xlsm";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully with validated Ribbon XML: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    // Helper method that validates an XML string against a given XSD file
+    static bool ValidateXmlAgainstSchema(string xmlContent, string xsdFilePath)
+    {
+        bool isValid = true;
+
+        // Prepare the schema set
+        XmlSchemaSet schemaSet = new XmlSchemaSet();
+        schemaSet.Add("http://schemas.microsoft.com/office/2006/01/customui", xsdFilePath);
+
+        // Configure XML reader settings for schema validation
+        XmlReaderSettings settings = new XmlReaderSettings
+        {
+            ValidationType = System.Xml.ValidationType.Schema,
+            Schemas = schemaSet
+        };
+        settings.ValidationEventHandler += (sender, args) =>
+        {
+            Console.WriteLine($"Schema validation error: {args.Message}");
+            isValid = false;
+        };
+
+        // Parse and validate the XML
+        using (StringReader stringReader = new StringReader(xmlContent))
+        using (XmlReader xmlReader = XmlReader.Create(stringReader, settings))
         {
             try
             {
-                // Sample Ribbon XML to be validated
-                string ribbonXml =
-                    "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-                    "  <ribbon>" +
-                    "    <tabs>" +
-                    "      <tab id=\"customTab\" label=\"My Tab\">" +
-                    "        <group id=\"customGroup\" label=\"My Group\">" +
-                    "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-                    "        </group>" +
-                    "      </tab>" +
-                    "    </tabs>" +
-                    "  </ribbon>" +
-                    "</customUI>";
-
-                // Validate the XML against the schema
-                bool isValid = ValidateXml(ribbonXml, CustomUiSchema, out string validationMessage);
-
-                if (!isValid)
-                {
-                    Console.WriteLine("Ribbon XML validation failed:");
-                    Console.WriteLine(validationMessage);
-                    return;
-                }
-
-                // Create a new workbook (lifecycle rule)
-                Workbook workbook = new Workbook();
-
-                // Apply the validated Ribbon XML
-                workbook.RibbonXml = ribbonXml;
-
-                // Save the workbook (lifecycle rule)
-                string outputPath = "ValidatedRibbonWorkbook.xlsm";
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Workbook saved successfully with validated Ribbon XML at '{outputPath}'.");
+                while (xmlReader.Read()) { }
             }
-            catch (Exception ex)
+            catch (XmlException ex)
             {
-                Console.WriteLine("An unexpected error occurred:");
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Validates an XML string against a provided XSD schema string.
-        /// </summary>
-        /// <param name="xmlContent">The XML to validate.</param>
-        /// <param name="xsdContent">The XSD schema.</param>
-        /// <param name="errorMessage">Detailed validation errors, if any.</param>
-        /// <returns>True if XML is valid; otherwise false.</returns>
-        private static bool ValidateXml(string xmlContent, string xsdContent, out string errorMessage)
-        {
-            bool isValid = true;
-            StringWriter errors = new StringWriter();
-
-            // Prepare schema set
-            XmlSchemaSet schemas = new XmlSchemaSet();
-            using (StringReader xsdReader = new StringReader(xsdContent))
-            {
-                schemas.Add("http://schemas.microsoft.com/office/2006/01/customui",
-                            XmlReader.Create(xsdReader));
-            }
-
-            // Configure XML reader settings for validation
-            XmlReaderSettings settings = new XmlReaderSettings
-            {
-                ValidationType = System.Xml.ValidationType.Schema, // Resolve ambiguity
-                Schemas = schemas,
-                ValidationFlags =
-                    XmlSchemaValidationFlags.ProcessIdentityConstraints |
-                    XmlSchemaValidationFlags.ReportValidationWarnings
-            };
-            settings.ValidationEventHandler += (sender, args) =>
-            {
+                Console.WriteLine($"XML parsing error: {ex.Message}");
                 isValid = false;
-                errors.WriteLine($"{args.Severity}: {args.Message}");
-            };
-
-            // Perform validation
-            using (StringReader xmlReader = new StringReader(xmlContent))
-            using (XmlReader reader = XmlReader.Create(xmlReader, settings))
-            {
-                try
-                {
-                    while (reader.Read()) { } // Parse entire document
-                }
-                catch (XmlException ex)
-                {
-                    isValid = false;
-                    errors.WriteLine($"XML Exception: {ex.Message}");
-                }
             }
-
-            errorMessage = errors.ToString();
-            return isValid;
         }
+
+        return isValid;
     }
 }

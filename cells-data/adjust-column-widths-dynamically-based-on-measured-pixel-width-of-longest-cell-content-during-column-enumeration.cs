@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace DynamicColumnWidthDemo
@@ -8,56 +7,49 @@ namespace DynamicColumnWidthDemo
     {
         static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // ------------------------------------------------------------
+            // Sample data – in real scenarios the worksheet would already
+            // contain data that needs column width adjustment.
+            // ------------------------------------------------------------
+            cells["A1"].PutValue("Short");
+            cells["A2"].PutValue("A much longer piece of text that should expand the column");
+            cells["B1"].PutValue("12345");
+            cells["B2"].PutValue("67890");
+            cells["C1"].PutValue("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+            cells["C2"].PutValue("Short");
+
+            // Determine the range that contains data
+            int firstRow = 0;
+            int lastRow = cells.MaxDataRow;          // last row with data
+            int firstColumn = 0;
+            int lastColumn = cells.MaxDataColumn;    // last column with data
+
+            // Iterate through each column, autofit based on its content,
+            // retrieve the resulting pixel width, and then explicitly set
+            // the column width in pixels (adding a small padding for safety).
+            for (int col = firstColumn; col <= lastColumn; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                // AutoFitColumn adjusts the column width according to the
+                // longest cell content within the specified row range.
+                worksheet.AutoFitColumn(col, firstRow, lastRow);
 
-                // Sample data with varying lengths
-                cells["A1"].PutValue("Short");
-                cells["A2"].PutValue("A much longer piece of text that should expand the column");
-                cells["B1"].PutValue(12345);
-                cells["B2"].PutValue("Medium length");
-                cells["C1"].PutValue("Tiny");
-                cells["C2"].PutValue("Another very long text string that will require a wider column");
+                // Get the width that AutoFitColumn calculated (in pixels)
+                int pixelWidth = cells.GetColumnWidthPixel(col);
 
-                // Determine the used range to know how many columns to inspect
-                int maxColumn = cells.MaxDataColumn;
-                int maxRow = cells.MaxDataRow; // needed for AutoFitColumn overload
+                // Optional: add a few pixels as padding so text does not touch the border
+                int paddedPixelWidth = pixelWidth + 5;
 
-                // Padding to add a little extra space (in pixels)
-                const int paddingPixels = 5;
-
-                // Iterate through each column, auto‑fit, then add padding
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    // Auto‑fit the column based on its content (firstRow = 0, lastRow = maxRow)
-                    sheet.AutoFitColumn(col, 0, maxRow);
-
-                    // Get the current width in pixels, add padding, and set it back
-                    int currentWidth = cells.GetColumnWidthPixel(col);
-                    int finalWidth = currentWidth + paddingPixels;
-                    cells.SetColumnWidthPixel(col, finalWidth);
-                }
-
-                // Prepare output path
-                string outputPath = "DynamicColumnWidthDemo.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Explicitly set the column width in pixels
+                cells.SetColumnWidthPixel(col, paddedPixelWidth);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save("DynamicColumnWidthResult.xlsx");
         }
     }
 }

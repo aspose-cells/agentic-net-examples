@@ -1,107 +1,113 @@
+// Title: Aspose.Cells .NET: Parallel Export of Localized Charts to PDF with Low Memory Footprint
+// Description: Shows how to create a workbook for each culture, apply MemorySetting.MemoryPreference, enable MultiThreadReading, fill month‑wise sales data via CultureInfo, build a column chart, and export the chart to a locale‑named PDF inside a Parallel.ForEach loop. Each workbook is disposed after export to keep memory usage stable in multi‑threaded environments.
+// Keywords: Aspose.Cells | .NET | parallel chart export | localized charts | PDF export | MemorySetting.MemoryPreference | MultiThreadReading | culture-specific data | low memory processing | batch workbook generation
+// Common Searches: Aspose.Cells export chart in parallel | memory efficient chart generation Aspose.Cells | localized PDF chart Aspose.Cells .NET | how to use MemorySetting.MemoryPreference | MultiThreadReading example Aspose.Cells | parallel processing of workbooks Aspose.Cells
+// Developer Intent: Generate and export culture‑specific charts concurrently while minimizing memory consumption.
+// Use Cases: Batch creation of monthly‑sales charts for multiple locales in a reporting service. | High‑throughput web API that returns localized PDF chart files without exhausting server RAM. | Automated international dashboard generation where each chart is produced in a separate thread. | Scheduled job that processes dozens of language versions of a chart while keeping the process lightweight.
+// AI Prompts: Provide C# code to log Aspose.Cells memory usage before and after each chart export inside the parallel loop. | Explain how to share a single thread‑safe Random instance across Parallel.ForEach iterations to avoid duplicate values. | Show how to configure Aspose.Cells to write temporary files to a custom directory for better resource management. | Suggest ways to throttle the degree of parallelism to balance CPU usage and memory pressure.
+
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsMultiThreadedChartExport
 {
-    public class ChartExportDemo
+    // Shows how to create a workbook for each culture, apply MemorySetting.MemoryPreference, enable MultiThreadReading, fill month‑wise sales data via CultureInfo, build a column chart, and export the chart to a locale‑named PDF inside a Parallel.ForEach loop. Each workbook is disposed after export to keep memory usage stable in multi‑threaded environments.
+    public class LocalizedChartExporter
     {
+        // List of locales (culture codes) to process – each will generate its own chart.
+        private static readonly List<string> Locales = new List<string>
+        {
+            "en-US", "fr-FR", "de-DE", "es-ES", "ja-JP"
+        };
+
         public static void Run()
         {
-            try
+            // Process each locale in parallel while keeping memory usage stable.
+            Parallel.ForEach(Locales, locale =>
             {
-                // Create a new workbook with memory‑efficient settings.
-                using (Workbook workbook = new Workbook())
-                {
-                    workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
+                // Create a new workbook for this locale.
+                Workbook workbook = new Workbook();
 
-                    // Access the first worksheet and enable multi‑thread reading.
-                    Worksheet sheet = workbook.Worksheets[0];
-                    Cells cells = sheet.Cells;
-                    cells.MultiThreadReading = true;
+                // Apply memory‑efficient settings.
+                // MemoryPreference keeps the data model compact.
+                workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
 
-                    // Populate sample data.
-                    int rows = 100;
-                    cells[0, 0].PutValue("Category");
-                    for (int i = 1; i <= rows; i++)
-                    {
-                        cells[i, 0].PutValue($"Item {i}");
-                        cells[i, 1].PutValue(i * 10);   // English
-                        cells[i, 2].PutValue(i * 12.5); // French
-                        cells[i, 3].PutValue(i * 9.8);  // German
-                    }
+                // Enable multi‑thread reading on the cells collection.
+                // This allows safe concurrent reads if needed later.
+                workbook.Worksheets[0].Cells.MultiThreadReading = true;
 
-                    // Prepare chart parameters.
-                    int chartCount = 3;
-                    int[] dataColumns = { 1, 2, 3 };
-                    string[] locales = { "en", "fr", "de" };
-                    string outputFolder = Path.Combine(Environment.CurrentDirectory, "ChartExports");
-                    Directory.CreateDirectory(outputFolder);
+                // Populate worksheet with localized sample data.
+                PopulateWorksheet(workbook, locale);
 
-                    // Create charts.
-                    Chart[] charts = new Chart[chartCount];
-                    for (int i = 0; i < chartCount; i++)
-                    {
-                        int chartIndex = sheet.Charts.Add(ChartType.Column, 5 + i * 15, 0, 20 + i * 15, 8);
-                        Chart chart = sheet.Charts[chartIndex];
+                // Create a chart based on the data.
+                Chart chart = CreateChart(workbook);
 
-                        string valueRange = dataColumns[i] switch
-                        {
-                            2 => $"C2:C{rows + 1}",
-                            3 => $"D2:D{rows + 1}",
-                            _ => $"B2:B{rows + 1}"
-                        };
+                // Export the chart to a PDF file named with the locale.
+                string outputPath = Path.Combine("ExportedCharts", $"Chart_{locale}.pdf");
+                Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+                chart.ToPdf(outputPath);
 
-                        chart.NSeries.Add(valueRange, true);
-                        chart.NSeries.CategoryData = $"A2:A{rows + 1}";
-                        chart.Title.Text = $"Sales ({locales[i].ToUpperInvariant()})";
+                // Dispose the workbook to release any temporary files/resources.
+                workbook.Dispose();
 
-                        chart.Calculate(); // optional layout calculation
-                        charts[i] = chart;
-                    }
+                Console.WriteLine($"Locale {locale}: chart exported to {outputPath}");
+            });
+        }
 
-                    // Export charts to PDF in parallel.
-                    Parallel.ForEach(
-                        Enumerable.Range(0, chartCount),
-                        new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount },
-                        index =>
-                        {
-                            try
-                            {
-                                Chart chart = charts[index];
-                                string locale = locales[index];
-                                string pdfPath = Path.Combine(outputFolder, $"Chart_{locale}.pdf");
-                                chart.ToPdf(pdfPath);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.Error.WriteLine($"Error exporting chart {locales[index]}: {ex.Message}");
-                            }
-                        });
+        private static void PopulateWorksheet(Workbook workbook, string locale)
+        {
+            // Example: create a simple table with localized month names.
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                    // Save workbook for verification.
-                    string workbookPath = Path.Combine(outputFolder, "WorkbookWithCharts.xlsx");
-                    workbook.Save(workbookPath, SaveFormat.Xlsx);
-                }
+            // Header
+            cells[0, 0].PutValue("Month");
+            cells[0, 1].PutValue("Sales");
 
-                Console.WriteLine("Chart export completed. Files are located at: " + Path.Combine(Environment.CurrentDirectory, "ChartExports"));
-            }
-            catch (Exception ex)
+            // Sample data – 12 rows for months.
+            var culture = new System.Globalization.CultureInfo(locale);
+            for (int i = 1; i <= 12; i++)
             {
-                Console.Error.WriteLine("Unexpected error: " + ex.Message);
+                // Use the culture to get month name.
+                string monthName = culture.DateTimeFormat.GetMonthName(i);
+                cells[i, 0].PutValue(monthName);
+                // Random sales value.
+                cells[i, 1].PutValue(new Random().Next(1000, 5000));
             }
+        }
+
+        private static Chart CreateChart(Workbook workbook)
+        {
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a column chart covering the data range (A1:B13).
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data source for the chart.
+            chart.NSeries.Add("B2:B13", true);          // Values
+            chart.NSeries.CategoryData = "A2:A13";     // Categories (month names)
+
+            // Optional: give the chart a title.
+            chart.Title.Text = "Monthly Sales";
+
+            // Calculate the chart layout before exporting.
+            chart.Calculate();
+
+            return chart;
         }
     }
 
-    // Entry point required by the runtime.
-    public static class Program
+    // Entry point for demonstration.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            ChartExportDemo.Run();
+            LocalizedChartExporter.Run();
         }
     }
 }

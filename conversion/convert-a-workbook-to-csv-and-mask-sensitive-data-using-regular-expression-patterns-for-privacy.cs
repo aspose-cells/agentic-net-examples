@@ -1,5 +1,12 @@
+// Title: Convert Excel to CSV with email & credit‑card masking using Aspose.Cells (C#)
+// Description: Load an XLSX workbook with Aspose.Cells, scan string cells, replace email addresses and credit‑card numbers via Regex, save the sanitized workbook, and export it directly to CSV. Ideal for GDPR‑compliant data pipelines in .NET.
+// Keywords: Aspose.Cells CSV export | C# Excel masking | regex data sanitization | email redaction Excel | credit card masking | privacy compliant CSV | Excel to CSV conversion .NET | GDPR data masking Aspose
+// Common Searches: Aspose.Cells mask email before CSV export | C# replace credit card numbers in Excel workbook | how to sanitize Excel data with regex and convert to CSV | privacy compliant Excel to CSV conversion .NET | regex masking of PII in Aspose.Cells
+// Developer Intent: Remove personally identifiable information from an Excel workbook and generate a clean CSV file using Aspose.Cells.
+// Use Cases: Produce GDPR‑ready CSV reports by redacting customer emails. | Share financial worksheets without exposing credit‑card numbers. | Automate a data‑export workflow that strips PII before downstream processing.
+// AI Prompts: Write C# code that uses Aspose.Cells to mask phone numbers with a [PHONE] placeholder before CSV conversion. | Extend the example to also replace URLs and social‑security numbers using regular expressions. | Explain how to stream a masked workbook directly to CSV with Aspose.Cells, eliminating the intermediate XLSX file.
+
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
@@ -7,96 +14,96 @@ using Aspose.Cells.Utility;
 
 namespace AsposeCellsExamples
 {
+    // Load an XLSX workbook with Aspose.Cells, scan string cells, replace email addresses and credit‑card numbers via Regex, save the sanitized workbook, and export it directly to CSV. Ideal for GDPR‑compliant data pipelines in .NET.
     public class WorkbookToCsvWithMasking
     {
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
-
         public static void Run()
         {
+            // Paths for the original workbook, the masked intermediate workbook, and the final CSV file
+            string sourcePath = "input.xlsx";
+            string maskedPath = "masked.xlsx";
+            string csvPath = "output.csv";
+
             try
             {
-                // Paths for the original workbook, the masked intermediate file, and the final CSV output
-                string sourcePath = "input.xlsx";
-                string maskedPath = "masked.xlsx";
-                string csvPath = "output.csv";
-
-                // Verify that the source workbook exists
+                // Verify source file exists
                 if (!File.Exists(sourcePath))
                 {
                     Console.WriteLine($"Source file not found: {sourcePath}");
                     return;
                 }
 
-                // Load the original workbook (lifecycle: create -> load)
+                // Load the original workbook
                 Workbook workbook = new Workbook(sourcePath);
 
-                // Define regular expression patterns for sensitive data and their replacement masks
-                var patterns = new Dictionary<string, string>
+                // Define regular expression patterns for sensitive data
+                Regex emailRegex = new Regex(@"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", RegexOptions.IgnoreCase);
+                Regex creditCardRegex = new Regex(@"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b");
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Email addresses
-                    { @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", "[EMAIL_REDACTED]" },
-                    // US phone numbers (e.g., 123-456-7890 or (123) 456-7890)
-                    { @"\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}", "[PHONE_REDACTED]" },
-                    // Credit card numbers (simple 16‑digit pattern)
-                    { @"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b", "[CC_REDACTED]" }
-                };
+                    Cells cells = sheet.Cells;
 
-                // Iterate through all used cells in the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                    // Determine the used range
+                    int maxRow = cells.MaxDataRow;
+                    int maxCol = cells.MaxDataColumn;
 
-                // Determine the used range to avoid scanning empty cells
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Scan each cell in the used range
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        Cell cell = cells[row, col];
-                        if (cell.Type == CellValueType.IsString)
+                        for (int col = 0; col <= maxCol; col++)
                         {
-                            string original = cell.StringValue;
-                            string masked = original;
+                            Cell cell = cells[row, col];
 
-                            // Apply each regex pattern
-                            foreach (var kvp in patterns)
+                            // Process only string cells
+                            if (cell.Type == CellValueType.IsString)
                             {
-                                masked = Regex.Replace(masked, kvp.Key, kvp.Value);
-                            }
+                                string original = cell.StringValue;
+                                string masked = original;
 
-                            // If the value changed, write it back to the cell
-                            if (!masked.Equals(original))
-                            {
-                                cell.PutValue(masked);
+                                // Mask email addresses
+                                if (emailRegex.IsMatch(masked))
+                                {
+                                    masked = emailRegex.Replace(masked, "[EMAIL]");
+                                }
+
+                                // Mask credit card numbers
+                                if (creditCardRegex.IsMatch(masked))
+                                {
+                                    masked = creditCardRegex.Replace(masked, "[CREDIT_CARD]");
+                                }
+
+                                // Update the cell only if a change occurred
+                                if (!masked.Equals(original))
+                                {
+                                    cell.PutValue(masked);
+                                }
                             }
                         }
                     }
                 }
 
-                // Save the masked workbook (lifecycle: save)
+                // Save the workbook after masking (intermediate file)
                 workbook.Save(maskedPath, SaveFormat.Xlsx);
 
-                // Verify that the masked file was created before conversion
-                if (!File.Exists(maskedPath))
-                {
-                    Console.WriteLine($"Masked file not created: {maskedPath}");
-                    return;
-                }
-
-                // Convert the masked workbook to CSV using ConversionUtility
+                // Convert the masked workbook to CSV
                 ConversionUtility.Convert(maskedPath, csvPath);
 
-                Console.WriteLine($"Workbook has been masked and converted to CSV: {csvPath}");
+                Console.WriteLine($"Workbook has been masked and converted to CSV at: {csvPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            WorkbookToCsvWithMasking.Run();
         }
     }
 }

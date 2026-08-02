@@ -2,57 +2,50 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRenameDemo
+class RenamePivotFieldAfterHide
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].Value = "Category";
+        worksheet.Cells["B1"].Value = "Amount";
+        worksheet.Cells["A2"].Value = "Alpha";
+        worksheet.Cells["B2"].Value = 100;
+        worksheet.Cells["A3"].Value = "Beta";
+        worksheet.Cells["B3"].Value = 200;
+        worksheet.Cells["A4"].Value = "Gamma";
+        worksheet.Cells["B4"].Value = 300;
+        worksheet.Cells["A5"].Value = "Alpha";
+        worksheet.Cells["B5"].Value = 150;
+
+        // Add a pivot table covering the data range
+        int pivotIndex = worksheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+
+        // Add the "Category" field to the row area and "Amount" to the data area
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+        // Hide all row items except the one named "Alpha"
+        PivotField rowField = pivotTable.RowFields[0];
+        for (int i = 0; i < rowField.ItemCount; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data
-            cells["A1"].Value = "Product";
-            cells["A2"].Value = "Laptop";
-            cells["A3"].Value = "Tablet";
-            cells["A4"].Value = "Smartphone";
-            cells["A5"].Value = "Laptop";
-
-            cells["B1"].Value = "Sales";
-            cells["B2"].Value = 1500;
-            cells["B3"].Value = 800;
-            cells["B4"].Value = 1200;
-            cells["B5"].Value = 1700;
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Add the "Product" field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-
-            // Add the "Sales" field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Hide all products except "Laptop"
-            PivotField productField = pivotTable.RowFields[0];
-            for (int i = 0; i < productField.ItemCount; i++)
-            {
-                // Hide the item if its name is not "Laptop"
-                productField.HideItem(i, productField.Items[i] != "Laptop");
-            }
-
-            // After hiding, rename the pivot field to match new business terminology
-            productField.Name = "DeviceCategory";
-
-            // Refresh and calculate the pivot table to apply changes
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotFieldRenamedAfterHide.xlsx");
+            // HideItem(int index, bool isHidden) – hide if the item is not "Alpha"
+            rowField.HideItem(i, rowField.Items[i] != "Alpha");
         }
+
+        // Rename the pivot field to reflect new business terminology
+        rowField.Name = "ProductGroup";
+
+        // Refresh and calculate the pivot table to apply changes
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Save the workbook
+        workbook.Save("RenamedPivotField.xlsx");
     }
 }

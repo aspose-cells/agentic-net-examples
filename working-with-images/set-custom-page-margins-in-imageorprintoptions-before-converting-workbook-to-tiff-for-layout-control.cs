@@ -1,40 +1,36 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-class SetCustomMarginsToTiff
+class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Demo: Custom page margins for TIFF rendering");
 
-        // Add sample content
-        worksheet.Cells["A1"].PutValue("Custom margins demo");
+        // Set custom page margins (values are in inches)
+        worksheet.PageSetup.TopMarginInch = 0.5;      // 0.5 inch top margin
+        worksheet.PageSetup.BottomMarginInch = 0.5;   // 0.5 inch bottom margin
+        worksheet.PageSetup.LeftMarginInch = 0.75;    // 0.75 inch left margin
+        worksheet.PageSetup.RightMarginInch = 0.75;   // 0.75 inch right margin
 
-        // Set custom page margins (in inches)
-        worksheet.PageSetup.LeftMarginInch = 0.5;
-        worksheet.PageSetup.RightMarginInch = 0.5;
-        worksheet.PageSetup.TopMarginInch = 0.7;
-        worksheet.PageSetup.BottomMarginInch = 0.7;
-
-        // Configure image options for TIFF rendering
+        // Configure image rendering options for TIFF output
         ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = Aspose.Cells.Drawing.ImageType.Tiff;
-        options.OnePagePerSheet = true; // render the whole sheet on a single page
+        options.ImageType = ImageType.Tiff;          // Set output format to TIFF
+        options.OnePagePerSheet = true;              // Render the whole sheet on a single page
 
-        // Create a SheetRender with the worksheet and the configured options
+        // Create a SheetRender object with the worksheet and options
         SheetRender renderer = new SheetRender(worksheet, options);
 
-        // Render the worksheet to a TIFF file
+        // Render the worksheet to a multi‑page TIFF file
         string outputFile = "CustomMarginsOutput.tiff";
-        using (FileStream tiffStream = new FileStream(outputFile, FileMode.Create))
-        {
-            renderer.ToTiff(tiffStream);
-        }
+        renderer.ToTiff(outputFile);
 
-        Console.WriteLine($"TIFF file saved to: {outputFile}");
+        Console.WriteLine($"TIFF file created with custom margins: {outputFile}");
     }
 }

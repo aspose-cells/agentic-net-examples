@@ -6,20 +6,20 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (required to access theme colors)
+        // Create a new workbook (default theme is applied)
         Workbook workbook = new Workbook();
 
         // Enumerate all ThemeColorType values
         foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
         {
-            // Retrieve the default theme color for the current type
+            // Retrieve the default color for the current theme type
             Color color = workbook.GetThemeColor(type);
 
-            // Output the enum name and its default RGB values
+            // Output the theme type and its RGB components
             Console.WriteLine($"{type} => R:{color.R} G:{color.G} B:{color.B}");
         }
 
-        // Save the workbook (optional, fulfills lifecycle requirement)
+        // Save the workbook (optional, just to follow lifecycle rules)
         workbook.Save("ThemeColors.xlsx");
     }
 }

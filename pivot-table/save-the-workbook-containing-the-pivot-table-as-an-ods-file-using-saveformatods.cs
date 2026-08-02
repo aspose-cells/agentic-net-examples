@@ -2,31 +2,39 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class SavePivotTableAsOds
+namespace AsposeCellsPivotOdsDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Sales");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["B2"].PutValue(1000);
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["B3"].PutValue(2000);
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B4"].PutValue(3000);
+            // Populate sample data for the pivot table
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "Amount";
+            cells["A2"].Value = "Food";
+            cells["B2"].Value = 1200;
+            cells["A3"].Value = "Food";
+            cells["B3"].Value = 800;
+            cells["A4"].Value = "Travel";
+            cells["B4"].Value = 1500;
+            cells["A5"].Value = "Travel";
+            cells["B5"].Value = 700;
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E5", "SalesPivot");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
+            // Add a pivot table based on the data range A1:B5, place it at D1
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Save the workbook containing the pivot table as an ODS file
-        workbook.Save("SalesPivot.ods", SaveFormat.ODS);
+            // Configure the pivot table: Category as row field, Amount as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Category
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Amount
+
+            // Save the workbook as an ODS file using SaveFormat.ODS
+            workbook.Save("SalesPivotTable.ods", SaveFormat.Ods);
+        }
     }
 }

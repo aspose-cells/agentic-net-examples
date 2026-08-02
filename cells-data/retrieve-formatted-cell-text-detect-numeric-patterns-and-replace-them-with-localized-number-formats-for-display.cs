@@ -1,96 +1,71 @@
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizedNumberDemo
+namespace AsposeCellsLocalizedNumberFormat
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate some sample data
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Price");
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(1234.56);          // Numeric value
-            cells["A3"].PutValue("Banana");
-            cells["B3"].PutValue(7890);             // Integer value
-            cells["A4"].PutValue("Note");
-            cells["B4"].PutValue("Total: 9123.45"); // Text containing a number
+            // Populate cells with mixed content
+            cells["A1"].PutValue(1234.56);          // numeric
+            cells["A2"].PutValue("Sample Text");   // text
+            cells["A3"].PutValue(98765);           // integer
+            cells["A4"].PutValue(0.789);           // numeric
+            cells["B1"].PutValue(DateTime.Now);    // date (treated as numeric for formatting)
 
-            // Set the workbook culture to German (de-DE) for localized formatting
-            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+            // Set an initial generic number format for demonstration
+            Style initStyle = workbook.CreateStyle();
+            initStyle.Custom = "#,##0.00";
+            cells["A1"].SetStyle(initStyle);
+            cells["A3"].SetStyle(initStyle);
+            cells["A4"].SetStyle(initStyle);
+            cells["B1"].SetStyle(initStyle);
 
-            // Regular expression to detect numeric patterns in a string
-            Regex numberRegex = new Regex(@"\d+([.,]\d+)?", RegexOptions.Compiled);
+            // Change workbook culture to French (France) to obtain localized number formats
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-            // Iterate through the used range of the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through used cells and replace numeric patterns with localized formats
+            foreach (Cell cell in cells)
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Process only cells that contain numeric values (including dates)
+                if (cell.IsNumericValue)
                 {
-                    Cell cell = cells[row, col];
+                    // Retrieve the current display string (formatted according to current style)
+                    string currentDisplay = cell.DisplayStringValue;
 
-                    // Retrieve the formatted display string of the cell
-                    string displayValue = cell.DisplayStringValue;
+                    // Parse the underlying numeric value using invariant culture
+                    // This works for both double and DateTime (DateTime is stored as double internally)
+                    double numericValue = cell.DoubleValue;
 
-                    // Detect if the cell already contains a numeric value
-                    if (cell.IsNumericValue)
-                    {
-                        // Apply a culture‑dependent custom number format
-                        Style style = cell.GetStyle();
-                        // "#,##0.00" will be rendered according to the workbook's CultureInfo (German uses comma as decimal separator)
-                        style.CultureCustom = "#,##0.00";
-                        cell.SetStyle(style);
-                    }
-                    else
-                    {
-                        // For text cells, check if they contain embedded numeric patterns
-                        if (numberRegex.IsMatch(displayValue))
-                        {
-                            // Replace each numeric occurrence with a localized formatted version
-                            string localized = numberRegex.Replace(displayValue, match =>
-                            {
-                                // Parse using invariant culture to avoid locale issues
-                                if (double.TryParse(match.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double num))
-                                {
-                                    // Format using the workbook's culture (German in this example)
-                                    return num.ToString("N", workbook.Settings.CultureInfo);
-                                }
-                                // If parsing fails, return the original match
-                                return match.Value;
-                            });
+                    // Format the numeric value using the workbook's current culture
+                    // The "N" format specifier respects the culture's number group and decimal separators
+                    string localizedString = numericValue.ToString("N", workbook.Settings.CultureInfo);
 
-                            // Overwrite the cell with the new localized string (as plain text)
-                            cell.PutValue(localized);
-                        }
-                    }
+                    // Apply a custom culture-dependent format to the cell style
+                    // Setting CultureCustom ensures the pattern adapts to the workbook's culture
+                    Style style = cell.GetStyle();
+                    style.CultureCustom = "#,##0.00"; // pattern stays the same, separators become culture-specific
+                    cell.SetStyle(style);
+
+                    // Optionally, you can verify the replacement by writing to console
+                    Console.WriteLine($"Cell {cell.Name}: Original='{currentDisplay}' => Localized='{cell.DisplayStringValue}'");
+                }
+                else
+                {
+                    // Non-numeric cells remain unchanged; display their original string
+                    Console.WriteLine($"Cell {cell.Name}: Non-numeric value = '{cell.DisplayStringValue}'");
                 }
             }
 
-            // Output the final display strings to the console
-            Console.WriteLine("Final cell display values after localization:");
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
-                    Console.Write($"{cell.DisplayStringValue}\t");
-                }
-                Console.WriteLine();
-            }
-
-            // Save the workbook to verify the applied formats
-            workbook.Save("LocalizedNumbersDemo.xlsx");
+            // Save the modified workbook (lifecycle: save)
+            workbook.Save("LocalizedNumbers.xlsx");
         }
     }
 }

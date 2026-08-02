@@ -1,47 +1,34 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
+// Author: Aspose.Cells .NET example – detects empty worksheets and skips them when saving to PDF
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (replace with loading if needed)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Sample worksheets: one with data, two empty
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "DataSheet";
-        dataSheet.Cells["A1"].PutValue("Sample Data");
-
-        Worksheet emptySheet1 = workbook.Worksheets.Add("EmptySheet1");
-        Worksheet emptySheet2 = workbook.Worksheets.Add("EmptySheet2");
-
-        // Collect indexes of worksheets that contain any data
-        List<int> nonEmptyIndexes = new List<int>();
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        // Hide worksheets that are empty to prevent blank pages in the PDF
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Worksheet ws = workbook.Worksheets[i];
-            // MaxDataRow/MaxDataColumn are -1 when the sheet has no data
-            if (ws.Cells.MaxDataRow >= 0 && ws.Cells.MaxDataColumn >= 0)
+            // Since Aspose.Cells 21.5.2, MaxDisplayRange is null for an empty sheet
+            if (sheet.Cells.MaxDisplayRange == null)
             {
-                nonEmptyIndexes.Add(i);
+                sheet.IsVisible = false; // Skip this sheet during PDF rendering
             }
         }
 
-        // Configure PDF save options to skip empty sheets and avoid blank pages
+        // Configure PDF save options to ignore blank pages and not output a blank page when nothing is printed
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Do not output a blank page when a sheet has nothing to print
-            OutputBlankPageWhenNothingToPrint = false,
-            // Ignore completely blank pages within a sheet
             PrintingPageType = PrintingPageType.IgnoreBlank,
-            // Render only the non‑empty worksheets
-            SheetSet = new SheetSet(nonEmptyIndexes.ToArray())
+            OutputBlankPageWhenNothingToPrint = false
         };
 
-        // Save the workbook to PDF using the configured options
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the workbook as PDF
+        string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Result.pdf");
+        workbook.Save(outputPath, pdfOptions);
     }
 }

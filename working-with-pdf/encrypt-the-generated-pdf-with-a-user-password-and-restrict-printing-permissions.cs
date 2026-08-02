@@ -1,29 +1,36 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering.PdfSecurity;
 
-class Program
+namespace AsposeCellsPdfSecurityDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        // Create a new workbook and add some content
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].Value = "Secure PDF with user password";
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Prepare PDF save options
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+            // Add sample content
+            workbook.Worksheets[0].Cells["A1"].Value = "Secure PDF Example";
 
-        // Configure PDF security options
-        PdfSecurityOptions securityOptions = new PdfSecurityOptions();
-        securityOptions.UserPassword = "user123";          // Password required to open the PDF
-        securityOptions.PrintPermission = false;          // Disallow printing
-        securityOptions.ModifyDocumentPermission = false; // Disallow modifications
-        securityOptions.ExtractContentPermission = false; // Disallow content extraction
-        securityOptions.FullQualityPrintPermission = false; // Ensure low‑quality printing is also disabled
+            // Configure PDF save options
+            PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-        // Attach security options to the save options
-        pdfSaveOptions.SecurityOptions = securityOptions;
+            // Set security options
+            PdfSecurityOptions security = new PdfSecurityOptions();
+            security.UserPassword = "user123";          // Password required to open the PDF
+            security.OwnerPassword = "owner123";        // Owner password for full access
+            security.PrintPermission = false;           // Restrict printing
+            security.ModifyDocumentPermission = false; // Optional: restrict modifications
+            security.ExtractContentPermission = false; // Optional: restrict content extraction
 
-        // Save the workbook as a secured PDF
-        workbook.Save("SecuredDocument.pdf", pdfSaveOptions);
+            // Assign security options to the PDF save options
+            saveOptions.SecurityOptions = security;
+
+            // Save the workbook as a secured PDF
+            workbook.Save("SecuredOutput.pdf", saveOptions);
+        }
     }
 }

@@ -4,35 +4,40 @@ using Aspose.Cells.Metadata;
 
 namespace AsposeCellsMetadataPreserveDemo
 {
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Paths for the original workbook and the new modified workbook
-            string sourcePath = "original.xlsx";
-            string destinationPath = "modified.xlsx";
+            // Paths for the original and the new workbook
+            string originalPath = "OriginalWorkbook.xlsx";
+            string newPath = "ModifiedWorkbook.xlsx";
 
             // Load the original workbook
-            Workbook workbook = new Workbook(sourcePath);
+            Workbook workbook = new Workbook(originalPath);
 
-            // Example modification: change the value of cell A1 in the first worksheet
+            // ----- Example modification -----
+            // Change the value of cell A1 in the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Modified Content");
+            sheet.Cells["A1"].PutValue("Modified content");
+            // --------------------------------
 
-            // Save the modified workbook to the new file path
-            workbook.Save(destinationPath, SaveFormat.Xlsx);
+            // Save the modified workbook content to the new file
+            // (Uses the Workbook.Save(string) rule)
+            workbook.Save(newPath, SaveFormat.Xlsx);
 
             // Preserve the original version metadata (document properties)
             // Create MetadataOptions for document properties
             MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
 
             // Load metadata from the original workbook
-            WorkbookMetadata metadata = new WorkbookMetadata(sourcePath, metaOptions);
+            // (Uses the WorkbookMetadata(string, MetadataOptions) constructor rule)
+            WorkbookMetadata originalMetadata = new WorkbookMetadata(originalPath, metaOptions);
 
-            // Save the metadata to the newly created workbook file
-            metadata.Save(destinationPath);
+            // Save the metadata to the new workbook file
+            // (Uses the WorkbookMetadata.Save(string) rule)
+            originalMetadata.Save(newPath);
 
-            Console.WriteLine("Workbook saved with original metadata preserved.");
+            Console.WriteLine("Workbook modified and saved with original metadata preserved.");
         }
     }
 }

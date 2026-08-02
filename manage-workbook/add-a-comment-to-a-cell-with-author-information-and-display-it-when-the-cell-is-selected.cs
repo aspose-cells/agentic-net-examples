@@ -1,28 +1,40 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class AddCommentDemo
+namespace AsposeCellsCommentDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a comment to cell A1 (creates the comment if it does not exist)
-        int commentIndex = worksheet.Comments.Add("A1");
-        Comment comment = worksheet.Comments[commentIndex];
+            // Target cell
+            Cell cell = worksheet.Cells["A1"];
+            cell.PutValue("Sample Cell");
 
-        // Set the author and the comment text
-        comment.Author = "John Doe";
-        comment.Note = "Reviewed by John Doe";
+            // Add a comment to the cell if it does not exist
+            Comment comment = cell.Comment;
+            if (comment == null)
+            {
+                // Add comment via the worksheet's comment collection
+                int commentIndex = worksheet.Comments.Add("A1");
+                comment = worksheet.Comments[commentIndex];
+            }
 
-        // Make the comment visible when the cell is selected
-        comment.IsVisible = true;
+            // Set author and note
+            comment.Author = "John Doe";
+            comment.Note = "This comment appears when the cell is selected.";
 
-        // Save the workbook
-        workbook.Save("CommentWithAuthor.xlsx");
+            // Make the comment visible (displayed when the cell is selected)
+            comment.IsVisible = true;
+
+            // Save the workbook
+            workbook.Save("CommentWithAuthor.xlsx");
+        }
     }
 }

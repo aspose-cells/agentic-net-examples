@@ -1,63 +1,54 @@
+// Title: Generate an XML summary of worksheet name, TabId, data limits, and shape count with Aspose.Cells for .NET
+// Description: Loads a workbook with Aspose.Cells, iterates through every worksheet, and uses System.Xml.XmlWriter to create an indented XML file that records each sheet's Name, TabId, MaxDataRow, MaxDataColumn, and the number of drawing shapes. The workbook itself remains unchanged.
+// Keywords: Aspose.Cells XML worksheet summary | C# export worksheet metadata | TabId shape count Aspose | MaxDataRow MaxDataColumn XML | generate workbook report .NET
+// Common Searches: Aspose.Cells write worksheet details to XML C# | export sheet name TabId shape count as XML | list MaxDataRow and MaxDataColumn for each sheet | create workbook structure report using Aspose.Cells | C# generate XML summary of all worksheets
+// Developer Intent: Produce an XML file that lists each worksheet’s name, internal TabId, highest occupied row and column, and total shape count.
+// Use Cases: Document workbook layout for compliance audits | Feed sheet metadata into a cataloging or search index | Identify sheets with excessive shapes for cleanup | Track structural changes across workbook versions
+// AI Prompts: Write C# code with Aspose.Cells that outputs an XML file containing Name, TabId, MaxDataRow, MaxDataColumn, and ShapeCount for every worksheet. | Extend the XML summary to include each worksheet’s visibility status (Visible, Hidden, VeryHidden). | Add comprehensive error handling for missing input files and failures when writing the summary XML, and log detailed messages.
+
 using System;
 using System.Xml;
 using Aspose.Cells;
 
-namespace AsposeCellsSummaryDemo
+// Loads a workbook with Aspose.Cells, iterates through every worksheet, and uses System.Xml.XmlWriter to create an indented XML file that records each sheet's Name, TabId, MaxDataRow, MaxDataColumn, and the number of drawing shapes. The workbook itself remains unchanged.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Create an XML writer for the summary file
+        using (XmlWriter xmlWriter = XmlWriter.Create("summary.xml", new XmlWriterSettings { Indent = true }))
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("WorksheetsSummary");
 
-            // Path where the XML summary will be saved
-            string outputPath = "summary.xml";
-
-            // Load the workbook (uses the provided Workbook constructor)
-            Workbook workbook = new Workbook(inputPath);
-
-            // Create an XmlWriter to generate the summary file
-            XmlWriterSettings settings = new XmlWriterSettings
+            // Iterate through each worksheet and write required information
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Indent = true,
-                IndentChars = "    "
-            };
+                xmlWriter.WriteStartElement("Worksheet");
 
-            using (XmlWriter writer = XmlWriter.Create(outputPath, settings))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("WorksheetsSummary");
+                // Worksheet name
+                xmlWriter.WriteElementString("Name", sheet.Name);
 
-                // Iterate through each worksheet in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    writer.WriteStartElement("Worksheet");
+                // Internal tab identifier
+                xmlWriter.WriteElementString("TabId", sheet.TabId.ToString());
 
-                    // Worksheet name
-                    writer.WriteElementString("Name", sheet.Name);
+                // Maximum row and column that contain data
+                xmlWriter.WriteElementString("MaxDataRow", sheet.Cells.MaxDataRow.ToString());
+                xmlWriter.WriteElementString("MaxDataColumn", sheet.Cells.MaxDataColumn.ToString());
 
-                    // Internal TabId
-                    writer.WriteElementString("TabId", sheet.TabId.ToString());
+                // Number of drawing shapes on the sheet
+                xmlWriter.WriteElementString("ShapeCount", sheet.Shapes.Count.ToString());
 
-                    // Maximum data row index (zero‑based)
-                    writer.WriteElementString("MaxDataRow", sheet.Cells.MaxDataRow.ToString());
-
-                    // Maximum data column index (zero‑based)
-                    writer.WriteElementString("MaxDataColumn", sheet.Cells.MaxDataColumn.ToString());
-
-                    // Number of drawing shapes on the sheet
-                    writer.WriteElementString("ShapeCount", sheet.Shapes.Count.ToString());
-
-                    writer.WriteEndElement(); // </Worksheet>
-                }
-
-                writer.WriteEndElement(); // </WorksheetsSummary>
-                writer.WriteEndDocument();
+                xmlWriter.WriteEndElement(); // </Worksheet>
             }
 
-            // The XML summary file is now saved at 'outputPath'
-            Console.WriteLine($"Summary XML generated at: {outputPath}");
+            xmlWriter.WriteEndElement(); // </WorksheetsSummary>
+            xmlWriter.WriteEndDocument();
         }
+
+        // No additional save operation needed for the workbook itself
     }
 }

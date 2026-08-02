@@ -3,50 +3,41 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerBatch
+namespace AsposeCellsSlicerBatchDemo
 {
     class Program
     {
         static void Main()
         {
-            // Load an existing workbook (replace with your source file)
+            // Load an existing workbook that already contains pivot tables
             Workbook workbook = new Workbook("input.xlsx");
 
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the collection of pivot tables on the current worksheet
-                PivotTableCollection pivots = sheet.PivotTables;
-
-                // Starting position for slicers on this sheet
-                int slicerRow = 0;
-                int slicerColumn = 0;
-
-                // Loop through each pivot table
-                foreach (PivotTable pivot in pivots)
+                // Iterate through each pivot table on the current worksheet
+                foreach (PivotTable pivot in sheet.PivotTables)
                 {
-                    // Loop through each base field of the pivot table
-                    foreach (PivotField baseField in pivot.BaseFields)
+                    // Ensure the pivot table has at least one base field to create a slicer for
+                    if (pivot.BaseFields.Count > 0)
                     {
-                        // Add a slicer for the current base field
-                        // Using the overload: Add(PivotTable, int row, int column, PivotField baseField)
-                        int slicerIndex = sheet.Slicers.Add(pivot, slicerRow, slicerColumn, baseField);
+                        // Choose a destination cell for the slicer.
+                        // Here we place slicers sequentially in the first row, shifting columns by 2 per slicer.
+                        int destRow = 0;
+                        int destColumn = sheet.Slicers.Count * 2;
+
+                        // Add a slicer using the first base field of the pivot table
+                        // Overload: Add(PivotTable pivot, int row, int column, PivotField baseField)
+                        int slicerIndex = sheet.Slicers.Add(pivot, destRow, destColumn, pivot.BaseFields[0]);
+
+                        // Optional: customize the slicer (e.g., set a style)
                         Slicer slicer = sheet.Slicers[slicerIndex];
-
-                        // Optional: set a caption to identify the slicer
-                        slicer.Caption = $"{pivot.Name}_{baseField.Name}_Slicer";
-
-                        // Move to the next column for the next slicer
-                        slicerColumn += 2; // adjust spacing as needed
+                        slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
                     }
-
-                    // Reset column and move to next row block for the next pivot table
-                    slicerColumn = 0;
-                    slicerRow += 5; // adjust spacing as needed
                 }
             }
 
-            // Save the modified workbook
+            // Save the modified workbook with the newly added slicers
             workbook.Save("output.xlsx");
         }
     }

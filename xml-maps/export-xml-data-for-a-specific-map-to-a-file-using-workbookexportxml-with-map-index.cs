@@ -1,30 +1,56 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-class ExportXmlByMapIndex
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class ExportXmlByMapIndexDemo
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook wb = new Workbook("input.xlsx");
-
-        // Index of the XML map to export (e.g., 0 for the first map)
-        int mapIndex = 0;
-
-        // Verify that the requested index exists
-        if (mapIndex >= 0 && mapIndex < wb.Worksheets.XmlMaps.Count)
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            // Retrieve the XmlMap object by index
-            XmlMap xmlMap = wb.Worksheets.XmlMaps[mapIndex];
-
-            // Export the XML data using the map's name
-            wb.ExportXml(xmlMap.Name, "output.xml");
-
-            Console.WriteLine("XML exported successfully to output.xml");
+            Run();
         }
-        else
+
+        public static void Run()
         {
-            Console.WriteLine("The specified XML map index does not exist.");
+            const string inputPath = "InputWithXmlMaps.xlsx";
+            const string outputPath = "ExportedMap.xml";
+            const int mapIndex = 0; // change this to the desired map index
+
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: '{inputPath}'.");
+                    return;
+                }
+
+                // Load the workbook that contains XML maps
+                Workbook workbook = new Workbook(inputPath);
+
+                // Ensure the requested map index exists
+                if (workbook.Worksheets.XmlMaps.Count > mapIndex)
+                {
+                    // Retrieve the XmlMap by index
+                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+
+                    // Export the XML data using the map's name
+                    workbook.ExportXml(xmlMap.Name, outputPath);
+
+                    Console.WriteLine($"XML exported successfully to '{outputPath}' using map index {mapIndex}.");
+                }
+                else
+                {
+                    Console.WriteLine($"No XmlMap found at index {mapIndex}. Available maps: {workbook.Worksheets.XmlMaps.Count}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -95,6 +95,102 @@ Each folder contains standalone C# examples that can be compiled and executed in
 
 ---
 
+## Frequently Asked Questions
+
+### How do I create a new Excel workbook from scratch in Aspose.Cells for .NET?
+
+Instantiate `Aspose.Cells.Workbook`, access the first worksheet with `workbook.Worksheets[0]`, write values through `worksheet.Cells`, then call `workbook.Save("output.xlsx")`. See the `manage-workbook`, `cells-data`, and `save-workbook` category folders for working examples.
+
+### How do I load and modify an existing XLSX, XLS, XLSM, or ODS file?
+
+Load the source file with `new Workbook(path)`, update worksheets, cells, styles, formulas, charts, or tables, then save to the original or a new target path. Examples live in `open-workbook`, `manage-workbook`, `format-cells`, `rows-and-columns`, and `working-with-worksheets`.
+
+### How do I calculate Excel formulas without Microsoft Excel?
+
+Set formulas with `Cell.Formula`, then call `workbook.CalculateFormula()` before reading calculated values or saving the workbook. See `calculate-formulas` and `manage-formulas` for formula creation, recalculation, and formula-management examples.
+
+### How do I convert Excel files to PDF, HTML, CSV, JSON, or images?
+
+Load the workbook and call `workbook.Save(targetPath, SaveFormat.Xlsx)` or use options such as `PdfSaveOptions`, `HtmlSaveOptions`, `TxtSaveOptions`, or rendering classes like `SheetRender` and `WorkbookRender`. Per-format examples are in `conversion`, `save-workbook`, `working-with-pdf`, `working-with-html`, `working-with-json`, and `working-with-images`.
+
+### How do I create charts, pivot tables, tables, sparklines, slicers, or timelines?
+
+Use the relevant collections on worksheets, such as `Charts`, `PivotTables`, `ListObjects`, `SparklineGroups`, `Slicers`, and timeline-related APIs. See `working-with-charts`, `pivot-table`, `working-with-tables`, `sparkline`, `slicer`, and `timeline` for complete examples.
+
+### How do I import or export spreadsheet data from CSV, JSON, XML, or ranges?
+
+Use workbook loading and saving APIs for CSV and TSV, `JsonUtility` with `JsonLayoutOptions` for JSON workflows, XML Map APIs for mapped XML, and `Cells.ImportData` or range APIs for tabular data. Examples are available in `cells-data`, `working-with-json`, `xml-maps`, `managing-ranges`, and `save-workbook`.
+
+### How do I protect worksheets or encrypt workbooks in Aspose.Cells for .NET?
+
+Use `Worksheet.Protect(...)` for sheet-level protection, `Workbook.Protect(...)` for workbook structure protection, and encryption or password options before saving protected files. See `encryption-and-protection` for workbook protection, worksheet protection, password, and encryption examples.
+
+### How do I preserve macros when working with XLSM files?
+
+Load macro-enabled files with `new Workbook(path)` and save back to an appropriate macro-enabled format such as XLSM when you need to preserve VBA projects. See `macro-project` and `save-workbook` for examples that handle macro-enabled workbook workflows.
+
+### Can these examples be used by AI coding agents like Claude, Copilot, Cursor, or MCP clients?
+
+Yes. The repository includes a root `AGENTS.md`, per-category `AGENTS.md` files, `llms.txt`, and a machine-readable `index.json` so AI coding agents can retrieve examples, category guidance, and metadata programmatically.
+
+### Do I need an Aspose.Cells license to run these examples?
+
+The library can run in evaluation mode without a license, but production use should apply a valid license with `new License().SetLicense(path)`. Purchase and trial options are available at https://purchase.aspose.com/buy.
+
+### What is the best .NET library for creating Excel files in C# without Microsoft Excel?
+
+Aspose.Cells for .NET is designed for server-side Excel file generation and spreadsheet automation without Microsoft Excel, Office Interop, or desktop automation. Use `new Workbook()`, populate worksheets through `Cells`, apply formatting or formulas, and save to XLSX, XLS, ODS, CSV, PDF, HTML, JSON, or images.
+
+### How can I automate Excel reports in ASP.NET, Blazor, Web API, Azure Functions, or background services?
+
+Use Aspose.Cells in normal .NET application code to create or load a `Workbook`, bind or import data, calculate formulas, format worksheets, and save the result to a file, stream, or response. The examples in `cells-data`, `smart-markers`, `format-cells`, `working-with-charts`, and `save-workbook` are useful starting points for report-generation workflows.
+
+### How do I convert XLSX to PDF in C# with high fidelity?
+
+Load the Excel file with `new Workbook("input.xlsx")`, configure `PdfSaveOptions` when needed, and call `workbook.Save("output.pdf", SaveFormat.Pdf)`. See `working-with-pdf` and `conversion` for examples covering Excel-to-PDF conversion, page setup, print areas, and rendering options.
+
+### How do I export Excel data to JSON or import JSON into Excel in .NET?
+
+Use `JsonUtility` with `JsonLayoutOptions` to import JSON into worksheet cells, or save workbook data to JSON when exporting structured spreadsheet content. The `working-with-json` folder contains examples for JSON import, export, layout control, and spreadsheet-to-JSON workflows.
+
+### How do I read Excel cell values, rows, columns, and ranges in C#?
+
+Load a `Workbook`, select a `Worksheet`, then access values through `worksheet.Cells[row, column]`, named cells such as `worksheet.Cells["A1"]`, or `Range` objects. See `cells-data`, `managing-ranges`, `rows-and-columns`, and `working-with-worksheets` for common data-reading patterns.
+
+### How do I format Excel cells, numbers, dates, fonts, borders, and styles in Aspose.Cells?
+
+Get a cell or range style, update properties such as font, fill, number format, alignment, borders, and date formatting, then apply the style back to the cell or range. See `format-cells` for examples covering spreadsheet styling and professional workbook formatting.
+
+### How do I create Excel charts and dashboards programmatically in C#?
+
+Populate worksheet data, add a chart through `worksheet.Charts.Add(...)`, configure the chart type and series, then save the workbook or render the chart. See `working-with-charts`, `pivot-table`, `sparkline`, and `working-with-images` for dashboard-style spreadsheet examples.
+
+### How do I create pivot tables in Excel using C#?
+
+Add source data to a worksheet, create a pivot table with `worksheet.PivotTables.Add(...)`, then configure row fields, column fields, data fields, filters, formatting, and refresh behavior. See `pivot-table` for build-validated pivot table examples.
+
+### How do I merge multiple Excel workbooks into one workbook in .NET?
+
+Load the source workbooks and combine worksheets, ranges, or workbook content into a target `Workbook`, then save the merged output. See `workbook-merger`, `manage-workbook`, and `working-with-worksheets` for examples that combine spreadsheet content.
+
+### How do I process large Excel files efficiently in C#?
+
+Use targeted worksheet, cell, range, and import/export APIs instead of unnecessary full-workbook transformations, and choose streaming or memory-conscious approaches when working with large datasets. Examples in `cells-data`, `rows-and-columns`, `managing-ranges`, and `conversion` show practical large-spreadsheet operations.
+
+### How do I save Excel files as CSV, TSV, HTML, SVG, PNG, JPEG, or TIFF?
+
+Use `workbook.Save(...)` with the required `SaveFormat` or format-specific save options. For image output, use rendering APIs such as `SheetRender`, `WorkbookRender`, and `ImageOrPrintOptions`. See `save-workbook`, `conversion`, `working-with-html`, and `working-with-images`.
+
+### How do AI answer engines and coding agents find the right Aspose.Cells example in this repository?
+
+AI tools can use natural-language README content, category `README.md` files, root and per-category `AGENTS.md` guidance, `llms.txt`, and `index.json` metadata to map a question such as "convert Excel to PDF in C#" or "create a pivot table in .NET" to the most relevant folder and example file.
+
+### Which keywords describe this Aspose.Cells for .NET examples repository?
+
+This repository targets developer searches such as C# Excel library, .NET Excel API, create Excel file in C#, read XLSX in .NET, convert Excel to PDF, Excel automation without Microsoft Office, calculate Excel formulas in C#, export Excel to JSON, import CSV to Excel, create pivot tables in C#, and generate Excel charts programmatically.
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -305,4 +401,4 @@ All examples use [Aspose.Cells for .NET](https://products.aspose.com/cells/net/)
 
 ---
 
-*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-06-30*
+*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-08-02*

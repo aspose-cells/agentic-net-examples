@@ -3,66 +3,61 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsJsonFromNetwork
+namespace AsposeCellsJsonNetworkExample
 {
     class Program
     {
         // Entry point of the console application
         static async Task Main(string[] args)
         {
+            // URL of the JSON file hosted on a network location
+            string jsonUrl = "https://example.com/data/sample.json";
+
             try
             {
-                // URL of the JSON file hosted on a network location
-                string jsonUrl = "https://example.com/data/sample.json";
-
-                // Create HttpClient for downloading the JSON content as a stream
+                // Create an HttpClient instance for downloading the JSON data
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    // Send GET request
-                    using (HttpResponseMessage response = await httpClient.GetAsync(jsonUrl))
+                    // Send request and get response
+                    HttpResponseMessage response = await httpClient.GetAsync(jsonUrl);
+                    if (!response.IsSuccessStatusCode)
                     {
-                        if (!response.IsSuccessStatusCode)
+                        Console.WriteLine($"Failed to download JSON. Status code: {(int)response.StatusCode} {response.ReasonPhrase}");
+                        return;
+                    }
+
+                    // Download the JSON content as a stream
+                    using (Stream jsonStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        // Configure JSON load options (optional)
+                        JsonLoadOptions loadOptions = new JsonLoadOptions
                         {
-                            Console.WriteLine($"Failed to download JSON. Status code: {(int)response.StatusCode} {response.ReasonPhrase}");
-                            return;
-                        }
+                            // Start loading data from cell A1
+                            StartCell = "A1",
+                            // Keep the JSON schema (useful if you plan to save back to JSON)
+                            KeptSchema = true,
+                            // Import each top‑level array as a separate worksheet
+                            MultipleWorksheets = true
+                        };
 
-                        // Read the response content as a stream
-                        using (Stream jsonStream = await response.Content.ReadAsStreamAsync())
-                        {
-                            // Configure JSON load options (optional)
-                            JsonLoadOptions loadOptions = new JsonLoadOptions
-                            {
-                                // Example: start importing data from cell B2
-                                StartCell = "B2",
-                                // Keep the JSON schema for later saving back to JSON if needed
-                                KeptSchema = true
-                            };
+                        // Load the JSON data from the stream into a Workbook
+                        Workbook workbook = new Workbook(jsonStream, loadOptions);
 
-                            // Load the JSON data into a Workbook using the stream and options
-                            Workbook workbook = new Workbook(jsonStream, loadOptions);
+                        // For demonstration, write the name of the first worksheet to the console.
+                        Console.WriteLine("Workbook loaded. First worksheet name: " + workbook.Worksheets[0].Name);
 
-                            // Save the workbook to an Excel file
-                            string outputPath = "NetworkJsonOutput.xlsx";
-                            workbook.Save(outputPath);
-                            Console.WriteLine($"JSON data loaded from network and saved to Excel successfully: {Path.GetFullPath(outputPath)}");
-                        }
+                        // Save the workbook to an Excel file
+                        string outputPath = "NetworkJsonOutput.xlsx";
+                        workbook.Save(outputPath, SaveFormat.Xlsx);
+                        Console.WriteLine($"Workbook saved to '{outputPath}'.");
                     }
                 }
             }
-            catch (HttpRequestException httpEx)
-            {
-                Console.WriteLine($"Network error while downloading JSON: {httpEx.Message}");
-            }
-            catch (FileNotFoundException fileEx)
-            {
-                Console.WriteLine($"File not found: {fileEx.Message}");
-            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // Catch any unexpected errors (e.g., network issues, Aspose.Cells errors)
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

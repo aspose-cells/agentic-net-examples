@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsStringValueDemo
+namespace AsposeCellsGetStringValueDemo
 {
     class Program
     {
@@ -10,22 +10,26 @@ namespace AsposeCellsStringValueDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Access a specific cell (A1) and put a numeric value into it
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue(12345.678);
+            // Put a numeric value into cell A1
+            cells["A1"].PutValue(12345.6789);
 
-            // Apply a number format (e.g., currency) to the cell
-            Style style = cell.GetStyle();
-            style.Number = 3; // Currency format
-            cell.SetStyle(style);
+            // Apply a number format to the cell (e.g., currency)
+            Style style = cells["A1"].GetStyle();
+            style.Number = 4; // Currency format
+            cells["A1"].SetStyle(style);
 
-            // Retrieve the cell's formatted string value using the DisplayString strategy
-            // This strategy includes all formatting (number format, locale, column width, etc.)
-            string formattedValue = cell.GetStringValue(CellValueFormatStrategy.DisplayString);
+            // Retrieve the formatted string using the DisplayString strategy
+            string formattedValue = cells["A1"].GetStringValue(CellValueFormatStrategy.DisplayString);
+            Console.WriteLine("Formatted (DisplayString) value: " + formattedValue);
 
-            // Output the result
-            Console.WriteLine("Formatted string value (DisplayString strategy): " + formattedValue);
+            // Retrieve the raw value without any formatting using the None strategy
+            string rawValue = cells["A1"].GetStringValue(CellValueFormatStrategy.None);
+            Console.WriteLine("Raw (None) value: " + rawValue);
+
+            // Optionally save the workbook (not required for the GetStringValue demonstration)
+            workbook.Save("GetStringValueDemo.xlsx");
         }
     }
 }

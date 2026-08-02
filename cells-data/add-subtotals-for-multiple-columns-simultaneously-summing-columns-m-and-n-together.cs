@@ -1,46 +1,38 @@
 using Aspose.Cells;
 using System;
 
-class Program
+class SubtotalMultipleColumns
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Add header row (columns L, M, N)
-        cells["L1"].PutValue("Group");
-        cells["M1"].PutValue("Value1");
-        cells["N1"].PutValue("Value2");
+        // Add header row
+        cells["A1"].PutValue("Group");   // Column A (index 0) – grouping field
+        cells["M1"].PutValue("ValueM");  // Column M (index 12)
+        cells["N1"].PutValue("ValueN");  // Column N (index 13)
 
-        // Sample data
-        string[] groups = { "A", "A", "B", "B", "A" };
-        int[,] values = {
-            { 10, 20 },
-            { 15, 25 },
-            { 5, 30 },
-            { 8, 12 },
-            { 20, 10 }
-        };
-
-        // Populate data starting from row 2 (zero‑based index 1)
-        for (int i = 0; i < groups.Length; i++)
+        // Populate sample data (5 rows)
+        for (int i = 0; i < 5; i++)
         {
-            cells[i + 1, 11].PutValue(groups[i]);          // Column L (index 11)
-            cells[i + 1, 12].PutValue(values[i, 0]);      // Column M (index 12)
-            cells[i + 1, 13].PutValue(values[i, 1]);      // Column N (index 13)
+            // Alternate groups for demonstration
+            cells[i + 1, 0].PutValue(i % 2 == 0 ? "G1" : "G2"); // Group column
+            cells[i + 1, 12].PutValue(10 + i);                 // Column M values
+            cells[i + 1, 13].PutValue(20 + i);                 // Column N values
         }
 
-        // Define the cell area that includes the header and data (L1:N6)
-        CellArea area = CellArea.CreateCellArea(0, 11, groups.Length, 13);
-        // Parameters:
-        // - groupBy: 0 (first column of the area, i.e., column L)
-        // - function: Sum
-        // - totalList: {1, 2} (columns M and N within the area)
-        // - replace, pageBreaks, summaryBelowData: true for demonstration
-        worksheet.Cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 1, 2 }, true, true, true);
+        // Define the cell area covering the data (A1:N6)
+        CellArea area = CellArea.CreateCellArea(0, 0, 5, 13);
+
+        // Add subtotals:
+        // - Group by column A (index 0)
+        // - Use SUM function
+        // - Apply to columns M and N (indices 12 and 13)
+        // - Replace existing subtotals, no page breaks, summary below data
+        cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 12, 13 }, true, false, true);
 
         // Save the workbook
         workbook.Save("Subtotal_M_N.xlsx");

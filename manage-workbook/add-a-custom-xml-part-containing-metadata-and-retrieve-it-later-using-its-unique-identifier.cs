@@ -9,32 +9,37 @@ namespace AsposeCellsCustomXmlDemo
     {
         static void Main()
         {
-            // ---------- Create a new workbook ----------
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Sample XML data to store in the custom XML part
-            string xmlContent = "<root><item>Sample Metadata</item></root>";
+            // Prepare XML data for the custom part
+            string xmlContent = "<metadata><author>John Doe</author><created>2024-01-01</created></metadata>";
             byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlContent);
 
-            // Add the custom XML part (no schema data in this example)
-            int partIndex = workbook.CustomXmlParts.Add(xmlBytes, null);
+            // (Optional) Prepare an XML schema – can be null if not needed
+            byte[] schemaBytes = null;
 
-            // Retrieve the added part and assign a unique identifier (GUID)
+            // Add the custom XML part to the workbook and obtain its index
+            int partIndex = workbook.CustomXmlParts.Add(xmlBytes, schemaBytes);
+
+            // Retrieve the newly added part via the index
             CustomXmlPart customPart = workbook.CustomXmlParts[partIndex];
-            string uniqueId = Guid.NewGuid().ToString();
-            customPart.ID = uniqueId;
+
+            // Assign a unique identifier (GUID) to the part
+            string partId = Guid.NewGuid().ToString();
+            customPart.ID = partId;
 
             // Save the workbook containing the custom XML part
             string filePath = "CustomXmlDemo.xlsx";
             workbook.Save(filePath);
 
-            // ---------- Load the workbook and retrieve the custom XML part ----------
+            // Load the workbook from disk
             Workbook loadedWorkbook = new Workbook(filePath);
 
-            // Use the unique identifier to locate the custom XML part
-            CustomXmlPart retrievedPart = loadedWorkbook.CustomXmlParts.SelectByID(uniqueId);
+            // Retrieve the custom XML part using its unique ID
+            CustomXmlPart retrievedPart = loadedWorkbook.CustomXmlParts.SelectByID(partId);
 
-            // Output verification information
+            // Output the ID and XML content of the retrieved part
             if (retrievedPart != null)
             {
                 Console.WriteLine("Retrieved Part ID: " + retrievedPart.ID);

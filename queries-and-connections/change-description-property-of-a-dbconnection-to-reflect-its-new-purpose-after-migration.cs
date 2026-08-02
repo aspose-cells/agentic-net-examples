@@ -7,21 +7,27 @@ namespace AsposeCellsExamples
 {
     public class UpdateDbConnectionDescription
     {
+        // Entry point required for the console application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
+
         public static void Run()
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Ensure the input file exists before loading
+                // Verify that the input workbook exists
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the workbook containing external data connections
+                // Load the workbook that contains a DBConnection
                 Workbook workbook = new Workbook(inputPath);
 
                 // Access the collection of external connections
@@ -44,26 +50,22 @@ namespace AsposeCellsExamples
                     return;
                 }
 
-                // Update the connection description
+                // Update the description to reflect the new purpose after migration
                 dbConn.ConnectionDescription = "Migrated connection: now points to the new data warehouse";
 
-                // Save the modified workbook
+                // Optionally, update other properties such as the connection string
+                // dbConn.ConnectionString = "Provider=SQLNCLI11;Data Source=NewServer;Initial Catalog=NewDB;Integrated Security=SSPI;";
+
+                // Save the workbook with the modified connection
                 workbook.Save(outputPath);
-                Console.WriteLine($"DBConnection description updated and workbook saved as '{outputPath}'.");
+
+                Console.WriteLine("DBConnection description updated and workbook saved successfully.");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Program entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            UpdateDbConnectionDescription.Run();
         }
     }
 }

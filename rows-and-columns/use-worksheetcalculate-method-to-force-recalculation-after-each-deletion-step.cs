@@ -1,68 +1,58 @@
+// Title: C# – Recalculate formulas after each row deletion using Aspose.Cells Worksheet.Calculate
+// Description: Demonstrates how to delete rows from a worksheet and trigger immediate formula recalculation with Worksheet.Calculate (or Workbook.CalculateFormula) in Aspose.Cells for .NET, printing the updated SUM after each removal and saving the final file.
+// Keywords: Aspose.Cells C# | Worksheet.Calculate | Workbook.CalculateFormula | recalculate after DeleteRow | dynamic row removal Excel | force formula update .NET | sum formula after row delete | Excel automation Aspose | incremental calculation | performance optimization
+// Common Searches: Aspose.Cells recalculate after deleting rows | Worksheet.Calculate vs Workbook.CalculateFormula | C# delete rows and update formulas | force Excel formula refresh after row removal | Aspose.Cells incremental calculation example
+// Developer Intent: Keep dependent formulas accurate by forcing a calculation after each row deletion.
+// Use Cases: Maintain a running total while pruning data rows. | Ensure financial aggregates stay correct after dynamic row cleanup. | Generate a final workbook that reflects the latest calculations after iterative deletions.
+// AI Prompts: Generate C# code that deletes rows from an Aspose.Cells worksheet and calls Worksheet.Calculate after each deletion. | Explain when to prefer Worksheet.Calculate over Workbook.CalculateFormula in Aspose.Cells. | Show how to log formula results after every DeleteRow operation using Aspose.Cells. | Compare performance of batch recalculation versus per‑row recalculation in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to delete rows from a worksheet and trigger immediate formula recalculation with Worksheet.Calculate (or Workbook.CalculateFormula) in Aspose.Cells for .NET, printing the updated SUM after each removal and saving the final file.
+class WorksheetCalculateAfterDeletion
 {
-    public class WorksheetCalculateAfterDeletionDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Populate sample data in column A (rows 1-5)
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
-            cells["A4"].PutValue(40);
-            cells["A5"].PutValue(50);
+            // Populate column A with values 1 to 10
+            for (int i = 0; i < 10; i++)
+            {
+                cells[i, 0].PutValue(i + 1); // A1..A10
+            }
 
-            // Add a formula that sums the values in column A
-            cells["B1"].Formula = "=SUM(A1:A5)";
+            // Add a formula in B1 that sums the values in column A
+            cells[0, 1].Formula = "=SUM(A1:A10)";
 
             // Initial calculation to evaluate the formula
             workbook.CalculateFormula();
+            Console.WriteLine("Initial sum (B1): " + cells[0, 1].StringValue);
 
-            Console.WriteLine("Initial sum (B1): " + cells["B1"].StringValue); // Expected 150
-
-            // Delete the second row (index 1) and recalculate
-            cells.DeleteRow(1);               // Removes row 2 (value 20)
-            workbook.CalculateFormula();     // Force recalculation after deletion
-
-            Console.WriteLine("After deleting row 2, sum (B1): " + cells["B1"].StringValue); // Expected 130
-
-            // Delete two rows starting from the third row (current indices after previous deletion)
-            cells.DeleteRows(2, 2);           // Removes rows that originally were 4 and 5 (values 40 and 50)
-            workbook.CalculateFormula();     // Force recalculation after second deletion
-
-            Console.WriteLine("After deleting rows 4-5, sum (B1): " + cells["B1"].StringValue); // Expected 40 (10+30)
-
-            // Save the workbook to verify the final state
-            string outputPath = "WorksheetCalculateAfterDeletionDemo.xlsx";
-            try
+            // Delete rows from bottom to top, forcing recalculation after each deletion
+            for (int rowIndex = 9; rowIndex >= 0; rowIndex--)
             {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                // Delete the current row
+                cells.DeleteRow(rowIndex);
+
+                // Recalculate formulas after the deletion
+                workbook.CalculateFormula();
+
+                // Output the updated sum after this deletion step
+                Console.WriteLine($"After deleting row {rowIndex + 1}, sum (B1): {cells[0, 1].StringValue}");
             }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+
+            // Save the final workbook
+            workbook.Save("Result.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

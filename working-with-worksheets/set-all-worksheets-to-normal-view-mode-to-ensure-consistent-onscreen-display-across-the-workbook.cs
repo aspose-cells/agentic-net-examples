@@ -3,25 +3,23 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    class SetAllWorksheetsToNormalView
+    // Author: Aspose.Cells .NET example – set all worksheets to Normal view
+    class SetAllSheetsNormalView
     {
         static void Main()
         {
             // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") to load
 
-            // Add a few worksheets for demonstration
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
-
-            // Iterate through all worksheets and set the view type to NormalView
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                sheet.ViewType = ViewType.NormalView; // Normal view ensures consistent on‑screen display
+                // Set the view type to Normal view
+                sheet.ViewType = ViewType.NormalView;
             }
 
             // Save the workbook to a file
-            workbook.Save("AllSheetsNormalView.xlsx", SaveFormat.Xlsx);
+            workbook.Save("AllSheetsNormalView.xlsx");
         }
     }
 }

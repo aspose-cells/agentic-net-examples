@@ -1,11 +1,19 @@
+// Title: Resize chart data label shapes with large markers using Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, adds a line chart, binds a series to sample data, sets 30‑point circular markers, enables data labels above each point, disables auto‑fit, and applies a custom 80 × 30‑point size to every label before recalculating and saving the file.
+// Keywords: Aspose.Cells | C# chart customization | line chart data labels | custom label width height | .NET Excel chart | large marker size | disable auto fit data labels | resize chart label shape | Excel export Aspose.Cells
+// Common Searches: Aspose.Cells set custom size for chart data labels | Resize data label shapes in a line chart C# | Disable auto‑fit for Excel chart labels Aspose | How to change marker size and label dimensions in Aspose.Cells | Custom width and height for chart point labels .NET
+// Developer Intent: Apply a fixed width and height to each data label shape after enabling large markers on a line chart.
+// Use Cases: Generate Excel reports where data labels must stay uniform regardless of their text length. | Design charts with oversized markers while keeping label dimensions consistent to avoid overlap. | Create a reusable .NET routine that standardizes label size for all points in a series.
+// AI Prompts: Show C# code to disable auto‑fit and set a custom 80 × 30‑point size for each data label in an Aspose.Cells line chart with large markers. | Provide an Aspose.Cells example that resizes data label shapes for all points in a series. | Explain how to recalculate an Aspose.Cells chart after modifying data label dimensions.
+
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    public class ResizeDataLabelShapesForLineChart
+    // Creates a workbook, adds a line chart, binds a series to sample data, sets 30‑point circular markers, enables data labels above each point, disables auto‑fit, and applies a custom 80 × 30‑point size to every label before recalculating and saving the file.
+    class ResizeDataLabelShapes
     {
         public static void Run()
         {
@@ -13,56 +21,52 @@ namespace AsposeCellsExamples
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
                 // Populate sample data for the line chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+                worksheet.Cells["A1"].PutValue("X");
+                worksheet.Cells["B1"].PutValue("Y");
+                for (int i = 0; i < 5; i++)
+                {
+                    worksheet.Cells[i + 2, 0].PutValue(i + 1);          // X values
+                    worksheet.Cells[i + 2, 1].PutValue((i + 1) * 10); // Y values
+                }
 
-                // Add a line chart
-                int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
+                // Add a line chart to the worksheet
+                int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+                Chart chart = worksheet.Charts[chartIndex];
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+                // Add a series and bind it to the data range
+                int seriesIndex = chart.NSeries.Add("B2:B6", true);
+                Series series = chart.NSeries[seriesIndex];
+                series.XValues = "A2:A6";
 
-                // Access the first (and only) series
-                Series series = chart.NSeries[0];
-
-                // Enable markers with a large size
+                // Enable markers and set a large marker size
                 series.Marker.MarkerStyle = ChartMarkerType.Circle;
-                series.Marker.MarkerSize = 30; // large marker size in points
-                series.Marker.ForegroundColor = Color.Red;
-                series.Marker.BackgroundColor = Color.Yellow;
+                series.Marker.MarkerSize = 30; // size in points (large)
 
                 // Enable data labels for the series
                 series.DataLabels.ShowValue = true;
-                // Optional: set shape type if needed (removed due to API compatibility)
+                series.DataLabels.Position = LabelPositionType.Above;
 
                 // Resize each data label shape
                 foreach (ChartPoint point in series.Points)
                 {
-                    // Disable auto‑fit so we can set custom dimensions
+                    // Disable auto‑fit so custom dimensions are applied
                     point.DataLabels.IsResizeShapeToFitText = false;
 
-                    // Set custom width and height (units are points)
-                    point.DataLabels.Width = 40;   // narrower than default
-                    point.DataLabels.Height = 15;  // shorter than default
+                    // Set custom width and height for the data label shape (in points)
+                    point.DataLabels.Width = 80;
+                    point.DataLabels.Height = 30;
                 }
 
-                // Define output file path
-                string outputPath = "ResizeDataLabelShapesForLineChart.xlsx";
+                // Recalculate the chart to apply the changes
+                chart.Calculate();
 
                 // Save the workbook
+                string outputPath = "ResizeDataLabelShapes.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
@@ -71,12 +75,11 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for the console application
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            ResizeDataLabelShapesForLineChart.Run();
+            ResizeDataLabelShapes.Run();
         }
     }
 }

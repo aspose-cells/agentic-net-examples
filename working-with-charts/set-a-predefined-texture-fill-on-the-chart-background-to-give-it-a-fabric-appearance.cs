@@ -9,7 +9,7 @@ namespace AsposeCellsChartTextureDemo
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -31,13 +31,13 @@ namespace AsposeCellsChartTextureDemo
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Apply a texture fill to the chart background (fabric appearance)
-            // First set the fill type to Texture
+            // Apply a predefined texture (fabric-like) to the chart background
+            // Set the fill type to Texture and choose a texture that resembles fabric, e.g., WovenMat
             chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
-            // Then assign a predefined texture, e.g., Denim, which resembles fabric
-            chart.ChartArea.Area.FillFormat.Texture = TextureType.Denim;
-            // Alternatively, you can also set the TextureFill.Type property
-            // chart.ChartArea.Area.FillFormat.TextureFill.Type = TextureType.Denim;
+            chart.ChartArea.Area.FillFormat.Texture = TextureType.WovenMat;
+
+            // Optionally enable tiling for a more pronounced texture effect
+            chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
 
             // Save the workbook
             workbook.Save("ChartWithFabricTexture.xlsx");

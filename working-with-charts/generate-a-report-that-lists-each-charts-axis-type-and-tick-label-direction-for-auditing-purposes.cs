@@ -1,103 +1,108 @@
+// Title: C# console report of chart axis types and tick‑label directions with Aspose.Cells
+// Description: Loads an Excel workbook, iterates every worksheet and chart, calculates each chart layout, and prints to the console the axis scope (primary/secondary), axis type (Category, Value, Series) and tick‑label text direction. Ideal for .NET developers needing a quick audit of chart axis settings.
+// Keywords: Aspose.Cells chart axis direction | C# list chart axes tick label | retrieve axis type Aspose.Cells | audit Excel chart axes .NET | chart axis tick label direction C# | Aspose.Cells console report | Excel chart axis enumeration
+// Common Searches: how to get tick label direction of chart axes using Aspose.Cells C# | list primary and secondary axes for all charts in a workbook | Aspose.Cells enumerate chart axes properties | C# code to output chart axis type and label direction | Aspose.Cells chart axis audit example
+// Developer Intent: Generate a detailed console report that shows each chart’s axis type and its tick‑label direction across all worksheets in an Excel file.
+// Use Cases: Create an audit log of chart axis settings before publishing a workbook to guarantee visual consistency. | Validate that tick‑label directions follow corporate style guidelines in financial or marketing reports. | Troubleshoot unexpected axis formatting in automated chart generation pipelines.
+// AI Prompts: Write a method that returns a List<ChartAxisInfo> with worksheet name, chart name, axis scope, axis type, and tick‑label direction. | Modify the sample to export the axis report to CSV or JSON instead of writing to the console. | Add error handling for missing secondary axes and produce a summary of primary vs. secondary axes found.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsAuditReport
+// Loads an Excel workbook, iterates every worksheet and chart, calculates each chart layout, and prints to the console the axis scope (primary/secondary), axis type (Category, Value, Series) and tick‑label text direction. Ideal for .NET developers needing a quick audit of chart axis settings.
+class ChartAxisAudit
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            const string inputPath = "input.xlsx";
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Set a custom tick label direction for demonstration
-            chart.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Vertical;
-            chart.ValueAxis.TickLabels.DirectionType = ChartTextDirectionType.Horizontal;
-
-            // Calculate the chart to ensure axis information is up‑to‑date
-            chart.Calculate();
-
-            // Add a worksheet to hold the audit report
-            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            reportSheet.Name = "AuditReport";
-
-            // Write header row
-            reportSheet.Cells["A1"].PutValue("Worksheet");
-            reportSheet.Cells["B1"].PutValue("Chart Index");
-            reportSheet.Cells["C1"].PutValue("Axis Type");
-            reportSheet.Cells["D1"].PutValue("Primary/Secondary");
-            reportSheet.Cells["E1"].PutValue("Tick Label Direction");
-
-            int reportRow = 1; // zero‑based index; row 1 is the second row (after header)
-
-            // Iterate through all worksheets (excluding the report sheet itself)
-            for (int wsIdx = 0; wsIdx < workbook.Worksheets.Count; wsIdx++)
+            // Verify that the input workbook exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
             {
-                Worksheet ws = workbook.Worksheets[wsIdx];
-                if (ws.Name == "AuditReport") continue;
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-                // Iterate through all charts in the worksheet
-                for (int cIdx = 0; cIdx < ws.Charts.Count; cIdx++)
+            // Load the workbook that contains charts.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all charts on the worksheet.
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Chart ch = ws.Charts[cIdx];
+                    // Ensure the chart layout is calculated before accessing axis properties.
+                    chart.Calculate();
 
-                    // Helper local function to record an axis entry
-                    void RecordAxis(string axisName, bool isPrimary, Axis axisObj)
+                    // Local helper to output information for a given axis.
+                    void ReportAxis(Axis axis, AxisType type, bool isPrimary)
                     {
-                        // Get the direction of tick labels; default to Horizontal if null
-                        ChartTextDirectionType direction = ChartTextDirectionType.Horizontal;
-                        if (axisObj != null && axisObj.TickLabels != null)
-                            direction = axisObj.TickLabels.DirectionType;
+                        if (axis == null) return; // Safety check.
 
-                        // Write data to the report sheet
-                        reportSheet.Cells[reportRow, 0].PutValue(ws.Name);
-                        reportSheet.Cells[reportRow, 1].PutValue(cIdx);
-                        reportSheet.Cells[reportRow, 2].PutValue(axisName);
-                        reportSheet.Cells[reportRow, 3].PutValue(isPrimary ? "Primary" : "Secondary");
-                        reportSheet.Cells[reportRow, 4].PutValue(direction.ToString());
-                        reportRow++;
+                        // Get the text direction of the tick labels.
+                        ChartTextDirectionType direction = axis.TickLabels.DirectionType;
+
+                        // Build a readable description.
+                        string axisScope = isPrimary ? "Primary" : "Secondary";
+                        Console.WriteLine($"Worksheet: {sheet.Name}");
+                        Console.WriteLine($"Chart: {(!string.IsNullOrEmpty(chart.Name) ? chart.Name : "Unnamed Chart")}");
+                        Console.WriteLine($"  {axisScope} {type} Axis:");
+                        Console.WriteLine($"    TickLabel Direction: {direction}");
                     }
 
-                    // Category Axis (primary)
-                    if (ch.HasAxis(AxisType.Category, true))
-                        RecordAxis("Category", true, ch.CategoryAxis);
+                    // Primary Category Axis
+                    if (chart.HasAxis(AxisType.Category, true))
+                    {
+                        ReportAxis(chart.CategoryAxis, AxisType.Category, true);
+                    }
 
-                    // Category Axis (secondary)
-                    if (ch.HasAxis(AxisType.Category, false))
-                        RecordAxis("Category", false, ch.SecondCategoryAxis);
+                    // Secondary Category Axis
+                    if (chart.HasAxis(AxisType.Category, false))
+                    {
+                        ReportAxis(chart.SecondCategoryAxis, AxisType.Category, false);
+                    }
 
-                    // Value Axis (primary)
-                    if (ch.HasAxis(AxisType.Value, true))
-                        RecordAxis("Value", true, ch.ValueAxis);
+                    // Primary Value Axis
+                    if (chart.HasAxis(AxisType.Value, true))
+                    {
+                        ReportAxis(chart.ValueAxis, AxisType.Value, true);
+                    }
 
-                    // Value Axis (secondary)
-                    if (ch.HasAxis(AxisType.Value, false))
-                        RecordAxis("Value", false, ch.SecondValueAxis);
+                    // Secondary Value Axis
+                    if (chart.HasAxis(AxisType.Value, false))
+                    {
+                        ReportAxis(chart.SecondValueAxis, AxisType.Value, false);
+                    }
 
-                    // Series Axis (primary) – always primary for series axis
-                    if (ch.HasAxis(AxisType.Series, true))
-                        RecordAxis("Series", true, ch.SeriesAxis);
+                    // Primary Series Axis (if applicable)
+                    if (chart.HasAxis(AxisType.Series, true))
+                    {
+                        ReportAxis(chart.SeriesAxis, AxisType.Series, true);
+                    }
+
+                    // Secondary Series Axis (if applicable)
+                    if (chart.HasAxis(AxisType.Series, false) && chart.SeriesAxis != null)
+                    {
+                        // Aspose.Cells does not have a distinct property for secondary series axis,
+                        // so we reuse the same SeriesAxis reference when HasAxis returns true for false.
+                        ReportAxis(chart.SeriesAxis, AxisType.Series, false);
+                    }
+
+                    Console.WriteLine(); // Blank line between charts
                 }
             }
 
-            // Save the workbook with the audit report
-            workbook.Save("ChartAxisAuditReport.xlsx");
+            // Optionally, save the workbook after any modifications.
+            // workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

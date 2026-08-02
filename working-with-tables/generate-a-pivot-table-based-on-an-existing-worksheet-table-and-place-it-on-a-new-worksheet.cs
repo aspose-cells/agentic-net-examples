@@ -1,84 +1,102 @@
+// Title: Create a PivotTable on a New Sheet from Existing Data with Aspose.Cells for .NET
+// Description: C# example that builds a workbook, fills a source sheet with Category, Product and Sales data, defines the used range, adds a second worksheet, creates a PivotTable named SalesPivot at cell A3, assigns Category to rows, Product to columns, Sales to data (sum), applies a medium style, refreshes the pivot, and saves the file as PivotTableFromExistingTable.xlsx.
+// Keywords: Aspose.Cells pivot table C# | add pivot table new worksheet .NET | generate pivot from existing range Aspose | PivotTableStyleType Aspose.Cells | refresh pivot tables programmatically | Excel pivot table automation | Aspose.Cells example pivot
+// Common Searches: how to create a pivot table on a different sheet using Aspose.Cells | Aspose.Cells C# pivot table from source range | set row, column, data fields in Aspose.Cells pivot | apply style to Aspose.Cells PivotTable | refresh all pivot tables Aspose.Cells
+// Developer Intent: Generate a PivotTable from data on one worksheet and place it on a separate worksheet using Aspose.Cells for .NET.
+// Use Cases: Produce a sales summary report that groups totals by Category (rows) and Product (columns) on a dedicated reporting sheet. | Separate raw data and analytical views by creating pivot tables on new worksheets automatically. | Apply a predefined PivotTableStyleType for better readability and refresh the pivot after data updates.
+// AI Prompts: Write C# code with Aspose.Cells to create a PivotTable from a used range and place it on a new worksheet. | Explain how to add row, column, and data fields to a PivotTable and set its style using Aspose.Cells for .NET. | Show how to refresh all PivotTables on a worksheet after modifying source data with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Tables;   // Required for ListObject
+using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsPivotExample
 {
-    public class CreatePivotFromTable
+    // C# example that builds a workbook, fills a source sheet with Category, Product and Sales data, defines the used range, adds a second worksheet, creates a PivotTable named SalesPivot at cell A3, assigns Category to rows, Product to columns, Sales to data (sum), applies a medium style, refreshes the pivot, and saves the file as PivotTableFromExistingTable.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // ---------- Source worksheet with data and a table ----------
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "SourceData";
+                // -------------------------------------------------
+                // 1. Prepare source data on the first worksheet
+                // -------------------------------------------------
+                Worksheet dataSheet = workbook.Worksheets[0];
+                dataSheet.Name = "SourceData";
 
-                // Populate sample data
-                sourceSheet.Cells["A1"].PutValue("Category");
-                sourceSheet.Cells["B1"].PutValue("Product");
-                sourceSheet.Cells["C1"].PutValue("Sales");
+                // Populate sample data (Category, Product, Sales)
+                dataSheet.Cells["A1"].PutValue("Category");
+                dataSheet.Cells["B1"].PutValue("Product");
+                dataSheet.Cells["C1"].PutValue("Sales");
 
-                for (int i = 2; i <= 10; i++)
+                string[] categories = { "Fruit", "Fruit", "Vegetable", "Vegetable", "Fruit" };
+                string[] products   = { "Apple", "Banana", "Carrot", "Potato", "Orange" };
+                int[] sales         = { 1200, 800, 600, 900, 1500 };
+
+                for (int i = 0; i < categories.Length; i++)
                 {
-                    sourceSheet.Cells[$"A{i}"].PutValue("Cat" + ((i % 3) + 1));
-                    sourceSheet.Cells[$"B{i}"].PutValue("Prod" + i);
-                    sourceSheet.Cells[$"C{i}"].PutValue(i * 100);
+                    dataSheet.Cells[i + 2, 0].PutValue(categories[i]); // Column A
+                    dataSheet.Cells[i + 2, 1].PutValue(products[i]);   // Column B
+                    dataSheet.Cells[i + 2, 2].PutValue(sales[i]);     // Column C
                 }
 
-                // Define a table (ListObject) over the data range
-                int firstDataRow = 0; // zero‑based index
-                int firstDataColumn = 0;
-                int totalRows = sourceSheet.Cells.MaxDisplayRange.RowCount;
-                int totalColumns = sourceSheet.Cells.MaxDisplayRange.ColumnCount;
-
-                int tableIndex = sourceSheet.ListObjects.Add(firstDataRow, firstDataColumn,
-                                                             totalRows - 1, totalColumns - 1, true);
-                ListObject table = sourceSheet.ListObjects[tableIndex];
-                // Set the table name (use DisplayName as Name is not available in this version)
-                table.DisplayName = "SalesTable";
-
-                // ---------- Destination worksheet for the pivot table ----------
+                // -------------------------------------------------
+                // 2. Add a new worksheet that will host the pivot table
+                // -------------------------------------------------
                 Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-                // Build the source data reference using the table name
-                // For a table, the reference format is: =SheetName!TableName
-                string sourceData = $"=SourceData!{table.DisplayName}";
+                // -------------------------------------------------
+                // 3. Define the source data range for the pivot cache
+                // -------------------------------------------------
+                // Use MaxDisplayRange to get the used range automatically
+                AsposeRange sourceRange = dataSheet.Cells.MaxDisplayRange;
+                string sourceData = $"=SourceData!{sourceRange.Address}";
 
-                // Add a new pivot table to the destination sheet (cell A1, name "SalesPivot")
-                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "SalesPivot");
+                // -------------------------------------------------
+                // 4. Add the pivot table to the new worksheet
+                // -------------------------------------------------
+                // Destination cell for the pivot table (top‑left corner)
+                string destCell = "A3";
+                string pivotName = "SalesPivot";
+
+                // Add the pivot table
+                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, destCell, pivotName);
                 PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                // Configure pivot fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product"); // Column field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");    // Data field (sum)
+                // -------------------------------------------------
+                // 5. Configure the pivot table fields
+                // -------------------------------------------------
+                // Row field: Category
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                // Column field: Product
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+                // Data field: Sum of Sales
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Refresh the pivot table to calculate data
+                // Optional: set a style for better appearance
+                pivotTable.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+
+                // -------------------------------------------------
+                // 6. Refresh the pivot table to calculate data
+                // -------------------------------------------------
                 pivotSheet.RefreshPivotTables();
 
-                // Save the workbook
-                string outputPath = "PivotFromTableDemo.xlsx";
+                // -------------------------------------------------
+                // 7. Save the workbook
+                // -------------------------------------------------
+                string outputPath = "PivotTableFromExistingTable.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point required by the project
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreatePivotFromTable.Run();
         }
     }
 }

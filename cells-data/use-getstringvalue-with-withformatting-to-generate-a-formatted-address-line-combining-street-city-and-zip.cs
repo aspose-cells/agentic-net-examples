@@ -1,33 +1,33 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAddressExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Populate cells with address components
-            sheet.Cells["A1"].PutValue("123 Main St");   // Street
-            sheet.Cells["B1"].PutValue("Springfield");  // City
-            sheet.Cells["C1"].PutValue("12345");        // ZIP code
+        // Populate address components
+        cells["A1"].PutValue("123 Main St");   // Street
+        cells["A2"].PutValue("Springfield");   // City
+        cells["A3"].PutValue("12345");         // ZIP code
 
-            // Create a formula that concatenates the components into a single address line
-            // Result will look like: 123 Main St, Springfield 12345
-            sheet.Cells["D1"].Formula = "=A1 & \", \" & B1 & \" \" & C1";
+        // Create a formula that concatenates the components with proper separators
+        cells["A4"].Formula = "=A1 & \", \" & A2 & \" \" & A3";
 
-            // Retrieve the formatted string value of the formula cell using DisplayString strategy
-            string formattedAddress = sheet.Cells["D1"].GetStringValue(CellValueFormatStrategy.DisplayString);
+        // Evaluate the formula so the cell contains the resulting value
+        workbook.CalculateFormula();
 
-            // Output the formatted address
-            Console.WriteLine("Formatted Address: " + formattedAddress);
+        // Retrieve the formatted address line using GetStringValue with DisplayString strategy
+        string formattedAddress = cells["A4"].GetStringValue(CellValueFormatStrategy.DisplayString);
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("FormattedAddress.xlsx");
-        }
+        // Display the result
+        Console.WriteLine("Formatted Address: " + formattedAddress);
+
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        workbook.Save("FormattedAddress.xlsx");
     }
 }

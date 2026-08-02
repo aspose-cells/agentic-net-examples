@@ -1,51 +1,80 @@
+// Title: Preserve Chart Controls When Saving a Modified Workbook with Aspose.Cells for .NET
+// Description: Demonstrates how to load an existing XLSX file, replace a chart's data series, enable RefreshChartCache via OoxmlSaveOptions, and save the workbook so all chart controls remain functional.
+// Keywords: Aspose.Cells save chart | RefreshChartCache | preserve chart controls | modify chart series C# | OoxmlSaveOptions example | Aspose.Cells .NET chart editing | save workbook after chart changes
+// Common Searches: Aspose.Cells keep chart controls after save | RefreshChartCache option usage | C# modify chart series and save workbook | How to preserve interactive charts with Aspose.Cells | Save workbook with updated chart data .NET
+// Developer Intent: Save a workbook after updating a chart while ensuring all chart controls stay intact.
+// Use Cases: Update a chart's data series in an existing XLSX and export a new file with all interactive elements preserved. | Validate the presence of charts before applying modifications to avoid runtime errors. | Apply OoxmlSaveOptions.RefreshChartCache to guarantee that chart changes are reflected in the saved file.
+// AI Prompts: Write C# code that loads an XLSX, changes the first chart's series, sets RefreshChartCache in OoxmlSaveOptions, and saves the workbook preserving chart controls. | Explain the impact of RefreshChartCache on chart rendering when saving workbooks with Aspose.Cells. | Provide a step‑by‑step tutorial for safely modifying chart data and exporting the workbook while keeping all chart controls functional.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Saving;
 
 namespace AsposeCellsChartSaveDemo
 {
-    public class Program
+    // Demonstrates how to load an existing XLSX file, replace a chart's data series, enable RefreshChartCache via OoxmlSaveOptions, and save the workbook so all chart controls remain functional.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_modified.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["A5"].PutValue("Q4");
+            Workbook workbook = null;
+            try
+            {
+                // Load the workbook containing the chart
+                workbook = new Workbook(inputPath);
 
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
-            sheet.Cells["B5"].PutValue(200);
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
+                // Ensure the worksheet has at least one chart
+                if (sheet.Charts.Count > 0)
+                {
+                    // Get the first chart in the worksheet
+                    Chart chart = sheet.Charts[0];
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+                    // Modify the first series: clear existing series, add new Y‑values
+                    chart.NSeries.Clear();                     // Remove all existing series
+                    chart.NSeries.Add("B2:B5", true);          // Add new Y‑values series
 
-            // Modify a chart property (e.g., title) to demonstrate a change
-            chart.Title.Text = "Quarterly Sales";
+                    // Note: Setting CategoryData is optional; omitted to avoid API compatibility issues
 
-            // Prepare save options to ensure chart cache is refreshed (preserves chart controls)
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
-            saveOptions.RefreshChartCache = true;   // refreshes chart cache data
+                    // Refresh chart cache to ensure changes are saved correctly
+                    OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
+                    {
+                        RefreshChartCache = true
+                    };
 
-            // Save the workbook with the modified chart to an XLSX file
-            workbook.Save("ModifiedChartWorkbook.xlsx", saveOptions);
-
-            Console.WriteLine("Workbook with modified chart saved successfully.");
+                    // Save the modified workbook
+                    workbook.Save(outputPath, saveOptions);
+                    Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                }
+                else
+                {
+                    Console.WriteLine("No charts found in the first worksheet.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Ensure resources are released
+                workbook?.Dispose();
+            }
         }
     }
 }

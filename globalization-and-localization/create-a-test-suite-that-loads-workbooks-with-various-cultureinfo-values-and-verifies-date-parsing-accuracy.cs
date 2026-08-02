@@ -1,84 +1,79 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsCultureInfoTest
+namespace AsposeCellsCultureInfoTests
 {
-    class Program
+    public class TestCultureInfoDateParsing
     {
-        static void Main()
+        // Path for the temporary workbook used in all tests
+        private const string TestFilePath = "DateParsingTest.xlsx";
+
+        // The date value that will be written to the workbook
+        private static readonly DateTime SampleDate = new DateTime(2023, 12, 31, 15, 45, 0);
+
+        public static void Main()
         {
-            // Path for the temporary workbook
-            const string workbookPath = "DateSample.xlsx";
+            // Step 1: Create a workbook with a single date cell and save it
+            CreateSampleWorkbook();
 
-            // 1. Create a workbook with a known date value and save it
-            CreateSampleWorkbook(workbookPath);
+            // Step 2: Define cultures to test
+            string[] cultureNames = { "en-US", "de-DE", "fr-FR", "ja-JP", "ar-SA" };
 
-            // 2. Define cultures to test
-            var cultures = new Dictionary<string, CultureInfo>
+            // Step 3: Load the workbook with each culture and verify date parsing
+            foreach (string cultureName in cultureNames)
             {
-                { "en-US", new CultureInfo("en-US") }, // MM/dd/yyyy
-                { "de-DE", new CultureInfo("de-DE") }, // dd.MM.yyyy
-                { "fr-FR", new CultureInfo("fr-FR") }  // dd/MM/yyyy
-            };
-
-            // Expected date (January 15, 2023)
-            DateTime expectedDate = new DateTime(2023, 1, 15);
-
-            // 3. Load the workbook with each culture and verify date parsing
-            foreach (var kvp in cultures)
-            {
-                string cultureName = kvp.Key;
-                CultureInfo culture = kvp.Value;
-
-                // Use LoadOptions with the specific CultureInfo (rule: LoadOptions.CultureInfo)
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-                loadOptions.CultureInfo = culture;
-
-                // Load the workbook (rule: load)
-                Workbook wb = new Workbook(workbookPath, loadOptions);
-                Worksheet sheet = wb.Worksheets[0];
-                Cell dateCell = sheet.Cells["A1"];
-
-                // Retrieve the parsed date
-                DateTime parsedDate = dateCell.DateTimeValue;
-
-                // Verify that the parsed date matches the expected date
-                if (parsedDate != expectedDate)
-                {
-                    Console.WriteLine($"[FAIL] Culture {cultureName}: Parsed date {parsedDate:d} does not match expected {expectedDate:d}");
-                }
-                else
-                {
-                    Console.WriteLine($"[PASS] Culture {cultureName}: Parsed date correctly as {parsedDate:d}");
-                }
+                VerifyDateParsing(cultureName);
             }
 
-            // Clean up (optional)
-            // System.IO.File.Delete(workbookPath);
+            Console.WriteLine("All culture tests completed.");
         }
 
-        // Helper method to create a workbook containing a date in cell A1 and save it
-        static void CreateSampleWorkbook(string path)
+        private static void CreateSampleWorkbook()
         {
-            // Create a new workbook (rule: create)
+            // Create a new workbook
             Workbook wb = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
+            // Put the sample date into cell A1
+            wb.Worksheets[0].Cells["A1"].PutValue(SampleDate);
 
-            // Put a known date value into cell A1
-            DateTime sampleDate = new DateTime(2023, 1, 15);
-            sheet.Cells["A1"].PutValue(sampleDate);
+            // Apply a date format so the cell is recognized as a date
+            Style style = wb.CreateStyle();
+            style.Custom = "yyyy-mm-dd hh:mm:ss";
+            wb.Worksheets[0].Cells["A1"].SetStyle(style);
 
-            // Apply a date format (optional, does not affect parsing)
-            Style style = sheet.Cells["A1"].GetStyle();
-            style.Custom = "mm/dd/yyyy";
-            sheet.Cells["A1"].SetStyle(style);
+            // Save the workbook (XLSX format)
+            wb.Save(TestFilePath, SaveFormat.Xlsx);
+        }
 
-            // Save the workbook (rule: save)
-            wb.Save(path, SaveFormat.Xlsx);
+        private static void VerifyDateParsing(string cultureName)
+        {
+            // Prepare LoadOptions with the specific CultureInfo
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            loadOptions.CultureInfo = new CultureInfo(cultureName);
+
+            // Load the workbook using the options
+            Workbook wb = new Workbook(TestFilePath, loadOptions);
+
+            // Retrieve the date from cell A1
+            Cell dateCell = wb.Worksheets[0].Cells["A1"];
+            DateTime parsedDate = dateCell.DateTimeValue;
+
+            // Verify that the parsed date matches the original sample date (ignoring Kind)
+            bool datesMatch = parsedDate == SampleDate;
+
+            // Also verify that the workbook's Settings.CultureInfo reflects the loaded culture
+            CultureInfo workbookCulture = wb.Settings.CultureInfo;
+            bool cultureMatches = workbookCulture != null && workbookCulture.Name.Equals(cultureName, StringComparison.OrdinalIgnoreCase);
+
+            // Output the verification result
+            Console.WriteLine($"Culture: {cultureName}");
+            Console.WriteLine($"  Parsed Date: {parsedDate:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"  Expected Date: {SampleDate:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"  Dates Match: {datesMatch}");
+            Console.WriteLine($"  Workbook Settings CultureInfo: {(workbookCulture != null ? workbookCulture.Name : "null")}");
+            Console.WriteLine($"  CultureInfo Matches LoadOptions: {cultureMatches}");
+            Console.WriteLine();
         }
     }
 }

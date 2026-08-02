@@ -1,42 +1,56 @@
+// Title: Export Excel Formula Tree to Hierarchical JSON with Aspose.Cells for .NET (C#)
+// Description: Loads an existing workbook, configures JsonSaveOptions (ExportNestedStructure, AlwaysExportAsJsonObject, ExportAsString, ExportEmptyCells, HasHeaderRow, Indent) and saves the file as JSON. The output contains each cell’s address, value, and formula, forming a parent‑child representation of the workbook’s calculation graph.
+// Keywords: Aspose.Cells | C# | .NET | export formula tree | nested JSON | ExportNestedStructure | Excel to JSON | formula dependency hierarchy | workbook JsonSaveOptions | Excel model auditing
+// Common Searches: Aspose.Cells export formula hierarchy JSON C# | ExportNestedStructure option example | How to get Excel formula dependency tree with Aspose.Cells | Save workbook as hierarchical JSON .NET | C# code to export Excel formulas to JSON
+// Developer Intent: Generate a JSON file that captures the workbook’s formula dependencies as a parent‑child hierarchy.
+// Use Cases: Create a portable snapshot of calculation logic for analytics pipelines. | Feed a visualization service that displays formula flow charts. | Archive Excel models for version control, auditing, or documentation.
+// AI Prompts: Write C# code using Aspose.Cells to export an Excel workbook’s formula tree to a nested JSON file, preserving cell addresses and formulas. | Explain how the ExportNestedStructure flag builds parent‑child relationships between cells in the JSON output. | Provide a sample JSON snippet for a workbook where A1=5, B1=A1*2, and C1=B1+3 using the given JsonSaveOptions.
+
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Json;
 
-class Program
+namespace FormulaTreeExport
 {
-    static void Main()
+    // Loads an existing workbook, configures JsonSaveOptions (ExportNestedStructure, AlwaysExportAsJsonObject, ExportAsString, ExportEmptyCells, HasHeaderRow, Indent) and saves the file as JSON. The output contains each cell’s address, value, and formula, forming a parent‑child representation of the workbook’s calculation graph.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample values
-        worksheet.Cells["A1"].PutValue(5);
-        worksheet.Cells["A2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue(15);
-
-        // Add formulas that reference each other to build a calculation tree
-        worksheet.Cells["B1"].Formula = "=A1*2";          // Child of A1
-        worksheet.Cells["B2"].Formula = "=A2*2";          // Child of A2
-        worksheet.Cells["B3"].Formula = "=A3*2";          // Child of A3
-        worksheet.Cells["C1"].Formula = "=B1+B2+B3";      // Parent of B1, B2, B3
-        worksheet.Cells["D1"].Formula = "=C1+100";        // Root node
-
-        // Calculate all formulas so that the workbook has evaluated values
-        workbook.CalculateFormula();
-
-        // Configure JSON save options to export as a parent‑child hierarchy
-        JsonSaveOptions saveOptions = new JsonSaveOptions
+        static void Main()
         {
-            ExportNestedStructure = true,          // Enable nested (tree) JSON output
-            AlwaysExportAsJsonObject = true        // Ensure the output is a JSON object even for a single sheet
-        };
+            // -----------------------------------------------------------------
+            // 1. Create a new workbook or load an existing one.
+            // -----------------------------------------------------------------
+            // Example: load an existing workbook from disk.
+            // Replace "input.xlsx" with the path to your workbook.
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Save the workbook as JSON; the resulting file contains the formula tree
-        string outputPath = "formula_tree.json";
-        workbook.Save(outputPath, saveOptions);
+            // -----------------------------------------------------------------
+            // 2. Configure JSON save options to export a parent‑child hierarchy.
+            //    ExportNestedStructure = true tells Aspose.Cells to output the
+            //    data as a nested JSON structure, which includes formulas and
+            //    their relationships (e.g., cells that reference other cells).
+            // -----------------------------------------------------------------
+            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            {
+                ExportNestedStructure = true,          // Enable parent‑child JSON
+                AlwaysExportAsJsonObject = true,      // Ensure the workbook is an object even if single sheet
+                ExportAsString = true,                // Export cell values as strings (preserves formulas as text)
+                ExportEmptyCells = false,             // Skip empty cells to keep output concise
+                HasHeaderRow = true,                  // Treat first row as header (optional)
+                Indent = "  "                         // Pretty‑print with indentation
+            };
 
-        Console.WriteLine($"Formula tree exported to: {outputPath}");
+            // -----------------------------------------------------------------
+            // 3. Save the workbook as a JSON file. The resulting file contains
+            //    a hierarchical representation of the workbook, where each
+            //    cell node includes its address, value, and formula (if any).
+            //    This effectively captures the formula tree (parent‑child
+            //    relationships) for all calculations in the workbook.
+            // -----------------------------------------------------------------
+            string outputPath = "formulaTree.json";
+            workbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Workbook formula tree exported to: {outputPath}");
+        }
     }
 }

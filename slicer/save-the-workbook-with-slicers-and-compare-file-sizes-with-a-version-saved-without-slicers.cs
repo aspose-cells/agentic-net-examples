@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;
 using Aspose.Cells.Tables;
 
 namespace AsposeCellsSlicerSizeComparison
@@ -12,60 +13,67 @@ namespace AsposeCellsSlicerSizeComparison
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate sample data for a table (A1:C9)
+                // Populate sample data for a table
                 cells["A1"].PutValue("Category");
                 cells["B1"].PutValue("Year");
                 cells["C1"].PutValue("Amount");
 
-                string[] categories = { "A", "B", "A", "B", "A", "B", "A", "B", "A" };
-                int[] years = { 2020, 2020, 2020, 2020, 2020, 2021, 2021, 2021, 2021 };
-                int[] amounts = { 10, 20, 30, 40, 50, 60, 70, 80, 90 };
+                cells["A2"].PutValue("A");
+                cells["B2"].PutValue(2020);
+                cells["C2"].PutValue(10);
 
-                for (int i = 0; i < categories.Length; i++)
-                {
-                    cells[i + 1, 0].PutValue(categories[i]); // Column A
-                    cells[i + 1, 1].PutValue(years[i]);     // Column B
-                    cells[i + 1, 2].PutValue(amounts[i]);  // Column C
-                }
+                cells["A3"].PutValue("B");
+                cells["B3"].PutValue(2020);
+                cells["C3"].PutValue(20);
 
-                // Add a table (ListObject) covering the data range
-                int tableIndex = sheet.ListObjects.Add(0, 0, categories.Length, 2, true);
+                cells["A4"].PutValue("A");
+                cells["B4"].PutValue(2021);
+                cells["C4"].PutValue(30);
+
+                cells["A5"].PutValue("B");
+                cells["B5"].PutValue(2021);
+                cells["C5"].PutValue(40);
+
+                // Add a ListObject (table) using the data range
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
                 ListObject table = sheet.ListObjects[tableIndex];
-                // Use DisplayName instead of Name for compatibility with older Aspose.Cells versions
+                // Set a display name for the table (Name property may not be available in some versions)
                 table.DisplayName = "DataTable";
 
-                // Add a slicer for the first column (Category) of the table, positioned at cell E2
-                int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], "E2");
+                // Add a slicer for the first column of the table
+                int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], "E1");
                 Slicer slicer = sheet.Slicers[slicerIndex];
                 slicer.Caption = "Category Slicer";
 
                 // Save workbook with slicer
-                string withSlicerPath = "WorkbookWithSlicer.xlsx";
+                string withSlicerPath = "Workbook_WithSlicers.xlsx";
                 workbook.Save(withSlicerPath, SaveFormat.Xlsx);
-                long sizeWithSlicer = new FileInfo(withSlicerPath).Length;
 
                 // Remove all slicers from the worksheet
                 sheet.Slicers.Clear();
 
                 // Save workbook without slicer
-                string withoutSlicerPath = "WorkbookWithoutSlicer.xlsx";
+                string withoutSlicerPath = "Workbook_WithoutSlicers.xlsx";
                 workbook.Save(withoutSlicerPath, SaveFormat.Xlsx);
-                long sizeWithoutSlicer = new FileInfo(withoutSlicerPath).Length;
 
-                // Output the comparison results
-                Console.WriteLine($"File size with slicer    : {sizeWithSlicer} bytes");
-                Console.WriteLine($"File size without slicer : {sizeWithoutSlicer} bytes");
-                Console.WriteLine($"Size difference          : {sizeWithSlicer - sizeWithoutSlicer} bytes");
+                // Compare file sizes (ensure files exist before accessing)
+                long sizeWithSlicer = File.Exists(withSlicerPath) ? new FileInfo(withSlicerPath).Length : 0;
+                long sizeWithoutSlicer = File.Exists(withoutSlicerPath) ? new FileInfo(withoutSlicerPath).Length : 0;
+
+                Console.WriteLine($"File size with slicers: {sizeWithSlicer} bytes");
+                Console.WriteLine($"File size without slicers: {sizeWithoutSlicer} bytes");
+                Console.WriteLine($"Difference: {sizeWithSlicer - sizeWithoutSlicer} bytes");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

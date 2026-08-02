@@ -1,68 +1,107 @@
 using System;
 using Aspose.Cells;
 
-namespace ExternalLinkPathUpdater
+namespace AsposeCellsExternalLinkHandling
 {
-    class Program
+    public class ExternalLinkPathUpdater
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Loads a workbook, updates the DataSource of each external link using the supplied
+        /// path transformation function, and saves the workbook.
+        /// All operations are wrapped with error handling to capture and report failures.
+        /// </summary>
+        /// <param name="inputFile">Full path of the workbook to process.</param>
+        /// <param name="outputFile">Full path where the updated workbook will be saved.</param>
+        /// <param name="transformPath">
+        /// A function that receives the current DataSource string and returns the new path.
+        /// </param>
+        public void UpdateExternalLinkPaths(string inputFile, string outputFile, Func<string, string> transformPath)
         {
-            // Input and output workbook file paths
-            string inputFile = "InputWorkbook.xlsx";
-            string outputFile = "UpdatedWorkbook.xlsx";
+            if (string.IsNullOrEmpty(inputFile))
+                throw new ArgumentException("Input file path must be provided.", nameof(inputFile));
 
-            // Old and new base paths to replace in external link data sources
-            string oldBasePath = @"C:\OldExternalLinks\";
-            string newBasePath = @"D:\NewExternalLinks\";
+            if (string.IsNullOrEmpty(outputFile))
+                throw new ArgumentException("Output file path must be provided.", nameof(outputFile));
+
+            if (transformPath == null)
+                throw new ArgumentNullException(nameof(transformPath));
+
+            Workbook workbook = null;
 
             try
             {
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(inputFile);
+                // Load the workbook
+                workbook = new Workbook(inputFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook '{inputFile}': {ex.Message}");
+                return;
+            }
 
-                // Get the collection of external links
-                ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+            // Get the external links collection
+            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
-                // Iterate through each external link and attempt to update its DataSource
-                for (int i = 0; i < externalLinks.Count; i++)
+            // Iterate through each external link and attempt to update its DataSource
+            for (int i = 0; i < externalLinks.Count; i++)
+            {
+                try
                 {
-                    try
+                    ExternalLink link = externalLinks[i];
+                    string originalPath = link.DataSource;
+
+                    // Transform the path using the user‑provided delegate
+                    string newPath = transformPath(originalPath);
+
+                    // Only assign if the path actually changed
+                    if (!string.Equals(originalPath, newPath, StringComparison.OrdinalIgnoreCase))
                     {
-                        ExternalLink link = externalLinks[i];
-
-                        // Preserve the original data source for logging
-                        string originalDataSource = link.DataSource;
-
-                        // Perform the path replacement
-                        string updatedDataSource = originalDataSource.Replace(oldBasePath, newBasePath);
-
-                        // If no change occurred, skip assignment
-                        if (!originalDataSource.Equals(updatedDataSource, StringComparison.OrdinalIgnoreCase))
-                        {
-                            link.DataSource = updatedDataSource;
-                            Console.WriteLine($"Link {i} updated: '{originalDataSource}' -> '{updatedDataSource}'");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Link {i} unchanged (no matching base path).");
-                        }
-                    }
-                    catch (Exception linkEx)
-                    {
-                        // Handle failures for a specific link without aborting the whole process
-                        Console.WriteLine($"Error updating external link at index {i}: {linkEx.Message}");
+                        link.DataSource = newPath;
+                        Console.WriteLine($"External link #{i} updated: '{originalPath}' => '{newPath}'");
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Capture any failure for the specific link but continue processing others
+                    Console.WriteLine($"Error updating external link at index {i}: {ex.Message}");
+                }
+            }
 
-                // Save the modified workbook (lifecycle rule: save)
+            try
+            {
+                // Save the modified workbook
                 workbook.Save(outputFile);
                 Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                // General error handling for load/save operations
-                Console.WriteLine($"Failed to process workbook: {ex.Message}");
+                Console.WriteLine($"Error saving workbook to '{outputFile}': {ex.Message}");
             }
+            finally
+            {
+                // Ensure resources are released
+                workbook?.Dispose();
+            }
+        }
+    }
+
+    // Example usage (could be wired to a ribbon button)
+    class Program
+    {
+        static void Main()
+        {
+            var updater = new ExternalLinkPathUpdater();
+
+            // Example transformation: replace an old SharePoint URL with a new one
+            Func<string, string> pathTransformer = original =>
+                original.Replace(
+                    @"https://oldsharepoint.com/Docs/",
+                    @"https://newsharepoint.com/Shared/");
+
+            updater.UpdateExternalLinkPaths(
+                inputFile: @"C:\Temp\SourceWorkbook.xlsx",
+                outputFile: @"C:\Temp\SourceWorkbook_Updated.xlsx",
+                transformPath: pathTransformer);
         }
     }
 }

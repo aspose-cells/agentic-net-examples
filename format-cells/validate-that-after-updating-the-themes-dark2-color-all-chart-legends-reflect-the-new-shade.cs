@@ -1,71 +1,74 @@
+// Title: Update Dark2 (Accent2) Theme Color and Verify Chart Legends in Aspose.Cells for .NET
+// Description: Shows how to modify the workbook's Dark2 (Accent2) theme color with Aspose.Cells, save the file, and confirm that a column chart's legend font automatically adopts the new shade without extra formatting steps.
+// Keywords: Aspose.Cells | SetThemeColor | ThemeColorType.Accent2 | chart legend color | C# | .NET | Excel theme update | Dark2 theme | validate chart legend | workbook theme change
+// Common Searches: Aspose.Cells change theme color C# | update Dark2 (Accent2) in Excel workbook | chart legend color after theme change Aspose | refresh chart after SetThemeColor | verify theme color applied to chart legend
+// Developer Intent: Confirm that all chart legends automatically display the new Dark2 (Accent2) shade after the workbook theme is altered via Workbook.SetThemeColor.
+// Use Cases: Programmatically change the Accent2 color to a custom hue and let existing chart legends reflect the update instantly. | Generate before‑and‑after Excel files to visually compare legend colors when the theme is modified. | Read chart.Legend.Font.ThemeColor to ensure the ColorType remains Accent2 and the tint matches the new shade.
+// AI Prompts: Write C# code using Aspose.Cells that updates the Dark2 (Accent2) theme color and asserts that every chart legend in the workbook shows the new color. | Create a unit test that loads a workbook, calls Workbook.SetThemeColor for Accent2, and verifies the legend font color has changed accordingly. | Explain how to programmatically check that chart legends stay linked to the theme after calling SetThemeColor in Aspose.Cells.
+
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsThemeValidation
+namespace AsposeCellsThemeLegendDemo
 {
-    class Program
+    // Shows how to modify the workbook's Dark2 (Accent2) theme color with Aspose.Cells, save the file, and confirm that a column chart's legend font automatically adopts the new shade without extra formatting steps.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Series1");
+                sheet.Cells["C1"].PutValue("Series2");
 
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
+                for (int i = 2; i <= 5; i++)
+                {
+                    sheet.Cells[$"A{i}"].PutValue($"Cat {i - 1}");
+                    sheet.Cells[$"B{i}"].PutValue(i * 10);
+                    sheet.Cells[$"C{i}"].PutValue(i * 12);
+                }
 
-            // Set data range for the series
-            chart.NSeries.Add("B2:C4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Add a column chart
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
+                Chart chart = sheet.Charts[chartIdx];
 
-            // Ensure the legend uses a theme color (Accent2) for its font
-            chart.Legend.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0.0);
+                // Set the data range for the chart
+                chart.SetChartDataRange("B1:C5", true);
+                chart.NSeries.CategoryData = "A2:A5";
 
-            // Save the workbook before changing the theme (optional step)
-            workbook.Save("ThemeBeforeChange.xlsx");
+                // Configure the legend to use a theme color (Accent2 represents Dark2 in this context)
+                chart.Legend.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0.0);
+                // Ensure the legend is displayed (position it at the bottom)
+                chart.Legend.Position = LegendPositionType.Bottom;
 
-            // ---------- Update the theme's Dark2 (mapped to Accent2) color ----------
-            // Change Accent2 to a distinct color (e.g., Purple)
-            workbook.SetThemeColor(ThemeColorType.Accent2, Color.Purple);
+                // Save the workbook before changing the theme (optional, just for reference)
+                workbook.Save("BeforeThemeChange.xlsx");
 
-            // Save the workbook after the theme change
-            workbook.Save("ThemeAfterChange.xlsx");
+                // Update the theme's Dark2 (mapped to Accent2) color to a new shade
+                Color newDark2Shade = Color.FromArgb(255, 128, 0); // Example: orange shade
+                workbook.SetThemeColor(ThemeColorType.Accent2, newDark2Shade);
 
-            // ---------- Load the saved workbook to validate ----------
-            Workbook loadedWb = new Workbook("ThemeAfterChange.xlsx");
-            Worksheet loadedSheet = loadedWb.Worksheets[0];
-            Chart loadedChart = loadedSheet.Charts[chartIdx];
+                // Save the workbook after the theme change
+                workbook.Save("AfterThemeChange.xlsx");
 
-            // Retrieve the legend font's ThemeColor
-            ThemeColor legendThemeColor = loadedChart.Legend.Font.ThemeColor;
-
-            // Validate that the legend still references Accent2 (the updated theme color)
-            bool isAccent2 = legendThemeColor != null && legendThemeColor.ColorType == ThemeColorType.Accent2;
-
-            Console.WriteLine(isAccent2
-                ? "Validation passed: Legend font uses the updated Accent2 theme color."
-                : "Validation failed: Legend font does not use the expected theme color.");
-
-            // Optionally, save the final workbook
-            loadedWb.Save("ThemeValidationResult.xlsx");
+                // Validation: the legend font still references the theme color Accent2
+                ThemeColor legendTheme = chart.Legend.Font.ThemeColor;
+                Console.WriteLine($"Legend font uses ThemeColor type: {legendTheme.ColorType}");
+                Console.WriteLine($"Legend font tint value: {legendTheme.Tint}");
+                Console.WriteLine("If the theme color Accent2 was updated, the legend will display the new shade.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

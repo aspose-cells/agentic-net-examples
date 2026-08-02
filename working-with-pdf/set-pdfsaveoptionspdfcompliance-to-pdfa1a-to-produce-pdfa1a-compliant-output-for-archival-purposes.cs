@@ -2,30 +2,24 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfA1aExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and add sample content
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("PDF/A-1a compliance example");
+
+        // Configure PDF save options to use PDF/A-1a compliance
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Create a new workbook (in‑memory Excel file)
-            Workbook workbook = new Workbook();
+            Compliance = PdfCompliance.PdfA1a
+        };
 
-            // Add some sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF/A‑1a compliance example");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Set the compliance level to PDF/A‑1a for archival purposes
-            pdfOptions.Compliance = PdfCompliance.PdfA1a;
-
-            // Save the workbook as a PDF file with the specified compliance level
-            workbook.Save("PdfA1aOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with PDF/A‑1a compliance.");
-        }
+        // Save the workbook as a PDF file with the specified compliance level
+        workbook.Save("output_pdfa1a.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example code.

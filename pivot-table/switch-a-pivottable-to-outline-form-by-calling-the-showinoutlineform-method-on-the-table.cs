@@ -1,83 +1,51 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotOutlineDemo
 {
-    public class PivotTableOutlineFormDemo
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a worksheet for source data
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
+            // Prepare source data on the first worksheet
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-                // Populate sample data
-                dataSheet.Cells["A1"].PutValue("Date");
-                dataSheet.Cells["B1"].PutValue("Product");
-                dataSheet.Cells["C1"].PutValue("Sales");
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+            dataSheet.Cells["A2"].PutValue("Food");
+            dataSheet.Cells["B2"].PutValue(1200);
+            dataSheet.Cells["A3"].PutValue("Food");
+            dataSheet.Cells["B3"].PutValue(800);
+            dataSheet.Cells["A4"].PutValue("Drink");
+            dataSheet.Cells["B4"].PutValue(500);
+            dataSheet.Cells["A5"].PutValue("Drink");
+            dataSheet.Cells["B5"].PutValue(700);
 
-                dataSheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
-                dataSheet.Cells["B2"].PutValue("Apple");
-                dataSheet.Cells["C2"].PutValue(1000);
+            // Add a worksheet that will contain the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-                dataSheet.Cells["A3"].PutValue(new DateTime(2023, 1, 2));
-                dataSheet.Cells["B3"].PutValue("Banana");
-                dataSheet.Cells["C3"].PutValue(2000);
+            // Create the pivot table using the source range
+            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:B5", "A3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                dataSheet.Cells["A4"].PutValue(new DateTime(2023, 1, 3));
-                dataSheet.Cells["B4"].PutValue("Apple");
-                dataSheet.Cells["C4"].PutValue(1500);
+            // Add fields to the pivot table (row and data areas)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Add a worksheet to host the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Switch the pivot table layout to outline form
+            pivotTable.ShowInOutlineForm();
 
-                // Create the pivot table and obtain its reference
-                int pivotIndex = pivotSheet.PivotTables.Add(
-                    "=Data!A1:C4",   // source data range
-                    "A3",            // top‑left cell of the pivot table
-                    "PivotTable1");  // pivot table name
+            // Refresh and calculate the pivot table to populate data
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Add fields to the pivot table areas
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Switch the pivot table layout to Outline form
-                pivotTable.ShowInOutlineForm();
-
-                // Refresh and calculate the pivot table data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Determine output file path
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "PivotTableOutlineFormDemo.xlsx");
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PivotTableOutlineFormDemo.Run();
+            // Save the workbook to a file
+            workbook.Save("PivotTableOutlineDemo.xlsx");
         }
     }
 }

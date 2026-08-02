@@ -1,53 +1,51 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class ValidateNamedRangesA1
+namespace NamedRangeA1Validation
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Name = "Sheet1";
-
-        // Populate some sample data
-        ws.Cells["A1"].PutValue(1);
-        ws.Cells["A2"].PutValue(2);
-        ws.Cells["A3"].PutValue(3);
-        ws.Cells["B1"].PutValue(10);
-        ws.Cells["B2"].PutValue(20);
-        ws.Cells["B3"].PutValue(30);
-
-        // Create a named range using A1 reference style
-        int idxA1 = wb.Worksheets.Names.Add("A1Range");
-        Name nameA1 = wb.Worksheets.Names[idxA1];
-        nameA1.RefersTo = "=Sheet1!$A$1:$A$3";
-
-        // Create a named range using R1C1 reference style
-        int idxR1C1 = wb.Worksheets.Names.Add("R1C1Range");
-        Name nameR1C1 = wb.Worksheets.Names[idxR1C1];
-        nameR1C1.R1C1RefersTo = "'Sheet1'!R1C2:R3C2";
-
-        // Validate each named range to ensure its address is in A1 style
-        foreach (Name n in wb.Worksheets.Names)
+        static void Main()
         {
-            // Get the reference formatted as A1
-            string a1Reference = n.GetRefersTo(false, false);
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create rule
 
-            // Original stored reference (could be A1 or R1C1)
-            string originalReference = n.RefersTo;
+            // Add sample data and named ranges for demonstration
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-            // Determine if the original reference already matches A1 style
-            bool conformsToA1 = string.Equals(originalReference, a1Reference, StringComparison.OrdinalIgnoreCase);
+            // A1 style named range (valid)
+            int idx1 = workbook.Worksheets.Names.Add("ValidRange");
+            Name validName = workbook.Worksheets.Names[idx1];
+            validName.RefersTo = "=Sheet1!$A$1:$A$3";
 
-            Console.WriteLine($"Name: {n.Text}");
-            Console.WriteLine($"Original RefersTo: {originalReference}");
-            Console.WriteLine($"A1 RefersTo: {a1Reference}");
-            Console.WriteLine($"Conforms to A1 style: {conformsToA1}");
-            Console.WriteLine();
+            // R1C1 style named range (invalid for A1)
+            int idx2 = workbook.Worksheets.Names.Add("InvalidRange");
+            Name invalidName = workbook.Worksheets.Names[idx2];
+            // Set using R1C1 reference
+            invalidName.R1C1RefersTo = "'Sheet1'!R1C1:R3C1";
+
+            // Iterate through all defined names and verify A1 reference style
+            foreach (Name name in workbook.Worksheets.Names)
+            {
+                // Original reference string as stored
+                string storedRef = name.RefersTo;
+
+                // Get the reference formatted explicitly in A1 style
+                string a1Ref = name.GetRefersTo(false, false); // get A1, global/local not relevant here
+
+                // Compare the two strings (case‑insensitive)
+                bool isA1 = string.Equals(storedRef, a1Ref, StringComparison.OrdinalIgnoreCase);
+
+                Console.WriteLine($"Name: {name.Text}");
+                Console.WriteLine($"Stored RefersTo: {storedRef}");
+                Console.WriteLine($"A1 RefersTo   : {a1Ref}");
+                Console.WriteLine($"Conforms to A1 style: {(isA1 ? "Yes" : "No")}");
+                Console.WriteLine(new string('-', 40));
+            }
+
+            // Save the workbook (save rule)
+            workbook.Save("NamedRangeA1Validation_Output.xlsx");
         }
-
-        // Save the workbook
-        wb.Save("ValidateNamedRangesA1.xlsx");
     }
 }

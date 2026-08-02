@@ -1,54 +1,29 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class MergeWorkbooksWithNamedRanges
 {
-    public class MergeWorkbooksWithNamedRanges
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Load the first workbook (the one that will receive the other workbook's content)
+        Workbook targetWorkbook = new Workbook("Target.xlsx");
 
-        public static void Run()
-        {
-            const string targetPath = "TargetWorkbook.xlsx";
-            const string sourcePath = "SourceWorkbook.xlsx";
-            const string outputPath = "MergedWorkbook.xlsx";
+        // Load the second workbook (the one to be merged into the target)
+        Workbook sourceWorkbook = new Workbook("Source.xlsx");
 
-            // Verify that the input files exist to avoid FileNotFoundException
-            if (!File.Exists(targetPath))
-                throw new FileNotFoundException($"Target workbook not found: {targetPath}");
-            if (!File.Exists(sourcePath))
-                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+        // Combine the source workbook into the target workbook.
+        // This merges worksheets, charts, tables, and also brings in named ranges.
+        targetWorkbook.Combine(sourceWorkbook);
 
-            // Load the target workbook (will receive merged content)
-            Workbook targetWorkbook = new Workbook(targetPath);
+        // After combining, there may be duplicate named ranges.
+        // RemoveDuplicateNames keeps the first occurrence and discards later duplicates,
+        // ensuring each name is unique while preserving distinct ranges.
+        targetWorkbook.Worksheets.Names.RemoveDuplicateNames();
 
-            // Load the source workbook (its sheets and named ranges will be merged)
-            Workbook sourceWorkbook = new Workbook(sourcePath);
+        // Optional: sort the names for a tidy definition order.
+        targetWorkbook.Worksheets.SortNames();
 
-            // Combine the source workbook into the target workbook (worksheets, charts, tables, etc.)
-            targetWorkbook.Combine(sourceWorkbook);
-
-            // Remove duplicate named ranges, keeping the first occurrence
-            targetWorkbook.Worksheets.Names.RemoveDuplicateNames();
-
-            // Optional: sort the remaining named ranges for better organization
-            targetWorkbook.Worksheets.SortNames();
-
-            // Save the merged workbook
-            targetWorkbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Merged workbook saved to: {outputPath}");
-        }
+        // Save the merged workbook with all distinct named ranges.
+        targetWorkbook.Save("MergedResult.xlsx", SaveFormat.Xlsx);
     }
 }

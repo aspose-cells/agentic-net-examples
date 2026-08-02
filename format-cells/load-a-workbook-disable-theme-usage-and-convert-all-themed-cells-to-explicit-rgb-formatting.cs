@@ -2,59 +2,69 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-class ConvertThemeToRgb
+class ConvertThemedCellsToRgb
 {
     static void Main()
     {
-        // Load the workbook
+        // Load the workbook from a file
         Workbook workbook = new Workbook("input.xlsx");
 
         // Iterate through all worksheets
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Iterate through all used cells
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
+            // Get the used range of cells
+            Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
+            // Loop through each cell in the used range
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
-                    Cell cell = sheet.Cells[row, col];
+                    Cell cell = cells[row, col];
+                    // Skip empty cells
+                    if (cell == null) continue;
+
+                    // Retrieve the cell style
                     Style style = cell.GetStyle();
+
                     bool styleChanged = false;
 
-                    // Convert font theme color to explicit RGB
-                    if (style.Font.ThemeColor != null)
+                    // ----- Font Theme Color -----
+                    ThemeColor fontTheme = style.Font.ThemeColor;
+                    if (fontTheme != null && fontTheme.ColorType != ThemeColorType.StyleColor)
                     {
-                        ThemeColor tc = style.Font.ThemeColor;
-                        Color themeClr = workbook.GetThemeColor(tc.ColorType);
-                        style.Font.Color = themeClr;          // Set explicit color
-                        style.Font.ThemeColor = null;         // Remove theme reference
+                        // Get the actual RGB color from the workbook theme
+                        Color rgbColor = workbook.GetThemeColor(fontTheme.ColorType);
+                        // Apply the color to the font (ignoring tint for simplicity)
+                        style.Font.Color = rgbColor;
+                        // Clear the theme reference
+                        style.Font.ThemeColor = null;
                         styleChanged = true;
                     }
 
-                    // Convert foreground theme color to explicit RGB
-                    if (style.ForegroundThemeColor != null)
+                    // ----- Foreground Theme Color -----
+                    ThemeColor fgTheme = style.ForegroundThemeColor;
+                    if (fgTheme != null && fgTheme.ColorType != ThemeColorType.StyleColor)
                     {
-                        ThemeColor tc = style.ForegroundThemeColor;
-                        Color themeClr = workbook.GetThemeColor(tc.ColorType);
-                        style.ForegroundColor = themeClr;
+                        Color rgbColor = workbook.GetThemeColor(fgTheme.ColorType);
+                        style.ForegroundColor = rgbColor;
                         style.ForegroundThemeColor = null;
                         styleChanged = true;
                     }
 
-                    // Convert background theme color to explicit RGB
-                    if (style.BackgroundThemeColor != null)
+                    // ----- Background Theme Color -----
+                    ThemeColor bgTheme = style.BackgroundThemeColor;
+                    if (bgTheme != null && bgTheme.ColorType != ThemeColorType.StyleColor)
                     {
-                        ThemeColor tc = style.BackgroundThemeColor;
-                        Color themeClr = workbook.GetThemeColor(tc.ColorType);
-                        style.BackgroundColor = themeClr;
+                        Color rgbColor = workbook.GetThemeColor(bgTheme.ColorType);
+                        style.BackgroundColor = rgbColor;
                         style.BackgroundThemeColor = null;
                         styleChanged = true;
                     }
 
-                    // Apply modified style back to the cell
+                    // Apply the modified style back to the cell if any changes were made
                     if (styleChanged)
                     {
                         cell.SetStyle(style);
@@ -63,7 +73,7 @@ class ConvertThemeToRgb
             }
         }
 
-        // Save the workbook with explicit RGB colors
+        // Save the workbook with explicit RGB formatting
         workbook.Save("output.xlsx");
     }
 }

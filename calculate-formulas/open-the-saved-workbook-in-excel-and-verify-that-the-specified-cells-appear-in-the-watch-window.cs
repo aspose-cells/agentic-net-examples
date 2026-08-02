@@ -1,43 +1,52 @@
 using System;
 using Aspose.Cells;
 
-class VerifyCellWatches
+namespace AsposeCellsWatchDemo
 {
-    static void Main()
+    class Program
     {
-        // Path to the workbook that already contains cell watches.
-        // The workbook should have been created and saved earlier using the
-        // Worksheet.CellWatches.Add method (e.g., "CellWatchDemo.xlsx").
-        string filePath = "CellWatchDemo.xlsx";
-
-        // Load the workbook from the file system.
-        // This uses the Workbook(string) constructor rule.
-        Workbook workbook = new Workbook(filePath);
-
-        // Access the first worksheet in the workbook.
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Cells that we expect to be present in the Watch Window.
-        string[] expectedWatches = { "B2", "A1" };
-
-        // Iterate through the expected cells and verify their presence.
-        foreach (string cellName in expectedWatches)
+        static void Main()
         {
-            // Retrieve the CellWatch object by cell name using the indexer.
-            // If the cell is not being watched, the indexer returns null.
-            CellWatch watch = sheet.CellWatches[cellName];
+            // ---------- Create a new workbook and add cell watches ----------
+            Workbook workbook = new Workbook();                     // create workbook (rule: Workbook())
+            Worksheet sheet = workbook.Worksheets[0];              // get first worksheet
 
-            if (watch != null)
+            // Add sample data (optional, just to have content)
+            sheet.Cells["B2"].PutValue("First Watch");
+            sheet.Cells["C3"].PutValue("Second Watch");
+
+            // Add cell watches for B2 and C3 using the Add(string) method
+            int indexB2 = sheet.CellWatches.Add("B2");             // add watch for B2
+            int indexC3 = sheet.CellWatches.Add("C3");             // add watch for C3
+
+            // Save the workbook to disk (rule: Save(string))
+            string filePath = "CellWatchDemo.xlsx";
+            workbook.Save(filePath);
+
+            // ---------- Load the saved workbook ----------
+            Workbook loadedWorkbook = new Workbook(filePath);       // load workbook (rule: Workbook(string))
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0]; // get first worksheet
+
+            // Verify that the watches exist
+            bool hasB2 = false;
+            bool hasC3 = false;
+
+            // Iterate through the CellWatchCollection
+            foreach (CellWatch watch in loadedSheet.CellWatches)
             {
-                Console.WriteLine($"Watch found: {watch.CellName} (Row={watch.Row}, Column={watch.Column})");
+                if (watch.CellName.Equals("B2", StringComparison.OrdinalIgnoreCase))
+                    hasB2 = true;
+                if (watch.CellName.Equals("C3", StringComparison.OrdinalIgnoreCase))
+                    hasC3 = true;
             }
-            else
-            {
-                Console.WriteLine($"Watch NOT found for cell: {cellName}");
-            }
+
+            // Output verification results
+            Console.WriteLine($"Watch for B2 present: {hasB2}");
+            Console.WriteLine($"Watch for C3 present: {hasC3}");
+
+            // Optionally, demonstrate accessing a watch by index
+            CellWatch watchB2 = loadedSheet.CellWatches[indexB2];
+            Console.WriteLine($"Accessed by index {indexB2}: CellName={watchB2.CellName}, Row={watchB2.Row}, Column={watchB2.Column}");
         }
-
-        // Output the total number of watches in the worksheet.
-        Console.WriteLine($"Total watches in worksheet: {sheet.CellWatches.Count}");
     }
 }

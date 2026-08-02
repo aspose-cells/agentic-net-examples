@@ -2,40 +2,38 @@ using System;
 using Aspose.Cells;
 using System.Drawing;
 
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (create rule)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Get the cells collection
-        Cells cells = worksheet.Cells;
+            // Get the Cells collection
+            Cells cells = worksheet.Cells;
 
-        // Specify the zero‑based row and column indices
-        int rowIndex = 2;      // third row (A3)
-        int columnIndex = 3;   // fourth column (D)
+            // Access a cell by numeric row and column indexes (zero‑based)
+            // Example: row 2, column 3 corresponds to cell D3
+            Cell cell = cells[2, 3];
 
-        // Access the cell by numeric index (Cells indexer rule)
-        Cell cell = cells[rowIndex, columnIndex];
+            // Optional: put a value into the cell
+            cell.PutValue("Demo");
 
-        // Optional: put a value into the cell
-        cell.PutValue("Demo");
+            // Create a style and set its background color
+            Style style = workbook.CreateStyle();
+            style.BackgroundColor = Color.LightBlue;   // Desired background color
+            style.Pattern = BackgroundType.Solid;      // Ensure the color is applied
 
-        // Retrieve the cell's current style
-        Style style = cell.GetStyle();
+            // Apply the style to the selected cell
+            cell.SetStyle(style);
 
-        // Set a solid background color (using ForegroundColor with solid pattern)
-        style.ForegroundColor = Color.Yellow;
-        style.Pattern = BackgroundType.Solid;
-
-        // Apply the modified style back to the cell
-        cell.SetStyle(style);
-
-        // Save the workbook (save rule)
-        workbook.Save("ModifiedCell.xlsx");
+            // Save the workbook to a file
+            workbook.Save("CellBackgroundDemo.xlsx");
+        }
     }
 }

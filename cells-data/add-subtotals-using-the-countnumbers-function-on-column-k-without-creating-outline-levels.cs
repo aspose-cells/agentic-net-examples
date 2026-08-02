@@ -1,37 +1,55 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class Program
+namespace AsposeCellsSubtotalExample
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data: column J (index 9) as group, column K (index 10) as numbers
-        cells["J1"].PutValue("Group");
-        cells["K1"].PutValue("Value");
-
-        string[] groups = { "A", "A", "B", "B", "A", "B" };
-        int[] values = { 5, 10, 7, 3, 8, 6 };
-
-        for (int i = 0; i < groups.Length; i++)
+        static void Main()
         {
-            cells[i + 1, 9].PutValue(groups[i]);   // Column J
-            cells[i + 1, 10].PutValue(values[i]); // Column K
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data in columns J (index 9) and K (index 10)
+            // Header row
+            worksheet.Cells["J1"].PutValue("Category");
+            worksheet.Cells["K1"].PutValue("Value");
+
+            // Sample data rows
+            object[,] data = new object[,]
+            {
+                { "A", 10 },
+                { "A", 20 },
+                { "B", 15 },
+                { "B", 25 },
+                { "C", 30 }
+            };
+
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                // Row index is i+1 because row 0 contains headers
+                worksheet.Cells[i + 1, 9].PutValue(data[i, 0]); // Column J
+                worksheet.Cells[i + 1, 10].PutValue(data[i, 1]); // Column K
+            }
+
+            // Define the cell area that includes the data (J1:K6)
+            // StartRow = 0, StartColumn = 9 (J), EndRow = 5, EndColumn = 10 (K)
+            CellArea area = CellArea.CreateCellArea(0, 9, 5, 10);
+
+            // Add subtotals:
+            // - Group by the first column of the area (Category, offset 0)
+            // - Use CountNums function on the second column (Value, offset 1)
+            // - No outline levels are created because we use the 4‑parameter overload
+            worksheet.Cells.Subtotal(
+                area,
+                0,                                 // groupBy: first column in the area
+                ConsolidationFunction.CountNums,   // function: CountNumbers
+                new int[] { 1 }                    // totalList: apply to second column in the area
+            );
+
+            // Save the workbook
+            workbook.Save("Subtotal_CountNums_ColumnK.xlsx");
         }
-
-        // Define the range that includes the header and data (J1:K7)
-        CellArea area = CellArea.CreateCellArea("J1", "K7");
-
-        // Add subtotals:
-        // - Group by the first column of the area (column J) -> offset 0
-        // - Use CountNums function on the second column of the area (column K) -> offset 1
-        sheet.Cells.Subtotal(area, 0, ConsolidationFunction.CountNums, new int[] { 1 });
-
-        // Save the workbook
-        workbook.Save("SubtotalCountNums_K.xlsx");
     }
 }

@@ -5,25 +5,33 @@ namespace AsposeCellsReplaceExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Load the workbook (replace "input.xlsx" with your source file)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data containing different case variations of the target phrase
+            sheet.Cells["A1"].PutValue("Total Revenue");
+            sheet.Cells["A2"].PutValue("total revenue");
+            sheet.Cells["A3"].PutValue("TOTAL REVENUE");
+            sheet.Cells["A4"].PutValue("Net Total Revenue");
 
             // Configure replace options for case‑insensitive search
             ReplaceOptions options = new ReplaceOptions
             {
-                CaseSensitive = false,               // ignore case
-                MatchEntireCellContents = false      // replace even if the text is part of a larger string
+                CaseSensitive = false,          // ignore case
+                MatchEntireCellContents = false // allow partial matches within a cell
             };
 
-            // Perform the replacement: "total revenue" → "Revenue Total"
+            // Perform the replacement
             int replacedCount = workbook.Replace("total revenue", "Revenue Total", options);
+            Console.WriteLine($"Replacements made: {replacedCount}");
 
-            Console.WriteLine($"Number of replacements made: {replacedCount}");
-
-            // Save the modified workbook (replace "output.xlsx" with your desired output file)
-            workbook.Save("output.xlsx");
+            // Save the workbook
+            workbook.Save("ReplacedOutput.xlsx");
         }
     }
 }

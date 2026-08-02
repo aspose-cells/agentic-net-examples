@@ -3,30 +3,36 @@ using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-class RemoveRedundantSpacesDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – removes redundant spaces after line breaks when converting HTML to Excel and back to HTML
+    class RemoveRedundantSpacesDemo
     {
-        // Sample HTML containing redundant spaces after line breaks
-        string html = "<p>Line1<br>   Line2   <br>   Line3</p>";
-
-        // Convert the HTML string to a memory stream
-        byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
-        using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
+        static void Main()
         {
-            // Load the workbook from the HTML stream with redundant spaces removal enabled
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-            loadOptions.DeleteRedundantSpaces = true; // removes extra spaces after <br>
+            // Sample HTML containing redundant spaces and line breaks (<br>)
+            string html = "<p>   This    text   has   redundant   spaces   <br>   and   more   spaces   </p>";
 
-            Workbook workbook = new Workbook(htmlStream, loadOptions);
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Configure HtmlLoadOptions to delete redundant spaces during import
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions
+            {
+                DeleteRedundantSpaces = true // removes extra spaces after <br> tags
+            };
 
-            // Optional: display the cleaned cell text
-            Console.WriteLine("Cell A1 after loading: '" + worksheet.Cells["A1"].StringValue + "'");
+            // Convert the HTML string to a byte array and load it into a workbook using the options above
+            byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+            using (MemoryStream stream = new MemoryStream(htmlBytes))
+            {
+                Workbook workbook = new Workbook(stream, loadOptions);
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook back to HTML (spaces are already cleaned)
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            workbook.Save("output.html", saveOptions);
+                // Optional: display the cleaned cell text in console
+                Console.WriteLine("Cell A1 after removing redundant spaces:");
+                Console.WriteLine(sheet.Cells["A1"].StringValue);
+
+                // Save the workbook back to HTML – the cell text will no longer contain redundant spaces
+                workbook.Save("CleanedOutput.html", SaveFormat.Html);
+            }
         }
     }
 }

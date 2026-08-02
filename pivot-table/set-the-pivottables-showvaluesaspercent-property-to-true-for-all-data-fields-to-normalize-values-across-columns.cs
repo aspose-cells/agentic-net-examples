@@ -1,9 +1,18 @@
+// Title: Set ShowValuesAsPercent for All Data Fields in an Aspose.Cells PivotTable (C#)
+// Description: Creates a workbook, adds sample data, builds a pivot table, and programmatically sets each data field's ShowValuesSetting to PercentageOfTotal. The pivot is refreshed, recalculated, and saved as an XLSX file.
+// Keywords: Aspose.Cells PivotTable ShowValuesAsPercent | C# set pivot field percentage | Aspose.Cells PercentageOfTotal | .NET pivot table display as percent | normalize pivot values Aspose | ShowValuesSetting CalculationType
+// Common Searches: Aspose.Cells set pivot values to percent of total | C# pivot table show values as percentage | How to enable ShowValuesAsPercent for all data fields in Aspose.Cells | PivotField ShowValuesSetting PercentageOfTotal example | Aspose.Cells pivot table percentage formatting
+// Developer Intent: Apply a percentage‑of‑total display to every data field in a pivot table using Aspose.Cells for .NET.
+// Use Cases: Transform monetary amounts into relative percentages for financial dashboards. | Standardize percentage formatting across multiple data fields when generating reports automatically. | Ensure the workbook reflects the new display format by refreshing and recalculating the pivot after changes.
+// AI Prompts: Write C# code with Aspose.Cells that iterates over PivotTable.DataFields and sets ShowValuesSetting.CalculationType to PercentageOfTotal for each field. | Create a method that enables ShowValuesAsPercent for all data fields in an existing Aspose.Cells pivot table, then refreshes and calculates the pivot. | Explain step‑by‑step how to display pivot table values as a percentage of total using Aspose.Cells for .NET.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotExample
+namespace AsposeCellsPivotDemo
 {
+    // Creates a workbook, adds sample data, builds a pivot table, and programmatically sets each data field's ShowValuesSetting to PercentageOfTotal. The pivot is refreshed, recalculated, and saved as an XLSX file.
     class Program
     {
         static void Main()
@@ -34,7 +43,7 @@ namespace AsposeCellsPivotExample
             cells["B5"].Value = "Coffee";
             cells["C5"].Value = 700;
 
-            // Add a pivot table to the worksheet
+            // Add a pivot table based on the data range
             PivotTableCollection pivots = sheet.PivotTables;
             int pivotIndex = pivots.Add("A1:C5", "E3", "PivotTable1");
             PivotTable pivotTable = pivots[pivotIndex];
@@ -44,14 +53,13 @@ namespace AsposeCellsPivotExample
             pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Set ShowValuesAsPercent (percentage of total) for all data fields
+            // Iterate over all data fields and set ShowValuesSetting to display values as percentage of total
             foreach (PivotField dataField in pivotTable.DataFields)
             {
-                // Use ShowValuesSetting.CalculationType to display values as percentage of total
                 dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.PercentageOfTotal;
             }
 
-            // Refresh and calculate the pivot table data
+            // Refresh and calculate the pivot table to apply the settings
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

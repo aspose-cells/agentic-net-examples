@@ -7,31 +7,33 @@ namespace AsposeCellsPageSetupDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create rule)
+            // Create a new workbook (default contains one worksheet)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set narrow page margins (values in centimeters)
-            // Adjust these values as needed for "narrow" margins
-            sheet.PageSetup.TopMargin = 0.5;    // 0.5 cm top margin
-            sheet.PageSetup.BottomMargin = 0.5; // 0.5 cm bottom margin
-            sheet.PageSetup.LeftMargin = 0.5;   // 0.5 cm left margin
-            sheet.PageSetup.RightMargin = 0.5;  // 0.5 cm right margin
+            // Access the PageSetup object of the worksheet
+            PageSetup pageSetup = sheet.PageSetup;
+
+            // Set narrow margins (values are in centimeters)
+            pageSetup.LeftMargin = 0.5;   // 0.5 cm left margin
+            pageSetup.RightMargin = 0.5;  // 0.5 cm right margin
+            pageSetup.TopMargin = 0.5;    // 0.5 cm top margin
+            pageSetup.BottomMargin = 0.5; // 0.5 cm bottom margin
 
             // Configure the worksheet to print in landscape orientation
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
+            pageSetup.Orientation = PageOrientationType.Landscape;
 
-            // Add some sample data to visualize the effect
+            // (Optional) Add some sample data to visualize the effect
             sheet.Cells["A1"].PutValue("Landscape orientation with narrow margins");
-            for (int row = 2; row <= 20; row++)
+            for (int i = 2; i <= 10; i++)
             {
-                sheet.Cells[$"A{row}"].PutValue($"Row {row - 1}");
+                sheet.Cells[$"A{i}"].PutValue($"Row {i - 1}");
             }
 
-            // Save the workbook (lifecycle save rule)
-            workbook.Save("NarrowMarginsLandscape.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file
+            workbook.Save("NarrowMargins_Landscape.xlsx", SaveFormat.Xlsx);
         }
     }
 }

@@ -1,87 +1,63 @@
+// Title: Convert Excel to CSV and Standardize Phone Numbers with Aspose.Cells (C#)
+// Description: Loads an .xlsx workbook, iterates through every used cell, detects phone‑number patterns with a regular expression, rewrites them to (123) 456‑7890, and saves the updated data as a CSV file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | .NET | Excel to CSV conversion | phone number formatting | regex cell processing | custom cell value transformation | workbook export | data cleansing | CSV generation
+// Common Searches: Aspose.Cells convert workbook to CSV C# | reformat phone numbers in Excel before CSV export | apply regex to Excel cells using Aspose.Cells | standardize phone number format during Excel to CSV conversion | C# iterate over cells and modify values with Aspose.Cells
+// Developer Intent: Load an Excel file, normalize any phone‑number strings to a consistent format, and export the cleaned workbook as a CSV document.
+// Use Cases: Prepare contact lists for systems that require a uniform phone format. | Cleanse data before importing into a CRM or marketing platform. | Generate CSV reports where all telephone entries follow the (123) 456‑7890 pattern.
+// AI Prompts: Show how to extend the regex to support international phone numbers while exporting to CSV. | Provide an example of implementing ICellValueFormatter in Aspose.Cells to format phone numbers during the save operation. | Suggest a method to log each cell that was modified from its original phone format.
+
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsPhoneNumberFormatter
 {
+    // Loads an .xlsx workbook, iterates through every used cell, detects phone‑number patterns with a regular expression, rewrites them to (123) 456‑7890, and saves the updated data as a CSV file using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            try
+            // Paths for source workbook and destination CSV
+            string sourcePath = "input.xlsx";
+            string csvPath = "output.csv";
+
+            // Load the existing workbook (lifecycle: create & load)
+            Workbook workbook = new Workbook(sourcePath);
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Determine the used range
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Regex to capture various phone number patterns and reformat to (123) 456-7890
+            Regex phoneRegex = new Regex(@"\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*");
+
+            // Iterate through all cells in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Path to the source Excel workbook
-                string sourcePath = "input.xlsx";
-
-                // Verify that the source file exists
-                if (!File.Exists(sourcePath))
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Console.WriteLine($"Error: Source file \"{sourcePath}\" not found.");
-                    return;
-                }
+                    Cell cell = cells[row, col];
 
-                // Load the workbook (creation rule)
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Define a regular expression to remove non‑digit characters
-                Regex digitsOnly = new Regex(@"\D");
-
-                // Assume phone numbers are in column B (index 1), starting from row 0
-                int firstRow = 0;
-                int lastRow = cells.MaxDataRow; // Last row that contains data
-
-                for (int row = firstRow; row <= lastRow; row++)
-                {
-                    Cell cell = cells[row, 1]; // Column B
-
-                    // Get the raw string value (unformatted)
-                    string raw = cell.StringValue?.Trim();
-
-                    // Process only if the cell contains a non‑empty value
-                    if (!string.IsNullOrEmpty(raw))
+                    // Process only string cells
+                    if (cell.Type == CellValueType.IsString)
                     {
-                        // Remove all non‑digit characters
-                        string digits = digitsOnly.Replace(raw, "");
+                        string original = cell.StringValue;
+                        Match match = phoneRegex.Match(original);
 
-                        // If we have exactly 10 digits, format as (###) ###‑####
-                        if (digits.Length == 10)
+                        // If a phone number is detected, replace with standardized format
+                        if (match.Success)
                         {
-                            string formatted = $"({digits.Substring(0, 3)}) {digits.Substring(3, 3)}-{digits.Substring(6, 4)}";
-
-                            // Replace the cell value with the formatted phone number
+                            string formatted = $"({match.Groups[1].Value}) {match.Groups[2].Value}-{match.Groups[3].Value}";
                             cell.PutValue(formatted);
-
-                            // Apply a custom number format (display only)
-                            Style style = cell.GetStyle();
-                            style.Custom = "(###) ###-####";
-                            cell.SetStyle(style);
                         }
                     }
                 }
-
-                // Save the workbook as CSV (save rule)
-                string csvPath = "output.csv";
-
-                // Ensure the directory for the CSV exists
-                string csvDir = Path.GetDirectoryName(csvPath);
-                if (!string.IsNullOrEmpty(csvDir) && !Directory.Exists(csvDir))
-                {
-                    Directory.CreateDirectory(csvDir);
-                }
-
-                workbook.Save(csvPath, SaveFormat.Csv);
-
-                Console.WriteLine($"Workbook converted to CSV and saved at: {csvPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook as CSV (using provided Save method)
+            workbook.Save(csvPath, SaveFormat.Csv);
         }
     }
 }

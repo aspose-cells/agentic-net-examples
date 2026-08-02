@@ -1,36 +1,43 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class RemoveAllSparklines
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet (active worksheet)
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Example data and sparkline creation (optional, for demonstration)
+        // Populate some sample data
         sheet.Cells["A1"].PutValue(5);
         sheet.Cells["B1"].PutValue(2);
         sheet.Cells["C1"].PutValue(1);
         sheet.Cells["D1"].PutValue(3);
-        CellArea sparklineLocation = new CellArea { StartColumn = 4, EndColumn = 4, StartRow = 0, EndRow = 0 };
-        int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineLocation);
-        SparklineGroup group = sheet.SparklineGroups[groupIdx];
-        group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
 
-        // ----- Core logic: remove all sparklines from the active worksheet -----
-        // Iterate through each SparklineGroup in the worksheet and clear its Sparklines collection.
+        // Define the location where the sparkline will be placed
+        CellArea location = new CellArea
+        {
+            StartColumn = 4,
+            EndColumn = 4,
+            StartRow = 0,
+            EndRow = 0
+        };
+
+        // Add a sparkline group to the worksheet
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
+        SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+
+        // Add a sparkline to the group (just for demonstration)
+        sparklineGroup.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
+
+        // Remove all sparklines by clearing each group's SparklineCollection
         foreach (SparklineGroup sg in sheet.SparklineGroups)
         {
-            // Clear all sparklines within the current group.
-            sg.Sparklines.Clear();
+            sg.Sparklines.Clear(); // Clears all sparklines within the group
         }
 
-        // Save the workbook to verify that sparklines have been removed.
-        workbook.Save("RemovedAllSparklines.xlsx", SaveFormat.Xlsx);
+        // Save the workbook
+        workbook.Save("RemovedSparklines.xlsx", SaveFormat.Xlsx);
     }
 }

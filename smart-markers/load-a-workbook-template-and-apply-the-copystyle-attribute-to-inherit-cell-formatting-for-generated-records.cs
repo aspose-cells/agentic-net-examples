@@ -1,90 +1,51 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsCopyStyleDemo
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            const string templatePath = "Template.xlsx";
-            const string resultPath = "Result.xlsx";
+            // Load the workbook template (lifecycle rule: use provided load constructor)
+            Workbook workbook = new Workbook("Template.xlsx");
 
-            // Verify that the template file exists before loading
-            if (!File.Exists(templatePath))
-                throw new FileNotFoundException($"Template file not found: {templatePath}");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Load the workbook template that contains markers and the desired cell formatting
-            Workbook templateWorkbook = new Workbook(templatePath);
-
-            // Initialize WorkbookDesigner with the loaded template
-            WorkbookDesigner designer = new WorkbookDesigner(templateWorkbook);
-
-            // Sample data source that will be merged into the template
-            List<Person> persons = new List<Person>
+            // Example data to be added as new records
+            string[,] newData = new string[,]
             {
-                new Person { Name = "John", Age = 28 },
-                new Person { Name = "Anna", Age = 32 }
+                { "John", "Doe", "30" },
+                { "Jane", "Smith", "25" },
+                { "Bob", "Johnson", "40" }
             };
 
-            // Bind the data source to the designer (markers like &Person.Name, &Person.Age should exist in the template)
-            designer.SetDataSource("Person", persons);
+            // Starting row index where new records will be inserted (0‑based)
+            // Assuming the template has a header in row 0 and existing data starts at row 1
+            int insertRowIndex = 1;
 
-            // Process the template – this generates the records in the worksheet
-            designer.Process();
-
-            // ------------------------------------------------------------
-            // Inherit cell formatting (CopyStyle) for the generated records
-            // ------------------------------------------------------------
-            Worksheet sheet = designer.Workbook.Worksheets[0];
-
-            // Assume the first data row in the template (row index 1, i.e., A2) has the style we want to copy
-            Style templateStyle = sheet.Cells["A2"].GetStyle();
-
-            // Determine the range of rows that now contain data after processing
-            int firstDataRow = 1; // zero‑based index of the first row with data (A2)
-            int lastDataRow = sheet.Cells.MaxDataRow; // last row with data
-
-            // Apply the template style to each populated cell in the generated rows
-            for (int row = firstDataRow; row <= lastDataRow; row++)
+            // Loop through each record
+            for (int i = 0; i < newData.GetLength(0); i++)
             {
-                for (int col = 0; col <= sheet.Cells.MaxDataColumn; col++)
+                // Insert a new row and inherit formatting from the row above
+                InsertOptions insertOptions = new InsertOptions();
+                insertOptions.CopyFormatType = CopyFormatType.SameAsAbove; // CopyStyle attribute equivalent
+                cells.InsertRows(insertRowIndex, 1, insertOptions);
+
+                // Populate the newly inserted row with data
+                for (int j = 0; j < newData.GetLength(1); j++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-
-                    // Skip cells that have no value
-                    if (cell.Value == null)
-                        continue;
-
-                    // Create a new style instance and copy the template style into it
-                    Style newStyle = designer.Workbook.CreateStyle();
-                    newStyle.Copy(templateStyle);
-
-                    // Assign the copied style to the current cell
-                    cell.SetStyle(newStyle);
+                    cells[insertRowIndex, j].PutValue(newData[i, j]);
                 }
+
+                // Move the insertion point down for the next record
+                insertRowIndex++;
             }
 
-            // Save the resulting workbook
-            designer.Workbook.Save(resultPath);
-            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+            // Save the workbook (lifecycle rule: use provided save method)
+            workbook.Save("OutputWithInheritedStyle.xlsx");
         }
-        catch (FileNotFoundException ex)
-        {
-            Console.Error.WriteLine($"File error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
-        }
-    }
-
-    // Simple POCO class used as data source
-    public class Person
-    {
-        public string? Name { get; set; }
-        public int Age { get; set; }
     }
 }

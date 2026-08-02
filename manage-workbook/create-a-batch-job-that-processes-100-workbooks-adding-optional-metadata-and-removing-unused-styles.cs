@@ -9,69 +9,63 @@ namespace BatchWorkbookProcessor
     {
         static void Main()
         {
-            // Directory containing the source workbooks
-            string sourceDir = @"C:\Workbooks\Source";
-            // Directory where processed workbooks will be saved
-            string outputDir = @"C:\Workbooks\Processed";
+            // Folder paths – adjust as needed
+            string inputFolder = @"C:\Workbooks\Input";
+            string outputFolder = @"C:\Workbooks\Output";
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputDir);
+            // Ensure output folder exists
+            Directory.CreateDirectory(outputFolder);
 
-            // Process 100 workbooks named Workbook1.xlsx ... Workbook100.xlsx
+            // Process 100 workbooks
             for (int i = 1; i <= 100; i++)
             {
-                string inputPath = Path.Combine(sourceDir, $"Workbook{i}.xlsx");
-                string outputPath = Path.Combine(outputDir, $"Workbook{i}_Processed.xlsx");
-                string tempMetaPath = Path.Combine(outputDir, $"Workbook{i}_TempMeta.xlsx");
+                string inputPath = Path.Combine(inputFolder, $"Workbook{i}.xlsx");
+                string outputPath = Path.Combine(outputFolder, $"Workbook{i}_Processed.xlsx");
+
+                // Skip missing input files
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}. Skipping.");
+                    continue;
+                }
 
                 try
                 {
-                    // Verify source file exists
-                    if (!File.Exists(inputPath))
-                    {
-                        Console.WriteLine($"Source file not found: {inputPath}");
-                        continue;
-                    }
-
-                    // Load the workbook
+                    // Load workbook
                     using (Workbook wb = new Workbook(inputPath))
                     {
-                        // OPTIONAL: Add custom metadata using WorkbookMetadata
-                        MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
-                        WorkbookMetadata metadata = new WorkbookMetadata(inputPath, metaOptions);
+                        // Remove unused styles
+                        wb.RemoveUnusedStyles();
 
-                        // Add custom document properties
-                        metadata.CustomDocumentProperties.Add("ProcessedOn", DateTime.UtcNow.ToString("o"));
-                        metadata.CustomDocumentProperties.Add("ProcessedBy", "BatchJob");
-
-                        // Save metadata to a temporary file
-                        metadata.Save(tempMetaPath);
-
-                        // Reload workbook with updated metadata
-                        wb.Dispose(); // Dispose original workbook before reloading
-                        using (Workbook wbMeta = new Workbook(tempMetaPath))
-                        {
-                            // Remove all unused styles
-                            wbMeta.RemoveUnusedStyles();
-
-                            // Save the final processed workbook
-                            wbMeta.Save(outputPath);
-                        }
+                        // Save cleaned workbook
+                        wb.Save(outputPath, SaveFormat.Xlsx);
                     }
 
-                    // Clean up temporary file
-                    if (File.Exists(tempMetaPath))
+                    // OPTIONAL: Add custom metadata for even‑indexed workbooks
+                    if (i % 2 == 0)
                     {
-                        File.Delete(tempMetaPath);
+                        // Prepare metadata options
+                        MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+                        // Load metadata for the saved file
+                        WorkbookMetadata meta = new WorkbookMetadata(outputPath, metaOptions);
+
+                        // Add a custom document property indicating processing status
+                        meta.CustomDocumentProperties.Add("ProcessedByBatch", true);
+
+                        // Save the modified metadata back to the file
+                        meta.Save(outputPath);
                     }
+
+                    Console.WriteLine($"Processed workbook {i}: {outputPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing Workbook{i}: {ex.Message}");
+                    // Log any errors but continue processing remaining files
+                    Console.WriteLine($"Error processing workbook {i}: {ex.Message}");
                 }
             }
 
-            Console.WriteLine("Batch processing of 100 workbooks completed.");
+            Console.WriteLine("Batch processing of workbooks completed.");
         }
     }
 }

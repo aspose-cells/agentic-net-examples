@@ -1,34 +1,36 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsOnePagePerSheetDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Populate first worksheet with sample data
+        Worksheet sheet1 = workbook.Worksheets[0];
+        for (int i = 0; i < 10; i++)
         {
-            // Create a new workbook with two worksheets
-            Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "FirstSheet";
-
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-
-            // Populate some sample data in each sheet
-            for (int i = 0; i < 10; i++)
-            {
-                sheet1.Cells[i, 0].PutValue($"FirstSheet Row {i + 1}");
-                sheet2.Cells[i, 0].PutValue($"SecondSheet Row {i + 1}");
-            }
-
-            // Create PDF save options and enable OnePagePerSheet
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                OnePagePerSheet = true // Each worksheet will be saved as a separate PDF page
-            };
-
-            // Save the workbook as PDF using the specified options
-            workbook.Save("OnePagePerSheetOutput.pdf", pdfOptions);
+            sheet1.Cells[i, 0].Value = $"Sheet1 Data {i + 1}";
         }
+
+        // Add a second worksheet and populate it
+        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+        for (int i = 0; i < 10; i++)
+        {
+            sheet2.Cells[i, 0].Value = $"Sheet2 Data {i + 1}";
+        }
+
+        // Set PDF save options to generate a separate page for each worksheet
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            OnePagePerSheet = true
+        };
+
+        // Save the workbook as a PDF file
+        workbook.Save("output.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example code.

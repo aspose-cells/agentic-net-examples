@@ -1,94 +1,115 @@
+// Title: Detect formulas that reference hidden named ranges in Excel using Aspose.Cells for .NET (C#)
+// Description: C# program that loads an Excel workbook, finds named ranges defined on hidden worksheets, scans all formulas for those references, and creates a remediation report with worksheet, cell, formula, hidden name and suggested action.
+// Keywords: Aspose.Cells | C# | .NET | hidden worksheet | named range | formula detection | remediation report | Excel audit | spreadsheet governance | workbook analysis | hidden sheet names
+// Common Searches: Aspose.Cells find formulas referencing hidden named ranges | C# detect hidden worksheet name usage in Excel | generate report of cells that use hidden named ranges | how to audit Excel for hidden sheet references with Aspose.Cells | list formulas that depend on hidden worksheets .NET
+// Developer Intent: Identify every formula that points to a named range located on a hidden worksheet and output a detailed remediation report.
+// Use Cases: Perform a pre‑release audit to ensure no formulas rely on hidden names that could break for end users. | Create a compliance document for spreadsheet governance that lists hidden‑name dependencies and recommended fixes. | Automate cleanup of legacy workbooks by flagging hidden‑range references for manual or programmatic correction.
+// AI Prompts: Write C# code with Aspose.Cells that lists all formulas referencing hidden named ranges and saves the results to an Excel report. | Modify the example to add a comment to each offending cell in the original workbook describing the hidden name issue. | Create a function that replaces hidden named range references with equivalent visible ranges and updates the workbook automatically.
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace HiddenNamedRangeAnalysis
+namespace HiddenNamedRangeRemediation
 {
+    // C# program that loads an Excel workbook, finds named ranges defined on hidden worksheets, scans all formulas for those references, and creates a remediation report with worksheet, cell, formula, hidden name and suggested action.
     class Program
     {
         static void Main()
         {
-            // Load the workbook (replace with actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Gather hidden worksheet indexes (Aspose uses zero‑based indexes)
-            HashSet<int> hiddenSheetIndexes = new HashSet<int>();
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            try
             {
-                Worksheet ws = workbook.Worksheets[i];
-                if (!ws.IsVisible) // hidden worksheet
+                // Input workbook path
+                string inputFile = "InputWorkbook.xlsx";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
                 {
-                    hiddenSheetIndexes.Add(i);
+                    Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                    return;
                 }
-            }
 
-            // Identify names that are scoped to hidden worksheets
-            List<Name> hiddenScopedNames = new List<Name>();
-            foreach (Name name in workbook.Worksheets.Names)
-            {
-                // SheetIndex: 0 = global, otherwise one‑based sheet index
-                int sheetIdx = name.SheetIndex;
-                if (sheetIdx > 0 && hiddenSheetIndexes.Contains(sheetIdx - 1))
+                // Load the workbook that needs to be analyzed
+                Workbook workbook = new Workbook(inputFile);
+
+                // Collect names that belong to hidden worksheets
+                var hiddenNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase); // key: name text, value: sheet name
+
+                foreach (Name name in workbook.Worksheets.Names)
                 {
-                    hiddenScopedNames.Add(name);
-                }
-            }
-
-            // Map each hidden name to the cells whose formulas reference it
-            Dictionary<Name, List<Cell>> nameReferences = new Dictionary<Name, List<Cell>>();
-            foreach (Name hiddenName in hiddenScopedNames)
-            {
-                nameReferences[hiddenName] = new List<Cell>();
-            }
-
-            // Scan all cells with formulas across the workbook
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                Cells cells = ws.Cells;
-                foreach (Cell cell in cells)
-                {
-                    if (cell.IsFormula)
+                    // SheetIndex: 0 = global name, otherwise one‑based index of the sheet the name belongs to
+                    if (name.SheetIndex > 0)
                     {
-                        string formula = cell.Formula;
-                        foreach (Name hiddenName in hiddenScopedNames)
+                        // Convert to zero‑based index to get the owning worksheet
+                        Worksheet ownerSheet = workbook.Worksheets[name.SheetIndex - 1];
+
+                        // Worksheet.IsVisible indicates whether the sheet is visible
+                        if (!ownerSheet.IsVisible)
                         {
-                            // Simple containment check; adjust for case‑sensitivity if needed
-                            if (formula.IndexOf(hiddenName.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                            hiddenNames[name.Text] = ownerSheet.Name;
+                        }
+                    }
+                }
+
+                // Prepare a new workbook for the remediation report
+                Workbook report = new Workbook();
+                Worksheet reportSheet = report.Worksheets[0];
+                Cells reportCells = reportSheet.Cells;
+
+                // Write header row
+                reportCells[0, 0].PutValue("Worksheet");
+                reportCells[0, 1].PutValue("Cell");
+                reportCells[0, 2].PutValue("Formula");
+                reportCells[0, 3].PutValue("Hidden Named Range");
+                reportCells[0, 4].PutValue("Suggested Action");
+
+                int reportRow = 1;
+
+                // Scan all worksheets and cells for formulas that reference hidden names
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    Cells cells = ws.Cells;
+
+                    foreach (Cell cell in cells)
+                    {
+                        if (cell.IsFormula)
+                        {
+                            string formula = cell.Formula;
+
+                            foreach (var kvp in hiddenNames)
                             {
-                                nameReferences[hiddenName].Add(cell);
+                                string hiddenName = kvp.Key;
+                                string hiddenSheet = kvp.Value;
+
+                                // Case‑insensitive containment check
+                                if (formula.IndexOf(hiddenName, StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    // Record the offending formula in the report
+                                    reportCells[reportRow, 0].PutValue(ws.Name);
+                                    reportCells[reportRow, 1].PutValue(cell.Name);
+                                    reportCells[reportRow, 2].PutValue(formula);
+                                    reportCells[reportRow, 3].PutValue($"{hiddenSheet}!{hiddenName}");
+                                    reportCells[reportRow, 4].PutValue("Unhide the sheet or replace the name with a visible one");
+                                    reportRow++;
+                                    // No need to check other hidden names for this cell
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // Output remediation plan
-            Console.WriteLine("=== Remediation Plan for Formulas Referencing Hidden Named Ranges ===");
-            foreach (var kvp in nameReferences)
+                // Save the remediation report
+                string reportFile = "RemediationReport.xlsx";
+                report.Save(reportFile);
+                Console.WriteLine($"Remediation report saved to \"{reportFile}\".");
+            }
+            catch (Exception ex)
             {
-                Name hiddenName = kvp.Key;
-                List<Cell> referencingCells = kvp.Value;
-
-                if (referencingCells.Count == 0)
-                {
-                    Console.WriteLine($"\nNamed range \"{hiddenName.Text}\" is defined on hidden sheet \"{workbook.Worksheets[hiddenName.SheetIndex - 1].Name}\" but is not referenced by any formula.");
-                    continue;
-                }
-
-                Console.WriteLine($"\nNamed range \"{hiddenName.Text}\" (defined on hidden sheet \"{workbook.Worksheets[hiddenName.SheetIndex - 1].Name}\") is referenced by {referencingCells.Count} formula(s):");
-                foreach (Cell refCell in referencingCells)
-                {
-                    Console.WriteLine($"- Sheet: {refCell.Worksheet.Name}, Cell: {refCell.Name}, Formula: {refCell.Formula}");
-                }
-
-                Console.WriteLine("Recommended actions:");
-                Console.WriteLine("  1. Move the named range to a visible worksheet, or");
-                Console.WriteLine("  2. Update the formulas to reference an alternative (visible) named range, or");
-                Console.WriteLine("  3. Unhide the worksheet if the hidden scope is intentional.");
+                // Log unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // (Optional) Save a copy of the workbook after analysis
-            workbook.Save("analysis_output.xlsx");
         }
     }
 }

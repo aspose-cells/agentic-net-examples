@@ -1,59 +1,76 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class Program
+namespace BatchVbaReferenceAdder
 {
-    static void Main()
+    class Program
     {
-        // Folder containing the workbooks to process
-        string sourceFolder = "InputWorkbooks";
-        // Folder where processed workbooks will be saved
-        string outputFolder = "OutputWorkbooks";
-
-        // Ensure the output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Get all macro-enabled workbooks in the source folder
-        string[] files = Directory.GetFiles(sourceFolder, "*.xlsm", SearchOption.TopDirectoryOnly);
-
-        int successCount = 0;
-        int failureCount = 0;
-
-        foreach (string filePath in files)
+        static void Main(string[] args)
         {
-            try
-            {
-                // Load the workbook from file
-                Workbook workbook = new Workbook(filePath);
+            // Folder containing the workbooks to process
+            string folderPath = @"C:\Workbooks";
 
-                // Add the standard library reference if a VBA project is present
-                if (workbook.VbaProject != null)
+            // Standard library reference to add
+            const string referenceName = "stdole";
+            const string referenceLibId = "*\\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\\Windows\\system32\\stdole2.tlb#OLE Automation";
+
+            // Counters for summary
+            int successCount = 0;
+            int failureCount = 0;
+            List<string> failedFiles = new List<string>();
+
+            // Get all macro-enabled Excel files in the folder
+            string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsm", SearchOption.TopDirectoryOnly);
+
+            foreach (string filePath in workbookFiles)
+            {
+                try
                 {
-                    workbook.VbaProject.References.AddRegisteredReference(
-                        "stdole",
-                        "*\\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\\Windows\\system32\\stdole2.tlb#OLE Automation");
+                    // Load the workbook (uses the provided load rule)
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Ensure the workbook has a VBA project
+                    if (workbook.VbaProject != null)
+                    {
+                        // Add the standard library reference (uses the provided API)
+                        workbook.VbaProject.References.AddRegisteredReference(referenceName, referenceLibId);
+                    }
+                    else
+                    {
+                        // If there is no VBA project, skip adding the reference
+                        Console.WriteLine($"No VBA project found in '{Path.GetFileName(filePath)}'. Skipping.");
+                    }
+
+                    // Save the workbook (overwrites the original file using the provided save rule)
+                    workbook.Save(filePath);
+
+                    successCount++;
                 }
-
-                // Determine the output file path (overwrite in the output folder)
-                string fileName = Path.GetFileName(filePath);
-                string outputPath = Path.Combine(outputFolder, fileName);
-
-                // Save the workbook preserving the macro-enabled format
-                workbook.Save(outputPath, SaveFormat.Xlsm);
-
-                successCount++;
+                catch (Exception ex)
+                {
+                    // Record failure details
+                    failureCount++;
+                    failedFiles.Add($"{Path.GetFileName(filePath)}: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+
+            // Output summary
+            Console.WriteLine("Batch processing completed.");
+            Console.WriteLine($"Total files processed: {workbookFiles.Length}");
+            Console.WriteLine($"Successful updates: {successCount}");
+            Console.WriteLine($"Failed updates: {failureCount}");
+
+            if (failedFiles.Count > 0)
             {
-                // Log the error and continue with the next file
-                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                failureCount++;
+                Console.WriteLine("Failed files:");
+                foreach (string info in failedFiles)
+                {
+                    Console.WriteLine($" - {info}");
+                }
             }
         }
-
-        // Output a summary of the batch operation
-        Console.WriteLine($"Batch processing completed. Successes: {successCount}, Failures: {failureCount}");
     }
 }

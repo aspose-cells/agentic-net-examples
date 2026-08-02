@@ -1,43 +1,48 @@
 using System;
 using Aspose.Cells;
 
-class RenameNamedRange
+namespace AsposeCellsRenameNamedRange
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
+        static void Main()
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["A3"].PutValue(30);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-        // Create a named range called "OldName" that refers to A1:A3
-        int nameIndex = workbook.Worksheets.Names.Add("OldName");
-        Name oldName = workbook.Worksheets.Names[nameIndex];
-        oldName.RefersTo = "=Sheet1!$A$1:$A$3";
+            // Add sample data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
 
-        // Use the named range in a formula
-        sheet.Cells["B1"].Formula = "=SUM(OldName)";
+            // Create a named range called "OldName" that refers to A1:A3
+            int nameIndex = workbook.Worksheets.Names.Add("OldName");
+            Name oldName = workbook.Worksheets.Names[nameIndex];
+            oldName.RefersTo = "=Sheet1!$A$1:$A$3";
 
-        // Calculate the formula before renaming
-        workbook.CalculateFormula();
-        Console.WriteLine("Sum before rename: " + sheet.Cells["B1"].Value); // Expected: 60
+            // Use the named range in a formula (for demonstration)
+            sheet.Cells["B1"].Formula = "=SUM(OldName)";
 
-        // Rename the named range to "NewName"
-        oldName.Text = "NewName";
+            // ------------------------------
+            // Rename the existing named range
+            // ------------------------------
+            // Retrieve the Name object by its current text
+            Name nameToRename = workbook.Worksheets.Names["OldName"];
+            if (nameToRename != null)
+            {
+                // Change the name text to the new name
+                nameToRename.Text = "NewName";
 
-        // Recalculate after renaming; Aspose.Cells updates formula references automatically
-        workbook.CalculateFormula();
+                // Recalculate formulas so that references to the old name are updated
+                workbook.CalculateFormula();
+            }
 
-        // Verify that the formula now references the new name
-        Console.WriteLine("Formula after rename: " + sheet.Cells["B1"].Formula); // Expected: =SUM(NewName)
-        Console.WriteLine("Sum after rename: " + sheet.Cells["B1"].Value); // Expected: 60
-
-        // Save the workbook
-        workbook.Save("RenamedNamedRange.xlsx");
+            // Save the workbook
+            workbook.Save("RenamedNamedRange.xlsx");
+        }
     }
 }

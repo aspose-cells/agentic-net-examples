@@ -1,66 +1,64 @@
+// Title: Evaluate External Workbook References with Worksheet.CalculateFormula in Aspose.Cells for .NET
+// Description: Demonstrates how to create a secondary workbook, assign a value to Sheet1!A2, reference that cell from a primary workbook using the formula =[External.xlsx]Sheet1!$A$2, configure CalculationOptions.LinkedDataSources with the external file, and compute the result both via Worksheet.CalculateFormula and Workbook.CalculateFormula.
+// Keywords: Aspose.Cells | Worksheet.CalculateFormula | external reference | LinkedDataSources | CalculationOptions | C# | cross‑workbook formula | .NET | Excel automation | formula evaluation
+// Common Searches: Aspose.Cells calculate formula from another file | Worksheet.CalculateFormula external link example | How to use LinkedDataSources in Aspose.Cells | C# evaluate cross‑workbook cell reference | CalculateFormula with external workbook in .NET
+// Developer Intent: Compute a cell value that depends on data stored in a separate workbook using Aspose.Cells without opening the source file.
+// Use Cases: Generate financial summaries that pull totals from a shared data workbook. | Run batch calculations where the source workbook serves as a static lookup table. | Create reporting tools that consolidate figures from multiple Excel files on the fly.
+// AI Prompts: Provide C# code that sets up CalculationOptions.LinkedDataSources to resolve an external cell reference with Worksheet.CalculateFormula. | Show how to handle missing or mismatched external workbook names when evaluating a linked formula in Aspose.Cells. | Explain the difference between direct formula calculation and full workbook recalculation for cross‑file references.
+
 using System;
 using Aspose.Cells;
 
 namespace WorksheetCalculateFormulaExternalDemo
 {
+    // Demonstrates how to create a secondary workbook, assign a value to Sheet1!A2, reference that cell from a primary workbook using the formula =[External.xlsx]Sheet1!$A$2, configure CalculationOptions.LinkedDataSources with the external file, and compute the result both via Worksheet.CalculateFormula and Workbook.CalculateFormula.
     class Program
     {
         static void Main()
         {
-            // ---------- Create external workbook with data ----------
-            Workbook externalWb = new Workbook();
-            // Set a file name that matches the reference used in formulas
-            externalWb.FileName = "External.xlsx";
-
-            // Populate data in Sheet1
-            Worksheet extSheet1 = externalWb.Worksheets[0];
-            extSheet1.Name = "Sheet1";
-            extSheet1.Cells["A2"].PutValue(100);
-
-            // Add a second sheet with additional data
-            Worksheet extSheet2 = externalWb.Worksheets.Add("Sheet2");
-            extSheet2.Cells["A2"].PutValue(200);
-
-            // Define named ranges in the external workbook
-            int nameIdx1 = externalWb.Worksheets.Names.Add("Sheet1!ExtNamedRange1");
-            externalWb.Worksheets.Names[nameIdx1].RefersTo = "=Sheet1!$A$2";
-
-            int nameIdx2 = externalWb.Worksheets.Names.Add("Sheet2!ExtNamedRange2");
-            externalWb.Worksheets.Names[nameIdx2].RefersTo = "=Sheet2!$A$2";
-
-            int nameIdx3 = externalWb.Worksheets.Names.Add("GlobalNamedRange");
-            externalWb.Worksheets.Names[nameIdx3].RefersTo = "=Sheet1!$A$2";
-
-            // ---------- Create main workbook that references the external one ----------
-            Workbook mainWb = new Workbook();
-            Worksheet mainSheet = mainWb.Worksheets[0];
-
-            // Formulas that reference the external workbook
-            mainSheet.Cells["A1"].Formula = "=[External.xlsx]Sheet1!$A$2";
-            mainSheet.Cells["A2"].Formula = "=INDIRECT(\"[External.xlsx]Sheet1!$A$2\")";
-            mainSheet.Cells["A3"].Formula = "=INDIRECT(\"[External.xlsx]Sheet1!ExtNamedRange1\")";
-            mainSheet.Cells["A4"].Formula = "=INDIRECT(\"[External.xlsx]!GlobalNamedRange\")";
-
-            // ---------- Set calculation options with linked data sources ----------
-            CalculationOptions calcOptions = new CalculationOptions
+            try
             {
-                // Provide the external workbook(s) that formulas may refer to
-                LinkedDataSources = new Workbook[] { externalWb }
-            };
+                // ---------- Create external workbook ----------
+                Workbook externalWb = new Workbook();
+                // Put a value in Sheet1!A2 (row 1, column 0)
+                externalWb.Worksheets[0].Cells["A2"].PutValue(12345);
+                // (Optional) give the workbook a name that matches the reference
+                externalWb.FileName = "External.xlsx";
 
-            // Calculate all formulas in the worksheet, allowing recursive evaluation of external links
-            mainSheet.CalculateFormula(calcOptions, true);
+                // ---------- Create main workbook ----------
+                Workbook mainWb = new Workbook();
+                Worksheet sheet = mainWb.Worksheets[0];
 
-            // ---------- Output the calculated values ----------
-            Console.WriteLine("Calculated values after Worksheet.CalculateFormula:");
-            for (int i = 1; i <= 4; i++)
-            {
-                string cellName = $"A{i}";
-                Console.WriteLine($"{cellName}: {mainSheet.Cells[cellName].StringValue}");
+                // Set a formula that references the external workbook cell A2
+                // Note: the external workbook name must match the name used in the formula
+                string externalFormula = "=[External.xlsx]Sheet1!$A$2";
+                sheet.Cells["B1"].Formula = externalFormula;
+
+                // ---------- Prepare calculation options ----------
+                CalculationOptions calcOptions = new CalculationOptions
+                {
+                    // Provide the external workbook(s) that formulas may refer to
+                    LinkedDataSources = new Workbook[] { externalWb }
+                };
+
+                // ---------- Calculate the specific formula directly ----------
+                // Demonstrates Worksheet.CalculateFormula(string, CalculationOptions)
+                object result = sheet.CalculateFormula(externalFormula, calcOptions);
+                Console.WriteLine($"Result of direct calculation: {result}");
+
+                // ---------- Calculate all formulas in the workbook ----------
+                // Use Workbook.CalculateFormula(CalculationOptions) to apply linked data sources
+                mainWb.CalculateFormula(calcOptions);
+                Console.WriteLine($"Result after full workbook calculation (B1): {sheet.Cells["B1"].Value}");
+
+                // Keep console window open
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
             }
-
-            // (Optional) Save the main workbook to verify results in Excel
-            // mainWb.Save("Result.xlsx", SaveFormat.Xlsx);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

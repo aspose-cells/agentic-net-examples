@@ -1,43 +1,30 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsIgnoreErrorDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Set a formula that will generate a #REF! error (reference to a non‑existent cell)
+        sheet.Cells["A1"].Formula = "=INDIRECT(\"Z1\")";
+
+        // Configure calculation options to ignore errors during formula evaluation
+        CalculationOptions calcOptions = new CalculationOptions
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            IgnoreError = true   // Suppress exceptions for errors like #REF!
+        };
 
-            // Populate some data in column B (which will later be deleted)
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i, 1].PutValue(i + 1); // B1:B5 = 1,2,3,4,5
-            }
+        // Perform calculation with the specified options
+        workbook.CalculateFormula(calcOptions);
 
-            // Set a formula that sums the values in column B
-            cells["A1"].Formula = "=SUM(B1:B5)";
+        // Display the result; the cell will contain the #REF! error string
+        Console.WriteLine("Result in A1 (expected #REF!): " + sheet.Cells["A1"].StringValue);
 
-            // Delete column B – the formula now references a non‑existent range and becomes #REF!
-            sheet.Cells.DeleteColumn(1); // Column index 1 corresponds to column B
-
-            // Prepare calculation options to ignore errors during formula evaluation
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                IgnoreError = true   // Suppress errors such as #REF!
-            };
-
-            // Calculate all formulas in the workbook using the specified options
-            workbook.CalculateFormula(calcOptions);
-
-            // Output the result of the formula after ignoring the #REF! error
-            Console.WriteLine("Result of A1 after ignoring errors: " + cells["A1"].StringValue);
-
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("IgnoreErrorResult.xlsx");
-        }
+        // Optional: save the workbook to verify the result in Excel
+        workbook.Save("IgnoreRefError.xlsx");
     }
 }

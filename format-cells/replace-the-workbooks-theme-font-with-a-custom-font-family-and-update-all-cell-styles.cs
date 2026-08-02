@@ -2,64 +2,48 @@ using System;
 using Aspose.Cells;
 using System.Drawing;
 
-class ReplaceThemeFontExample
+class ReplaceThemeFont
 {
     static void Main()
     {
-        try
+        // Create a new workbook (lifecycle rule: create)
+        Workbook workbook = new Workbook();
+
+        // Define the custom font family to be used as the theme font
+        string customFontFamily = "Arial";
+
+        // Update the default style so that any new cells will inherit the custom font
+        Style defaultStyle = workbook.DefaultStyle;
+        defaultStyle.Font.Name = customFontFamily;
+        // Apply the font as a major scheme font (you can also set Minor if needed)
+        defaultStyle.Font.SchemeType = FontSchemeType.Major;
+        workbook.DefaultStyle = defaultStyle;
+
+        // Iterate through all worksheets and cells to replace existing font settings
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Determine the used range to limit iteration (optional: you can use MaxDataRow/Column)
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-            // Define the custom font family to be applied
-            string customFontFamily = "Calibri";
-
-            // Set the default style font to the custom font
-            Style defaultStyle = workbook.DefaultStyle;
-            defaultStyle.Font.Name = customFontFamily;
-            defaultStyle.IsFontApplied = true; // Ensure font changes are applied for named style
-            workbook.DefaultStyle = defaultStyle;
-
-            // Add sample data to demonstrate the font change
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Original Font");
-            sheet.Cells["A2"].PutValue("Will be changed to custom font");
-            sheet.Cells["B1"].PutValue(123);
-            sheet.Cells["B2"].PutValue(DateTime.Now);
-
-            // Iterate through all worksheets and update each cell's style to use the custom font
-            foreach (Worksheet ws in workbook.Worksheets)
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Use the used range to limit iteration to cells that contain data
-                Aspose.Cells.Range usedRange = ws.Cells.MaxDisplayRange;
-                int firstRow = usedRange.FirstRow;
-                int firstColumn = usedRange.FirstColumn;
-                int rowCount = usedRange.RowCount;
-                int columnCount = usedRange.ColumnCount;
-
-                for (int row = firstRow; row < firstRow + rowCount; row++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = firstColumn; col < firstColumn + columnCount; col++)
-                    {
-                        Cell cell = ws.Cells[row, col];
-                        Style style = cell.GetStyle();
+                    Cell cell = sheet.Cells[row, col];
+                    // Skip empty cells to avoid unnecessary style creation
+                    if (cell == null || cell.Type == CellValueType.IsNull) continue;
 
-                        // Apply the custom font family
-                        style.Font.Name = customFontFamily;
-                        style.IsFontApplied = true; // Ensure the font change takes effect
-
-                        cell.SetStyle(style);
-                    }
+                    // Get the current style, modify the font, and reapply
+                    Style style = cell.GetStyle();
+                    style.Font.Name = customFontFamily;
+                    style.Font.SchemeType = FontSchemeType.Major;
+                    cell.SetStyle(style);
                 }
             }
+        }
 
-            // Save the workbook with the updated theme font
-            string outputPath = "WorkbookWithCustomThemeFont.xlsx";
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("WorkbookWithCustomThemeFont.xlsx");
     }
 }

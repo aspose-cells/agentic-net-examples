@@ -11,64 +11,55 @@ namespace AsposeCellsCustomXmlValidation
     {
         static void Main()
         {
-            // Path for the workbook file
+            // Path for the workbook to be saved
             string workbookPath = "CustomXmlWorkbook.xlsx";
 
-            // ---------- Create ----------
-            // Initialize a new workbook
-            Workbook wb = new Workbook();
+            // ------------------- Create workbook and add custom XML part -------------------
+            Workbook wb = new Workbook(); // create workbook (lifecycle rule)
 
             // Sample XML data and optional schema
             string xmlData = "<MyData xmlns=\"http://example.com\"><Value>123</Value></MyData>";
-            byte[] dataBytes = Encoding.UTF8.GetBytes(xmlData);
-            byte[] schemaBytes = null; // No schema in this example
+            byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlData);
+            byte[] schemaBytes = null; // no schema needed for this demo
 
-            // Add the custom XML part to the workbook
-            // The Add method returns the index of the newly added part
-            int partIndex = wb.CustomXmlParts.Add(dataBytes, schemaBytes);
+            // Add the custom XML part; Add returns the index of the new part
+            int partIndex = wb.CustomXmlParts.Add(xmlBytes, schemaBytes);
 
-            // Optional: set a known ID for later retrieval (not required for zip validation)
-            wb.CustomXmlParts[partIndex].ID = Guid.NewGuid().ToString();
+            // Optionally set a known ID to retrieve later
+            wb.CustomXmlParts[partIndex].ID = "MyCustomXmlPartId";
 
-            // ---------- Save ----------
-            // Save the workbook to disk
-            wb.Save(workbookPath);
+            // ------------------- Save workbook -------------------
+            wb.Save(workbookPath); // save (lifecycle rule)
 
-            // ---------- Load ----------
-            // Load the workbook back from the saved file
-            Workbook loadedWb = new Workbook(workbookPath);
+            // ------------------- Load workbook to verify part count -------------------
+            Workbook loadedWb = new Workbook(workbookPath); // load (lifecycle rule)
+            Console.WriteLine($"Custom XML parts count after reload: {loadedWb.CustomXmlParts.Count}");
 
-            // Verify that the custom XML part exists by inspecting the ZIP package
-            bool customXmlPartFound = false;
+            // ------------------- Validate zip entry name -------------------
+            // OOXML stores custom XML parts under the "customXml" folder.
+            // We'll open the saved file as a zip archive and look for entries that start with that folder.
             using (FileStream fs = new FileStream(workbookPath, FileMode.Open, FileAccess.Read))
-            using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))
+            using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Read))
             {
-                // In OOXML, custom XML parts are stored under the "customXml" folder
-                foreach (ZipArchiveEntry entry in archive.Entries)
+                bool customXmlEntryFound = false;
+
+                foreach (ZipArchiveEntry entry in zip.Entries)
                 {
+                    // Check for entries like "customXml/item1.xml"
                     if (entry.FullName.StartsWith("customXml/", StringComparison.OrdinalIgnoreCase) &&
                         entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                     {
-                        customXmlPartFound = true;
+                        customXmlEntryFound = true;
                         Console.WriteLine($"Found custom XML part entry: {entry.FullName}");
                         break;
                     }
                 }
-            }
 
-            // Output validation result
-            if (customXmlPartFound)
-            {
-                Console.WriteLine("Validation succeeded: Custom XML part is present in the saved workbook.");
+                if (!customXmlEntryFound)
+                {
+                    Console.WriteLine("Custom XML part entry not found in the workbook package.");
+                }
             }
-            else
-            {
-                Console.WriteLine("Validation failed: Custom XML part is missing in the saved workbook.");
-            }
-
-            // Clean up (optional)
-            wb.Dispose();
-            loadedWb.Dispose();
         }
     }
 }

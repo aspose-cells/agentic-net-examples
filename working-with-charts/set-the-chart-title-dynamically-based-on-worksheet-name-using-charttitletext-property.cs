@@ -2,45 +2,39 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDynamicChartTitle
+class SetChartTitleDynamic
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet and give it a meaningful name
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Name = "SalesData";
 
-            // Optionally rename the worksheet to demonstrate dynamic title
-            worksheet.Name = "SalesData";
+        // Populate sample data for the chart
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["A2"].PutValue("A");
+        worksheet.Cells["A3"].PutValue("B");
+        worksheet.Cells["A4"].PutValue("C");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["B4"].PutValue(30);
 
-            // Add sample data for the chart
-            worksheet.Cells["A1"].PutValue("Month");
-            worksheet.Cells["A2"].PutValue("Jan");
-            worksheet.Cells["A3"].PutValue("Feb");
-            worksheet.Cells["A4"].PutValue("Mar");
-            worksheet.Cells["B1"].PutValue("Revenue");
-            worksheet.Cells["B2"].PutValue(15000);
-            worksheet.Cells["B3"].PutValue(18000);
-            worksheet.Cells["B4"].PutValue(21000);
+        // Add a column chart to the worksheet
+        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = worksheet.Charts[chartIndex];
 
-            // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
+        // Define the data range for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+        // Dynamically set the chart title to the worksheet's name
+        chart.Title.Text = worksheet.Name;
 
-            // Dynamically set the chart title to the worksheet name
-            chart.Title.Text = worksheet.Name;
-            chart.Title.IsVisible = true;
-
-            // Save the workbook
-            workbook.Save("DynamicChartTitle.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("DynamicChartTitle.xlsx");
     }
 }

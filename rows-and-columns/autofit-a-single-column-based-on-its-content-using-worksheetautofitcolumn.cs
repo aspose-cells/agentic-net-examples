@@ -1,33 +1,28 @@
 using System;
 using Aspose.Cells;
 
-namespace AutoFitColumnDemo
+namespace AutoFitColumnExample
 {
-    public class Program
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook (in-memory)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data in column A (index 0)
-            worksheet.Cells["A1"].PutValue("Short");
-            worksheet.Cells["A2"].PutValue("This is a much longer piece of text that will require column width adjustment");
-            worksheet.Cells["A3"].PutValue("Another long text entry to demonstrate AutoFitColumn");
+            // Populate some cells in column C (index 2)
+            worksheet.Cells["C1"].PutValue("Short");
+            worksheet.Cells["C2"].PutValue("A much longer piece of text that requires wider column");
+            worksheet.Cells["C3"].PutValue("Medium length");
 
-            // Display column width before autofit
-            Console.WriteLine($"Column width before AutoFitColumn: {worksheet.Cells.GetColumnWidth(0)}");
+            // Auto‑fit column C (0‑based index 2)
+            worksheet.AutoFitColumn(2);
 
-            // Auto‑fit column A (zero‑based index 0) using Worksheet.AutoFitColumn
-            worksheet.AutoFitColumn(0);
-
-            // Display column width after autofit
-            Console.WriteLine($"Column width after AutoFitColumn: {worksheet.Cells.GetColumnWidth(0)}");
-
-            // Save the workbook (save rule)
+            // Save the workbook to a file
             workbook.Save("AutoFitColumnResult.xlsx");
         }
     }

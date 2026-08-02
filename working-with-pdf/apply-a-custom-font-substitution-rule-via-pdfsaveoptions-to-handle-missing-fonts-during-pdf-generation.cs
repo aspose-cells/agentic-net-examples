@@ -1,39 +1,36 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class FontSubstitutionPdfDemo
+public class FontSubstitutionPdfDemo
 {
-    static void Main()
+    public static void Main()
     {
-        // Define substitute fonts for a font that may be missing on the system.
-        // If "NonExistentFont" is not found, Aspose.Cells will try "Arial" then "Helvetica".
-        FontConfigs.SetFontSubstitutes("NonExistentFont", new string[] { "Arial", "Helvetica" });
-
-        // Create a new workbook and add a cell that uses the missing font.
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Text using a missing font");
 
-        // Apply the missing font to the cell style.
+        // Add sample text that uses a font which might be missing on the target system
+        sheet.Cells["A1"].PutValue("Sample text with missing font");
+
+        // Apply the original font (e.g., Arial) to the cell style
         Style style = workbook.CreateStyle();
-        style.Font.Name = "NonExistentFont";
+        style.Font.Name = "Arial"; // Assume Arial may not be installed
         sheet.Cells["A1"].SetStyle(style);
 
-        // Configure PDF save options.
+        // Define substitute fonts for the original font
+        string originalFont = "Arial";
+        string[] substituteFonts = new string[] { "Liberation Sans", "Helvetica", "Verdana" };
+        FontConfigs.SetFontSubstitutes(originalFont, substituteFonts);
+
+        // Configure PDF save options with a default fallback font
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Use a known default font when the original font cannot be rendered.
-            DefaultFont = "Arial",
-            // Try the workbook's default font first before falling back to system fonts.
-            CheckWorkbookDefaultFont = true,
-            // Substitute fonts at character granularity to avoid whole-cell substitution.
-            IsFontSubstitutionCharGranularity = true,
-            // Use Identity encoding for embedded fonts.
-            FontEncoding = PdfFontEncoding.Identity
+            DefaultFont = "Liberation Sans"
         };
 
-        // Save the workbook as a PDF using the configured options.
-        workbook.Save("FontSubstitutionOutput.pdf", pdfOptions);
+        // Save the workbook as PDF using the configured options
+        workbook.Save("FontSubstitutionDemo.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example.

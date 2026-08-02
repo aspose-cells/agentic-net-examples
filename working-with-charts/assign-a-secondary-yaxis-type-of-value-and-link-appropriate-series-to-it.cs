@@ -11,14 +11,14 @@ class SecondaryYAxisDemo
 
         // Add sample data
         sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Jan");
-        sheet.Cells["A3"].PutValue("Feb");
-        sheet.Cells["A4"].PutValue("Mar");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
 
         sheet.Cells["B1"].PutValue("Primary");
         sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(200);
+        sheet.Cells["B3"].PutValue(200);
+        sheet.Cells["B4"].PutValue(300);
 
         sheet.Cells["C1"].PutValue("Secondary");
         sheet.Cells["C2"].PutValue(5000);

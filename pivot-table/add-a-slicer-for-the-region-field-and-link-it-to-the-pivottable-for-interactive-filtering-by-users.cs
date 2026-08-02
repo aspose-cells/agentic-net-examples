@@ -13,7 +13,7 @@ namespace AsposeCellsSlicerExample
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data with a "Region" field
+            // Populate sample data for the pivot table
             sheet.Cells["A1"].Value = "Product";
             sheet.Cells["B1"].Value = "Region";
             sheet.Cells["C1"].Value = "Sales";
@@ -22,28 +22,28 @@ namespace AsposeCellsSlicerExample
             sheet.Cells["B2"].Value = "North";
             sheet.Cells["C2"].Value = 1200;
 
-            sheet.Cells["A3"].Value = "Banana";
+            sheet.Cells["A3"].Value = "Apple";
             sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 850;
+            sheet.Cells["C3"].Value = 800;
 
-            sheet.Cells["A4"].Value = "Apple";
-            sheet.Cells["B4"].Value = "South";
-            sheet.Cells["C4"].Value = 950;
+            sheet.Cells["A4"].Value = "Banana";
+            sheet.Cells["B4"].Value = "North";
+            sheet.Cells["C4"].Value = 600;
 
             sheet.Cells["A5"].Value = "Banana";
-            sheet.Cells["B5"].Value = "North";
-            sheet.Cells["C5"].Value = 1100;
+            sheet.Cells["B5"].Value = "South";
+            sheet.Cells["C5"].Value = 400;
 
-            // Add a PivotTable based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // Configure the PivotTable: Product as Row, Region as Column, Sales as Data
-            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add fields to the pivot table
+            pivot.AddFieldToArea(PivotFieldType.Row, "Region");   // Region as row field
+            pivot.AddFieldToArea(PivotFieldType.Column, "Product"); // Product as column field
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");   // Sales as data field
 
-            // Refresh and calculate the PivotTable so that slicer can work correctly
+            // Refresh and calculate the pivot table so that slicer can work correctly
             pivot.RefreshData();
             pivot.CalculateData();
 
@@ -51,14 +51,11 @@ namespace AsposeCellsSlicerExample
             int slicerIndex = sheet.Slicers.Add(pivot, "G1", "Region");
             Slicer slicer = sheet.Slicers[slicerIndex];
 
-            // Explicitly link the slicer to the PivotTable (optional, but ensures connection)
+            // Link the slicer to the pivot table (required for interactive filtering)
             slicer.AddPivotConnection(pivot);
 
-            // Optionally set some slicer properties
+            // Optional: set a caption for better UI
             slicer.Caption = "Region Filter";
-            slicer.NumberOfColumns = 1;
-            slicer.WidthPixel = 150;
-            slicer.HeightPixel = 100;
 
             // Save the workbook
             workbook.Save("PivotTableWithRegionSlicer.xlsx");

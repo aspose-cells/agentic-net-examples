@@ -4,10 +4,103 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Settings;
 
-namespace AsposeCellsPerformanceDemo
+class PivotGlobalizationPerformance
 {
-    // Custom globalization settings for pivot tables
-    public class CustomPivotGlobalizationSettings : PivotGlobalizationSettings
+    // Size of the dataset for the performance test
+    const int RowCount = 100_000;
+
+    static void Main()
+    {
+        // Measure performance with default globalization settings
+        double defaultTime = MeasurePivotCreation(useCustomSettings: false);
+        Console.WriteLine($"Default globalization settings: {defaultTime:F2} ms");
+
+        // Measure performance with custom globalization settings
+        double customTime = MeasurePivotCreation(useCustomSettings: true);
+        Console.WriteLine($"Custom globalization settings: {customTime:F2} ms");
+    }
+
+    // Creates a workbook, populates data, creates a pivot table and measures the elapsed time.
+    static double MeasurePivotCreation(bool useCustomSettings)
+    {
+        // Start timing
+        Stopwatch sw = Stopwatch.StartNew();
+
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
+
+        // Populate a large dataset
+        PopulateSampleData(dataSheet, RowCount);
+
+        // Apply custom globalization settings if requested
+        if (useCustomSettings)
+        {
+            // Create an instance of custom pivot globalization settings
+            CustomPivotGlobalizationSettings customSettings = new CustomPivotGlobalizationSettings();
+
+            // Assign the custom settings to the workbook
+            workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
+            workbook.Settings.GlobalizationSettings.PivotSettings = customSettings;
+        }
+
+        // Add a new worksheet for the pivot table
+        Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+
+        // Define the data range for the pivot table (A1:C{RowCount})
+        string dataRange = $"A1:C{RowCount}";
+        // Add the pivot table to the pivot sheet
+        int pivotIndex = pivotSheet.PivotTables.Add(dataRange, "A1", "LargePivot");
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+        // Configure the pivot fields
+        // Row field: Category (column 0)
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+        // Column field: SubCategory (column 1)
+        pivotTable.AddFieldToArea(PivotFieldType.Column, 1);
+        // Data field: Value (column 2)
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
+
+        // Refresh and calculate the pivot table to apply all settings
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Stop timing
+        sw.Stop();
+
+        // Optionally save the workbook (not required for timing)
+        // workbook.Save(useCustomSettings ? "CustomPivot.xlsx" : "DefaultPivot.xlsx");
+
+        return sw.Elapsed.TotalMilliseconds;
+    }
+
+    // Populates the worksheet with sample data:
+    // Column A: Category (e.g., "Category0" to "Category9")
+    // Column B: SubCategory (e.g., "Sub0" to "Sub9")
+    // Column C: Random numeric value
+    static void PopulateSampleData(Worksheet sheet, int rows)
+    {
+        Random rnd = new Random(0);
+        // Header row
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("SubCategory");
+        sheet.Cells["C1"].PutValue("Value");
+
+        for (int i = 2; i <= rows + 1; i++)
+        {
+            // Cycle through 10 categories and subcategories to create realistic grouping
+            string category = "Category" + (i % 10);
+            string subCategory = "Sub" + (i % 10);
+            double value = rnd.NextDouble() * 1000;
+
+            sheet.Cells[$"A{i}"].PutValue(category);
+            sheet.Cells[$"B{i}"].PutValue(subCategory);
+            sheet.Cells[$"C{i}"].PutValue(value);
+        }
+    }
+
+    // Custom pivot globalization settings overriding a few text methods
+    class CustomPivotGlobalizationSettings : PivotGlobalizationSettings
     {
         public override string GetTextOfTotal()
         {
@@ -19,136 +112,19 @@ namespace AsposeCellsPerformanceDemo
             return "Custom Grand Total";
         }
 
-        public override string GetTextOfDataFieldHeader()
+        public override string GetTextOfAll()
         {
-            return "Custom Data Header";
+            return "All Items (Custom)";
         }
 
-        public override string GetTextOfProtectedName(string protectedName)
+        public override string GetTextOfRowLabels()
         {
-            return protectedName + "_Custom";
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Parameters for large dataset
-            const int rowCount = 100_000; // number of data rows
-            const int colCount = 5;       // number of data columns (including row header)
-
-            // Measure default globalization performance
-            Stopwatch swDefault = Stopwatch.StartNew();
-            Workbook wbDefault = CreateWorkbookWithPivot(rowCount, colCount, useCustomSettings: false);
-            swDefault.Stop();
-
-            // Measure custom globalization performance
-            Stopwatch swCustom = Stopwatch.StartNew();
-            Workbook wbCustom = CreateWorkbookWithPivot(rowCount, colCount, useCustomSettings: true);
-            swCustom.Stop();
-
-            // Output results
-            Console.WriteLine($"Default globalization time: {swDefault.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Custom globalization time: {swCustom.ElapsedMilliseconds} ms");
-
-            // Save workbooks (optional, just to verify correctness)
-            wbDefault.Save("Pivot_Default.xlsx");
-            wbCustom.Save("Pivot_Custom.xlsx");
+            return "Rows (Custom)";
         }
 
-        /// <summary>
-        /// Creates a workbook, fills it with sample data, applies optional custom globalization,
-        /// adds a pivot table, refreshes and calculates it.
-        /// </summary>
-        /// <param name="rows">Number of data rows to generate.</param>
-        /// <param name="cols">Number of data columns (including the first column for row field).</param>
-        /// <param name="useCustomSettings">If true, applies custom pivot globalization settings.</param>
-        /// <returns>The populated workbook.</returns>
-        private static Workbook CreateWorkbookWithPivot(int rows, int cols, bool useCustomSettings)
+        public override string GetTextOfColumnLabels()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-            Cells cells = dataSheet.Cells;
-
-            // Populate header row
-            for (int c = 0; c < cols; c++)
-            {
-                cells[0, c].PutValue($"Field{c + 1}");
-            }
-
-            // Populate large dataset
-            Random rnd = new Random(0);
-            for (int r = 1; r <= rows; r++)
-            {
-                // First column: categorical data (e.g., "CategoryA" to "CategoryZ")
-                string category = "Category" + ((r - 1) % 26);
-                cells[r, 0].PutValue(category);
-
-                // Remaining columns: numeric data
-                for (int c = 1; c < cols; c++)
-                {
-                    cells[r, c].PutValue(rnd.NextDouble() * 1000);
-                }
-            }
-
-            // Apply custom globalization settings if requested
-            if (useCustomSettings)
-            {
-                // Create an instance of custom pivot settings
-                CustomPivotGlobalizationSettings pivotSettings = new CustomPivotGlobalizationSettings();
-
-                // Assign to workbook's globalization settings
-                workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
-                workbook.Settings.GlobalizationSettings.PivotSettings = pivotSettings;
-            }
-
-            // Define the data range for the pivot table
-            string dataRange = $"A1:{CellIndexToName(rows, cols - 1)}";
-
-            // Add a new worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
-
-            // Add the pivot table
-            int pivotIndex = pivotSheet.PivotTables.Add(dataRange, "A1", "LargePivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Add the first column as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-
-            // Add all numeric columns as data fields
-            for (int c = 1; c < cols; c++)
-            {
-                pivotTable.AddFieldToArea(PivotFieldType.Data, c);
-            }
-
-            // Refresh and calculate the pivot table to materialize it
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            return workbook;
-        }
-
-        /// <summary>
-        /// Converts zero‑based row and column indexes to an Excel cell name (e.g., (0,0) => "A1").
-        /// Used to build the data range string.
-        /// </summary>
-        private static string CellIndexToName(int rowIndex, int columnIndex)
-        {
-            // Convert column index to letters
-            string columnName = "";
-            int dividend = columnIndex + 1;
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                columnName = Convert.ToChar('A' + modulo) + columnName;
-                dividend = (dividend - modulo) / 26;
-            }
-
-            // Excel rows are 1‑based
-            int excelRow = rowIndex + 1;
-            return $"{columnName}{excelRow}";
+            return "Columns (Custom)";
         }
     }
 }

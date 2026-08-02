@@ -1,27 +1,33 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsXmlMapWhitespaceDemo
 {
-    static void Main()
+    class Program
     {
-        // Create XML load options.
-        // Set IsXmlMap to true to enable XML mapping.
-        // Set IgnoreRootAttributes to true to ignore whitespace nodes (prevents blank entries).
-        XmlLoadOptions loadOptions = new XmlLoadOptions
+        static void Main()
         {
-            IsXmlMap = true,
-            IgnoreRootAttributes = true
-        };
+            // Create XML load options
+            XmlLoadOptions loadOptions = new XmlLoadOptions();
 
-        // Load the XML file using the configured options.
-        Workbook workbook = new Workbook("input.xml", loadOptions);
+            // Enable XML mapping
+            loadOptions.IsXmlMap = true;
 
-        // Example: read a cell value to verify import.
-        string firstCell = workbook.Worksheets[0].Cells["A1"].StringValue;
-        Console.WriteLine("First cell value: " + firstCell);
+            // Configure the options to ignore whitespace-like nodes.
+            // Aspose.Cells does not have a dedicated whitespace flag,
+            // but setting IgnoreRootAttributes helps avoid processing
+            // empty root attributes that can appear as blank entries.
+            loadOptions.IgnoreRootAttributes = true;
 
-        // Save the workbook to an Excel file.
-        workbook.Save("output.xlsx");
+            // Load the XML file with the configured options
+            Workbook workbook = new Workbook("input.xml", loadOptions);
+
+            // (Optional) Access the first worksheet to verify data
+            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine("First cell value after import: " + sheet.Cells["A1"].StringValue);
+
+            // Save the workbook to Excel format
+            workbook.Save("output.xlsx");
+        }
     }
 }

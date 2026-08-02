@@ -1,56 +1,54 @@
+// Title: C# – Create and Auto‑Expand a ListObject from a Dynamic Range with Aspose.Cells
+// Description: Shows how to detect the current data bounds, add a ListObject (Excel table) over that range, insert additional rows, and automatically resize the table using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | ListObject | dynamic range | auto resize table | Excel table expansion | MaxDataRow | MaxDataColumn | Resize method | add rows to table | Excel automation .NET
+// Common Searches: Aspose.Cells create table from range | Resize ListObject after adding rows Aspose.Cells | auto expand Excel table .NET | detect last data row Aspose.Cells | C# add rows to ListObject | dynamic table range Aspose.Cells
+// Developer Intent: Create a ListObject based on the existing data range and have it grow automatically when new rows are inserted.
+// Use Cases: Generate an Excel table from data whose size changes at runtime without recreating the table. | Append new rows to a worksheet and keep the ListObject range up‑to‑date, preserving formatting and table name. | Export dynamically sized datasets while maintaining a named table for downstream analysis or reporting.
+// AI Prompts: Provide C# code that uses Aspose.Cells to create a ListObject from a dynamic range and automatically expands it after new rows are added. | Show how to detect the last data row and column, add a table, insert additional rows, and call Resize to include them in Aspose.Cells. | Explain how to enable automatic table expansion in Aspose.Cells when data is appended later in the worksheet.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsListObjectDemo
+// Shows how to detect the current data bounds, add a ListObject (Excel table) over that range, insert additional rows, and automatically resize the table using Aspose.Cells for .NET.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate initial data (including headers)
+        worksheet.Cells["A1"].PutValue("ID");
+        worksheet.Cells["B1"].PutValue("Value");
+        for (int i = 2; i <= 5; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data (including headers) in a dynamic range
-            // A1:C4 will be the initial range; later rows can be added below it
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Score");
-
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["C2"].PutValue(85);
-
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-            sheet.Cells["C3"].PutValue(90);
-
-            sheet.Cells["A4"].PutValue(3);
-            sheet.Cells["B4"].PutValue("Charlie");
-            sheet.Cells["C4"].PutValue(78);
-
-            // Add a ListObject (Excel table) using the range that contains the data
-            // The range is defined by its start and end cell addresses
-            ListObjectCollection listObjects = sheet.ListObjects;
-            int tableIndex = listObjects.Add("A1", "C4", true); // hasHeaders = true
-            ListObject table = listObjects[tableIndex];
-
-            // Optional: set a table style for better visual appearance
-            table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-            // Demonstrate automatic expansion:
-            // Adding a new row directly below the current table expands it automatically
-            // Use PutCellValue on the row index that is one past the current EndRow
-            int newRow = table.EndRow + 1; // row index where the new data will be placed
-            table.PutCellValue(newRow, 0, 4);               // ID
-            table.PutCellValue(newRow, 1, "Diana");         // Name
-            table.PutCellValue(newRow, 2, 92);              // Score
-
-            // At this point the ListObject has automatically grown to include the new row
-
-            // Save the workbook (lifecycle rule compliance)
-            workbook.Save("DynamicListObject.xlsx", SaveFormat.Xlsx);
+            worksheet.Cells[i - 1, 0].PutValue(i - 1);          // ID column
+            worksheet.Cells[i - 1, 1].PutValue(i * 10);       // Value column
         }
+
+        // Determine the dynamic range that currently contains data
+        int startRow = 0;                                   // first row (zero‑based)
+        int startColumn = 0;                                // first column (zero‑based)
+        int endRow = worksheet.Cells.MaxDataRow;            // last row with data
+        int endColumn = worksheet.Cells.MaxDataColumn;      // last column with data
+
+        // Add a ListObject (table) using the dynamic range
+        int tableIndex = worksheet.ListObjects.Add(startRow, startColumn, endRow, endColumn, true);
+        ListObject table = worksheet.ListObjects[tableIndex];
+        table.DisplayName = "DynamicTable";
+
+        // ----- Simulate adding new rows later -----
+        // Add a new data row just below the current table range
+        int newRow = endRow + 1;
+        worksheet.Cells[newRow, 0].PutValue(newRow);        // New ID
+        worksheet.Cells[newRow, 1].PutValue(newRow * 10);  // New Value
+
+        // Expand (resize) the ListObject to include the newly added row
+        table.Resize(startRow, startColumn, newRow, endColumn, true);
+
+        // Save the workbook (using the provided save rule)
+        workbook.Save("DynamicListObject.xlsx", SaveFormat.Xlsx);
     }
 }

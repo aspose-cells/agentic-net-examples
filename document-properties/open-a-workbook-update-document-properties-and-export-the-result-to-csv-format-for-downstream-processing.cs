@@ -8,30 +8,25 @@ namespace AsposeCellsDocumentPropertiesToCsv
         static void Main()
         {
             // Path to the source Excel file
-            string sourcePath = "input.xlsx";
+            string sourceFile = "input.xlsx";
 
             // Path for the resulting CSV file
-            string csvPath = "output.csv";
+            string csvFile = "output.csv";
 
-            // Load the workbook from the existing file (load rule)
-            Workbook workbook = new Workbook(sourcePath);
+            // Open the workbook using the constructor that accepts a file path
+            using (Workbook workbook = new Workbook(sourceFile))
+            {
+                // Update a built‑in document property (Author)
+                workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
 
-            // Update built‑in document properties (property rule)
-            // Example: set Author and Title
-            workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
-            workbook.BuiltInDocumentProperties["Title"].Value = "Sample Data Export";
+                // Add a custom document property (ProcessedDate)
+                workbook.CustomDocumentProperties.Add("ProcessedDate", DateTime.Now);
 
-            // Add a custom document property (property rule)
-            // Example: add a custom property named "ExportedOn"
-            workbook.CustomDocumentProperties.Add("ExportedOn", DateTime.Now);
+                // Save the workbook as CSV using the Save method with SaveFormat
+                workbook.Save(csvFile, SaveFormat.Csv);
+            }
 
-            // Save the workbook as CSV (save rule)
-            workbook.Save(csvPath, SaveFormat.Csv);
-
-            // Clean up
-            workbook.Dispose();
-
-            Console.WriteLine($"Workbook properties updated and saved as CSV to '{csvPath}'.");
+            Console.WriteLine($"Workbook properties updated and saved as CSV to '{csvFile}'.");
         }
     }
 }

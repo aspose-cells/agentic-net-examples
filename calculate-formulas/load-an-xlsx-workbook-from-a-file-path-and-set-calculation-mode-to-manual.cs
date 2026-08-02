@@ -1,23 +1,20 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+class Program
 {
-    class LoadAndSetManualCalculation
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the existing XLSX file
-            string filePath = "input.xlsx";
+        // Path to the existing XLSX file
+        string filePath = "input.xlsx";
 
-            // Load the workbook from the specified file path
-            Workbook workbook = new Workbook(filePath);
+        // Load the workbook from the specified file path
+        Workbook workbook = new Workbook(filePath);
 
-            // Set the calculation mode to Manual
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+        // Set the calculation mode to Manual
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-            // (Optional) Save the workbook to persist the setting
-            // workbook.Save("output.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook if you want to persist the setting
+        workbook.Save("output_manual.xlsx", SaveFormat.Xlsx);
     }
 }

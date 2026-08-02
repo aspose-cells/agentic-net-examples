@@ -2,29 +2,31 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class PdfOptimizationExample
+namespace AsposeCellsPdfOptimization
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – MinimumSize optimization with font subsetting
+    class Program
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Aspose.Cells PDF optimization with MinimumSize and font subsetting.");
+        static void Main()
+        {
+            // Create a new workbook and add some sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Aspose.Cells PDF Optimization Example");
+            sheet.Cells["A2"].PutValue("This PDF uses MinimumSize optimization and font subsetting.");
 
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Reduce file size by selecting the MinimumSize optimization mode
+                OptimizationType = PdfOptimizationType.MinimumSize,
 
-        // 1. Optimize for minimum file size (print quality is less important)
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+                // Enable font subsetting (embed only the glyphs that are used)
+                IsFontSubstitutionCharGranularity = true
+            };
 
-        // 2. Enable font subsetting by using ANSI preferred encoding.
-        //    This reduces the embedded font data to only the characters used.
-        pdfOptions.FontEncoding = PdfFontEncoding.AnsiPrefer;
-
-        // Optional: ensure standard Windows fonts are embedded (default is true)
-        pdfOptions.EmbedStandardWindowsFonts = true;
-
-        // Save the workbook as a PDF with the specified options
-        workbook.Save("OptimizedWithFontSubsetting.pdf", pdfOptions);
+            // Save the workbook as a PDF with the specified options
+            workbook.Save("OptimizedDocument.pdf", pdfOptions);
+        }
     }
 }

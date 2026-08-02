@@ -1,50 +1,47 @@
+// Title: Aspose.Cells .NET – Protect rows 20‑25 with a password using the EntireRow property
+// Description: A C# sample that creates a workbook, selects rows 20‑25 via the EntireRow property (or an AllowEditRange), assigns a password, applies worksheet protection, and saves the result as ProtectedRows.xlsx.
+// Keywords: Aspose.Cells EntireRow | protect specific rows C# | password protect rows Aspose.Cells | AllowEditRanges .NET | Excel row protection | C# Excel security | Aspose.Cells worksheet protection
+// Common Searches: Aspose.Cells protect rows with password | C# protect rows 20 to 25 Excel | How to use EntireRow property Aspose.Cells | Set password for row range Aspose.Cells .NET | Excel row lock example Aspose.Cells
+// Developer Intent: Secure rows 20‑25 of a worksheet so they can only be edited after entering a password.
+// Use Cases: Prevent accidental changes to header or total rows in financial reports. | Restrict access to confidential data rows before sharing a spreadsheet with clients. | Lock template sections while allowing users to fill in other parts of the sheet.
+// AI Prompts: Generate C# code that uses Aspose.Cells' EntireRow property to password‑protect rows 20‑25 while keeping other cells editable. | Show how to combine AllowEditRanges with worksheet protection to lock a specific row range in Aspose.Cells for .NET. | Provide an example of protecting multiple non‑contiguous row blocks, each with its own password, using Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-class ProtectRowsExample
+namespace AsposeCellsProtectedRowsDemo
 {
-    static void Main()
+    // A C# sample that creates a workbook, selects rows 20‑25 via the EntireRow property (or an AllowEditRange), assigns a password, applies worksheet protection, and saves the result as ProtectedRows.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Define the zero‑based start row (20th row) and the number of rows to protect (6 rows: 20‑25)
-            int startRow = 19;          // Row 20 (zero‑based)
-            int rowsCount = 6;          // Rows 20 to 25 inclusive
-            int startColumn = 0;        // First column (A)
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a temporary range covering the first column of the desired rows,
-            // then expand it to the entire rows with the EntireRow property.
-            AsposeRange rowsRange = sheet.Cells.CreateRange(startRow, startColumn, rowsCount, 1).EntireRow;
+                // Add a protected range that covers rows 20 through 25 (zero‑based indices 19‑24)
+                // The range starts at column A (index 0) and ends at column A (index 0)
+                int rangeIndex = worksheet.AllowEditRanges.Add("Rows20to25", 19, 0, 24, 0);
+                ProtectedRange protectedRange = worksheet.AllowEditRanges[rangeIndex];
 
-            // Add a protected range to the worksheet's AllowEditRanges collection.
-            ProtectedRangeCollection allowRanges = sheet.AllowEditRanges;
-            int protectedIndex = allowRanges.Add(
-                "Rows20to25",
-                rowsRange.FirstRow,
-                rowsRange.FirstColumn,
-                rowsRange.FirstRow + rowsRange.RowCount - 1,
-                rowsRange.FirstColumn + rowsRange.ColumnCount - 1);
+                // Set a password for the protected range
+                protectedRange.Password = "MySecretPassword";
 
-            ProtectedRange protectedRange = allowRanges[protectedIndex];
-            protectedRange.Password = "MySecretPassword";
+                // Protect the entire worksheet (all protection types)
+                worksheet.Protect(ProtectionType.All);
 
-            // Protect the worksheet (required for the protected range to take effect)
-            sheet.Protect(ProtectionType.All);
-
-            // Save the workbook
-            string outputPath = "ProtectedRows.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook
+                workbook.Save("ProtectedRows.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

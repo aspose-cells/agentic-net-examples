@@ -11,60 +11,46 @@ namespace AsposeCellsCustomListOrderDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Item";
-            sheet.Cells["C1"].Value = "Amount";
+            // Populate sample data
+            // Column A: Fruit, Column B: Quantity
+            cells["A1"].Value = "Fruit";
+            cells["B1"].Value = "Quantity";
 
-            sheet.Cells["A2"].Value = "Fruit";
-            sheet.Cells["B2"].Value = "Apple";
-            sheet.Cells["C2"].Value = 120;
+            cells["A2"].Value = "Apple";
+            cells["B2"].Value = 10;
 
-            sheet.Cells["A3"].Value = "Fruit";
-            sheet.Cells["B3"].Value = "Banana";
-            sheet.Cells["C3"].Value = 80;
+            cells["A3"].Value = "Banana";
+            cells["B3"].Value = 20;
 
-            sheet.Cells["A4"].Value = "Fruit";
-            sheet.Cells["B4"].Value = "Cherry";
-            sheet.Cells["C4"].Value = 150;
+            cells["A4"].Value = "Orange";
+            cells["B4"].Value = 15;
 
-            sheet.Cells["A5"].Value = "Vegetable";
-            sheet.Cells["B5"].Value = "Carrot";
-            sheet.Cells["C5"].Value = 60;
-
-            sheet.Cells["A6"].Value = "Vegetable";
-            sheet.Cells["B6"].Value = "Broccoli";
-            sheet.Cells["C6"].Value = 90;
+            cells["A5"].Value = "Pear";
+            cells["B5"].Value = 5;
 
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C6", "E3", "PivotTable1");
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add fields: Category as row, Item as row (nested), Amount as data
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Item");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Add the Fruit field to the Row area and Quantity to the Data area
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Fruit");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
-            // Enable custom list sorting (optional, uses built‑in custom lists)
-            pivotTable.CustomListSort = true;
+            // Retrieve the row field (Fruit) and its PivotItems collection
+            PivotField fruitField = pivotTable.RowFields["Fruit"];
+            PivotItemCollection fruitItems = fruitField.PivotItems;
 
-            // Define a custom order for the "Item" field:
-            // Desired order: Banana, Apple, Cherry, Broccoli, Carrot
-            PivotField itemField = pivotTable.RowFields["Item"];
-            PivotItemCollection items = itemField.PivotItems;
+            // Define a custom order: Orange, Apple, Banana, Pear
+            // Use PositionInSameParentNode to set the order within the same parent node
+            // The first item gets position 0, the next 1, and so on.
+            fruitItems["Orange"].PositionInSameParentNode = 0;
+            fruitItems["Apple"].PositionInSameParentNode = 1;
+            fruitItems["Banana"].PositionInSameParentNode = 2;
+            fruitItems["Pear"].PositionInSameParentNode = 3;
 
-            // Set PositionInSameParentNode to control order within each parent (Category)
-            // For "Fruit" category
-            items["Banana"].PositionInSameParentNode = 0;
-            items["Apple"].PositionInSameParentNode = 1;
-            items["Cherry"].PositionInSameParentNode = 2;
-
-            // For "Vegetable" category
-            items["Broccoli"].PositionInSameParentNode = 0;
-            items["Carrot"].PositionInSameParentNode = 1;
-
-            // Refresh and calculate the pivot table to apply changes
+            // Refresh and calculate the pivot table to apply the new order
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

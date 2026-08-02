@@ -1,59 +1,37 @@
+// Title: Extract VBA Project Author from a Macro‑Enabled Workbook with Aspose.Cells for .NET
+// Description: C# example that loads an .xlsm file using Aspose.Cells, verifies the presence of a VBA project with HasMacro, reads the "Author" built‑in document property, and prints the value while handling missing data.
+// Keywords: Aspose.Cells VBA author | read .xlsm built‑in properties | Workbook.HasMacro C# | extract VBA metadata .NET | macro‑enabled workbook author | C# Aspose.Cells document properties
+// Common Searches: how to get VBA author from xlsm using Aspose.Cells | read built‑in document properties of macro workbook C# | check if workbook contains VBA project Aspose.Cells | extract VBA project metadata .NET | Aspose.Cells get author of macro‑enabled Excel file
+// Developer Intent: Obtain the author information stored in the VBA project of a macro‑enabled Excel workbook.
+// Use Cases: Document ownership of macros for compliance audits. | Create a report of VBA authors across a collection of .xlsm files. | Validate the presence of a VBA project before applying transformations.
+// AI Prompts: Generate C# code with Aspose.Cells that lists the author and other built‑in properties of a VBA project in an .xlsm file. | Write a method to scan a folder of .xlsm files, check HasMacro, and log each workbook's VBA author. | Build a utility that extracts VBA project metadata (author, title, comments) from a macro‑enabled workbook and exports it to JSON.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaMetadata
+// C# example that loads an .xlsm file using Aspose.Cells, verifies the presence of a VBA project with HasMacro, reads the "Author" built‑in document property, and prints the value while handling missing data.
+class ExtractVbaAuthor
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load a macro-enabled workbook from file
+        string inputPath = "input.xlsm";
+        Workbook workbook = new Workbook(inputPath);
+
+        // Verify that the workbook actually contains a VBA project
+        if (workbook.HasMacro && workbook.VbaProject != null)
         {
-            // Path to the macro‑enabled workbook to be loaded
-            string inputPath = "sample_with_macro.xlsm";
+            // Retrieve the author metadata from the built‑in document properties
+            var authorProperty = workbook.BuiltInDocumentProperties["Author"];
+            string author = authorProperty != null && authorProperty.Value != null
+                ? authorProperty.Value.ToString()
+                : "Unknown";
 
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"File not found: {Path.GetFullPath(inputPath)}");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Verify that the workbook actually contains a VBA project
-                if (!workbook.HasMacro || workbook.VbaProject == null)
-                {
-                    Console.WriteLine("The specified workbook does not contain a VBA project.");
-                    return;
-                }
-
-                // Access the VBA project
-                VbaProject vbaProject = workbook.VbaProject;
-
-                // Extract VBA project name (often used as the project identifier)
-                string vbaProjectName = vbaProject.Name ?? "(Unnamed Project)";
-
-                // Extract the author metadata from the built‑in document properties
-                string author = "(Unknown Author)";
-                var authorProp = workbook.BuiltInDocumentProperties["Author"];
-                if (authorProp != null && authorProp.Value != null)
-                {
-                    author = authorProp.Value.ToString();
-                }
-
-                // Output the extracted information
-                Console.WriteLine($"VBA Project Name: {vbaProjectName}");
-                Console.WriteLine($"Workbook Author (metadata): {author}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("VBA Project Author: " + author);
+        }
+        else
+        {
+            Console.WriteLine("The loaded workbook does not contain a VBA project.");
         }
     }
 }

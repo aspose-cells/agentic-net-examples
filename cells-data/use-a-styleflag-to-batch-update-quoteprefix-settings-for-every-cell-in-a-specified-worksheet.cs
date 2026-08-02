@@ -1,48 +1,31 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class QuotePrefixBatchUpdate
 {
-    public class BatchQuotePrefixUpdate
+    static void Main()
     {
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // default workbook with one worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Sample data: cells with leading single quote and a normal cell
+        worksheet.Cells["A1"].PutValue("'SampleText");
+        worksheet.Cells["B2"].PutValue("'12345");
+        worksheet.Cells["C3"].PutValue("RegularValue");
 
-            // Populate some cells with values that start with a single quote
-            sheet.Cells["A1"].PutValue("'Text with quote");
-            sheet.Cells["B2"].PutValue("'12345");
-            sheet.Cells["C3"].PutValue("'Another example");
+        // Create a style and set QuotePrefix to true
+        Style quoteStyle = workbook.CreateStyle();
+        quoteStyle.QuotePrefix = true;
 
-            // Create a style and enable the QuotePrefix property
-            Style quoteStyle = workbook.CreateStyle();
-            quoteStyle.QuotePrefix = true; // Mark cells as having a leading quote
+        // Create a StyleFlag and enable the QuotePrefix flag
+        StyleFlag flag = new StyleFlag();
+        flag.QuotePrefix = true;
 
-            // Create a StyleFlag and enable only the QuotePrefix flag
-            StyleFlag flag = new StyleFlag();
-            flag.QuotePrefix = true; // Apply only the QuotePrefix setting
+        // Apply the style to every cell in the worksheet using the flag
+        worksheet.Cells.ApplyStyle(quoteStyle, flag);
 
-            // Apply the style to all cells in the worksheet using the flag
-            sheet.Cells.ApplyStyle(quoteStyle, flag);
-
-            // Save the workbook to verify the changes
-            workbook.Save("BatchQuotePrefixUpdated.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook
+        workbook.Save("QuotePrefixBatchUpdated.xlsx");
     }
 }

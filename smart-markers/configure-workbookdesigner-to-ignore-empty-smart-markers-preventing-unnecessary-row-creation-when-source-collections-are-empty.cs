@@ -1,60 +1,72 @@
+// Title: Aspose.Cells .NET: Use WorkbookDesigner.LineByLine = false to skip empty smart markers and avoid extra rows
+// Description: Shows how to set WorkbookDesigner.LineByLine to false in C# so that smart markers defined in a named range are processed as a block. When the data source (e.g., List<Employee>) is empty, no placeholder rows are added, producing a clean workbook.
+// Keywords: Aspose.Cells | WorkbookDesigner | LineByLine false | smart markers | ignore empty collection | prevent extra rows | C# .NET | named range | template processing | empty data source
+// Common Searches: Aspose.Cells ignore empty smart markers | WorkbookDesigner LineByLine property effect | prevent blank rows in smart marker report | C# Aspose smart markers empty collection | how to skip rows when smart marker list is empty
+// Developer Intent: Configure WorkbookDesigner so that an empty smart‑marker collection does not generate additional rows in the output workbook.
+// Use Cases: Generate a spreadsheet report where a section may have zero records without leaving empty rows. | Create optional table blocks in a template that disappear when their data source is empty. | Process smart markers as a single block to maintain layout integrity when no data is supplied.
+// AI Prompts: Provide C# code that sets WorkbookDesigner.LineByLine = false to ignore empty smart markers. | Explain how named ranges and LineByLine affect smart marker processing in Aspose.Cells. | Show an example of preventing extra rows when the smart marker data source is an empty list.
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsSmartMarkerDemo
 {
-    static void Main()
+    // Sample data class
+    // Shows how to set WorkbookDesigner.LineByLine to false in C# so that smart markers defined in a named range are processed as a block. When the data source (e.g., List<Employee>) is empty, no placeholder rows are added, producing a clean workbook.
+    public class Employee
     {
-        try
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+
+    public class IgnoreEmptySmartMarkers
+    {
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook (template)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Header cells
+            // 2. Set up smart markers in the template
+            // Header row
             sheet.Cells["A1"].PutValue("Name");
             sheet.Cells["B1"].PutValue("Age");
-
-            // Smart marker row – will be repeated for each item in the collection
+            // Data row with smart markers
             sheet.Cells["A2"].PutValue("&=Employees.Name");
             sheet.Cells["B2"].PutValue("&=Employees.Age");
 
-            // Define the range that contains the smart markers and give it the required name
-            Aspose.Cells.Range smartMarkerRange = sheet.Cells.CreateRange("A2:B2");
-            smartMarkerRange.Name = "_CellsSmartMarkers";
+            // 3. Define a named range that contains the smart markers.
+            // When LineByLine is false, the designer processes the range as a block.
+            sheet.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
 
-            // Empty data source – no rows should be added
-            List<Employee> employees = new List<Employee>(); // intentionally empty
-
-            // Set up the designer
+            // 4. Configure the WorkbookDesigner
             WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook = workbook
+                Workbook = workbook,
+                // Disable line‑by‑line processing so that an empty collection does not create rows.
+                LineByLine = false
             };
 
-            // Bind the empty collection to the smart marker name
-            designer.SetDataSource("Employees", employees);
+            // 5. Provide an empty collection as the data source.
+            List<Employee> emptyEmployees = new List<Employee>(); // No items
+            designer.SetDataSource("Employees", emptyEmployees);
 
-            // Process only the defined range; true = preserve unrecognized markers (not needed here)
-            designer.Process(smartMarkerRange, true);
+            // 6. Process the smart markers.
+            designer.Process();
 
-            // Save the workbook – no extra rows will be created
-            string outputPath = "Result.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            // 7. Save the result – no extra rows will be added because the collection is empty.
+            workbook.Save("Result_IgnoringEmptySmartMarkers.xlsx");
         }
     }
 
-    // Simple data class used for the smart marker
-    public class Employee
+    // Entry point for demonstration
+    class Program
     {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
+        static void Main()
+        {
+            IgnoreEmptySmartMarkers.Run();
+            Console.WriteLine("Workbook saved successfully.");
+        }
     }
 }

@@ -2,66 +2,56 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+namespace PivotGrandTotalsDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet (will hold the source data)
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+            // Get the first worksheet (default sheet)
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
-            // Columns: Product, Region, Sales
-            dataSheet.Cells["A1"].PutValue("Product");
-            dataSheet.Cells["B1"].PutValue("Region");
-            dataSheet.Cells["C1"].PutValue("Sales");
+            Cells cells = sheet.Cells;
+            cells["A1"].Value = "Product";
+            cells["B1"].Value = "Region";
+            cells["C1"].Value = "Sales";
 
-            dataSheet.Cells["A2"].PutValue("Product A");
-            dataSheet.Cells["B2"].PutValue("North");
-            dataSheet.Cells["C2"].PutValue(1000);
+            cells["A2"].Value = "Product A";
+            cells["B2"].Value = "North";
+            cells["C2"].Value = 1000;
 
-            dataSheet.Cells["A3"].PutValue("Product B");
-            dataSheet.Cells["B3"].PutValue("South");
-            dataSheet.Cells["C3"].PutValue(1500);
+            cells["A3"].Value = "Product B";
+            cells["B3"].Value = "South";
+            cells["C3"].Value = 1500;
 
-            dataSheet.Cells["A4"].PutValue("Product A");
-            dataSheet.Cells["B4"].PutValue("South");
-            dataSheet.Cells["C4"].PutValue(2000);
+            cells["A4"].Value = "Product A";
+            cells["B4"].Value = "South";
+            cells["C4"].Value = 2000;
 
-            dataSheet.Cells["A5"].PutValue("Product B");
-            dataSheet.Cells["B5"].PutValue("North");
-            dataSheet.Cells["C5"].PutValue(1200);
+            cells["A5"].Value = "Product B";
+            cells["B5"].Value = "North";
+            cells["C5"].Value = 1200;
 
-            // Add a new worksheet that will contain the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            // Add a pivot table based on the data range
+            PivotTableCollection pivotTables = sheet.PivotTables;
+            int pivotIndex = pivotTables.Add("A1:C5", "E3", "PivotTable1");
+            PivotTable pivotTable = pivotTables[pivotIndex];
 
-            // Create the pivot table using the source range A1:C5 and place it at E3
-            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "E3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Product as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region as column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales as data field
 
-            // Configure the pivot table fields
-            // Row: Product (field index 0)
-            // Column: Region (field index 1)
-            // Data: Sales (field index 2)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-            pivotTable.AddFieldToArea(PivotFieldType.Column, 1);
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);
-
-            // Set grand total visibility
+            // Set grand total visibility: show row grand totals, hide column grand totals
             pivotTable.ShowRowGrandTotals = true;   // Show row grand totals
             pivotTable.ShowColumnGrandTotals = false; // Hide column grand totals
 
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
             // Save the workbook to a file
-            workbook.Save("PivotTable_RowGrand_HideColumnGrand.xlsx");
+            workbook.Save("PivotGrandTotalsDemo.xlsx");
         }
     }
 }

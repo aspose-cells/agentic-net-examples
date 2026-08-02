@@ -1,82 +1,108 @@
 using System;
 using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
 namespace AsposeCellsUtf8CompressionDemo
 {
-    // Custom LightCellsDataProvider that converts each string value to a UTF‑8 byte array
-    // before the cell is written to the output file.
-    public class Utf8CompressDataProvider : LightCellsDataProvider
+    // Custom LightCellsDataProvider that writes cell values to the target workbook.
+    // String values are converted to UTF‑8 byte arrays before being placed into the cell.
+    class Utf8CompressProvider : LightCellsDataProvider
     {
-        // Sample data to be written – can be replaced with any source.
-        private readonly string[,] _data = new string[,]
-        {
-            { "ID", "Name", "Description" },
-            { "1", "Apple",  "Fresh red apple" },
-            { "2", "Banana", "Ripe yellow banana" },
-            { "3", "Cherry", "Sweet dark cherry" }
-        };
-
+        private readonly Worksheet _sourceSheet;
         private int _currentRow = -1;
         private int _currentCol = -1;
+        private readonly int _maxRow;
+        private readonly int _maxCol;
+
+        public Utf8CompressProvider(Worksheet sourceSheet)
+        {
+            _sourceSheet = sourceSheet ?? throw new ArgumentNullException(nameof(sourceSheet));
+            // Determine the used range of the source sheet.
+            var maxRow = sourceSheet.Cells.MaxDataRow;
+            var maxCol = sourceSheet.Cells.MaxDataColumn;
+            _maxRow = maxRow;
+            _maxCol = maxCol;
+        }
 
         // Process only the first worksheet.
-        public bool StartSheet(int sheetIndex) => sheetIndex == 0;
+        public bool StartSheet(int sheetIndex)
+        {
+            return sheetIndex == 0;
+        }
 
-        // Return the next row index or -1 when finished.
+        // Return the next row index to be saved, or -1 when done.
         public int NextRow()
         {
             _currentRow++;
             _currentCol = -1;
-            return _currentRow < _data.GetLength(0) ? _currentRow : -1;
+            return _currentRow <= _maxRow ? _currentRow : -1;
         }
 
-        // No special row handling required.
+        // No special row initialization required.
         public void StartRow(Row row) { }
 
-        // Return the next column index or -1 when the row is finished.
+        // Return the next column index within the current row, or -1 when the row ends.
         public int NextCell()
         {
             _currentCol++;
-            return _currentCol < _data.GetLength(1) ? _currentCol : -1;
+            return _currentCol <= _maxCol ? _currentCol : -1;
         }
 
-        // Convert the string value to UTF‑8 bytes and store the byte array in the cell.
+        // Write the cell value to the target workbook.
+        // If the source cell contains a string, convert it to UTF‑8 bytes first.
         public void StartCell(Cell cell)
         {
-            string originalValue = _data[_currentRow, _currentCol];
+            Cell srcCell = _sourceSheet.Cells[_currentRow, _currentCol];
 
-            // Convert the string to a UTF‑8 encoded byte array.
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(originalValue);
-
-            // Store the byte array. Aspose.Cells will treat the byte[] as a binary value.
-            cell.PutValue(utf8Bytes);
+            if (srcCell.Type == CellValueType.IsString)
+            {
+                string text = srcCell.StringValue;
+                byte[] utf8Bytes = Encoding.UTF8.GetBytes(text);
+                // Store the byte array directly. Aspose.Cells treats a byte[] as a binary value.
+                cell.PutValue(utf8Bytes);
+            }
+            else
+            {
+                // Preserve non‑string values as they are.
+                cell.PutValue(srcCell.Value);
+            }
         }
 
-        // No string gathering is required for this example.
-        public bool IsGatherString() => false;
+        // No string gathering needed for this scenario.
+        public bool IsGatherString()
+        {
+            return false;
+        }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create an empty workbook – the actual data will be supplied by the provider.
-            Workbook workbook = new Workbook();
+            // ---------- Prepare source workbook with sample data ----------
+            Workbook sourceWb = new Workbook();
+            Worksheet srcWs = sourceWb.Worksheets[0];
+            srcWs.Cells["A1"].PutValue("Hello");
+            srcWs.Cells["B1"].PutValue("World");
+            srcWs.Cells["A2"].PutValue(123);
+            srcWs.Cells["B2"].PutValue(45.67);
+            srcWs.Cells["A3"].PutValue("Aspose.Cells");
+            srcWs.Cells["B3"].PutValue(DateTime.Now);
 
-            // Configure OoxmlSaveOptions:
-            //   * Use the custom LightCellsDataProvider to supply cell data.
-            //   * Set the highest compression level (Level9) for maximum size reduction.
+            // ---------- Save using LightCells mode with UTF‑8 compression ----------
             OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
             {
-                LightCellsDataProvider = new Utf8CompressDataProvider(),
-                CompressionType = OoxmlCompressionType.Level9
+                LightCellsDataProvider = new Utf8CompressProvider(srcWs),
+                // Optional: choose a higher compression level for the package itself.
+                CompressionType = OoxmlCompressionType.Level6
             };
 
-            // Save the workbook. The provider streams the UTF‑8 byte arrays directly to the file.
-            workbook.Save("Utf8CompressedWorkbook.xlsx", saveOptions);
+            // The target workbook is empty; the provider supplies all cell data.
+            Workbook targetWb = new Workbook();
+            targetWb.Save("CompressedUtf8.xlsx", saveOptions);
 
-            Console.WriteLine("Workbook saved with UTF‑8 byte array compression and Level9 Ooxml compression.");
+            Console.WriteLine("Workbook saved with UTF‑8 byte array compression.");
         }
     }
 }

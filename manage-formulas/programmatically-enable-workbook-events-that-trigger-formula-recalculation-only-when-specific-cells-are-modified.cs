@@ -1,93 +1,56 @@
+// Title: Selective Formula Recalculation in Aspose.Cells (C#) – Trigger Calculation Only for Specified Cells
+// Description: Demonstrates how to set Aspose.Cells to Manual calculation mode and recalculate formulas only when designated cells (e.g., A1, B1) are changed. A helper method updates a cell, checks a trigger list, and calls Workbook.CalculateFormula() selectively, improving performance for large workbooks.
+// Keywords: Aspose.Cells manual calculation | selective formula recalculation | C# Aspose.Cells trigger cells | conditional workbook calculation | performance optimization Aspose.Cells | CalculateFormula on demand | Excel formula event simulation
+// Common Searches: Aspose.Cells recalculate formulas only when certain cells change | C# manual calculation mode with custom triggers Aspose.Cells | how to avoid full workbook recalculation in Aspose.Cells | selective formula update Aspose.Cells .NET example | triggered calculation Aspose.Cells workbook
+// Developer Intent: The developer wants to recalculate workbook formulas only after specific input cells are modified, avoiding unnecessary calculations.
+// Use Cases: Large financial models where only key input cells should cause a full recalculation, reducing CPU load. | Data‑entry forms that update dependent results only after critical parameters are edited. | Custom event‑like handling in Aspose.Cells where changes to certain cells invoke CalculateFormula on demand.
+// AI Prompts: Generate C# code using Aspose.Cells that recalculates formulas only when cells from a configurable list are edited. | Show how to extend the helper method to support multiple worksheets and dynamic trigger collections. | Refactor the example into a reusable class that mimics workbook events for selective formula calculation.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to set Aspose.Cells to Manual calculation mode and recalculate formulas only when designated cells (e.g., A1, B1) are changed. A helper method updates a cell, checks a trigger list, and calls Workbook.CalculateFormula() selectively, improving performance for large workbooks.
+class Program
 {
-    // Custom monitor to log calculation events (optional)
-    public class LoggingCalculationMonitor : AbstractCalculationMonitor
+    static void Main()
     {
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Add some initial data and a dependent formula
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["B1"].PutValue(20);
+        sheet.Cells["C1"].Formula = "=A1+B1"; // C1 depends on A1 and B1
+
+        // Set calculation mode to Manual so formulas are not auto‑calculated
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+
+        // Define the cells that should trigger a full recalculation when modified
+        HashSet<string> triggerCells = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            Console.WriteLine($"Calculated cell: Sheet{sheetIndex} {CellsHelper.CellIndexToName(rowIndex, colIndex)}");
-        }
-    }
+            "A1",
+            "B1"
+        };
 
-    public class WorkbookEventDrivenRecalcDemo
-    {
-        public static void Run()
+        // Helper method: set a cell's value and recalculate only if it is a trigger cell
+        void SetCellValue(string address, object value)
         {
-            // 1. Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            sheet.Cells[address].PutValue(value);
 
-            // 2. Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // 3. Set up some initial data and formulas
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["B1"].Formula = "=A1+A2";   // depends on A1 and A2
-            cells["C1"].Formula = "=B1*2";    // depends on B1
-
-            // 4. Configure formula calculation to Manual mode
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // 5. Define the set of cells whose modification should trigger recalculation
-            HashSet<string> triggerCells = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            // If the modified cell is in the trigger list, recalculate the workbook
+            if (triggerCells.Contains(address))
             {
-                "A1",   // when A1 changes, recalc
-                "A2"    // when A2 changes, recalc
-                // add more cell addresses as needed
-            };
-
-            // 6. Prepare calculation options with a monitor (optional, for logging)
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                CalculationMonitor = new LoggingCalculationMonitor()
-            };
-
-            // 7. Helper method to modify a cell and conditionally recalculate
-            void ModifyCell(string address, object value)
-            {
-                Console.WriteLine($"\nModifying {address} to {value}");
-                cells[address].PutValue(value);
-
-                // If the modified cell is in the trigger list, recalculate formulas
-                if (triggerCells.Contains(address))
-                {
-                    Console.WriteLine($"Trigger cell changed. Recalculating formulas...");
-                    workbook.CalculateFormula(calcOptions);
-                }
-                else
-                {
-                    Console.WriteLine($"Cell {address} is not a trigger cell. Skipping recalculation.");
-                }
+                workbook.CalculateFormula();
             }
-
-            // 8. Perform modifications
-            ModifyCell("A1", 30);   // triggers recalculation
-            ModifyCell("B2", 5);    // does NOT trigger recalculation
-            ModifyCell("A2", 40);   // triggers recalculation
-
-            // 9. Save the workbook (lifecycle rule: save)
-            workbook.Save("EventDrivenRecalcOutput.xlsx", SaveFormat.Xlsx);
-
-            // 10. Display final values for verification
-            Console.WriteLine("\nFinal cell values after conditional recalculations:");
-            Console.WriteLine($"A1 = {cells["A1"].Value}");
-            Console.WriteLine($"A2 = {cells["A2"].Value}");
-            Console.WriteLine($"B1 (formula) = {cells["B1"].Value}");
-            Console.WriteLine($"C1 (formula) = {cells["C1"].Value}");
         }
-    }
 
-    // Entry point for demonstration
-    class Program
-    {
-        static void Main()
-        {
-            WorkbookEventDrivenRecalcDemo.Run();
-        }
+        // Example modifications
+        SetCellValue("A1", 30); // Triggers recalculation (C1 will be updated)
+        SetCellValue("D1", 5);  // Does NOT trigger recalculation
+
+        // Save the workbook (lifecycle rule: create → save)
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

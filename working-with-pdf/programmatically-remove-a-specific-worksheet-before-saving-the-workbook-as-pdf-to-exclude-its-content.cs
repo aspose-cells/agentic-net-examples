@@ -1,25 +1,42 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class RemoveWorksheetAndSavePdf
+class Program
 {
     static void Main()
     {
-        // Load the workbook from an existing file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Load the workbook from a file
+        Workbook wb = new Workbook("input.xlsx");
 
-        // Remove the worksheet named "SheetToRemove"
-        workbook.Worksheets.RemoveAt("SheetToRemove");
+        // Name of the worksheet that should be excluded from the PDF
+        string sheetNameToRemove = "SecretSheet";
 
-        // Configure PDF save options (optional)
+        // Find the index of the worksheet with the specified name
+        int sheetIndex = -1;
+        for (int i = 0; i < wb.Worksheets.Count; i++)
+        {
+            if (wb.Worksheets[i].Name.Equals(sheetNameToRemove, StringComparison.OrdinalIgnoreCase))
+            {
+                sheetIndex = i;
+                break;
+            }
+        }
+
+        // If the worksheet exists, remove it from the collection
+        if (sheetIndex >= 0)
+        {
+            wb.Worksheets.RemoveAt(sheetIndex);
+        }
+
+        // Configure PDF save options (optional: ignore completely blank pages)
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Export only visible sheets (default behavior)
-            SheetSet = SheetSet.Visible
+            PrintingPageType = PrintingPageType.IgnoreBlank
         };
 
-        // Save the modified workbook as PDF
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the workbook as PDF; the removed sheet will not appear in the output
+        wb.Save("output.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – removes a specific worksheet before PDF export.

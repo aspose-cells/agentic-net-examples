@@ -1,23 +1,30 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-class LimitPdfPages
+namespace AsposeCellsPdfPageLimitDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – limit PDF pages using PageCount
+    class Program
     {
-        // Load the source Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load an existing Excel workbook (replace with your file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Initialize PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Set the maximum number of pages to render (e.g., first 3 pages)
-        pdfOptions.PageCount = 3;
+            // Set the first page to export (0‑based index). Optional – defaults to first page.
+            pdfOptions.PageIndex = 0;
 
-        // Optional: set the starting page index (0‑based). Default is 0.
-        pdfOptions.PageIndex = 0;
+            // Limit the export to a maximum of 3 pages.
+            pdfOptions.PageCount = 3;
 
-        // Save the workbook to PDF using the configured options
-        workbook.Save("output_limited.pdf", pdfOptions);
+            // Save the workbook as PDF with the page limitation applied
+            workbook.Save("output_limited.pdf", pdfOptions);
+
+            Console.WriteLine("PDF saved with a maximum of 3 pages.");
+        }
     }
 }

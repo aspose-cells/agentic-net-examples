@@ -8,13 +8,11 @@ namespace AsposeCellsAxisScalingDemo
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
+            // Add sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
@@ -35,17 +33,13 @@ namespace AsposeCellsAxisScalingDemo
 
             // Configure the vertical (value) axis scaling
             Axis valueAxis = chart.ValueAxis;
-            valueAxis.IsAutomaticMinValue = false; // Disable automatic minimum
-            valueAxis.IsAutomaticMaxValue = false; // Disable automatic maximum
-            valueAxis.MinValue = 0;                 // Set minimum to 0
-            valueAxis.MaxValue = 200;               // Set maximum to 200
+            valueAxis.IsAutomaticMinValue = false; // disable automatic min
+            valueAxis.IsAutomaticMaxValue = false; // disable automatic max
+            valueAxis.MinValue = 0;                 // set minimum to 0
+            valueAxis.MaxValue = 200;               // set maximum to 200
 
-            // Optional: set major unit for clearer tick marks
-            valueAxis.IsAutomaticMajorUnit = false;
-            valueAxis.MajorUnit = 20;
-
-            // Save the workbook to a file
-            workbook.Save("ChartWithFixedAxisScaling.xlsx");
+            // Save the workbook
+            workbook.Save("ChartWithFixedAxis.xlsx");
         }
     }
 }

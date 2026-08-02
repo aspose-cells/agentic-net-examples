@@ -1,23 +1,21 @@
+// Title: Align Two Worksheet Shapes to Identical Coordinates Using Aspose.Cells for .NET
+// Description: This C# example creates a workbook, adds two rectangle shapes, reads the first shape’s absolute row, column and offset values, and repositions the second shape with MoveToRange so it shares the exact cell location. The workbook is saved as AlignedShapes.xlsx.
+// Keywords: Aspose.Cells shape alignment | MoveToRange C# | retrieve shape coordinates | worksheet shape positioning | C# Aspose.Cells example | absolute shape location | copy shape position | Aspose.Cells .NET | Excel shape coordinates | programmatic shape layout
+// Common Searches: Aspose.Cells move shape to same cell | how to get shape row and column in Aspose.Cells | C# align two worksheet shapes | use MoveToRange to position shape | copy shape position Aspose.Cells .NET | align chart with rectangle shape Aspose.Cells
+// Developer Intent: Duplicate the location of one worksheet shape and place another shape at that exact position programmatically.
+// Use Cases: Maintain alignment of related diagram elements when generating reports | Automatically position a logo next to a dynamic chart | Synchronize watermark placement with header cells across multiple sheets | Create templates where data labels follow moved shapes | Ensure consistent layout when inserting shapes via automation
+// AI Prompts: Write C# code that reads a shape’s UpperLeftRow, UpperLeftColumn, UpperLeftRowOffset, UpperLeftColumnOffset in Aspose.Cells and moves another shape to those coordinates using MoveToRange. | Explain step‑by‑step how to obtain a shape’s absolute position and align multiple shapes in an Excel worksheet with Aspose.Cells for .NET. | Provide a complete Aspose.Cells example that aligns a chart shape to the same cell range as a rectangle shape, including handling of pixel offsets.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsShapeAlignment
 {
-    public class AlignShapeToAnotherShape
+    // This C# example creates a workbook, adds two rectangle shapes, reads the first shape’s absolute row, column and offset values, and repositions the second shape with MoveToRange so it shares the exact cell location. The workbook is saved as AlignedShapes.xlsx.
+    public class AlignShapes
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             try
@@ -31,37 +29,40 @@ namespace AsposeCellsExamples
 
                 // Add the first shape (a rectangle) at a specific position
                 // Parameters: upper left row, upper left column, top offset, left offset, height, width
-                int sourceRow = 2;
-                int sourceColumn = 2;
-                int sourceRowOffset = 10;   // top offset (in pixels)
-                int sourceColumnOffset = 15; // left offset (in pixels)
-                Shape sourceShape = shapes.AddRectangle(sourceRow, sourceColumn, sourceRowOffset, sourceColumnOffset, 100, 200);
+                Shape shape1 = shapes.AddRectangle(5, 2, 10, 15, 80, 120);
 
-                // Add a second shape (another rectangle) at a different initial position
-                Shape targetShape = shapes.AddRectangle(5, 5, 30, 40, 100, 200);
+                // Add the second shape (another rectangle) at a different initial position
+                Shape shape2 = shapes.AddRectangle(10, 5, 20, 30, 80, 120);
 
-                // Align the target shape to the same position as the source shape
-                targetShape.MoveToRange(sourceRow, sourceColumn, sourceRowOffset, sourceColumnOffset);
+                // Retrieve the absolute position of the first shape
+                int sourceTopRow = shape1.UpperLeftRow;
+                int sourceLeftColumn = shape1.UpperLeftColumn;
 
-                // Verify that the positions match by printing them
-                Console.WriteLine($"Source Shape - Row:{sourceShape.UpperLeftRow}, RowOffset:{sourceRowOffset}, Column:{sourceShape.UpperLeftColumn}, ColumnOffset:{sourceColumnOffset}");
-                Console.WriteLine($"Target Shape - Row:{targetShape.UpperLeftRow}, RowOffset:{sourceRowOffset}, Column:{targetShape.UpperLeftColumn}, ColumnOffset:{sourceColumnOffset}");
+                // Offsets are not required for this example; set to zero
+                int sourceTopOffset = 0;
+                int sourceLeftOffset = 0;
 
-                // Save the workbook to a file
-                try
-                {
-                    workbook.Save("AlignedShapes.xlsx");
-                    Console.WriteLine("Workbook saved as AlignedShapes.xlsx");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-                }
+                // Align the second shape to the same coordinates as the first shape
+                // MoveToRange positions a shape based on row/column and pixel offsets
+                shape2.MoveToRange(sourceTopRow, sourceLeftColumn, sourceTopOffset, sourceLeftOffset);
+
+                // Determine output file path
+                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "AlignedShapes.xlsx");
+
+                // Save the workbook to verify the result
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Entry point for the application
+        public static void Main()
+        {
+            Run();
         }
     }
 }

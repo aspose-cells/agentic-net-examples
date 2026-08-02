@@ -1,52 +1,21 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – load XLSX and save as PDF
+class Program
 {
-    public class XlsxToPdfConverter
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+        // Path to the source Excel file
+        string sourcePath = "input.xlsx";
 
-        public static void Run()
-        {
-            // Path to the source XLSX file
-            string sourcePath = "input.xlsx";
+        // Path for the resulting PDF file
+        string destPath = "output.pdf";
 
-            // Path for the output PDF file
-            string pdfPath = "output.pdf";
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(sourcePath);
 
-            // Verify that the source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.Error.WriteLine($"Source file not found: '{sourcePath}'");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook from the specified file path
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Save the loaded workbook as a PDF document
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-
-                Console.WriteLine($"Conversion completed: '{sourcePath}' -> '{pdfPath}'");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Conversion failed: {ex.Message}");
-            }
-        }
+        // Save the loaded workbook as a PDF document
+        workbook.Save(destPath, SaveFormat.Pdf);
     }
 }

@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class SparklineDynamicDemo
+class DynamicSparklineDemo
 {
     static void Main()
     {
@@ -10,8 +10,7 @@ class SparklineDynamicDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data that the sparkline will reference
-        // Data in column A (A1:A5)
+        // Populate initial data in column A (A1:A5)
         for (int i = 0; i < 5; i++)
         {
             sheet.Cells[i, 0].PutValue(i + 1); // values 1,2,3,4,5
@@ -21,29 +20,22 @@ class SparklineDynamicDemo
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Add a sparkline that uses a formula‑based data range.
-        // The data range is expressed as a string; it can contain a sheet name.
-        // Here we use the absolute reference "Sheet1!A1:A5".
-        // The sparkline will be placed in cell B1 (row 0, column 1).
-        group.Sparklines.Add(sheet.Name + "!A1:A5", 0, 1);
+        // Use a formula‑based data range that expands with the number of non‑empty cells in column A
+        // The formula "A1:INDEX(A:A, COUNTA(A:A))" creates a range from A1 to the last filled cell in column A
+        string dynamicRange = "A1:INDEX(A:A, COUNTA(A:A))";
 
-        // OPTIONAL: customize appearance (e.g., series color)
-        CellsColor seriesColor = workbook.CreateCellsColor();
-        seriesColor.Color = System.Drawing.Color.DarkBlue;
-        group.SeriesColor = seriesColor;
+        // Add a sparkline that uses the dynamic range.
+        // Place the sparkline in cell B1 (row 0, column 1)
+        group.Sparklines.Add(dynamicRange, 0, 1);
 
-        // Save the workbook with the initial sparkline
-        workbook.Save("SparklineDynamicInitial.xlsx");
+        // Add more data to column A to demonstrate automatic update
+        sheet.Cells[5, 0].PutValue(6); // A6
+        sheet.Cells[6, 0].PutValue(7); // A7
 
-        // ----- Demonstrate dynamic update -----
-        // Change the source data; the sparkline will reflect these changes automatically.
-        sheet.Cells["A3"].PutValue(20); // modify third value
-        sheet.Cells["A5"].PutValue(30); // modify fifth value
-
-        // Recalculate formulas (not strictly required for sparklines, but ensures workbook is up‑to‑date)
+        // Recalculate formulas so that the dynamic range reflects the new data
         workbook.CalculateFormula();
 
-        // Save the workbook after data change; the sparkline now shows the updated series.
-        workbook.Save("SparklineDynamicUpdated.xlsx");
+        // Save the workbook
+        workbook.Save("DynamicSparklineDemo.xlsx");
     }
 }

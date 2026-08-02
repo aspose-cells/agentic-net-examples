@@ -6,20 +6,23 @@ class RenameVbaModule
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        // Load an existing macro-enabled workbook that already contains VBA modules
+        Workbook workbook = new Workbook("input.xlsm");
 
-        // Add a procedural VBA module with an initial name
-        int moduleIndex = wb.VbaProject.Modules.Add(VbaModuleType.Procedural, "OldName");
-        VbaModule module = wb.VbaProject.Modules[moduleIndex];
+        // Access the VBA project within the workbook
+        VbaProject vbaProject = workbook.VbaProject;
 
-        // (Optional) Add some VBA code to the module
-        module.Codes = "Sub Test()\n    MsgBox \"Hello\"\nEnd Sub";
+        // Check that there is at least one module to rename
+        if (vbaProject.Modules.Count > 0)
+        {
+            // Retrieve the first module (you can also locate a specific module by index or name)
+            VbaModule module = vbaProject.Modules[0];
 
-        // Rename the module to "DataProcessor"
-        module.Name = "DataProcessor";
+            // Rename the module to "DataProcessor"
+            module.Name = "DataProcessor";
+        }
 
-        // Save the workbook as a macro-enabled file
-        wb.Save("RenamedModule.xlsm", SaveFormat.Xlsm);
+        // Save the workbook with the updated module name as a macro-enabled file
+        workbook.Save("output.xlsm", SaveFormat.Xlsm);
     }
 }

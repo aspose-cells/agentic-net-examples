@@ -12,7 +12,7 @@ namespace AsposeCellsLegendConfiguration
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data (categories in column A, series values in columns B and C)
+            // Populate sample data (categories in column A, two series in columns B and C)
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
@@ -32,37 +32,34 @@ namespace AsposeCellsLegendConfiguration
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set data range for the two series
-            chart.NSeries.Add("B2:B4", true); // Series 1 values, categories taken from A2:A4
-            chart.NSeries.Add("C2:C4", true); // Series 2 values, same categories
+            // Add the two series to the chart
+            chart.NSeries.Add("B2:B4", true); // Series 1 values
+            chart.NSeries.Add("C2:C4", true); // Series 2 values
+            chart.NSeries.CategoryData = "A2:A4";
 
             // Ensure the legend is displayed
             chart.ShowLegend = true;
 
-            // Iterate through each series and make sure its legend entry is visible
-            foreach (Series s in chart.NSeries)
-            {
-                // Show the series name in the legend
-                s.LegendEntry.IsDeleted = false;
-            }
-
-            // If the chart type creates additional legend entries for categories (some chart types do),
-            // they can be removed by accessing the LegendEntries collection.
-            // Here we delete any legend entry that is not associated with a series.
-            // Since Aspose.Cells does not expose a direct way to identify category entries,
-            // we simply ensure that only the series legend entries remain.
-            // (For most standard charts, this loop will have no effect.)
+            // Show only series names in the legend:
+            // 1. Make sure each series' legend entry is visible.
+            // 2. Hide any additional legend entries (e.g., category entries) that may exist.
+            int seriesCount = chart.NSeries.Count;
             Legend legend = chart.Legend;
-            if (legend.LegendEntries != null)
+            LegendEntryCollection legendEntries = legend.LegendEntries;
+
+            // Guard against null (some chart types may not support legend entries collection)
+            if (legendEntries != null)
             {
-                for (int i = 0; i < legend.LegendEntries.Count; i++)
+                // First, ensure series legend entries are not deleted
+                for (int i = 0; i < seriesCount && i < legendEntries.Count; i++)
                 {
-                    // The first NSeries.Count entries correspond to series.
-                    // Any extra entries are treated as category entries and are hidden.
-                    if (i >= chart.NSeries.Count)
-                    {
-                        legend.LegendEntries[i].IsDeleted = true;
-                    }
+                    legendEntries[i].IsDeleted = false; // show series name
+                }
+
+                // Then, hide any remaining legend entries (commonly category entries)
+                for (int i = seriesCount; i < legendEntries.Count; i++)
+                {
+                    legendEntries[i].IsDeleted = true; // hide category entry
                 }
             }
 

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
@@ -8,61 +9,64 @@ class ComboChartExample
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // ---------- Populate sample data ----------
-            // Column A : Dates (categories)
-            sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["A2"].PutValue(DateTime.Today.AddDays(-4).ToShortDateString());
-            sheet.Cells["A3"].PutValue(DateTime.Today.AddDays(-3).ToShortDateString());
-            sheet.Cells["A4"].PutValue(DateTime.Today.AddDays(-2).ToShortDateString());
-            sheet.Cells["A5"].PutValue(DateTime.Today.AddDays(-1).ToShortDateString());
-            sheet.Cells["A6"].PutValue(DateTime.Today.ToShortDateString());
-
-            // Column B : Volume (to be shown as Area)
+            // Populate sample data: Month, Volume (area), Trend (line)
+            sheet.Cells["A1"].PutValue("Month");
             sheet.Cells["B1"].PutValue("Volume");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(130);
-            sheet.Cells["B5"].PutValue(170);
-            sheet.Cells["B6"].PutValue(160);
+            sheet.Cells["C1"].PutValue("Trend");
 
-            // Column C : Price (to be shown as Line)
-            sheet.Cells["C1"].PutValue("Price");
-            sheet.Cells["C2"].PutValue(45.5);
-            sheet.Cells["C3"].PutValue(46.2);
-            sheet.Cells["C4"].PutValue(44.8);
-            sheet.Cells["C5"].PutValue(47.1);
-            sheet.Cells["C6"].PutValue(46.5);
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+            double[] volume = { 120, 150, 180, 130, 170, 200 };
+            double[] trend = { 130, 140, 160, 150, 165, 190 };
 
-            // ---------- Add a combo chart ----------
-            // Start with an Area chart; later we will change one series to Line
-            int chartIdx = sheet.Charts.Add(ChartType.Area, 8, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIdx];
-            chart.Title.Text = "Volume (Area) & Price (Line)";
+            for (int i = 0; i < months.Length; i++)
+            {
+                int row = i + 2; // data starts from row 2
+                sheet.Cells[row, 0].PutValue(months[i]);   // Column A: Month
+                sheet.Cells[row, 1].PutValue(volume[i]);   // Column B: Volume
+                sheet.Cells[row, 2].PutValue(trend[i]);    // Column C: Trend
+            }
 
-            // Set the category (X‑axis) data
-            chart.NSeries.CategoryData = "A2:A6";
+            // Add a combo chart: start with Area type
+            int chartIndex = sheet.Charts.Add(ChartType.Area, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Volume (Area) and Trend (Line)";
 
-            // Add the first series – Volume (Area)
-            chart.NSeries.Add("B2:B6", true);
+            // Set the category (X‑axis) data for the chart
+            chart.NSeries.CategoryData = "A2:A7";
+
+            // Add the first series (Volume) – default Area type
+            chart.NSeries.Add("B2:B7", false);
             chart.NSeries[0].Name = "Volume";
 
-            // Add the second series – Price (Line)
-            chart.NSeries.Add("C2:C6", true);
-            chart.NSeries[1].Name = "Price";
+            // Add the second series (Trend) and change its type to Line
+            chart.NSeries.Add("C2:C7", false);
+            chart.NSeries[1].Name = "Trend";
+            chart.NSeries[1].Type = ChartType.Line;   // Convert this series to a line chart
 
-            // Change the second series type to Line to create a combo chart
-            chart.NSeries[1].Type = ChartType.Line;
+            // Optional: display the line series on a secondary axis
+            // Note: Some Aspose.Cells versions may not expose IsOnSecondaryAxis.
+            // If needed, uncomment the line below when the property is available.
+            // chart.NSeries[1].IsOnSecondaryAxis = true;
 
-            // Save the workbook
-            workbook.Save("ComboAreaLineChart.xlsx");
+            // Determine output path and ensure directory exists
+            string outputPath = "ComboChart.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the combo chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

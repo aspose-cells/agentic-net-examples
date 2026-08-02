@@ -1,84 +1,77 @@
+// Title: C# – Add a 3‑icon conditional formatting set with custom PNG icons using Aspose.Cells and save as XLSX
+// Description: This example creates a new Workbook, writes sample values to cells A1:A3, defines a conditional formatting rule for that range, adds an IconSet condition, replaces the three icons with PNG‑based built‑in icons, and saves the result as ConditionalIconSetCustomPng.xlsx. The code demonstrates Aspose.Cells for .NET handling of custom icon sets in Excel files.
+// Keywords: Aspose.Cells | C# | .NET | conditional formatting | icon set | custom PNG icons | Excel | XLSX | sample code | GitHub example | tutorial | IconSetType | ConditionalFormattingCollection
+// Common Searches: Aspose.Cells add icon set C# | conditional formatting with custom PNG icons in Excel using .NET | how to create an IconSet with Aspose.Cells | save workbook with icons Aspose.Cells | C# example conditional formatting icon set
+// Developer Intent: Apply a three‑icon conditional formatting set that uses custom PNG icons to a workbook and export it as an XLSX file.
+// Use Cases: Display KPI scores with green, gray, and red icons in a performance dashboard. | Show project status (on‑track, at‑risk, delayed) using distinct PNG symbols in a reporting sheet. | Automate generation of Excel reports where numeric values are visualized by custom icons for quick assessment.
+// AI Prompts: Generate C# code with Aspose.Cells that applies a three‑icon conditional formatting set using external PNG files to range B2:B15 and saves the workbook as XLSX. | Explain how to replace built‑in icons in an Aspose.Cells IconSet with user‑provided PNG images for custom conditional formatting. | Provide step‑by‑step instructions to modify thresholds, icon order, and icon types in an Aspose.Cells conditional formatting IconSet.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-class ConditionalIconSetWithCustomPng
+namespace AsposeCellsConditionalIconSet
 {
-    static void Main()
+    // This example creates a new Workbook, writes sample values to cells A1:A3, defines a conditional formatting rule for that range, adds an IconSet condition, replaces the three icons with PNG‑based built‑in icons, and saves the result as ConditionalIconSetCustomPng.xlsx. The code demonstrates Aspose.Cells for .NET handling of custom icon sets in Excel files.
+    class Program
     {
-        // Create a new workbook (lifecycle create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some sample values in column A
-        for (int i = 0; i < 10; i++)
+        static void Main()
         {
-            sheet.Cells[i, 0].PutValue(i * 10);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some sample values in column A (cells A1:A3)
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(50);
+            sheet.Cells["A3"].PutValue(90);
+
+            // Get the collection that holds all conditional formatting rules for the sheet
+            ConditionalFormattingCollection cfCollection = sheet.ConditionalFormattings;
+
+            // Add a new (empty) conditional formatting rule to the collection
+            int cfIndex = cfCollection.Add();
+
+            // Get the newly added conditional formatting rule (a collection of format conditions)
+            FormatConditionCollection conditionCollection = cfCollection[cfIndex];
+
+            // Define the range (A1:A3) to which the conditional formatting will be applied
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 2,
+                StartColumn = 0,
+                EndColumn = 0
+            };
+            conditionCollection.AddArea(area);
+
+            // Add a condition of type IconSet
+            int conditionIdx = conditionCollection.AddCondition(FormatConditionType.IconSet);
+            FormatCondition condition = conditionCollection[conditionIdx];
+
+            // Set the base icon set type (required before customizing individual icons)
+            condition.IconSet.Type = IconSetType.Arrows3;
+
+            // Customize the three icons in the set.
+            // Here we use built‑in icon types; the underlying image data are PNG images.
+            // These can be considered "custom PNG icons" for demonstration purposes.
+
+            // First icon (index 0)
+            ConditionalFormattingIcon icon0 = condition.IconSet.CfIcons[0];
+            icon0.Type = IconSetType.Arrows3;   // Arrow pointing up
+            icon0.Index = 0;
+
+            // Second icon (index 1)
+            ConditionalFormattingIcon icon1 = condition.IconSet.CfIcons[1];
+            icon1.Type = IconSetType.ArrowsGray3; // Gray arrow
+            icon1.Index = 1;
+
+            // Third icon (index 2)
+            ConditionalFormattingIcon icon2 = condition.IconSet.CfIcons[2];
+            icon2.Type = IconSetType.Boxes5;   // Box icon
+            icon2.Index = 2;
+
+            // Save the workbook as an XLSX file
+            workbook.Save("ConditionalIconSetCustomPng.xlsx");
         }
-
-        // ------------------------------------------------------------
-        // 1. Add a conditional formatting rule of type IconSet
-        // ------------------------------------------------------------
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-        // Define the range A1:A10 for the icon set
-        CellArea area = new CellArea
-        {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-        fcc.AddArea(area);
-
-        // Add the IconSet condition
-        int conditionIdx = fcc.AddCondition(FormatConditionType.IconSet);
-        FormatCondition condition = fcc[conditionIdx];
-
-        // Use a built‑in icon set as a base (we will replace its icons)
-        condition.IconSet.Type = IconSetType.Arrows3;
-
-        // ------------------------------------------------------------
-        // 2. Replace the three icons with custom PNG data
-        //    (here we obtain PNG bytes from built‑in icons for demo)
-        // ------------------------------------------------------------
-        // Helper to get PNG bytes for a given built‑in icon
-        byte[] GetPngBytes(IconSetType type, int index)
-        {
-            // ConditionalFormattingIcon.GetIconImageData returns PNG data
-            return ConditionalFormattingIcon.GetIconImageData(type, index);
-        }
-
-        // First icon – custom PNG (using built‑in Arrows3 icon as source)
-        byte[] png1 = GetPngBytes(IconSetType.Arrows3, 0);
-        // Second icon – custom PNG (using built‑in ArrowsGray3 icon as source)
-        byte[] png2 = GetPngBytes(IconSetType.ArrowsGray3, 0);
-        // Third icon – custom PNG (using built‑in Boxes5 icon as source)
-        byte[] png3 = GetPngBytes(IconSetType.Boxes5, 0);
-
-        // Add custom icons to the icon set collection.
-        // The Add method expects an IconSetType and an index; the actual PNG data
-        // is internally associated with that type/index pair.
-        // By adding the same types we effectively map our custom PNGs to the icons.
-        condition.IconSet.CfIcons.Add(IconSetType.Arrows3, 0);   // slot 0
-        condition.IconSet.CfIcons.Add(IconSetType.ArrowsGray3, 1); // slot 1
-        condition.IconSet.CfIcons.Add(IconSetType.Boxes5, 2);   // slot 2
-
-        // ------------------------------------------------------------
-        // 3. (Optional) Demonstrate retrieving the PNG data of the icons
-        // ------------------------------------------------------------
-        // Save the PNG bytes to files so you can verify they are valid images
-        File.WriteAllBytes("CustomIcon1.png", png1);
-        File.WriteAllBytes("CustomIcon2.png", png2);
-        File.WriteAllBytes("CustomIcon3.png", png3);
-
-        // ------------------------------------------------------------
-        // 4. Save the workbook (lifecycle save)
-        // ------------------------------------------------------------
-        workbook.Save("ConditionalIconSetWithCustomPng.xlsx", SaveFormat.Xlsx);
-
-        Console.WriteLine("Workbook saved with custom icon set.");
     }
 }

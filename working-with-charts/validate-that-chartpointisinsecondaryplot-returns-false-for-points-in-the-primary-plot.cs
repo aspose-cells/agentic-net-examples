@@ -2,9 +2,9 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsValidation
+namespace AsposeCellsChartPointValidation
 {
-    class ValidateChartPointSecondaryPlot
+    class Program
     {
         static void Main()
         {
@@ -12,7 +12,7 @@ namespace AsposeCellsValidation
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for a pie chart (supports secondary plot)
+            // Populate sample data for a pie chart (3 categories)
             sheet.Cells["A1"].PutValue(50);
             sheet.Cells["A2"].PutValue(100);
             sheet.Cells["A3"].PutValue(150);
@@ -20,38 +20,47 @@ namespace AsposeCellsValidation
             sheet.Cells["B2"].PutValue(32);
             sheet.Cells["B3"].PutValue(50);
 
-            // Add a Pie chart
+            // Add a pie chart that supports secondary plots (Pie of Pie)
             int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
-
-            // Bind data to the chart
             chart.NSeries.Add("A1:B3", true);
 
-            // Explicitly set a couple of points to be in the secondary plot
-            // (these are the points we expect IsInSecondaryPlot == true)
-            chart.NSeries[0].Points[2].IsInSecondaryPlot = true; // third point
-            chart.NSeries[0].Points[3].IsInSecondaryPlot = true; // fourth point (the "Other" point)
+            // Explicitly set the third point to be in the secondary plot
+            // (indices are zero‑based)
+            chart.NSeries[0].Points[2].IsInSecondaryPlot = true;
 
-            // Validate that all other points report false for IsInSecondaryPlot
+            // Validate that points not marked as secondary return false
             for (int i = 0; i < chart.NSeries[0].Points.Count; i++)
             {
-                ChartPoint pt = chart.NSeries[0].Points[i];
-                bool isSecondary = pt.IsInSecondaryPlot;
+                ChartPoint point = chart.NSeries[0].Points[i];
+                bool isSecondary = point.IsInSecondaryPlot;
 
-                // Points with index 2 and 3 were set to true; all others should be false
-                bool expected = (i == 2 || i == 3);
-                if (isSecondary != expected)
+                if (i == 2) // this point was set to secondary
                 {
-                    Console.WriteLine($"Validation failed at point index {i}: Expected {expected}, got {isSecondary}");
+                    if (!isSecondary)
+                    {
+                        Console.WriteLine($"Validation failed: Point {i} should be secondary but IsInSecondaryPlot is false.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Point {i} correctly reports IsInSecondaryPlot = true.");
+                    }
                 }
-                else
+                else // all other points should be primary
                 {
-                    Console.WriteLine($"Point index {i}: IsInSecondaryPlot = {isSecondary} (as expected)");
+                    if (isSecondary)
+                    {
+                        Console.WriteLine($"Validation failed: Point {i} should be primary but IsInSecondaryPlot is true.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Point {i} correctly reports IsInSecondaryPlot = false.");
+                    }
                 }
             }
 
-            // Save the workbook (required by lifecycle rule)
-            workbook.Save("ValidateIsInSecondaryPlot.xlsx");
+            // Save the workbook (output file name can be adjusted as needed)
+            workbook.Save("ChartPointIsInSecondaryPlotValidation.xlsx");
         }
     }
 }

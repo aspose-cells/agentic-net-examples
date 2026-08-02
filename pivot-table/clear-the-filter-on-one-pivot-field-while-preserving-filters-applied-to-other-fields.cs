@@ -1,83 +1,61 @@
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
 
-namespace AsposeCellsExamples
+class ClearSpecificPivotFilter
 {
-    public class ClearSpecificPivotFieldFilter
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Region");
+        worksheet.Cells["C1"].PutValue("Sales");
+
+        string[] categories = { "Fruit", "Vegetable", "Fruit", "Vegetable", "Fruit" };
+        string[] regions = { "North", "South", "East", "West", "North" };
+        double[] sales = { 120, 150, 200, 130, 180 };
+
+        for (int i = 0; i < categories.Length; i++)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].Value = "Category";
-                worksheet.Cells["A2"].Value = "Fruit";
-                worksheet.Cells["A3"].Value = "Fruit";
-                worksheet.Cells["A4"].Value = "Vegetable";
-                worksheet.Cells["A5"].Value = "Vegetable";
-
-                worksheet.Cells["B1"].Value = "Region";
-                worksheet.Cells["B2"].Value = "North";
-                worksheet.Cells["B3"].Value = "South";
-                worksheet.Cells["B4"].Value = "North";
-                worksheet.Cells["B5"].Value = "South";
-
-                worksheet.Cells["C1"].Value = "Sales";
-                worksheet.Cells["C2"].Value = 120;
-                worksheet.Cells["C3"].Value = 150;
-                worksheet.Cells["C4"].Value = 200;
-                worksheet.Cells["C5"].Value = 180;
-
-                // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Apply filters on both row and column fields
-                // Row field (Category) – filter out "Vegetable"
-                pivotTable.PivotFilters.AddLabelFilter(0, PivotFilterType.CaptionNotEqual, "Vegetable", null);
-                // Column field (Region) – filter out "South"
-                pivotTable.PivotFilters.AddLabelFilter(1, PivotFilterType.CaptionNotEqual, "South", null);
-
-                // Refresh and calculate to apply filters
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Clear filter only on the row field (Category, index 0) while keeping column filter intact.
-                pivotTable.PivotFilters.ClearFilter(0);
-
-                // Refresh again to reflect the change
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                string outputPath = "ClearSpecificPivotFieldFilter.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            worksheet.Cells[i + 1, 0].PutValue(categories[i]);
+            worksheet.Cells[i + 1, 1].PutValue(regions[i]);
+            worksheet.Cells[i + 1, 2].PutValue(sales[i]);
         }
-    }
 
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ClearSpecificPivotFieldFilter.Run();
-        }
+        // Add a pivot table covering the data range
+        int pivotIndex = worksheet.PivotTables.Add("A1:C6", "E3", "SalesPivot");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+
+        // Add fields: Category as row, Region as column, Sales as data
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+        // Apply a filter on the row field (Category) to show only "Fruit"
+        PivotField rowField = pivotTable.RowFields[0];
+        rowField.FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
+
+        // Apply a filter on the column field (Region) to hide "South"
+        PivotField columnField = pivotTable.ColumnFields[0];
+        columnField.FilterByLabel(PivotFilterType.CaptionNotEqual, "South", null);
+
+        // Refresh and calculate to apply the filters
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Clear filter only on the row field (field index 0) while preserving other filters
+        // Using PivotFilterCollection.ClearFilter method
+        pivotTable.PivotFilters.ClearFilter(0);
+
+        // Refresh again; column filter remains active
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Save the workbook
+        workbook.Save("ClearSpecificPivotFilter.xlsx");
     }
 }

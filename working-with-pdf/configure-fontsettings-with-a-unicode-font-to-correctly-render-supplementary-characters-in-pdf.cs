@@ -2,39 +2,30 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsUnicodePdfDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Populate the workbook with Unicode characters
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Unicode test: 😀 𝟘𝟙𝟚");
+        sheet.Cells["A2"].PutValue("中文字符示例");
+
+        // Configure PDF save options to use a Unicode‑capable default font
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Set a Unicode capable default font globally (optional, can also be set per save options)
-            // Example font that supports many Unicode ranges, including supplementary characters
-            FontConfigs.DefaultFontName = "Arial Unicode MS";
+            DefaultFont = "MS Gothic",               // fallback font for supplementary characters
+            CheckWorkbookDefaultFont = true,         // try workbook's default font first
+            FontEncoding = PdfFontEncoding.Identity, // full Unicode support
+            EmbedStandardWindowsFonts = true         // embed standard fonts for ASCII range
+        };
 
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add regular text and supplementary Unicode characters (e.g., emoji)
-            sheet.Cells["A1"].PutValue("Regular text");
-            sheet.Cells["A2"].PutValue("Supplementary characters: 😀 🎉 𠜎"); // Emoji and a CJK Extension B character
-
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Use the Unicode font when a cell does not specify a compatible font
-                DefaultFont = "Arial Unicode MS",
-                // Try to use the workbook's default font first
-                CheckWorkbookDefaultFont = true,
-                // Ensure font compatibility checking is enabled (default true) so fallback fonts are used if needed
-                CheckFontCompatibility = true
-            };
-
-            // Save the workbook as PDF with the configured options
-            workbook.Save("UnicodeOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved successfully with Unicode font settings.");
-        }
+        // Save the workbook as PDF
+        workbook.Save("output.pdf", pdfOptions);
     }
 }
+
+// Author: Example demonstrating FontSettings for Unicode PDF rendering.

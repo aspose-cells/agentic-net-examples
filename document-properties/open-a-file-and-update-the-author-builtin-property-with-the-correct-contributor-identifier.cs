@@ -1,14 +1,14 @@
 using System;
 using Aspose.Cells;
 
-namespace UpdateAuthorProperty
+namespace AsposeCellsAuthorUpdate
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Path to the existing workbook
-            string inputPath = "input.xlsx";
+            string inputPath = "ExistingWorkbook.xlsx";
 
             // Load the workbook from the file
             Workbook workbook = new Workbook(inputPath);
@@ -17,11 +17,8 @@ namespace UpdateAuthorProperty
             string contributorId = "Contributor_12345";
             workbook.BuiltInDocumentProperties.Author = contributorId;
 
-            // Save the workbook back (overwrites the original file or specify a new path)
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-
-            Console.WriteLine($"Author property updated to '{contributorId}' and saved to '{outputPath}'.");
+            // Save the workbook (overwrites the original file or specify a new file name)
+            workbook.Save(inputPath);
         }
     }
 }

@@ -1,37 +1,43 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
 
-class ExportWorksheetToImage
+namespace AsposeCellsExportWorksheet
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
+        static void Main()
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create rule
 
-        // Select the worksheet to export (by index or name)
-        int sheetIndex = 0; // first worksheet
-        Worksheet sheet = workbook.Worksheets[sheetIndex];
+            // Access the worksheet you want to export (e.g., the first worksheet)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set up image rendering options
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Png;          // PNG supports transparency
-        options.HorizontalResolution = 300;         // 300 DPI horizontal
-        options.VerticalResolution = 300;           // 300 DPI vertical
-        options.Transparent = true;                 // make background transparent
-        options.OnePagePerSheet = true;             // render the whole sheet on one page
+            // OPTIONAL: add some data so the image is not empty
+            worksheet.Cells["A1"].PutValue("Sample Data");
+            worksheet.Cells["B2"].PutValue(12345);
 
-        // Create a SheetRender instance for the selected worksheet
-        SheetRender renderer = new SheetRender(sheet, options);
+            // Configure image rendering options
+            ImageOrPrintOptions options = new ImageOrPrintOptions();
+            options.ImageType = ImageType.Png;          // PNG supports transparency
+            options.HorizontalResolution = 300;         // 300 DPI horizontal
+            options.VerticalResolution = 300;           // 300 DPI vertical
+            options.Transparent = true;                // make background transparent
+            options.OnePagePerSheet = true;             // render the whole sheet on one page
 
-        // Define the output image file path
-        string imagePath = "output_sheet.png";
+            // Create a SheetRender instance for the selected worksheet
+            SheetRender sheetRender = new SheetRender(worksheet, options); // constructor rule
 
-        // Render the first (and only) page of the worksheet to the image file
-        renderer.ToImage(0, imagePath);
+            // Define output image path
+            string outputPath = Path.Combine(Environment.CurrentDirectory, "WorksheetImage.png");
 
-        Console.WriteLine($"Worksheet exported successfully to: {imagePath}");
+            // Render the first (and only) page to an image file
+            sheetRender.ToImage(0, outputPath); // ToImage(pageIndex, fileName) rule
+
+            Console.WriteLine($"Worksheet exported to image: {outputPath}");
+        }
     }
 }

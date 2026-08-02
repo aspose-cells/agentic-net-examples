@@ -4,71 +4,69 @@ using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Rendering; // for PdfSaveOptions if needed
 
 class Program
 {
     static void Main()
     {
-        // List of Excel files to process
-        List<string> excelFiles = new List<string>
-        {
-            "Book1.xlsx",
-            "Book2.xlsx",
-            "Book3.xlsx"
-        };
+        // Paths of the source Excel workbooks
+        string[] sourceFiles = { "Workbook1.xlsx", "Workbook2.xlsx", "Workbook3.xlsx" };
 
-        // Temporary folder for generated PDFs
-        string pdfFolder = Path.Combine(Path.GetTempPath(), "AsposePdfOutput");
-        Directory.CreateDirectory(pdfFolder);
+        // List to keep generated PDF file paths
+        List<string> pdfFiles = new List<string>();
 
         // Process each workbook
-        foreach (string excelPath in excelFiles)
+        foreach (string srcPath in sourceFiles)
         {
-            // Load workbook (uses Workbook(string) constructor rule)
-            Workbook wb = new Workbook(excelPath);
+            // Load the workbook (uses the provided Workbook(string) constructor)
+            Workbook wb = new Workbook(srcPath);
 
             // Remove all slicers from every worksheet
             foreach (Worksheet ws in wb.Worksheets)
             {
                 SlicerCollection slicers = ws.Slicers;
-                // Remove slicers while collection is not empty
-                while (slicers.Count > 0)
+                // Remove slicers in reverse order to avoid index shifting
+                for (int i = slicers.Count - 1; i >= 0; i--)
                 {
-                    // Delete slicer at index 0 (uses SlicerCollection.RemoveAt rule)
-                    slicers.RemoveAt(0);
+                    slicers.RemoveAt(i); // uses the provided RemoveAt method
                 }
             }
 
-            // Prepare PDF file name
-            string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
-            string pdfPath = Path.Combine(pdfFolder, pdfFileName);
+            // Create a temporary PDF file name
+            string tempPdf = Path.Combine(Path.GetTempPath(),
+                                          Guid.NewGuid().ToString() + ".pdf");
 
-            // Save workbook as PDF (uses Workbook.Save(string, SaveFormat) rule)
-            wb.Save(pdfPath, SaveFormat.Pdf);
+            // Save the workbook as PDF (uses the provided Save(string, SaveFormat) method)
+            wb.Save(tempPdf, SaveFormat.Pdf);
+
+            // Keep track of the PDF for later archiving
+            pdfFiles.Add(tempPdf);
 
             // Release resources
             wb.Dispose();
         }
 
-        // Create a zip archive containing all PDFs
-        string zipPath = "AllWorkbooks.pdf.zip";
-        if (File.Exists(zipPath))
-            File.Delete(zipPath);
-
-        using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
-        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+        // Archive all PDFs into a single ZIP file
+        string zipPath = "WorkbooksArchive.zip";
+        using (FileStream zipStream = new FileStream(zipPath, FileMode.Create))
+        using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Update))
         {
-            foreach (string pdfFile in Directory.GetFiles(pdfFolder, "*.pdf"))
+            foreach (string pdfPath in pdfFiles)
             {
-                // Add each PDF to the zip (free‑form code, no specific rule)
-                archive.CreateEntryFromFile(pdfFile, Path.GetFileName(pdfFile));
+                // Add each PDF to the archive with its file name
+                archive.CreateEntryFromFile(pdfPath, Path.GetFileName(pdfPath));
             }
         }
 
         // Clean up temporary PDF files
-        Directory.Delete(pdfFolder, true);
+        foreach (string pdfPath in pdfFiles)
+        {
+            if (File.Exists(pdfPath))
+            {
+                File.Delete(pdfPath);
+            }
+        }
 
-        Console.WriteLine("All workbooks have been converted to PDF, slicers removed, and archived to: " + zipPath);
+        Console.WriteLine($"All PDFs have been archived to '{zipPath}'.");
     }
 }

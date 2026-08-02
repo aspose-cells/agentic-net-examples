@@ -1,69 +1,69 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Json;
 
-namespace AsposeCellsJsonExport
+class JsonExportHiddenRowsColumns
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate a 5x5 grid with sample data
+        for (int row = 0; row < 5; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data (including header row)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
-            cells["C1"].PutValue("Score");
-
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Alice");
-            cells["C2"].PutValue(85);
-
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Bob");
-            cells["C3"].PutValue(92);
-
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue("Charlie");
-            cells["C4"].PutValue(78);
-
-            // Hide a row (row index 2 -> third row) and a column (column index 1 -> column B)
-            sheet.Cells.HideRow(2);      // Hides the row containing Bob's data
-            sheet.Cells.HideColumn(1);   // Hides the "Name" column
-
-            // Configure JsonSaveOptions
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            for (int col = 0; col < 5; col++)
             {
-                // Skip empty rows (helps to ignore rows that become empty after hiding)
-                SkipEmptyRows = true,
-
-                // Do not export empty cells as null
-                ExportEmptyCells = false,
-
-                // Define the export area to cover the used range.
-                // Hidden rows/columns are still part of the range, but because we set
-                // SkipEmptyRows = true and ExportEmptyCells = false, cells in hidden rows/columns
-                // will not appear in the resulting JSON.
-                ExportArea = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = cells.MaxDataRow,
-                    StartColumn = 0,
-                    EndColumn = cells.MaxDataColumn
-                },
-
-                // Indent the JSON for readability
-                Indent = "  "
-            };
-
-            // Save the workbook as JSON using the configured options
-            string outputPath = "ExportedData.json";
-            workbook.Save(outputPath, jsonOptions);
-
-            Console.WriteLine($"Workbook exported to JSON at: {outputPath}");
+                worksheet.Cells[row, col].PutValue($"R{row}C{col}");
+            }
         }
+
+        // Hide a specific row and column (zero‑based indexes)
+        worksheet.Cells.HideRow(1);   // Hide row 2
+        worksheet.Cells.HideColumn(2); // Hide column C
+
+        // Determine the bounding area that contains only visible rows and columns
+        int startRow = int.MaxValue, endRow = int.MinValue;
+        int startColumn = int.MaxValue, endColumn = int.MinValue;
+
+        // Iterate over the used range of the worksheet
+        for (int r = 0; r <= worksheet.Cells.MaxDataRow; r++)
+        {
+            if (worksheet.Cells.IsRowHidden(r))
+                continue; // Skip hidden rows
+
+            for (int c = 0; c <= worksheet.Cells.MaxDataColumn; c++)
+            {
+                if (worksheet.Cells.IsColumnHidden(c))
+                    continue; // Skip hidden columns
+
+                // Update the visible area bounds
+                if (r < startRow) startRow = r;
+                if (r > endRow) endRow = r;
+                if (c < startColumn) startColumn = c;
+                if (c > endColumn) endColumn = c;
+            }
+        }
+
+        // Build the CellArea that represents only the visible portion
+        CellArea visibleArea = new CellArea
+        {
+            StartRow = startRow,
+            EndRow = endRow,
+            StartColumn = startColumn,
+            EndColumn = endColumn
+        };
+
+        // Configure JsonSaveOptions to use the visible area only
+        JsonSaveOptions jsonOptions = new JsonSaveOptions
+        {
+            ExportArea = visibleArea,   // Export only visible rows/columns
+            SkipEmptyRows = true,       // Optional: skip rows that become empty after hiding
+            ExportEmptyCells = false,   // Optional: do not include empty cells
+            HasHeaderRow = false        // Adjust according to your data layout
+        };
+
+        // Save the workbook as JSON; hidden rows/columns are excluded
+        workbook.Save("output.json", jsonOptions);
     }
 }

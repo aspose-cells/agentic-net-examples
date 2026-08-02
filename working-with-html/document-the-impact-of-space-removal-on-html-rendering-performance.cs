@@ -4,57 +4,51 @@ using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-class HtmlSpaceRemovalPerformanceDemo
+namespace AsposeCellsHtmlSpaceDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – demonstrates impact of removing redundant spaces on HTML processing performance
+    class Program
     {
-        // HTML containing many redundant spaces
-        string html = "<p>   This    text   has   redundant   spaces   </p>";
-
-        // Convert the HTML string to a memory stream
-        byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
-        using (MemoryStream stream = new MemoryStream(htmlBytes))
+        static void Main()
         {
-            // ------------------------------------------------------------
-            // Load without removing redundant spaces
-            // ------------------------------------------------------------
-            HtmlLoadOptions loadOptsNoDelete = new HtmlLoadOptions();
-            loadOptsNoDelete.DeleteRedundantSpaces = false; // keep spaces
+            // Sample HTML containing many redundant spaces
+            string html = "<p>   This    text   has   redundant   spaces   </p>";
 
-            Stopwatch sw = Stopwatch.StartNew();
-            Workbook wbNoDelete = new Workbook(stream, loadOptsNoDelete);
-            sw.Stop();
+            // Convert the HTML string to a memory stream
+            byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+            using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
+            {
+                // ---------- Load HTML with space removal ----------
+                HtmlLoadOptions loadOpts = new HtmlLoadOptions
+                {
+                    // Deleting redundant spaces reduces the amount of text stored in cells,
+                    // which speeds up formula calculation and subsequent saving.
+                    DeleteRedundantSpaces = true
+                };
 
-            Console.WriteLine($"Load time (no space removal): {sw.ElapsedMilliseconds} ms");
-            Console.WriteLine("Cell A1 value (no removal): '" + wbNoDelete.Worksheets[0].Cells["A1"].StringValue + "'");
+                Stopwatch swLoad = Stopwatch.StartNew();
+                Workbook wb = new Workbook(htmlStream, loadOpts);
+                swLoad.Stop();
 
-            // Reset stream position for the second load
-            stream.Position = 0;
+                // Access the loaded cell to verify space removal
+                string cellText = wb.Worksheets[0].Cells["A1"].StringValue;
+                Console.WriteLine($"Cell text after loading (spaces removed): \"{cellText}\"");
 
-            // ------------------------------------------------------------
-            // Load with redundant spaces removed
-            // ------------------------------------------------------------
-            HtmlLoadOptions loadOptsDelete = new HtmlLoadOptions();
-            loadOptsDelete.DeleteRedundantSpaces = true; // delete spaces
+                // ---------- Save to HTML ----------
+                HtmlSaveOptions saveOpts = new HtmlSaveOptions
+                {
+                    // Excluding unused styles further reduces file size and improves rendering speed.
+                    ExcludeUnusedStyles = true
+                };
 
-            sw.Restart();
-            Workbook wbDelete = new Workbook(stream, loadOptsDelete);
-            sw.Stop();
+                Stopwatch swSave = Stopwatch.StartNew();
+                wb.Save("output.html", saveOpts);
+                swSave.Stop();
 
-            Console.WriteLine($"Load time (space removal enabled): {sw.ElapsedMilliseconds} ms");
-            Console.WriteLine("Cell A1 value (after removal): '" + wbDelete.Worksheets[0].Cells["A1"].StringValue + "'");
-
-            // ------------------------------------------------------------
-            // Save both workbooks as HTML to compare output size
-            // ------------------------------------------------------------
-            wbNoDelete.Save("NoDeleteSpaces.html", SaveFormat.Html);
-            wbDelete.Save("DeleteSpaces.html", SaveFormat.Html);
-
-            FileInfo fiNoDelete = new FileInfo("NoDeleteSpaces.html");
-            FileInfo fiDelete = new FileInfo("DeleteSpaces.html");
-
-            Console.WriteLine($"HTML size without deletion: {fiNoDelete.Length} bytes");
-            Console.WriteLine($"HTML size with deletion: {fiDelete.Length} bytes");
+                // Output performance measurements
+                Console.WriteLine($"Load time with DeleteRedundantSpaces=true: {swLoad.ElapsedMilliseconds} ms");
+                Console.WriteLine($"Save time with ExcludeUnusedStyles=true: {swSave.ElapsedMilliseconds} ms");
+            }
         }
     }
 }

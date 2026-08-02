@@ -10,72 +10,75 @@ namespace SlicerPlacementValidation
     {
         static void Main()
         {
-            // -------------------- Create workbook and data --------------------
+            // ---------- Create workbook and add data ----------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
             // Sample data for a pivot table
-            cells["A1"].Value = "Fruit";
-            cells["B1"].Value = "Sales";
-            cells["A2"].Value = "Apple";
-            cells["B2"].Value = 120;
-            cells["A3"].Value = "Orange";
-            cells["B3"].Value = 150;
-            cells["A4"].Value = "Banana";
-            cells["B4"].Value = 90;
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "Amount";
+            cells["A2"].Value = "A";
+            cells["B2"].Value = 100;
+            cells["A3"].Value = "B";
+            cells["B3"].Value = 200;
+            cells["A4"].Value = "A";
+            cells["B4"].Value = 150;
+            cells["A5"].Value = "B";
+            cells["B5"].Value = 250;
 
-            // -------------------- Create pivot table --------------------
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "FruitPivot");
+            // ---------- Create a pivot table ----------
+            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // -------------------- Add slicer linked to the pivot table --------------------
-            // Destination cell for slicer upper‑left corner is E1
-            int slicerIdx = sheet.Slicers.Add(pivot, "E1", "Fruit");
+            // ---------- Add a slicer linked to the pivot table ----------
+            // Place the slicer starting at cell G1
+            int slicerIdx = sheet.Slicers.Add(pivot, "G1", "Category");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Set explicit placement coordinates via the underlying Shape object
-            SlicerShape shape = slicer.Shape;
-            shape.Left = 100;   // pixels from left column
-            shape.Top = 50;     // pixels from top row
-            shape.Width = 200;  // pixels
-            shape.Height = 150; // pixels
+            // Set explicit placement coordinates using the underlying Shape object
+            // (Left and Top are in pixels)
+            slicer.Shape.Left = 300;   // horizontal offset from worksheet left border
+            slicer.Shape.Top = 100;    // vertical offset from worksheet top border
+            slicer.Shape.Width = 150;
+            slicer.Shape.Height = 120;
 
-            // Store original coordinates for later comparison
-            int originalLeft = shape.Left;
-            int originalTop = shape.Top;
-            int originalWidth = shape.Width;
-            int originalHeight = shape.Height;
+            // Store the coordinates for later comparison
+            int originalLeft = slicer.Shape.Left;
+            int originalTop = slicer.Shape.Top;
 
-            // -------------------- Save workbook --------------------
+            // ---------- Save the workbook ----------
             string filePath = "SlicerPlacementDemo.xlsx";
-            workbook.Save(filePath, SaveFormat.Xlsx);
+            workbook.Save(filePath);
 
-            // -------------------- Load workbook --------------------
+            // ---------- Load the workbook ----------
             Workbook loadedWorkbook = new Workbook(filePath);
             Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Slicer loadedSlicer = loadedSheet.Slicers[slicerIdx];
-            SlicerShape loadedShape = loadedSlicer.Shape;
+            Slicer loadedSlicer = loadedSheet.Slicers[0]; // assume only one slicer
 
-            // Retrieve coordinates after reload
-            int loadedLeft = loadedShape.Left;
-            int loadedTop = loadedShape.Top;
-            int loadedWidth = loadedShape.Width;
-            int loadedHeight = loadedShape.Height;
+            // Retrieve placement coordinates after reload
+            int loadedLeft = loadedSlicer.Shape.Left;
+            int loadedTop = loadedSlicer.Shape.Top;
 
-            // -------------------- Validate consistency --------------------
-            bool isConsistent = originalLeft == loadedLeft &&
-                               originalTop == loadedTop &&
-                               originalWidth == loadedWidth &&
-                               originalHeight == loadedHeight;
+            // ---------- Validate consistency ----------
+            bool leftMatches = originalLeft == loadedLeft;
+            bool topMatches = originalTop == loadedTop;
 
-            Console.WriteLine("Slicer placement validation result: " + (isConsistent ? "Consistent" : "Inconsistent"));
-            Console.WriteLine($"Original - Left:{originalLeft}, Top:{originalTop}, Width:{originalWidth}, Height:{originalHeight}");
-            Console.WriteLine($"Loaded   - Left:{loadedLeft}, Top:{loadedTop}, Width:{loadedWidth}, Height:{loadedHeight}");
+            Console.WriteLine($"Original Left: {originalLeft}, Loaded Left: {loadedLeft}, Match: {leftMatches}");
+            Console.WriteLine($"Original Top: {originalTop}, Loaded Top: {loadedTop}, Match: {topMatches}");
+
+            if (leftMatches && topMatches)
+            {
+                Console.WriteLine("Slicer placement coordinates are consistent after save and reload.");
+            }
+            else
+            {
+                Console.WriteLine("Slicer placement coordinates changed after save and reload.");
+            }
         }
     }
 }

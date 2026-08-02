@@ -1,47 +1,28 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – copy a worksheet and place it directly after the original
+class Program
 {
-    public class CopyWorksheetInsertAfterOriginal
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Access the first (original) worksheet and add some data
-                Worksheet originalSheet = workbook.Worksheets[0];
-                originalSheet.Name = "Original";
-                originalSheet.Cells["A1"].PutValue("Data in the original sheet");
+        // Access the first worksheet and add some data
+        Worksheet originalSheet = workbook.Worksheets[0];
+        originalSheet.Cells["A1"].PutValue("Original Worksheet");
 
-                // Copy the original worksheet; AddCopy returns the index of the new copy
-                int copiedIndex = workbook.Worksheets.AddCopy(0);
+        // Add a copy of the first worksheet (adds at the end of the collection)
+        int copiedSheetIndex = workbook.Worksheets.AddCopy(0);
 
-                // Move the copied worksheet so that it is placed directly after the original sheet
-                workbook.Worksheets[copiedIndex].MoveTo(originalSheet.Index + 1);
+        // Move the copied worksheet so it is placed directly after the original sheet (index 1)
+        workbook.Worksheets[copiedSheetIndex].MoveTo(1);
 
-                // Optionally rename the copied sheet
-                workbook.Worksheets[originalSheet.Index + 1].Name = "CopyAfterOriginal";
+        // Optionally rename the copied sheet
+        workbook.Worksheets[1].Name = "Copied Worksheet";
 
-                // Save the workbook
-                string outputPath = "CopyAfterOriginal.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Save the workbook
+        workbook.Save("CopyAfterOriginal.xlsx");
     }
 }

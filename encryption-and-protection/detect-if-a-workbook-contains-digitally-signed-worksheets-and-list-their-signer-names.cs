@@ -1,11 +1,20 @@
+// Title: Detect Excel workbook digital signatures and list signer names with Aspose.Cells for .NET
+// Description: This C# example loads an Excel file using Aspose.Cells, checks the Workbook.IsDigitallySigned flag, retrieves the DigitalSignatureCollection via GetDigitalSignature, and prints each signer's name extracted from the certificate's Subject field.
+// Keywords: Aspose.Cells digital signature detection | Workbook.IsDigitallySigned C# | GetDigitalSignature example | extract signer name from Excel certificate | C# verify Excel workbook signature | .NET Excel security
+// Common Searches: how to check if an Excel file is digitally signed using Aspose.Cells | list signers of Excel digital signatures in C# | Aspose.Cells GetDigitalSignature usage | retrieve certificate subject from Excel workbook signature | C# code to read digital signatures in .xlsx
+// Developer Intent: Determine whether an Excel workbook is digitally signed and obtain the names of all signers.
+// Use Cases: Validate authenticity of incoming Excel reports before automated processing. | Log signer information for compliance and audit trails. | Trigger workflow steps only when a workbook is signed by a trusted certificate.
+// AI Prompts: Generate C# code with Aspose.Cells that returns a list of signer names from an Excel file's digital signatures. | Explain how to handle a DigitalSignature object that lacks an associated X509Certificate when extracting signer details. | Create a reusable method that checks Workbook.IsDigitallySigned and returns signer names as a string array.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 using System.Security.Cryptography.X509Certificates;
 
-class DetectDigitalSignatures
+// This C# example loads an Excel file using Aspose.Cells, checks the Workbook.IsDigitallySigned flag, retrieves the DigitalSignatureCollection via GetDigitalSignature, and prints each signer's name extracted from the certificate's Subject field.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         // Path to the workbook to be examined
         string workbookPath = "SignedWorkbook.xlsx";
@@ -14,35 +23,22 @@ class DetectDigitalSignatures
         Workbook workbook = new Workbook(workbookPath);
 
         // Check if the workbook is digitally signed
-        bool isSigned = workbook.IsDigitallySigned;
-        Console.WriteLine($"Workbook is digitally signed: {isSigned}");
+        Console.WriteLine($"Workbook is digitally signed: {workbook.IsDigitallySigned}");
 
-        if (isSigned)
+        if (workbook.IsDigitallySigned)
         {
             // Retrieve the collection of digital signatures
             DigitalSignatureCollection signatures = workbook.GetDigitalSignature();
 
-            if (signatures != null && signatures.GetEnumerator().MoveNext())
+            int signatureIndex = 1;
+            foreach (DigitalSignature signature in signatures)
             {
-                Console.WriteLine("Signers found in the workbook:");
-                foreach (DigitalSignature signature in signatures)
-                {
-                    // Each signature contains an X509Certificate2 object
-                    X509Certificate2 cert = signature.Certificate;
+                // Extract signer information from the certificate (if available)
+                string signerName = signature.Certificate?.Subject ?? "Unknown signer";
 
-                    // Extract signer information (Subject contains the signer name)
-                    string signerName = cert != null ? cert.Subject : "Unknown signer";
-
-                    Console.WriteLine($"- {signerName}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No digital signatures were found despite IsDigitallySigned being true.");
+                Console.WriteLine($"Signature {signatureIndex}: Signer = {signerName}");
+                signatureIndex++;
             }
         }
-
-        // Clean up
-        workbook.Dispose();
     }
 }

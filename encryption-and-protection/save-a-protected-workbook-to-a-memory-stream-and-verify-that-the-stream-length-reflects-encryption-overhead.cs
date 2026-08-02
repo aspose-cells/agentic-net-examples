@@ -1,45 +1,67 @@
+// Title: Save a Password‑Protected Aspose.Cells Workbook to a MemoryStream and Measure Encryption Overhead (C#)
+// Description: Creates a workbook, writes sample data, saves it to an unprotected MemoryStream, applies a password with 128‑bit StrongCryptographicProvider encryption, saves the encrypted workbook to a second MemoryStream, prints both lengths, checks the IsEncrypted flag, and reloads the encrypted workbook from the stream using LoadOptions.
+// Keywords: Aspose.Cells C# | save workbook to MemoryStream | encrypt Excel file Aspose.Cells | password protection StrongCryptographicProvider | encryption overhead size | Workbook.Settings.IsEncrypted | LoadOptions password | compare encrypted vs unencrypted stream length | in‑memory Excel encryption | Aspose.Cells encryption API
+// Common Searches: Aspose.Cells save encrypted workbook to MemoryStream | How to measure encryption overhead in Aspose.Cells | Load password‑protected Excel from MemoryStream using Aspose.Cells | Check if Aspose.Cells workbook is encrypted after saving | C# example for workbook encryption with StrongCryptographicProvider
+// Developer Intent: Save a workbook with password protection to a MemoryStream, confirm the encrypted stream is larger than the unencrypted one, and reload it using the correct password.
+// Use Cases: Generate a secure Excel file entirely in memory for transmission over APIs or messaging systems. | Quantify the size impact of Aspose.Cells encryption for compliance or storage‑cost analysis. | Process an encrypted workbook without touching the file system by loading it directly from a MemoryStream.
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, encrypts it with a password, saves both encrypted and unencrypted versions to MemoryStream, and outputs the size difference. | Explain why the stream length increases when Aspose.Cells applies StrongCryptographicProvider encryption and how the overhead is calculated. | Generate a C# unit test that asserts the encrypted MemoryStream length is greater than the unencrypted length for the same workbook.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDemo
+// Creates a workbook, writes sample data, saves it to an unprotected MemoryStream, applies a password with 128‑bit StrongCryptographicProvider encryption, saves the encrypted workbook to a second MemoryStream, prints both lengths, checks the IsEncrypted flag, and reloads the encrypted workbook from the stream using LoadOptions.
+public class ProtectedWorkbookMemoryStreamDemo
 {
-    class Program
+    public static void Run()
     {
-        static void Main()
+        try
         {
-            // Create a workbook and add some sample data
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue("Sample");
-            ws.Cells["B1"].PutValue(123);
+            // Create a new workbook and add some sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Text");
+            sheet.Cells["B1"].PutValue(42);
 
             // Save the unprotected workbook to a memory stream
-            MemoryStream unprotectedStream = wb.SaveToStream();
+            MemoryStream unprotectedStream = workbook.SaveToStream();
 
-            // Protect the workbook with a password
-            wb.Settings.Password = "SecretPwd";
+            // Apply password protection and encryption options
+            workbook.Settings.Password = "mySecretPassword";
+            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Optionally set stronger encryption options (ignored for .xlsx but kept for completeness)
-            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Save the protected (encrypted) workbook to another memory stream
+            MemoryStream protectedStream = workbook.SaveToStream();
 
-            // Save the protected workbook to another memory stream
-            MemoryStream protectedStream = wb.SaveToStream();
+            // Output the lengths of both streams to demonstrate encryption overhead
+            Console.WriteLine($"Unprotected stream length: {unprotectedStream.Length}");
+            Console.WriteLine($"Protected stream length:   {protectedStream.Length}");
+            Console.WriteLine($"Length difference (overhead): {protectedStream.Length - unprotectedStream.Length}");
 
-            // Verify that the protected stream length is greater due to encryption overhead
-            Console.WriteLine($"Unprotected stream length: {unprotectedStream.Length} bytes");
-            Console.WriteLine($"Protected stream length:   {protectedStream.Length} bytes");
-            Console.WriteLine($"Encryption overhead detected: {protectedStream.Length > unprotectedStream.Length}");
+            // Verify that the workbook reports being encrypted
+            Console.WriteLine($"Workbook.Settings.IsEncrypted: {workbook.Settings.IsEncrypted}");
 
-            // Additional verification using FileFormatInfo
-            // Reset stream position before detection
+            // Reset stream position before loading
             protectedStream.Position = 0;
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(protectedStream);
-            Console.WriteLine($"FileFormatInfo reports encrypted: {formatInfo.IsEncrypted}");
 
-            // Clean up streams
-            unprotectedStream.Dispose();
-            protectedStream.Dispose();
+            // Load the encrypted workbook from the memory stream using the correct password
+            LoadOptions loadOptions = new LoadOptions { Password = "mySecretPassword" };
+            Workbook loadedWorkbook = new Workbook(protectedStream, loadOptions);
+
+            // Confirm that the loaded workbook is also recognized as encrypted
+            Console.WriteLine($"Loaded workbook.Settings.IsEncrypted: {loadedWorkbook.Settings.IsEncrypted}");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        ProtectedWorkbookMemoryStreamDemo.Run();
     }
 }

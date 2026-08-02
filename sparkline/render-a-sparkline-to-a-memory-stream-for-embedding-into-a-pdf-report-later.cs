@@ -4,27 +4,26 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsDemo
+namespace SparklineDemo
 {
-    public class SparklineToStreamExample
+    public class SparklineToMemoryStreamDemo
     {
-        // Renders a sparkline to a memory stream (PNG) for later embedding into a PDF.
-        public static MemoryStream RenderSparklineToStream()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet.
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data that the sparkline will represent.
+                // Populate sample data for the sparkline
                 sheet.Cells["A1"].PutValue(10);
                 sheet.Cells["B1"].PutValue(20);
                 sheet.Cells["C1"].PutValue(15);
                 sheet.Cells["D1"].PutValue(30);
 
-                // Define the cell where the sparkline will be placed.
-                CellArea location = new CellArea
+                // Define the cell area where the sparkline will be placed (E1)
+                CellArea sparklineLocation = new CellArea
                 {
                     StartRow = 0,
                     EndRow = 0,
@@ -32,56 +31,43 @@ namespace AsposeCellsDemo
                     EndColumn = 4
                 };
 
-                // Add a sparkline group (Line type) and retrieve the first sparkline.
-                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, sheet.Name + "!A1:D1", false, location);
+                // Add a sparkline group with the data range A1:D1
+                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, sheet.Name + "!A1:D1", false, sparklineLocation);
                 SparklineGroup group = sheet.SparklineGroups[groupIndex];
+
+                // Retrieve the first sparkline from the group
                 Sparkline sparkline = group.Sparklines[0];
 
-                // Configure image options for the output image.
+                // Configure image options for the sparkline rendering
                 ImageOrPrintOptions options = new ImageOrPrintOptions
                 {
                     ImageType = Aspose.Cells.Drawing.ImageType.Png,
                     HorizontalResolution = 300,
                     VerticalResolution = 300,
+                    Quality = 90,
                     Transparent = false
                 };
 
-                // Render the sparkline into a memory stream.
-                MemoryStream stream = new MemoryStream();
-                sparkline.ToImage(stream, options);
-                stream.Position = 0; // Reset stream position for subsequent reading.
-
-                return stream;
+                // Render the sparkline to a memory stream
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    sparkline.ToImage(stream, options);
+                    stream.Position = 0;
+                    Console.WriteLine($"Sparkline image rendered to memory stream. Length = {stream.Length} bytes.");
+                }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error rendering sparkline: {ex.Message}");
-                throw;
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            try
-            {
-                using (MemoryStream sparklineStream = SparklineToStreamExample.RenderSparklineToStream())
-                {
-                    // Save the stream to a file to verify the output.
-                    string outputPath = "sparkline.png";
-                    using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        sparklineStream.CopyTo(file);
-                    }
-                    Console.WriteLine($"Sparkline image saved to {Path.GetFullPath(outputPath)}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            SparklineToMemoryStreamDemo.Run();
         }
     }
 }

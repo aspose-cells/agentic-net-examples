@@ -2,39 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class VbaProjectPasswordValidationDemo
+namespace AsposeCellsVbaProtectionDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-
-        // Ensure a VBA project exists by adding a worksheet
-        workbook.Worksheets.Add();
-
-        // Define the password to protect the VBA project
-        string password = "MySecurePwd123";
-
-        // Minimum password length requirement
-        const int MinPasswordLength = 8;
-
-        // Validate password length before protecting
-        if (string.IsNullOrEmpty(password) || password.Length < MinPasswordLength)
+        static void Main()
         {
-            Console.WriteLine($"Password must be at least {MinPasswordLength} characters long.");
-        }
-        else
-        {
-            // Protect the VBA project (lock for viewing set to true)
-            workbook.VbaProject.Protect(true, password);
-            Console.WriteLine("VBA project protected successfully.");
+            // Minimum password length requirement
+            const int MinPasswordLength = 8;
 
-            // Optional: verify that the password works using ValidatePassword
-            bool isValid = workbook.VbaProject.ValidatePassword(password);
-            Console.WriteLine($"Password validation result after protection: {isValid}");
-        }
+            // Example password to protect the VBA project
+            string password = "mySecretPwd";
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("ProtectedVbaProject.xlsm", SaveFormat.Xlsm);
+            // Validate password length before protecting
+            if (string.IsNullOrEmpty(password) || password.Length < MinPasswordLength)
+            {
+                throw new ArgumentException($"Password must be at least {MinPasswordLength} characters long.");
+            }
+
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Ensure a worksheet exists so that a VBA project is initialized
+            workbook.Worksheets.Add();
+
+            // Protect the VBA project (isLockedForViewing = false in this example)
+            bool isLockedForViewing = false;
+            workbook.VbaProject.Protect(isLockedForViewing, password);
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("ProtectedVbaProject.xlsm", SaveFormat.Xlsm);
+        }
     }
 }

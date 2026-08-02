@@ -1,36 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-class Program
+class PrettyPrintJsonExample
 {
     static void Main()
     {
-        try
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Fill sample data into the worksheet
+        sheet.Cells["A1"].PutValue("Name");
+        sheet.Cells["B1"].PutValue("Age");
+        sheet.Cells["A2"].PutValue("John");
+        sheet.Cells["B2"].PutValue(30);
+        sheet.Cells["A3"].PutValue("Jane");
+        sheet.Cells["B3"].PutValue(25);
+
+        // Set up JSON save options with indentation for pretty‑printed output
+        JsonSaveOptions saveOptions = new JsonSaveOptions
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Two spaces will be used as the indent string
+            Indent = "  "
+        };
 
-            // Populate sample data
-            worksheet.Cells["A1"].PutValue("Name");
-            worksheet.Cells["B1"].PutValue("Age");
-            worksheet.Cells["A2"].PutValue("John");
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["A3"].PutValue("Jane");
-            worksheet.Cells["B3"].PutValue(25);
-
-            // Configure JSON save options (default formatting)
-            JsonSaveOptions saveOptions = new JsonSaveOptions();
-
-            // Save the workbook as a JSON file with the specified options
-            string outputPath = "prettyPrintedOutput.json";
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook as a JSON file using the configured options
+        workbook.Save("pretty_output.json", saveOptions);
     }
 }

@@ -3,127 +3,115 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDemo
 {
-    public class ODataConnectionMetadataComparison
+    class ODataMetadataComparison
     {
         public static void Run()
         {
             try
             {
-                const string originalPath = "OriginalWithOData.xlsx";
-                const string modifiedPath = "ModifiedWithOData.xlsx";
+                const string inputPath = "ODataWorkbook.xlsx";
+                const string outputPath = "ODataWorkbook_Modified.xlsx";
 
-                // Verify original workbook exists
-                if (!File.Exists(originalPath))
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"File not found: {originalPath}");
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
                     return;
                 }
 
-                // Load the original workbook that contains the OData connection
-                Workbook originalWorkbook = new Workbook(originalPath);
+                // Load workbook with OData connection
+                Workbook workbook = new Workbook(inputPath);
 
-                // Retrieve the first external connection (assumed to be the OData connection)
-                if (originalWorkbook.DataConnections.Count == 0)
+                // Find first OData connection
+                ExternalConnection odataConnection = null;
+                foreach (ExternalConnection conn in workbook.DataConnections)
                 {
-                    Console.WriteLine("No external connections found in the original workbook.");
+                    if (!string.IsNullOrEmpty(conn.ConnectionString) &&
+                        conn.ConnectionString.IndexOf("odata", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        odataConnection = conn;
+                        break;
+                    }
+                }
+
+                if (odataConnection == null)
+                {
+                    Console.WriteLine("No OData connection found in the workbook.");
                     return;
                 }
 
-                ExternalConnection originalConnection = originalWorkbook.DataConnections[0];
+                // Capture original metadata
+                string originalConnectionString = odataConnection.ConnectionString;
+                string originalCommand = odataConnection.Command;
+                bool originalIsNew = odataConnection.IsNew;
 
-                // Capture metadata before modification
-                string originalName = originalConnection.Name;
-                string originalConnectionString = originalConnection.ConnectionString;
-                bool originalIsNew = originalConnection.IsNew;
-                bool originalOnlyUseFile = originalConnection.OnlyUseConnectionFile;
-
-                Console.WriteLine("=== Original Connection Metadata ===");
-                Console.WriteLine($"Name: {originalName}");
+                Console.WriteLine("Original Metadata:");
                 Console.WriteLine($"ConnectionString: {originalConnectionString}");
+                Console.WriteLine($"Command: {originalCommand}");
                 Console.WriteLine($"IsNew: {originalIsNew}");
-                Console.WriteLine($"OnlyUseConnectionFile: {originalOnlyUseFile}");
-                Console.WriteLine();
 
-                // Modify the connection metadata (e.g., change the OData version in the connection string)
-                // Assume the OData version is specified as "Version=1.0" in the connection string
-                string modifiedConnectionString = originalConnectionString.Replace("Version=1.0", "Version=2.0");
-                originalConnection.ConnectionString = modifiedConnectionString;
+                // Toggle IsNew flag as an example modification
+                odataConnection.IsNew = !originalIsNew;
 
-                // Optionally toggle other properties to simulate a change
-                originalConnection.IsNew = false;
-                originalConnection.OnlyUseConnectionFile = !originalOnlyUseFile;
+                // Save modified workbook
+                workbook.Save(outputPath);
 
-                // Save the workbook after modification
-                originalWorkbook.Save(modifiedPath);
-
-                // Verify modified workbook was saved
-                if (!File.Exists(modifiedPath))
+                // Verify saved file exists before reloading
+                if (!File.Exists(outputPath))
                 {
-                    Console.WriteLine($"Failed to create modified file: {modifiedPath}");
+                    Console.WriteLine($"Failed to create output file '{outputPath}'.");
                     return;
                 }
 
-                // Load the modified workbook
-                Workbook modifiedWorkbook = new Workbook(modifiedPath);
-
-                // Retrieve the modified connection
-                if (modifiedWorkbook.DataConnections.Count == 0)
+                // Reload and read modified metadata
+                Workbook modifiedWorkbook = new Workbook(outputPath);
+                ExternalConnection modifiedConnection = null;
+                foreach (ExternalConnection conn in modifiedWorkbook.DataConnections)
                 {
-                    Console.WriteLine("No external connections found in the modified workbook.");
+                    if (!string.IsNullOrEmpty(conn.ConnectionString) &&
+                        conn.ConnectionString.IndexOf("odata", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        modifiedConnection = conn;
+                        break;
+                    }
+                }
+
+                if (modifiedConnection == null)
+                {
+                    Console.WriteLine("Modified OData connection not found.");
                     return;
                 }
 
-                ExternalConnection modifiedConnection = modifiedWorkbook.DataConnections[0];
-
-                // Capture metadata after modification
-                string modifiedName = modifiedConnection.Name;
-                string modifiedConnectionStringAfter = modifiedConnection.ConnectionString;
+                // Capture modified metadata
+                string modifiedConnectionString = modifiedConnection.ConnectionString;
+                string modifiedCommand = modifiedConnection.Command;
                 bool modifiedIsNew = modifiedConnection.IsNew;
-                bool modifiedOnlyUseFile = modifiedConnection.OnlyUseConnectionFile;
 
-                Console.WriteLine("=== Modified Connection Metadata ===");
-                Console.WriteLine($"Name: {modifiedName}");
-                Console.WriteLine($"ConnectionString: {modifiedConnectionStringAfter}");
+                Console.WriteLine("\nModified Metadata:");
+                Console.WriteLine($"ConnectionString: {modifiedConnectionString}");
+                Console.WriteLine($"Command: {modifiedCommand}");
                 Console.WriteLine($"IsNew: {modifiedIsNew}");
-                Console.WriteLine($"OnlyUseConnectionFile: {modifiedOnlyUseFile}");
-                Console.WriteLine();
 
-                // Helper to extract version from a connection string
-                string GetVersion(string connStr)
-                {
-                    const string token = "Version=";
-                    int idx = connStr.IndexOf(token, StringComparison.OrdinalIgnoreCase);
-                    if (idx < 0) return "NotSpecified";
-                    int start = idx + token.Length;
-                    int end = connStr.IndexOf(';', start);
-                    if (end < 0) end = connStr.Length;
-                    return connStr.Substring(start, end - start).Trim();
-                }
+                // Consistency check (ConnectionString and Command should remain unchanged)
+                bool isConsistent = originalConnectionString == modifiedConnectionString &&
+                                    originalCommand == modifiedCommand;
 
-                string originalVersion = GetVersion(originalConnectionString);
-                string modifiedVersion = GetVersion(modifiedConnectionStringAfter);
-
-                Console.WriteLine("=== Version Consistency Check ===");
-                Console.WriteLine($"Original Version: {originalVersion}");
-                Console.WriteLine($"Modified Version: {modifiedVersion}");
-                Console.WriteLine(originalVersion == modifiedVersion
-                    ? "Version is consistent."
-                    : "Version mismatch detected.");
+                Console.WriteLine($"\nVersion consistency check: {(isConsistent ? "PASS" : "FAIL")}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            ODataConnectionMetadataComparison.Run();
+            ODataMetadataComparison.Run();
         }
     }
 }

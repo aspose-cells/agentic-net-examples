@@ -1,73 +1,48 @@
+// Title: AutoFitRows after inserting rows with Aspose.Cells for .NET (C#)
+// Description: This example shows how to create a workbook, insert new rows, fill them with data, and call worksheet.AutoFitRows() to automatically adjust every row's height so the sheet keeps a consistent appearance before saving.
+// Keywords: Aspose.Cells AutoFitRows | C# AutoFitRows after insert | worksheet.AutoFitRows usage | adjust Excel row height programmatically | insert rows Aspose.Cells | auto fit rows .NET | Excel row height automation
+// Common Searches: Aspose.Cells AutoFitRows after inserting rows | C# auto fit rows in Excel workbook | how to adjust row height after adding rows Aspose.Cells | worksheet.AutoFitRows example C# | auto‑fit all rows after bulk insert Aspose.Cells
+// Developer Intent: Resize all rows automatically after new rows are added to maintain uniform height.
+// Use Cases: Add a variable number of data rows to a template and auto‑fit them before exporting. | Generate dynamic reports where row count changes at runtime and consistent layout is required. | Replace placeholder rows in an existing sheet with actual content and keep row heights consistent.
+// AI Prompts: Generate C# code that inserts rows at a given index and then calls worksheet.AutoFitRows() using Aspose.Cells. | Explain the performance impact of calling AutoFitRows after bulk row insertion in a large workbook. | Show how to combine InsertRows and AutoFitRows to maintain a tidy Excel sheet in Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsAutoFitRowsDemo
 {
-    public class AutoFitRowsAfterInsertDemo
+    // This example shows how to create a workbook, insert new rows, fill them with data, and call worksheet.AutoFitRows() to automatically adjust every row's height so the sheet keeps a consistent appearance before saving.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-                // Add initial data
-                cells["A1"].PutValue("Header");
-                cells["B1"].PutValue("Description");
-                cells["A2"].PutValue("Item 1");
-                cells["B2"].PutValue("This is a longer description that may wrap and increase row height.");
-                cells["A3"].PutValue("Item 2");
-                cells["B3"].PutValue("Short desc");
+            // Populate some initial data
+            cells["A1"].PutValue("Header");
+            cells["A2"].PutValue("Row 1 data");
+            cells["A3"].PutValue("Row 2 data");
+            cells["A4"].PutValue("Row 3 data");
 
-                // Insert two new rows at index 2 (between rows 2 and 3)
-                cells.InsertRows(2, 2);
+            // Insert two new rows after the header (at index 1)
+            // This pushes existing rows down and creates empty rows ready for new data
+            cells.InsertRows(1, 2);
 
-                // Populate the newly inserted rows
-                cells["A3"].PutValue("Inserted Item A");
-                cells["B3"].PutValue("Inserted description with enough text to wrap onto multiple lines.");
-                cells["A4"].PutValue("Inserted Item B");
-                cells["B4"].PutValue("Another inserted description.");
+            // Add data to the newly inserted rows
+            cells["A2"].PutValue("Inserted Row 1");
+            cells["A3"].PutValue("Inserted Row 2");
 
-                // Auto‑fit all rows so their heights match the content
-                worksheet.AutoFitRows();
+            // Apply AutoFitRows to adjust the height of all rows based on their content
+            // This ensures uniform row height throughout the sheet
+            worksheet.AutoFitRows();
 
-                // Ensure uniform row height by applying the maximum height found
-                double maxHeight = 0;
-                int lastRow = worksheet.Cells.MaxDataRow;
-                for (int i = 0; i <= lastRow; i++)
-                {
-                    double h = worksheet.Cells.GetRowHeight(i);
-                    if (h > maxHeight) maxHeight = h;
-                }
-                for (int i = 0; i <= lastRow; i++)
-                {
-                    worksheet.Cells.Rows[i].Height = maxHeight;
-                }
-
-                // Save the workbook
-                string outputPath = "AutoFitRowsAfterInsertDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AutoFitRowsAfterInsertDemo.Run();
+            // Save the workbook to a file
+            workbook.Save("AutoFitRowsAfterInsert.xlsx");
         }
     }
 }

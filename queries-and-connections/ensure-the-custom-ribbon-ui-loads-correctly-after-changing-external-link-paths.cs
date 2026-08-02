@@ -2,73 +2,85 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace CustomRibbonExternalLinkDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class RibbonAndExternalLinkDemo
     {
-        static void Main()
+        // Entry point for the application
+        public static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // Add a sample worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
-
-                // Insert a formula that references an external workbook (creates an external link)
-                // Correct external link syntax: ='[full_path]SheetName'!CellReference
-                sheet.Cells["A1"].Formula = "='[https://oldserver.com/Shared/OldData.xlsx]Sheet1'!A1";
-
-                // ----- Update external link paths -----
-                // Iterate through all external links and replace the old base URL with the new one
-                ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-                for (int i = 0; i < externalLinks.Count; i++)
-                {
-                    // Use OriginalDataSource to keep the original value and modify it
-                    string original = externalLinks[i].OriginalDataSource;
-                    string updated = original.Replace(
-                        "https://oldserver.com/Shared/",
-                        "https://newserver.com/Resources/");
-
-                    externalLinks[i].OriginalDataSource = updated;
-                }
-
-                // ----- Set custom Ribbon UI -----
-                // Define the Ribbon XML that will be embedded in the workbook
-                string ribbonXml =
-                    "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-                    "  <ribbon>" +
-                    "    <tabs>" +
-                    "      <tab id=\"customTab\" label=\"My Custom Tab\">" +
-                    "        <group id=\"customGroup\" label=\"My Group\">" +
-                    "          <button id=\"customButton\" label=\"Refresh Links\" size=\"large\" onAction=\"RefreshLinks\" />" +
-                    "        </group>" +
-                    "      </tab>" +
-                    "    </tabs>" +
-                    "  </ribbon>" +
-                    "</customUI>";
-
-                // Assign the Ribbon XML to the workbook (property: RibbonXml)
-                workbook.RibbonXml = ribbonXml;
-
-                // Optionally, prevent Excel from prompting to update links when the file opens
-                workbook.Settings.UpdateLinksType = UpdateLinksType.Never;
-
-                // Define output file path
-                string outputPath = "CustomRibbonWithUpdatedLinks.xlsm";
-
-                // Save the workbook (lifecycle: save)
-                workbook.Save(outputPath);
-
-                // Output confirmation
-                Console.WriteLine($"Workbook saved with updated external links and custom Ribbon UI at '{Path.GetFullPath(outputPath)}'.");
+                Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsm";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+            }
+
+            // Load an existing workbook that contains external links
+            Workbook workbook = new Workbook(inputPath);
+
+            // ------------------------------------------------------------
+            // 1. Update external link paths (e.g., change SharePoint URL)
+            // ------------------------------------------------------------
+            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+            for (int i = 0; i < externalLinks.Count; i++)
+            {
+                // Keep the original data source path
+                string originalPath = externalLinks[i].OriginalDataSource;
+
+                // Example replacement: change old SharePoint base URL to new one
+                string updatedPath = originalPath.Replace(
+                    @"https://oldsharepoint.com/Docs/",
+                    @"/sites/newsite/shared documents/");
+
+                // Apply the modified path
+                externalLinks[i].OriginalDataSource = updatedPath;
+            }
+
+            // ------------------------------------------------------------
+            // 2. Define custom Ribbon UI XML
+            // ------------------------------------------------------------
+            string ribbonXml =
+                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                "  <ribbon>" +
+                "    <tabs>" +
+                "      <tab id=\"customTab\" label=\"My Custom Tab\">" +
+                "        <group id=\"customGroup\" label=\"My Group\">" +
+                "          <button id=\"customButton\" label=\"Refresh Links\" size=\"large\" " +
+                "                  onAction=\"OnRefreshLinks\" />" +
+                "        </group>" +
+                "      </tab>" +
+                "    </tabs>" +
+                "  </ribbon>" +
+                "</customUI>";
+
+            // Assign the Ribbon XML to the workbook
+            workbook.RibbonXml = ribbonXml;
+
+            // ------------------------------------------------------------
+            // 3. Prevent Excel from prompting to update external links on open
+            // ------------------------------------------------------------
+            workbook.Settings.UpdateLinksType = UpdateLinksType.Never;
+
+            // ------------------------------------------------------------
+            // 4. Save the workbook (use .xlsm to retain Ribbon UI)
+            // ------------------------------------------------------------
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

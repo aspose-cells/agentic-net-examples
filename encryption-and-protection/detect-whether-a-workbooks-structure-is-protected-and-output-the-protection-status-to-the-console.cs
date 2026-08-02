@@ -1,56 +1,36 @@
+// Title: Check if an Excel workbook's structure or window is protected using Aspose.Cells for .NET (C#)
+// Description: A concise C# example that loads an .xlsx file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag, and prints the protection status (true/false) to the console. Demonstrates how to detect workbook structure or window protection without altering the file.
+// Keywords: Aspose.Cells | C# | .NET | WorkbookSettings | IsProtected | workbook protection | structure protection | window protection | detect Excel protection | read protection status | encryption and protection
+// Common Searches: Aspose.Cells check workbook protection | C# get workbook structure protected flag | How to read IsProtected property Aspose.Cells | Determine if Excel file is protected using Aspose.Cells | WorkbookSettings.IsProtected example
+// Developer Intent: Identify whether the loaded workbook has structure or window protection enabled.
+// Use Cases: Skip automated modifications when a workbook is protected | Log protection status of each file for compliance auditing | Conditionally unprotect a workbook before editing | Batch audit of Excel files to verify protection settings | Integrate protection checks into CI/CD pipelines
+// AI Prompts: Generate C# code with Aspose.Cells that returns a boolean indicating workbook protection and writes a detailed log entry. | Create a reusable method that accepts a file path, checks WorkbookSettings.IsProtected, and throws a custom exception if protection is detected. | Write a PowerShell script that invokes a .NET assembly to report the protection status of multiple Excel files. | Explain how to differentiate between structure and window protection using Aspose.Cells properties.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsProtectionCheck
 {
-    public class WorkbookStructureProtectionCheck
+    // A concise C# example that loads an .xlsx file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag, and prints the protection status (true/false) to the console. Demonstrates how to detect workbook structure or window protection without altering the file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            try
-            {
-                // Create a new workbook (no protection applied)
-                Workbook workbook = new Workbook();
+            // Path to the workbook to be examined.
+            // Replace with the actual file path as needed.
+            string filePath = "input.xlsx";
 
-                // Display the structure protection status of the new workbook
-                Console.WriteLine("New workbook structure protected: " + workbook.Settings.IsProtected);
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(filePath);
 
-                // Protect only the workbook structure with a password
-                workbook.Protect(ProtectionType.Structure, "myPassword");
+            // Access the workbook settings.
+            WorkbookSettings settings = workbook.Settings;
 
-                // Verify that the protection flag is now true
-                Console.WriteLine("After protecting structure: " + workbook.Settings.IsProtected);
+            // Determine if the workbook's structure or window is protected.
+            bool isProtected = settings.IsProtected;
 
-                // Save the protected workbook to disk
-                string filePath = "ProtectedStructureWorkbook.xlsx";
-                workbook.Save(filePath, SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved to: " + Path.GetFullPath(filePath));
-
-                // Load the workbook back from the file if it exists
-                if (File.Exists(filePath))
-                {
-                    Workbook loadedWorkbook = new Workbook(filePath);
-                    Console.WriteLine("Loaded workbook structure protected: " + loadedWorkbook.Settings.IsProtected);
-                }
-                else
-                {
-                    Console.WriteLine("File not found: " + filePath);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookStructureProtectionCheck.Run();
+            // Output the protection status to the console.
+            Console.WriteLine("Workbook structure/window protected: " + isProtected);
         }
     }
 }

@@ -1,35 +1,32 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitRowsExample
+namespace AsposeCellsExamples
 {
-    class Program
+    // Author: Aspose.Cells .NET example – AutoFitRows for a specific range of rows
+    class AutoFitRowsRangeDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook (lifecycle rule: creation)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some rows with varying text lengths to demonstrate autofit
-            worksheet.Cells["A1"].PutValue("Short text");
-            worksheet.Cells["A2"].PutValue("This is a longer piece of text that should cause the row height to increase when autofit is applied.");
-            worksheet.Cells["A3"].PutValue("Another short text");
-            worksheet.Cells["A4"].PutValue("A very long text that spans multiple lines when wrapped. It will be used to test the AutoFitRows method over a specific range of rows.");
-            worksheet.Cells["A5"].PutValue("Final short text");
+            // Populate sample data that will affect row heights
+            worksheet.Cells["A2"].PutValue("This is a long text that should cause row 2 to expand.");
+            worksheet.Cells["B2"].PutValue("Additional content in column B.");
+            worksheet.Cells["A3"].PutValue("Short");
+            worksheet.Cells["B3"].PutValue("Another short text.");
+            worksheet.Cells["A4"].PutValue("A very very long piece of text that will make row 4 taller than default.");
+            worksheet.Cells["B4"].PutValue("More text to increase height.");
 
-            // Enable text wrapping for the cells that contain long text
-            Style wrapStyle = worksheet.Cells["A2"].GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            worksheet.Cells["A2"].SetStyle(wrapStyle);
-            worksheet.Cells["A4"].SetStyle(wrapStyle);
+            // AutoFit rows 2 through 4 (zero‑based indices 1 to 3)
+            worksheet.AutoFitRows(startRow: 1, endRow: 3);
 
-            // AutoFit rows from index 1 to 3 (i.e., rows 2 to 4)
-            // This uses the Worksheet.AutoFitRows(int startRow, int endRow) overload
-            worksheet.AutoFitRows(1, 3);
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("AutoFitRowsBlockDemo.xlsx");
+            // Save the workbook (lifecycle rule: saving)
+            workbook.Save("AutoFitRowsRangeDemo.xlsx");
         }
     }
 }

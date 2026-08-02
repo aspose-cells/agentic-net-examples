@@ -6,28 +6,23 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
+        // Create a new workbook and add sample content
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample text with embedded fonts");
-        sheet.Cells["A2"].PutValue("中文字符测试");
+        sheet.Cells["A1"].PutValue("PDF/A-1a compliance with embedded fonts");
 
         // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        PdfSaveOptions saveOptions = new PdfSaveOptions
+        {
+            // Set compliance level to PDF/A-1a
+            Compliance = PdfCompliance.PdfA1a,
+            // Ensure standard Windows fonts are embedded (fonts are always embedded for PDF/A)
+            EmbedStandardWindowsFonts = true
+        };
 
-        // Set PDF/A‑1a compliance
-        pdfOptions.Compliance = PdfCompliance.PdfA1a;
-
-        // Ensure all fonts are embedded (default is true, set explicitly for clarity)
-        pdfOptions.EmbedStandardWindowsFonts = true;
-
-        // Provide a default font for Unicode characters
-        pdfOptions.DefaultFont = "Arial";
-
-        // Use Identity encoding for all embedded fonts
-        pdfOptions.FontEncoding = PdfFontEncoding.Identity;
-
-        // Save the workbook as a PDF file with the specified options
-        workbook.Save("Output_PdfA1a.pdf", pdfOptions);
+        // Save the workbook as PDF with the specified options
+        workbook.Save("output_pdfa1a.pdf", saveOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – PDF/A-1a compliance with font embedding.

@@ -1,17 +1,25 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsPivotPreparation
 {
-    static void Main()
+    class Program
     {
-        // Path to the Excel file to be loaded
-        string filePath = "input.xlsx";
+        static void Main(string[] args)
+        {
+            // Specify the full path to the existing Excel file
+            string filePath = @"C:\Data\SampleWorkbook.xlsx";
 
-        // Load the workbook from the file path using the Workbook(string) constructor
-        Workbook workbook = new Workbook(filePath);
+            // Load the workbook from the file path using the Workbook(string) constructor
+            Workbook workbook = new Workbook(filePath);
 
-        // The workbook is now loaded and ready for pivot table operations
-        Console.WriteLine($"Workbook loaded successfully. Worksheets count: {workbook.Worksheets.Count}");
+            // At this point the workbook is loaded and ready for pivot table operations
+            // Example: access the first worksheet (optional)
+            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Loaded workbook with {workbook.Worksheets.Count} worksheet(s).");
+            Console.WriteLine($"First worksheet name: {worksheet.Name}");
+
+            // No saving is performed here as the task only requires loading for further processing
+        }
     }
 }

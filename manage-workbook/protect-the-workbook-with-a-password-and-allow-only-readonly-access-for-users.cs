@@ -1,22 +1,52 @@
+using System;
+using System.IO;
 using Aspose.Cells;
 
-class ProtectWorkbookReadOnly
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class ProtectWorkbookReadOnlyDemo
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Set the password required to modify the file
-        wb.Settings.WriteProtection.Password = "modifyPwd";
+                // (Optional) Add some data to the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Read‑only protected workbook");
 
-        // Recommend opening the file as read‑only
-        wb.Settings.WriteProtection.RecommendReadOnly = true;
+                // Set write‑protection password and enable "Read‑only recommended"
+                workbook.Settings.WriteProtection.Password = "readOnlyPwd";
+                workbook.Settings.WriteProtection.RecommendReadOnly = true;
 
-        // Optional: set the author of the protection
-        wb.Settings.WriteProtection.Author = "Admin";
+                // Define output file path
+                string outputPath = "ReadOnlyProtectedWorkbook.xlsx";
 
-        // Save the protected workbook
-        wb.Save("ReadOnlyProtectedWorkbook.xlsx");
+                // If the file already exists, delete it to avoid IOException
+                if (File.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+
+                // Save the workbook; users will be prompted to open as read‑only unless they provide the password
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ProtectWorkbookReadOnlyDemo.Run();
+        }
     }
 }

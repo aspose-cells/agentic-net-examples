@@ -1,35 +1,63 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering.PdfSecurity;
+using System.Drawing;
 
 class PdfExportDemo
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
+        // Create a new workbook and add some content
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
         sheet.Cells["A1"].PutValue("Aspose.Cells PDF Export Demo");
 
-        // Instantiate PdfSaveOptions (rule: PdfSaveOptions constructor)
+        // Instantiate PdfSaveOptions
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
         // Configure desired PDF export settings
-        pdfOptions.Compliance = PdfCompliance.PdfA1b;                 // PDF/A-1b compliance
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;        // Use Flate compression
+        pdfOptions.EmbedStandardWindowsFonts = true;                     // Embed standard Windows fonts
+        pdfOptions.Compliance = PdfCompliance.PdfA1b;                    // PDF/A-1b compliance
+        pdfOptions.CalculateFormula = true;                             // Recalculate formulas before saving
+        pdfOptions.PdfCompression = PdfCompressionCore.Flate;           // Use Flate compression
+        pdfOptions.CreatedTime = DateTime.Now;                           // Set creation time
+        pdfOptions.Producer = "Aspose.Cells Demo";                      // Set PDF producer name
         pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize; // Optimize for minimum file size
-        pdfOptions.ExportDocumentStructure = true;                   // Export document structure
-        pdfOptions.DisplayDocTitle = true;                           // Show document title in PDF viewer
-        pdfOptions.DefaultFont = "Arial";                            // Default font for Unicode characters
-        pdfOptions.OnePagePerSheet = true;                           // Render each sheet on a single page
-        pdfOptions.AllColumnsInOnePagePerSheet = true;               // Fit all columns on one page per sheet
-        pdfOptions.CheckWorkbookDefaultFont = true;                  // Use workbook's default font when needed
-        pdfOptions.CheckFontCompatibility = true;                    // Verify font compatibility for each character
-        pdfOptions.IsFontSubstitutionCharGranularity = true;         // Substitute fonts per character if needed
-        pdfOptions.IgnoreError = true;                               // Hide rendering errors
-        pdfOptions.OutputBlankPageWhenNothingToPrint = true;         // Output a blank page if nothing to print
+        pdfOptions.DisplayDocTitle = true;                               // Show document title in viewer
+        pdfOptions.OnePagePerSheet = true;                               // Render each sheet on a single page
+        pdfOptions.AllColumnsInOnePagePerSheet = true;                  // Fit all columns on one page per sheet
 
-        // Save the workbook as a PDF file using the configured options (rule: workbook.Save with options)
+        // Optional: set security options
+        PdfSecurityOptions security = new PdfSecurityOptions
+        {
+            OwnerPassword = "ownerPwd",
+            UserPassword = "userPwd",
+            PrintPermission = true,
+            FullQualityPrintPermission = true
+        };
+        pdfOptions.SecurityOptions = security;
+
+        // Optional: add a watermark
+        RenderingFont watermarkFont = new RenderingFont("Calibri", 68)
+        {
+            Italic = true,
+            Bold = true,
+            Color = Color.Blue
+        };
+        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", watermarkFont)
+        {
+            HAlignment = TextAlignmentType.Center,
+            VAlignment = TextAlignmentType.Center,
+            Rotation = 30,
+            Opacity = 0.6f,
+            ScaleToPagePercent = 50
+        };
+        pdfOptions.Watermark = watermark;
+
+        // Save the workbook as PDF using the configured options
         workbook.Save("ExportedDocument.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – demonstrates PdfSaveOptions configuration for PDF export.

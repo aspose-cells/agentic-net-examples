@@ -1,39 +1,30 @@
 using System;
 using Aspose.Cells;
 
-class ShiftWorksheetToEnd
+class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook (contains a default sheet)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (contains a default sheet)
+        Workbook workbook = new Workbook();
 
-            // Remove the default sheet to avoid duplicate names
-            if (workbook.Worksheets.Count > 0)
-                workbook.Worksheets.RemoveAt(0);
+        // Add additional worksheets
+        workbook.Worksheets.Add("First");
+        workbook.Worksheets.Add("Second");
+        workbook.Worksheets.Add("Third");
 
-            // Add sample worksheets with unique names
-            workbook.Worksheets.Add("Sheet1");
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
+        // Select the worksheet you want to move (e.g., "First")
+        Worksheet sheetToMove = workbook.Worksheets["First"];
 
-            // Choose the worksheet to move (e.g., "Sheet2")
-            Worksheet sheetToMove = workbook.Worksheets["Sheet2"];
+        // Destination index is the last position (zero‑based)
+        int lastIndex = workbook.Worksheets.Count - 1;
 
-            // Destination index is the last position (zero‑based)
-            int lastIndex = workbook.Worksheets.Count - 1;
+        // Move the worksheet to the end of the workbook
+        sheetToMove.MoveTo(lastIndex);
 
-            // Move the selected worksheet to the end of the workbook
-            sheetToMove.MoveTo(lastIndex);
-
-            // Save the workbook
-            workbook.Save("ShiftedWorksheet.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook
+        workbook.Save("ShiftedToEnd.xlsx");
     }
 }
+
+// Author: Example demonstrating how to shift a worksheet to the last index using Aspose.Cells for .NET.

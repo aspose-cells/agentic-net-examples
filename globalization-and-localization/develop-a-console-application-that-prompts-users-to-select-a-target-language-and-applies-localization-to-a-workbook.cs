@@ -1,51 +1,67 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells; // Ensure Aspose.Cells library is referenced
 
-namespace WorkbookLocalizationDemo
+namespace AsposeCellsLocalizationDemo
 {
     class Program
     {
         static void Main()
         {
-            // Display available languages (CountryCode enum values)
+            // Prompt user to select a target language (country code)
             Console.WriteLine("Select a target language for the workbook:");
-            var values = Enum.GetValues(typeof(CountryCode));
-            int index = 1;
-            foreach (CountryCode code in values)
-            {
-                Console.WriteLine($"{index}. {code}");
-                index++;
-            }
+            Console.WriteLine("1 - United States (USA)");
+            Console.WriteLine("2 - Germany");
+            Console.WriteLine("3 - France");
+            Console.WriteLine("4 - Japan");
+            Console.WriteLine("5 - China");
+            Console.Write("Enter the number of your choice: ");
 
-            // Read user selection
-            Console.Write("Enter the number corresponding to your choice: ");
             string input = Console.ReadLine();
-            if (!int.TryParse(input, out int choice) || choice < 1 || choice > values.Length)
+            CountryCode selectedCode = CountryCode.Default;
+
+            switch (input)
             {
-                Console.WriteLine("Invalid selection. Exiting.");
-                return;
+                case "1":
+                    selectedCode = CountryCode.USA;
+                    break;
+                case "2":
+                    selectedCode = CountryCode.Germany;
+                    break;
+                case "3":
+                    selectedCode = CountryCode.France;
+                    break;
+                case "4":
+                    selectedCode = CountryCode.Japan;
+                    break;
+                case "5":
+                    selectedCode = CountryCode.China;
+                    break;
+                default:
+                    Console.WriteLine("Invalid selection. Using default language settings.");
+                    break;
             }
 
-            // Map selection to CountryCode
-            CountryCode selectedCode = (CountryCode)values.GetValue(choice - 1);
-            Console.WriteLine($"You selected: {selectedCode}");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook(); // create workbook
+            // Apply the selected language code to workbook settings
+            if (selectedCode != CountryCode.Default)
+            {
+                workbook.Settings.LanguageCode = selectedCode;
+                // Optionally set the region to match the language
+                workbook.Settings.Region = selectedCode;
+            }
+
+            // Add sample data to demonstrate the workbook
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["A3"].PutValue(DateTime.Now);
-
-            // Apply localization using WorkbookSettings.LanguageCode property
-            workbook.Settings.LanguageCode = selectedCode;
+            sheet.Cells["A1"].PutValue("Localized Workbook");
+            sheet.Cells["A2"].PutValue(DateTime.Now);
+            sheet.Cells["A3"].PutValue(12345.67);
 
             // Save the workbook
-            string fileName = "LocalizedWorkbook.xlsx";
-            workbook.Save(fileName); // save workbook
-
-            Console.WriteLine($"Workbook saved as '{fileName}' with language code set to {selectedCode}.");
+            string outputPath = "LocalizedWorkbook.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}' with language code: {workbook.Settings.LanguageCode}");
         }
     }
 }

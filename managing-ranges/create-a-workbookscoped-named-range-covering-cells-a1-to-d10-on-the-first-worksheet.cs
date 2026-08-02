@@ -1,44 +1,44 @@
+// Title: Aspose.Cells .NET: Create a Workbook‑Scoped Named Range for A1:D10
+// Description: Demonstrates how to create a new Workbook, define a range covering cells A1 to D10 on the first worksheet, assign a workbook‑scoped name (global) "MyRange", and save the file as WorkbookScopedNamedRange.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells named range C# | workbook scoped range .NET | global named range Aspose.Cells | create range A1 D10 | Aspose.Cells C# example
+// Common Searches: Aspose.Cells create workbook scoped named range C# | global named range A1:D10 Aspose.Cells | how to set named range without sheet prefix Aspose.Cells | Aspose.Cells define range programmatically .NET | C# Aspose.Cells named range example
+// Developer Intent: Create a workbook‑scoped (global) named range that spans A1:D10 and persist it in a workbook file.
+// Use Cases: Use the global name "MyRange" in formulas on any worksheet without a sheet qualifier. | Apply formatting, data validation, or calculations to the same cell block across multiple sheets. | Export or import the named range data for integration with reporting or analytics tools.
+// AI Prompts: Generate C# code to retrieve the workbook‑scoped named range "MyRange" and loop through its cells. | Show how to create a worksheet‑scoped named range and compare its scope to a workbook‑scoped range. | Provide a method that lists all workbook‑scoped named ranges in an Aspose.Cells workbook.
+
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-class CreateWorkbookScopedNamedRange
+namespace AsposeCellsNamedRangeDemo
 {
-    static void Main()
+    // Demonstrates how to create a new Workbook, define a range covering cells A1 to D10 on the first worksheet, assign a workbook‑scoped name (global) "MyRange", and save the file as WorkbookScopedNamedRange.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Initialize a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet (index 0)
-            Worksheet sheet = workbook.Worksheets[0];
+                // Access the first worksheet (index 0)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create the range A1:D10 on the first worksheet
-            // Use fully qualified type to avoid conflict with System.Range
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1", "D10");
+                // Create a range that covers cells A1 to D10
+                AsposeRange range = worksheet.Cells.CreateRange("A1", "D10");
 
-            // Add a new name to the workbook's name collection (global scope)
-            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
+                // Assign a workbook‑scoped name to the range.
+                // Setting the Name property without a sheet prefix makes it global.
+                range.Name = "MyRange";
 
-            // Retrieve the created Name object
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-
-            // Define the reference for the name (workbook‑scoped)
-            // SheetIndex = 0 indicates a global name (workbook scope)
-            namedRange.SheetIndex = 0;
-            namedRange.RefersTo = $"={sheet.Name}!$A$1:$D$10";
-
-            // Optionally, associate the name with the Range object (not required for scope)
-            range.Name = "MyRange";
-
-            // Save the workbook to a file
-            string outputPath = "WorkbookScopedNamedRange.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook to a file
+                workbook.Save("WorkbookScopedNamedRange.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

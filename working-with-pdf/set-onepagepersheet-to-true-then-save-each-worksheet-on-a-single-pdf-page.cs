@@ -1,38 +1,32 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class Program
+namespace AsposeCellsOnePagePerSheetDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        // Create a workbook and add a few worksheets with sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "FirstSheet";
-        sheet1.Cells["A1"].PutValue("Data in first sheet");
-
-        Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-        sheet2.Cells["A1"].PutValue("Data in second sheet");
-
-        Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
-        sheet3.Cells["A1"].PutValue("Data in third sheet");
-
-        // Configure PDF save options: each sheet will be rendered on a single PDF page
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = true; // Ensure one page per sheet
-
-        // Iterate through all worksheets and save each one as an individual PDF file
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        static void Main()
         {
-            // Restrict rendering to the current worksheet only
-            pdfOptions.SheetSet = new SheetSet(new int[] { i });
+            // Create a new workbook and add sample data to two worksheets
+            Workbook workbook = new Workbook();
+            Worksheet sheet1 = workbook.Worksheets[0];
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
-            // Build output file name using the worksheet name
-            string outputPath = $"{workbook.Worksheets[i].Name}.pdf";
+            for (int i = 0; i < 20; i++)
+            {
+                sheet1.Cells[i, 0].PutValue($"Sheet1 Row {i + 1}");
+                sheet2.Cells[i, 0].PutValue($"Sheet2 Row {i + 1}");
+            }
 
-            // Save the workbook (only the selected sheet) to PDF
-            workbook.Save(outputPath, pdfOptions);
+            // Configure PDF save options to force each sheet onto a single page
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = true
+            };
+
+            // Save the workbook as a PDF; each worksheet will occupy one page
+            workbook.Save("WorkbookOnePagePerSheet.pdf", pdfOptions);
         }
     }
 }

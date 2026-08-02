@@ -2,46 +2,49 @@ using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsKeywordCount
+class KeywordCellCounter
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate some sample data
+        cells["A1"].PutValue("Apple");
+        cells["B1"].PutValue("Banana");
+        cells["A2"].PutValue("Green Apple");
+        cells["B2"].PutValue("Orange");
+        cells["A3"].PutValue("Pineapple");
+        cells["B3"].PutValue("Grape");
+
+        // Keyword to search for
+        string keyword = "Apple";
+
+        // Counter for cells containing the keyword
+        int matchCount = 0;
+
+        // Enumerate all instantiated cells in the worksheet
+        IEnumerator enumerator = cells.GetEnumerator();
+        while (enumerator.MoveNext())
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Cell cell = (Cell)enumerator.Current;
 
-            // Populate sample data
-            worksheet.Cells["A1"].PutValue("Apple");
-            worksheet.Cells["B1"].PutValue("Banana");
-            worksheet.Cells["A2"].PutValue("Green Apple");
-            worksheet.Cells["B2"].PutValue("Orange");
-            worksheet.Cells["A3"].PutValue("Pineapple");
-            worksheet.Cells["B3"].PutValue("Grape");
+            // Get the displayed string value of the cell
+            string cellText = cell.StringValue;
 
-            // Keyword to search for
-            string keyword = "Apple";
-
-            // Counter for cells containing the keyword
-            int count = 0;
-
-            // Enumerate all instantiated cells (rule: Cells.GetEnumerator)
-            IEnumerator enumerator = worksheet.Cells.GetEnumerator();
-            while (enumerator.MoveNext())
+            // Check if the cell text contains the keyword (case‑insensitive)
+            if (!string.IsNullOrEmpty(cellText) &&
+                cellText.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                Cell cell = (Cell)enumerator.Current;
-                // Ensure the cell has a string representation
-                if (cell != null && cell.StringValue != null && cell.StringValue.Contains(keyword))
-                {
-                    count++;
-                }
+                matchCount++;
             }
-
-            Console.WriteLine($"Number of cells containing \"{keyword}\": {count}");
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("KeywordCountResult.xlsx");
         }
+
+        Console.WriteLine($"Cells containing \"{keyword}\": {matchCount}");
+
+        // Save the workbook
+        workbook.Save("KeywordCount.xlsx");
     }
 }

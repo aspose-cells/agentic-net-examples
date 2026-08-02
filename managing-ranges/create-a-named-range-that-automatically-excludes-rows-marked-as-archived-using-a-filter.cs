@@ -1,64 +1,54 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedRangeWithFilter
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (headers + rows)
-            // Columns: ID | Name | Status
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["C1"].PutValue("Status");
+        // ----- Populate sample data -----
+        // Header row
+        worksheet.Cells["A1"].PutValue("ID");
+        worksheet.Cells["B1"].PutValue("Name");
+        worksheet.Cells["C1"].PutValue("Status");
 
-            // Row 2
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alpha");
-            sheet.Cells["C2"].PutValue("Active");
+        // Data rows (some marked as "Archived")
+        worksheet.Cells["A2"].PutValue(1);
+        worksheet.Cells["B2"].PutValue("Item1");
+        worksheet.Cells["C2"].PutValue("Active");
 
-            // Row 3
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Beta");
-            sheet.Cells["C3"].PutValue("Archived");
+        worksheet.Cells["A3"].PutValue(2);
+        worksheet.Cells["B3"].PutValue("Item2");
+        worksheet.Cells["C3"].PutValue("Archived");
 
-            // Row 4
-            sheet.Cells["A4"].PutValue(3);
-            sheet.Cells["B4"].PutValue("Gamma");
-            sheet.Cells["C4"].PutValue("Active");
+        worksheet.Cells["A4"].PutValue(3);
+        worksheet.Cells["B4"].PutValue("Item3");
+        worksheet.Cells["C4"].PutValue("Active");
 
-            // Row 5
-            sheet.Cells["A5"].PutValue(4);
-            sheet.Cells["B5"].PutValue("Delta");
-            sheet.Cells["C5"].PutValue("Archived");
+        worksheet.Cells["A5"].PutValue(4);
+        worksheet.Cells["B5"].PutValue("Item4");
+        worksheet.Cells["C5"].PutValue("Archived");
 
-            // Determine the last data row (zero‑based index)
-            int lastDataRow = sheet.Cells.MaxDataRow; // e.g., 4 for rows 0‑4
+        // Determine the last row that contains data (zero‑based index)
+        int lastDataRowIndex = worksheet.Cells.MaxDataRow; // e.g., 4 for row 5
 
-            // Apply an AutoFilter to the whole data area (including header)
-            // SetRange(startRow, startColumn, endRow)
-            sheet.AutoFilter.SetRange(0, 0, lastDataRow);
+        // ----- Apply AutoFilter -----
+        // Set the filter range to include the header and all data rows
+        worksheet.AutoFilter.Range = $"A1:C{lastDataRowIndex + 1}";
 
-            // Exclude rows where Status = "Archived"
-            // Column index for Status is 2 (C)
-            // Use a custom filter with NotEqual operator
-            sheet.AutoFilter.Custom(2, FilterOperatorType.NotEqual, "Archived");
-            sheet.AutoFilter.Refresh();
+        // Show only rows where the Status column (index 2) equals "Active"
+        worksheet.AutoFilter.AddFilter(2, "Active");
+        worksheet.AutoFilter.Refresh();
 
-            // Create a named range that refers to the filtered data area
-            // The range includes all rows; the filter hides the "Archived" rows
-            int nameIdx = workbook.Worksheets.Names.Add("ActiveData");
-            // Build the address string dynamically (e.g., =Sheet1!$A$2:$C$5)
-            string refersTo = $"=Sheet1!$A$2:$C${lastDataRow + 1}";
-            workbook.Worksheets.Names[nameIdx].RefersTo = refersTo;
+        // ----- Create a named range that refers to the data area -----
+        // The named range will cover the same area as the table (excluding the header)
+        int nameIdx = workbook.Worksheets.Names.Add("ActiveData");
+        workbook.Worksheets.Names[nameIdx].RefersTo = $"=Sheet1!$A$2:$C${lastDataRowIndex + 1}";
 
-            // Save the workbook
-            workbook.Save("NamedRangeWithFilter.xlsx");
-        }
+        // ----- Save the workbook -----
+        workbook.Save("NamedRangeExcludingArchived.xlsx");
     }
 }

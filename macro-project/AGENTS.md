@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Inspect, create, modify, copy, protect, and sign Excel VBA projects in C#
 primary_apis: [VbaProject, VbaModule, VbaModuleCollection, VbaProjectReferenceCollection]
 related_categories: [../encryption-and-protection/, ../open-workbook/, ../save-workbook/]

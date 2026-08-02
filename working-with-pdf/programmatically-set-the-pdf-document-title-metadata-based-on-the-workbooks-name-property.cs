@@ -1,34 +1,27 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfTitleDemo
+// Author: Aspose.Cells .NET example – sets PDF title from workbook name
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Assign a file name to the workbook (used as the title)
+        workbook.FileName = "SampleWorkbook.xlsx";
+
+        // Set the built‑in document title to match the workbook's file name
+        workbook.BuiltInDocumentProperties.Title = workbook.FileName;
+
+        // Configure PDF save options to display the document title in the viewer's title bar
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            DisplayDocTitle = true
+        };
 
-            // Define a name for the workbook (could be any string you consider as the workbook's name)
-            string workbookName = "SampleWorkbook";
-
-            // Optionally set the first worksheet's name to the workbook name
-            workbook.Worksheets[0].Name = workbookName;
-
-            // Set the built‑in document Title property to the workbook name
-            // (uses Workbook.BuiltInDocumentProperties.Title rule)
-            workbook.BuiltInDocumentProperties.Title = workbookName;
-
-            // Create PDF save options and enable displaying the document title in the PDF window title bar
-            // (uses PdfSaveOptions.DisplayDocTitle rule)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                DisplayDocTitle = true
-            };
-
-            // Save the workbook as a PDF with the specified options (lifecycle rule: save)
-            workbook.Save("SampleWorkbook.pdf", pdfOptions);
-        }
+        // Save the workbook as PDF; the PDF will carry the title metadata
+        workbook.Save("SampleWorkbook.pdf", pdfOptions);
     }
 }

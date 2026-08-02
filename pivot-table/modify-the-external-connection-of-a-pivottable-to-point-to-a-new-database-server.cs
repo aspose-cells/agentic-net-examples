@@ -1,55 +1,45 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
+using Aspose.Cells.Pivot;
 
-class ModifyPivotTableConnection
+class Program
 {
     static void Main()
     {
-        // Load the workbook that contains the PivotTable with an external DB connection
+        // Load the existing workbook that contains the PivotTable
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Define the new connection string that points to the new database server
-        // Example for OLE DB: Provider=SQLOLEDB;Data Source=NewServer;Initial Catalog=NewDatabase;Integrated Security=SSPI;
-        string newConnectionString = "Provider=SQLOLEDB;Data Source=NewServer;Initial Catalog=NewDatabase;Integrated Security=SSPI;";
+        // Assume the PivotTable is on the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Ensure there is at least one PivotTable
+        if (worksheet.PivotTables.Count > 0)
         {
-            // Iterate through all pivot tables in the worksheet
-            foreach (PivotTable pivot in sheet.PivotTables)
+            // Get the first PivotTable (adjust index as needed)
+            PivotTable pivot = worksheet.PivotTables[0];
+
+            // Retrieve all external connections used by this PivotTable
+            ExternalConnection[] connections = pivot.GetSourceDataConnections();
+
+            foreach (ExternalConnection connection in connections)
             {
-                // Get all external data connections used by the pivot table
-                ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                foreach (ExternalConnection conn in connections)
+                // We're interested only in database connections (ODBC/OLEDB)
+                if (connection is DBConnection dbConnection)
                 {
-                    // We are interested only in database connections (DBConnection)
-                    if (conn is DBConnection dbConn)
-                    {
-                        // Update the connection string to point to the new server
-                        dbConn.ConnectionString = newConnectionString;
+                    // Example: replace the server name in the connection string
+                    // Adjust the pattern according to your actual connection string format
+                    string oldConnectionString = dbConnection.ConnectionString;
+                    string newConnectionString = oldConnectionString.Replace("Server=OldServer;", "Server=NewServer;");
 
-                        // Optionally, update the command if it contains server‑specific references
-                        // dbConn.Command = dbConn.Command.Replace("OldServer", "NewServer");
+                    // Apply the updated connection string
+                    dbConnection.ConnectionString = newConnectionString;
 
-                        // If the obsolete SeverCommand is used, update it as well
-                        if (!string.IsNullOrEmpty(dbConn.SeverCommand))
-                        {
-                            dbConn.SeverCommand = dbConn.SeverCommand.Replace("OldServer", "NewServer");
-                        }
-                    }
+                    // Optionally, update other properties such as Command if needed
+                    // dbConnection.Command = "SELECT * FROM NewTable";
                 }
-
-                // Refresh the pivot table to apply the new connection
-                pivot.RefreshData();
-                pivot.CalculateData();
             }
         }
-
-        // Refresh all pivot tables in the workbook (optional but ensures consistency)
-        workbook.Worksheets.RefreshPivotTables();
 
         // Save the modified workbook
         workbook.Save("output.xlsx");

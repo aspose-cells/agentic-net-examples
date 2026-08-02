@@ -1,45 +1,49 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-class AutoFitChartDemo
+namespace AsposeCellsChartAutoFitDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (creation rule)
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["A3"].PutValue("B");
+            worksheet.Cells["A4"].PutValue("C");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["B3"].PutValue(200);
+            worksheet.Cells["B4"].PutValue(1500); // Larger value to test auto‑fit
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Calculate the chart to ensure layout information is up‑to‑date
-        chart.Calculate();
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Retrieve the actual pixel size required to display the chart without clipping
-        int[] actualSize = chart.GetActualSize(); // [0] = width, [1] = height
+            // Ensure the chart layout is calculated (required before GetActualSize)
+            chart.Calculate();
 
-        // Apply the calculated size to the chart object
-        chart.ChartObject.Width = actualSize[0];
-        chart.ChartObject.Height = actualSize[1];
+            // Retrieve the actual size needed to display the chart without clipping
+            int[] actualSize = chart.GetActualSize(); // [0] = width, [1] = height
 
-        // Save the workbook with the auto‑fitted chart
-        workbook.Save("AutoFitChartDemo.xlsx");
+            // Apply the calculated size to the chart object
+            chart.ChartObject.Width = actualSize[0];
+            chart.ChartObject.Height = actualSize[1];
+
+            // Save the workbook (save rule)
+            workbook.Save("ChartAutoFitDemo.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

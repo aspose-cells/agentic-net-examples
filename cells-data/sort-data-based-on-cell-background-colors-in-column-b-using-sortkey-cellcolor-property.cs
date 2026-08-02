@@ -8,48 +8,60 @@ class SortByCellColor
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
         // Add header row
         cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Status");
+        cells["B1"].PutValue("Category");
+        cells["C1"].PutValue("Value");
 
-        // Row 2 - Red background
-        cells["A2"].PutValue("Task1");
-        cells["B2"].PutValue("Done");
-        Style styleRed = workbook.CreateStyle();
-        styleRed.ForegroundColor = Color.Red;
-        styleRed.Pattern = BackgroundType.Solid;
-        cells["B2"].SetStyle(styleRed);
+        // Add sample data with different background colors in column B
+        cells["A2"].PutValue("Apple");
+        cells["B2"].PutValue("Fruit");
+        cells["C2"].PutValue(10);
+        SetCellBackground(cells["B2"], Color.Red);
 
-        // Row 3 - Yellow background
-        cells["A3"].PutValue("Task2");
-        cells["B3"].PutValue("InProgress");
-        Style styleYellow = workbook.CreateStyle();
-        styleYellow.ForegroundColor = Color.Yellow;
-        styleYellow.Pattern = BackgroundType.Solid;
-        cells["B3"].SetStyle(styleYellow);
+        cells["A3"].PutValue("Carrot");
+        cells["B3"].PutValue("Vegetable");
+        cells["C3"].PutValue(5);
+        SetCellBackground(cells["B3"], Color.Green);
 
-        // Row 4 - Green background
-        cells["A4"].PutValue("Task3");
-        cells["B4"].PutValue("Pending");
-        Style styleGreen = workbook.CreateStyle();
-        styleGreen.ForegroundColor = Color.Green;
-        styleGreen.Pattern = BackgroundType.Solid;
-        cells["B4"].SetStyle(styleGreen);
+        cells["A4"].PutValue("Banana");
+        cells["B4"].PutValue("Fruit");
+        cells["C4"].PutValue(8);
+        SetCellBackground(cells["B4"], Color.Blue);
 
-        // Configure the DataSorter to sort by cell background color in column B (index 1)
+        cells["A5"].PutValue("Broccoli");
+        cells["B5"].PutValue("Vegetable");
+        cells["C5"].PutValue(7);
+        SetCellBackground(cells["B5"], Color.Red);
+
+        // Configure the DataSorter to sort by cell background color in column B
         DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = true; // First row contains headers
-        sorter.AddColorKey(1, SortOnType.CellColor, SortOrder.Ascending, Color.Red);
-        // Additional color keys can be added if a specific order for other colors is required
+        sorter.HasHeaders = true; // First row is a header
 
-        // Define the range to sort (including headers)
-        CellArea sortArea = CellArea.CreateCellArea("A1", "B4");
-        sorter.Sort(worksheet.Cells, sortArea);
+        // Define custom color order: Red, then Green, then Blue
+        sorter.AddColorKey(1, SortOnType.CellColor, SortOrder.Ascending, Color.Red);
+        sorter.AddColorKey(1, SortOnType.CellColor, SortOrder.Ascending, Color.Green);
+        sorter.AddColorKey(1, SortOnType.CellColor, SortOrder.Ascending, Color.Blue);
+
+        // Define the range to sort (including header)
+        CellArea area = CellArea.CreateCellArea("A1", "C5");
+
+        // Perform the sort
+        sorter.Sort(sheet.Cells, area);
 
         // Save the sorted workbook
-        workbook.Save("SortedByColor.xlsx");
+        workbook.Save("SortedByCellColor.xlsx");
+    }
+
+    // Helper method to apply a solid background color to a cell
+    static void SetCellBackground(Cell cell, Color color)
+    {
+        Style style = cell.GetStyle();
+        style.ForegroundColor = color;
+        style.Pattern = BackgroundType.Solid;
+        cell.SetStyle(style);
     }
 }

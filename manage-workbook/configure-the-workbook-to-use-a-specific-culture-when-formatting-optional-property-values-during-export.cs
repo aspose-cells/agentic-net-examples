@@ -2,31 +2,28 @@ using System;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsCultureDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (creation rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook wb = new Workbook();
 
-            // Set the desired culture for formatting optional property values
-            // For example, French (France) uses space as group separator and comma as decimal separator
-            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+        // Configure the workbook to use German (Germany) culture.
+        // This affects number/date formatting when the workbook is exported.
+        wb.Settings.CultureInfo = new CultureInfo("de-DE");
 
-            // Optional: demonstrate the effect by adding a number and applying a custom style
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue(1234567.89); // Value to be formatted
+        // Create a style with a custom number format.
+        // In German culture the decimal separator is a comma.
+        Style style = wb.CreateStyle();
+        style.Custom = "#,##0.00";
 
-            // Create a style with a custom numeric format
-            Style style = workbook.CreateStyle();
-            style.Custom = "#,##0.00"; // Uses the workbook's culture settings
-            cell.SetStyle(style);
+        // Apply the style to a cell and put a numeric value.
+        Cell cell = wb.Worksheets[0].Cells["A1"];
+        cell.PutValue(12345.67);
+        cell.SetStyle(style);
 
-            // Save the workbook (save rule)
-            workbook.Save("Workbook_With_FrenchCulture.xlsx");
-        }
+        // Save the workbook; the formatted value respects the specified culture.
+        wb.Save("CultureExportDemo.xlsx", SaveFormat.Xlsx);
     }
 }

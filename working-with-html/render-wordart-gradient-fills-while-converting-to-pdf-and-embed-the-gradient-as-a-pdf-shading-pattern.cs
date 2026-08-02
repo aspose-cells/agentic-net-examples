@@ -1,48 +1,43 @@
-using System;
+// Title: Add Gradient WordArt and Export to PDF with Aspose.Cells for .NET
+// Description: Shows how to create a workbook, insert a WordArt shape using the preset WordArtStyle7 (blue gradient), and save the file as PDF. Aspose.Cells automatically converts the gradient into a PDF shading pattern, preserving the visual effect.
+// Keywords: Aspose.Cells | .NET | WordArt | gradient fill | PDF export | shading pattern | PresetWordArtStyle | AddWordArt | SaveFormat.Pdf | Excel to PDF
+// Common Searches: How to add gradient WordArt in Excel with Aspose.Cells | Export WordArt with gradient to PDF using Aspose.Cells .NET | Does Aspose.Cells preserve WordArt gradients in PDF | PresetWordArtStyle gradient options in Aspose.Cells | Customize WordArt gradient colors before PDF conversion
+// Developer Intent: Create a WordArt shape with a gradient fill and ensure the gradient is retained when the workbook is saved as a PDF.
+// Use Cases: Design report headers with gradient WordArt that appear correctly in PDF output. | Generate marketing flyers where decorative gradient WordArt must be preserved in the final PDF. | Programmatically adjust WordArt gradient colors before exporting an Excel workbook to PDF.
+// AI Prompts: Provide code to change the two‑color gradient of a WordArt shape before saving to PDF with Aspose.Cells for .NET. | Explain how Aspose.Cells maps WordArt gradient fills to PDF shading patterns during the Save operation. | Show an example of applying a custom horizontal gradient to WordArt and exporting it as a PDF with the gradient embedded.
+
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-class WordArtGradientPdf
+// Shows how to create a workbook, insert a WordArt shape using the preset WordArtStyle7 (blue gradient), and save the file as PDF. Aspose.Cells automatically converts the gradient into a PDF shading pattern, preserving the visual effect.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (lifecycle create)
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape with a preset gradient style (WordArtStyle7)
-        // Parameters: style, text, upperLeftRow, top, upperLeftColumn, left, height, width
+        // Add a WordArt shape using a preset style that includes a gradient fill
+        // WordArtStyle7 = Gradient Fill - Blue, Accent 1, Reflection
         Shape wordArt = sheet.Shapes.AddWordArt(
             PresetWordArtStyle.WordArtStyle7,
             "Gradient WordArt",
-            2, 0,   // row, top offset
-            2, 0,   // column, left offset
-            100,    // height
-            400);   // width
+            2,          // upperLeftRow
+            0,          // top
+            2,          // upperLeftColumn
+            0,          // left
+            200,        // height
+            400);       // width
 
-        // Ensure the fill type is set to Gradient to allow custom gradient settings
-        wordArt.Fill.FillType = FillType.Gradient;
+        // The preset style already applies the gradient; additional customization can be done if needed:
+        // wordArt.Fill.FillType = FillType.Gradient;
+        // wordArt.Fill.SetTwoColorGradient(Color.Blue, Color.LightBlue, GradientStyleType.Horizontal, 1);
 
-        // Apply a custom two‑color gradient to the WordArt fill
-        // Gradient: Blue to LightBlue, horizontal direction, first variant
-        wordArt.Fill.SetTwoColorGradient(
-            Color.Blue,
-            Color.LightBlue,
-            GradientStyleType.Horizontal,
-            1);
-
-        // Optionally, adjust the gradient angle via the underlying GradientFill object
-        GradientFill gradFill = wordArt.Fill.GradientFill;
-        if (gradFill != null)
-        {
-            gradFill.Angle = 0; // horizontal
-        }
-
-        // Save the workbook as PDF; Aspose.Cells embeds the gradient as a PDF shading pattern
+        // Save the workbook as PDF (lifecycle save)
+        // Aspose.Cells automatically embeds the gradient as a PDF shading pattern.
         workbook.Save("WordArtGradient.pdf", SaveFormat.Pdf);
     }
 }

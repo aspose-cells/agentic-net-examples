@@ -2,91 +2,47 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class UpdateExternalLinksWithErrorHandling
 {
-    public class ExternalLinkPathUpdateWithErrorHandling
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load the workbook that contains external links
+        string inputFile = "input.xlsx";
+        Workbook workbook = new Workbook(inputFile);
+
+        // Get the collection of external links
+        ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+
+        // Iterate through each external link
+        for (int i = 0; i < externalLinks.Count; i++)
         {
-            try
+            ExternalLink link = externalLinks[i];
+
+            // Current data source (path) of the external link
+            string currentPath = link.DataSource;
+
+            // Example transformation: replace an old base folder with a new one
+            string updatedPath = currentPath.Replace(@"C:\OldFolder\", @"D:\NewFolder\");
+
+            // Verify that the updated file actually exists
+            if (File.Exists(updatedPath))
             {
-                Run();
+                // If the file exists, update the link's data source
+                link.DataSource = updatedPath;
+                Console.WriteLine($"Link updated to: {updatedPath}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // If the file is missing or inaccessible, handle the error
+                Console.WriteLine($"Missing external file: {updatedPath}. Removing the link.");
+
+                // Remove the problematic link to keep the workbook consistent
+                externalLinks.RemoveAt(i);
+                i--; // Adjust index because the collection size has decreased
             }
         }
 
-        public static void Run()
-        {
-            // Input workbook path
-            string inputPath = "input.xlsx";
-
-            // Verify input file exists before loading
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            Workbook workbook;
-            try
-            {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            // Get external links collection
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-            // Iterate backwards to safely remove items
-            for (int i = externalLinks.Count - 1; i >= 0; i--)
-            {
-                ExternalLink link = externalLinks[i];
-                string linkPath = link.DataSource;
-
-                // Resolve relative paths using workbook's folder
-                if (!Path.IsPathRooted(linkPath) && !string.IsNullOrEmpty(workbook.AbsolutePath))
-                {
-                    linkPath = Path.Combine(workbook.AbsolutePath, linkPath);
-                }
-
-                // Check if the external file exists
-                if (!File.Exists(linkPath))
-                {
-                    Console.WriteLine($"Missing external file: {linkPath}");
-                    // Remove link and update formulas to local references
-                    externalLinks.RemoveAt(i, updateReferencesAsLocal: true);
-                    Console.WriteLine($"Removed external link at index {i} and updated references.");
-                }
-                else
-                {
-                    // Example path update (e.g., C:\Data\ -> D:\Data\)
-                    string updatedPath = linkPath.Replace(@"C:\Data\", @"D:\Data\");
-                    if (!string.Equals(updatedPath, linkPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        link.DataSource = updatedPath;
-                        Console.WriteLine($"Updated external link path to: {updatedPath}");
-                    }
-                }
-            }
-
-            // Save the modified workbook
-            string outputPath = "output.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
-        }
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -8,47 +8,49 @@ namespace AsposeCellsPivotDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Product";
-            sheet.Cells["B1"].Value = "Region";
-            sheet.Cells["C1"].Value = "Sales";
+            Cells cells = sheet.Cells;
+            cells["A1"].Value = "Product";
+            cells["B1"].Value = "Region";
+            cells["C1"].Value = "Sales";
 
-            sheet.Cells["A2"].Value = "Laptop";
-            sheet.Cells["B2"].Value = "North";
-            sheet.Cells["C2"].Value = 1200;
+            cells["A2"].Value = "Laptop";
+            cells["B2"].Value = "North";
+            cells["C2"].Value = 1200;
 
-            sheet.Cells["A3"].Value = "Laptop";
-            sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 1500;
+            cells["A3"].Value = "Laptop";
+            cells["B3"].Value = "South";
+            cells["C3"].Value = 1500;
 
-            sheet.Cells["A4"].Value = "Phone";
-            sheet.Cells["B4"].Value = "North";
-            sheet.Cells["C4"].Value = 800;
+            cells["A4"].Value = "Phone";
+            cells["B4"].Value = "North";
+            cells["C4"].Value = 800;
 
-            sheet.Cells["A5"].Value = "Phone";
-            sheet.Cells["B5"].Value = "South";
-            sheet.Cells["C5"].Value = 950;
+            cells["A5"].Value = "Phone";
+            cells["B5"].Value = "South";
+            cells["C5"].Value = 950;
 
-            // Add a pivot table covering the data range
+            // Add a pivot table based on the data range
             int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
             // Configure the pivot table: rows = Product, columns = Region, data = Sales
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product
-            pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Hide column grand totals (ShowGrandTotalsForColumns = false)
+            // Hide column grand totals by setting ShowColumnGrandTotals to false
             pivotTable.ShowColumnGrandTotals = false;
 
-            // Recalculate the pivot table after changing the setting
+            // Refresh and calculate the pivot data
+            pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook (lifecycle: save)
+            // Save the workbook
             workbook.Save("PivotTable_NoColumnGrandTotals.xlsx");
         }
     }
