@@ -8,34 +8,31 @@ namespace AsposeCellsPerformanceDemo
     {
         static void Main()
         {
+            // Initialize a stopwatch to measure the conversion duration
+            Stopwatch stopwatch = new Stopwatch();
+
             // Create a new workbook (creation rule)
             Workbook workbook = new Workbook();
 
-            // Populate some data to simulate a realistic conversion workload
+            // Populate the workbook with sample data
             Worksheet sheet = workbook.Worksheets[0];
-            for (int row = 0; row < 5000; row++)
+            for (int i = 0; i < 1000; i++)
             {
-                for (int col = 0; col < 20; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
-                }
+                sheet.Cells[i, 0].PutValue($"Row {i}");
+                sheet.Cells[i, 1].PutValue(i);
             }
 
-            // Initialize Stopwatch to measure conversion duration
-            Stopwatch sw = new Stopwatch();
+            // Start measuring time before the conversion (save rule)
+            stopwatch.Start();
 
-            // Start timing just before the conversion (save) operation
-            sw.Start();
-
-            // Perform the conversion: save the workbook to a different format (e.g., PDF)
-            // This uses the standard Save method (save rule)
+            // Convert the workbook to PDF format
             workbook.Save("ConversionResult.pdf", SaveFormat.Pdf);
 
-            // Stop timing after the operation completes
-            sw.Stop();
+            // Stop measuring time after the conversion
+            stopwatch.Stop();
 
             // Log the elapsed time for performance analysis
-            Console.WriteLine($"Conversion completed in {sw.Elapsed.TotalMilliseconds} ms.");
+            Console.WriteLine($"Conversion completed in {stopwatch.Elapsed.TotalMilliseconds} ms.");
         }
     }
 }

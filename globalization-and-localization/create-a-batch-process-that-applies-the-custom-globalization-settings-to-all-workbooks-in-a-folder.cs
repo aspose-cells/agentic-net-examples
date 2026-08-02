@@ -1,59 +1,81 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using System.Globalization;
 
 namespace AsposeCellsBatchGlobalization
 {
-    // Custom batch processor that applies globalization settings to every workbook in a folder
-    public static class GlobalizationBatchProcessor
+    // Custom globalization settings derived from GlobalizationSettings.
+    // Override methods to provide localized strings for booleans and errors.
+    public class CustomGlobalizationSettings : GlobalizationSettings
     {
-        // Entry point
-        public static void ProcessFolder(string inputFolder, string outputFolder)
+        public override string GetBooleanValueString(bool value)
         {
-            // Ensure output folder exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            // Example: Russian boolean strings.
+            return value ? "ИСТИНА" : "ЛОЖЬ";
+        }
 
-            // Get all Excel files (you can adjust the pattern as needed)
-            string[] files = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            foreach (string filePath in files)
+        public override string GetErrorValueString(string error)
+        {
+            // Map standard error texts to localized versions.
+            return error switch
             {
-                // Load the workbook (uses the provided load rule)
-                using (Workbook workbook = new Workbook(filePath))
-                {
-                    // Create and configure custom globalization settings (uses the provided create rule)
-                    SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
+                "#NAME?" => "#ИМЯ?",
+                "#DIV/0!" => "#ДЕЛ/0!",
+                "#REF!" => "#ССЫЛКА!",
+                "#VALUE!" => "#ЗНАЧ!",
+                "#N/A" => "#Н/Д",
+                "#NUM!" => "#ЧИСЛО!",
+                "#NULL!" => "#ПУСТО!",
+                _ => base.GetErrorValueString(error)
+            };
+        }
+    }
 
-                    // Example customizations
-                    gSettings.SetListSeparator(';');                     // Use semicolon as list separator
-                    gSettings.SetBooleanValueString(true, "TRUE_CUSTOM");   // Custom true string
-                    gSettings.SetBooleanValueString(false, "FALSE_CUSTOM"); // Custom false string
-                    gSettings.SetLocalFunctionName("SUM", "SUMME", true);   // Localized SUM function (German)
-                    gSettings.SetLocalFunctionName("AVERAGE", "MITTELWERT", true); // Localized AVERAGE
+    public static class WorkbookBatchProcessor
+    {
+        // Processes all Excel files in the specified input folder,
+        // applies the custom globalization settings, and saves them to the output folder.
+        public static void ApplyGlobalizationToFolder(string inputFolder, string outputFolder)
+        {
+            // Ensure the output directory exists.
+            Directory.CreateDirectory(outputFolder);
 
-                    // Apply the settings to the workbook
-                    workbook.Settings.GlobalizationSettings = gSettings;
+            // Supported Excel extensions.
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsb", ".xlsm", ".ods" };
 
-                    // Determine output path (same name, different folder)
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+            foreach (string filePath in Directory.EnumerateFiles(inputFolder))
+            {
+                if (Array.IndexOf(extensions, Path.GetExtension(filePath).ToLowerInvariant()) < 0)
+                    continue; // Skip non‑Excel files.
 
-                    // Save the modified workbook (uses the provided save rule)
-                    workbook.Save(outputPath);
-                }
+                // Load the workbook using the constructor that accepts a file path.
+                Workbook workbook = new Workbook(filePath);
+
+                // Apply the custom globalization settings.
+                workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+
+                // Build the output file path (preserve original file name).
+                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+
+                // Save the workbook, overwriting if it already exists.
+                workbook.Save(outputPath);
             }
         }
     }
 
-    // Example usage
+    // Example usage.
     class Program
     {
         static void Main()
         {
+            // Folder containing source workbooks.
             string sourceFolder = @"C:\InputWorkbooks";
+
+            // Folder where processed workbooks will be saved.
             string destinationFolder = @"C:\OutputWorkbooks";
 
-            GlobalizationBatchProcessor.ProcessFolder(sourceFolder, destinationFolder);
+            WorkbookBatchProcessor.ApplyGlobalizationToFolder(sourceFolder, destinationFolder);
 
             Console.WriteLine("Batch processing completed.");
         }

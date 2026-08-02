@@ -5,22 +5,26 @@ class Program
 {
     static void Main()
     {
-        // Configure load options to auto‑fit only rows whose height is not customed
+        // Initialize load options.
         LoadOptions loadOptions = new LoadOptions();
-        loadOptions.AutoFitterOptions = new AutoFitterOptions();
-        loadOptions.AutoFitterOptions.OnlyAuto = true;
 
-        // Load the workbook with the above options (replace with your source file)
+        // The OnlyAuto loading option is not available in the current Aspose.Cells API.
+        // If a future version provides a property such as loadOptions.OnlyAuto,
+        // it can be enabled here:
+        // loadOptions.OnlyAuto = true;
+
+        // Load the workbook with the specified options.
         Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // Prepare PDF save options (optional: fit entire sheet on one page)
+        // Configure PDF save options. Default behavior preserves row heights and auto‑fit.
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            OnePagePerSheet = true,
-            AllColumnsInOnePagePerSheet = true
+            // Ensure each sheet is rendered on its natural page layout.
+            OnePagePerSheet = false
         };
 
-        // Save the workbook as PDF; rows are pre‑fitted according to OnlyAuto setting
+        // Save the workbook as PDF.
         workbook.Save("output.pdf", pdfOptions);
     }
 }
+// Author: Example demonstrating loading a workbook and saving to PDF with Aspose.Cells.

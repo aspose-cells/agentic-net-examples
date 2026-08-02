@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
 namespace BatchSmartMarkerReport
@@ -9,71 +9,45 @@ namespace BatchSmartMarkerReport
     {
         static void Main()
         {
-            try
+            // List of template files to process
+            var templates = new List<string>
             {
-                // Folder that contains the template files
-                string templateFolder = @"C:\Templates";
-                // Folder where the generated reports will be saved
-                string outputFolder = @"C:\Reports";
+                "Template1.xlsx",
+                "Template2.xlsx",
+                "Template3.xlsx"
+            };
 
-                // Ensure the output folder exists
-                Directory.CreateDirectory(outputFolder);
+            // Prepare a DataSet containing master‑detail tables
+            DataSet reportData = CreateMasterDetailDataSet();
 
-                // List of template file names (add more as needed)
-                string[] templateFiles = new string[]
+            // Process each template with the same data source
+            foreach (var templatePath in templates)
+            {
+                // Load the template workbook
+                Workbook workbook = new Workbook(templatePath);
+
+                // Initialize the designer with the loaded workbook
+                WorkbookDesigner designer = new WorkbookDesigner
                 {
-                    Path.Combine(templateFolder, "Template1.xlsx"),
-                    Path.Combine(templateFolder, "Template2.xlsx")
+                    Workbook = workbook
                 };
 
-                // Prepare a master‑detail DataSet used for every template
-                DataSet reportData = CreateMasterDetailDataSet();
+                // Bind the DataSet (master table "Orders", detail table "OrderDetails")
+                designer.SetDataSource(reportData);
 
-                // Iterate over each template, apply smart markers and save the result
-                foreach (string templatePath in templateFiles)
-                {
-                    if (!File.Exists(templatePath))
-                    {
-                        Console.WriteLine($"Template not found: {templatePath}");
-                        continue;
-                    }
+                // Process all smart markers in the workbook
+                designer.Process();
 
-                    try
-                    {
-                        // Load the template workbook
-                        Workbook workbook = new Workbook(templatePath);
+                // Build output file name (e.g., "Template1_Output.xlsx")
+                string outputPath = System.IO.Path.GetFileNameWithoutExtension(templatePath) + "_Output.xlsx";
 
-                        // Initialize the designer with the loaded workbook
-                        WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                        // Assign the same data source to each workbook
-                        designer.SetDataSource(reportData);
-
-                        // Process the smart markers (true = preserve unrecognized markers)
-                        designer.Process(true);
-
-                        // Build the output file name
-                        string outputFileName = Path.GetFileNameWithoutExtension(templatePath) + "_Result.xlsx";
-                        string outputPath = Path.Combine(outputFolder, outputFileName);
-
-                        // Save the processed workbook
-                        workbook.Save(outputPath);
-                        Console.WriteLine($"Report generated: {outputPath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing template '{templatePath}': {ex.Message}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                // Save the processed workbook
+                designer.Workbook.Save(outputPath);
+                Console.WriteLine($"Processed '{templatePath}' and saved as '{outputPath}'.");
             }
         }
 
-        // Creates a DataSet containing a master table (Orders) and a detail table (OrderDetails)
-        // with a relation between them. This DataSet can be reused for all templates.
+        // Creates a DataSet with two related tables: Orders (master) and OrderDetails (detail)
         private static DataSet CreateMasterDetailDataSet()
         {
             DataSet ds = new DataSet();
@@ -83,10 +57,9 @@ namespace BatchSmartMarkerReport
             orders.Columns.Add("OrderID", typeof(int));
             orders.Columns.Add("CustomerName", typeof(string));
             orders.Columns.Add("OrderDate", typeof(DateTime));
-
-            orders.Rows.Add(1, "Alice", new DateTime(2023, 1, 15));
-            orders.Rows.Add(2, "Bob", new DateTime(2023, 2, 20));
-            orders.Rows.Add(3, "Charlie", new DateTime(2023, 3, 5));
+            orders.Rows.Add(1001, "Alice", new DateTime(2023, 1, 15));
+            orders.Rows.Add(1002, "Bob", new DateTime(2023, 2, 20));
+            ds.Tables.Add(orders);
 
             // Detail table
             DataTable orderDetails = new DataTable("OrderDetails");
@@ -94,19 +67,14 @@ namespace BatchSmartMarkerReport
             orderDetails.Columns.Add("Product", typeof(string));
             orderDetails.Columns.Add("Quantity", typeof(int));
             orderDetails.Columns.Add("UnitPrice", typeof(decimal));
-
-            orderDetails.Rows.Add(1, "Laptop", 1, 1200.00m);
-            orderDetails.Rows.Add(1, "Mouse", 2, 25.50m);
-            orderDetails.Rows.Add(2, "Desk", 1, 300.00m);
-            orderDetails.Rows.Add(3, "Chair", 4, 45.00m);
-            orderDetails.Rows.Add(3, "Monitor", 2, 200.00m);
-
-            // Add tables to the DataSet
-            ds.Tables.Add(orders);
+            orderDetails.Rows.Add(1001, "Laptop", 1, 1200.00m);
+            orderDetails.Rows.Add(1001, "Mouse", 2, 25.50m);
+            orderDetails.Rows.Add(1002, "Desk", 1, 300.00m);
+            orderDetails.Rows.Add(1002, "Chair", 4, 45.00m);
             ds.Tables.Add(orderDetails);
 
-            // Create a relation between master and detail tables
-            ds.Relations.Add("Orders_OrderDetails",
+            // Define relation for master‑detail processing
+            ds.Relations.Add("Order_OrderDetails",
                 orders.Columns["OrderID"],
                 orderDetails.Columns["OrderID"]);
 

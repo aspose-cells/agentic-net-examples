@@ -18,9 +18,7 @@ class Program
         using (MemoryStream stream = new MemoryStream())
         {
             workbook.Save(stream, saveOptions);
-
-            // Reset the stream position if further processing is needed
-            stream.Position = 0;
+            stream.Position = 0; // Reset position for further processing if needed
 
             // Example: write the compressed stream to a file for verification
             using (FileStream file = new FileStream("output_compressed.xlsx", FileMode.Create, FileAccess.Write))

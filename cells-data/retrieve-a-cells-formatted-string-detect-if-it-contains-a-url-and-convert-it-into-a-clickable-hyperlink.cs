@@ -1,63 +1,48 @@
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-class Program
+namespace AsposeCellsHyperlinkDemo
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data: some cells contain URLs, others do not
-            sheet.Cells["A1"].PutValue("Visit https://www.example.com for more info");
-            sheet.Cells["A2"].PutValue("Just some text without a link");
-            sheet.Cells["A3"].PutValue("http://test.com");
+            // Example: put a string that may contain a URL into cell A1
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.PutValue("Check out https://www.example.com for more info.");
 
-            // Iterate through all used cells
-            AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-            foreach (Cell cell in usedRange)
+            // Retrieve the formatted string of the cell (as displayed in Excel)
+            string formattedText = targetCell.DisplayStringValue;
+
+            // Simple URL detection using regular expression
+            // This pattern matches http or https URLs until a whitespace or end of line
+            Regex urlRegex = new Regex(@"https?://\S+", RegexOptions.IgnoreCase);
+            Match match = urlRegex.Match(formattedText);
+
+            if (match.Success && !targetCell.ContainsExternalLink)
             {
-                // Retrieve the formatted (display) string of the cell
-                string displayText = cell.DisplayStringValue;
+                string url = match.Value;
 
-                // Detect a URL using a simple regular expression
-                if (Regex.IsMatch(displayText, @"https?://\S+"))
-                {
-                    // Extract the first URL found
-                    string url = Regex.Match(displayText, @"https?://\S+").Value;
+                // Add a hyperlink to the same cell using the Hyperlinks collection
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+                int hyperlinkIndex = sheet.Hyperlinks.Add(targetCell.Row, targetCell.Column, 1, 1, url);
 
-                    // If the cell does not already contain a hyperlink, add one
-                    if (!cell.ContainsExternalLink)
-                    {
-                        // Add a hyperlink to the cell (using the rule Hyperlinks.Add(string, int, int, string))
-                        int hyperlinkIndex = sheet.Hyperlinks.Add(cell.Name, 1, 1, url);
+                // Optionally set the display text of the hyperlink to the original cell text
+                Hyperlink hyperlink = sheet.Hyperlinks[hyperlinkIndex];
+                hyperlink.TextToDisplay = formattedText;
 
-                        // Set the displayed text of the hyperlink to the original cell text
-                        sheet.Hyperlinks[hyperlinkIndex].TextToDisplay = displayText;
-                    }
-                }
+                // If you want the cell to show only the display text (without the raw URL),
+                // you can overwrite the cell value with the display text
+                targetCell.PutValue(formattedText);
             }
 
-            // Ensure output directory exists
-            string outputPath = "Output.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Save the workbook to verify the result
+            workbook.Save("HyperlinkResult.xlsx", SaveFormat.Xlsx);
         }
     }
 }

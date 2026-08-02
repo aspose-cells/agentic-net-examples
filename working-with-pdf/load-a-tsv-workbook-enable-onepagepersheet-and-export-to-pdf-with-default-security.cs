@@ -5,14 +5,20 @@ class Program
 {
     static void Main()
     {
-        // Load the TSV workbook from file
-        Workbook workbook = new Workbook("input.tsv");
+        // Load the TSV file into a workbook
+        var loadOptions = new LoadOptions(LoadFormat.TabDelimited);
+        Workbook workbook = new Workbook("input.tsv", loadOptions);
 
-        // Create PDF save options and enable OnePagePerSheet
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = true; // Ensures each sheet fits on a single PDF page
+        // Configure PDF save options: one page per sheet, default (no) security
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            OnePagePerSheet = true
+            // SecurityOptions left unset to use default (no password protection)
+        };
 
-        // Save the workbook as PDF using the options (default security – no passwords set)
+        // Export the workbook to PDF
         workbook.Save("output.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – loads TSV, sets OnePagePerSheet, saves PDF with default security.

@@ -2,57 +2,53 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerIfDemo
+class Program
 {
-    // Sample data class
-    public class Product
+    static void Main()
     {
-        public string Name { get; set; }
-        public double Sales { get; set; }
-    }
+        // Create a new workbook (create rule)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-    public class Program
-    {
-        public static void Main()
+        // Add headers
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Sales");
+
+        // Add smart markers.
+        // Column A: simple field insertion.
+        sheet.Cells["A2"].PutValue("&=Products.Name");
+        // Column B: display Sales only when it exceeds 500 using IF smart marker.
+        sheet.Cells["B2"].PutValue("&=IF($Sales>500,$Sales,\"\")");
+
+        // Define the range that contains smart markers (required for processing).
+        sheet.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
+
+        // Prepare sample data source.
+        List<Product> products = new List<Product>
         {
-            // 1. Create a new workbook (template)
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            new Product { Name = "Alpha", Sales = 300 },
+            new Product { Name = "Beta",  Sales = 750 },
+            new Product { Name = "Gamma", Sales = 1200 }
+        };
 
-            // 2. Add header row
-            ws.Cells["A1"].PutValue("Product");
-            ws.Cells["B1"].PutValue("Sales (shown only if > 1000)");
+        // Set up WorkbookDesigner and assign the data source (process rule will use it).
+        WorkbookDesigner designer = new WorkbookDesigner
+        {
+            Workbook = workbook
+        };
+        designer.SetDataSource("Products", products);
 
-            // 3. Insert smart markers.
-            //    &IF($Sales>1000,$Sales,"") will display the Sales value only when it exceeds 1000.
-            ws.Cells["A2"].PutValue("&=Products.Name");
-            ws.Cells["B2"].PutValue("&=IF($Sales>1000,$Sales,\"\")");
+        // Process all smart markers (process rule).
+        designer.Process();
 
-            // 4. Define the range that contains smart markers and name it as required.
-            //    This is needed when LineByLine is set to false (optional here).
-            ws.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
-
-            // 5. Prepare sample data
-            List<Product> products = new List<Product>
-            {
-                new Product { Name = "Widget", Sales = 850.0 },
-                new Product { Name = "Gadget", Sales = 1250.5 },
-                new Product { Name = "Doohickey", Sales = 3000.0 }
-            };
-
-            // 6. Set up the WorkbookDesigner and bind the data source.
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = wb,
-                LineByLine = false   // Use range smart markers
-            };
-            designer.SetDataSource("Products", products);
-
-            // 7. Process the smart markers.
-            designer.Process();
-
-            // 8. Save the result.
-            wb.Save("SmartMarkerIfDemo.xlsx");
-        }
+        // Save the result (save rule).
+        workbook.Save("IfSmartMarkerOutput.xlsx");
     }
+}
+
+// Simple POCO class representing the data source.
+public class Product
+{
+    public string Name { get; set; }
+    public double Sales { get; set; }
 }

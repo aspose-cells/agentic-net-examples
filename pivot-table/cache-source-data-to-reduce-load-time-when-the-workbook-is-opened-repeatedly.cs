@@ -1,58 +1,55 @@
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
 class Program
 {
     static void Main()
     {
-        // Optional: set a folder for temporary cache files used by Aspose.Cells
-        string cacheFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "AsposeCellsCache");
-        System.IO.Directory.CreateDirectory(cacheFolder);
+        // -----------------------------------------------------------------
+        // Optional: define a folder for temporary cache files used by Aspose.Cells
+        // -----------------------------------------------------------------
+        string cacheFolder = Path.Combine(Path.GetTempPath(), "AsposeCellsCache");
+        Directory.CreateDirectory(cacheFolder);
         CellsHelper.SetCacheFolder(cacheFolder);
 
-        // Create a new workbook and obtain the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
+        // -----------------------------------------------------------------
+        // Create a new workbook and fill it with a relatively large data set
+        // -----------------------------------------------------------------
+        Workbook workbook = new Workbook();                     // create workbook
+        Worksheet sheet = workbook.Worksheets[0];              // first worksheet
         Cells cells = sheet.Cells;
 
-        // Populate a large range with data and simple styling.
-        // This data will be accessed repeatedly, so caching can improve performance.
-        for (int i = 0; i < 1000; i++)
+        // Populate 10,000 rows with sample values
+        for (int row = 0; row < 10000; row++)
         {
-            cells[i, 0].PutValue(i);
-
-            // Apply alternating font colors as an example of style usage.
-            Style style = wb.CreateStyle();
-            style.Font.Color = (i % 2 == 0) ? Color.Blue : Color.Green;
-            cells[i, 0].SetStyle(style);
+            cells[row, 0].PutValue(row);                      // numeric value
+            cells[row, 1].PutValue($"Row {row}");             // text value
         }
 
-        // Start the access cache for cell values and display‑related information.
-        // CellsData caches raw cell values; CellDisplay caches style/display data.
-        wb.StartAccessCache(AccessCacheOptions.CellsData | AccessCacheOptions.CellDisplay);
+        // -----------------------------------------------------------------
+        // Start an access cache session.
+        // We cache cell values (CellsData) and display‑related information (CellDisplay)
+        // because the following loop reads both repeatedly.
+        // -----------------------------------------------------------------
+        workbook.StartAccessCache(AccessCacheOptions.CellsData | AccessCacheOptions.CellDisplay);
 
-        // Perform many read operations that benefit from the cache.
-        for (int i = 0; i < 1000; i++)
+        // Access the data many times – the cache makes these operations faster
+        for (int row = 0; row < 10000; row++)
         {
-            Cell cell = cells[i, 0];
-
-            // Retrieve the numeric value (cached).
-            double value = cell.DoubleValue;
-
-            // Retrieve the display style (cached).
-            Style displayStyle = cell.GetDisplayStyle();
-
-            // Output occasional progress to the console.
-            if (i % 200 == 0)
-                Console.WriteLine($"Row {i}: Value={value}, FontColor={displayStyle.Font.Color}");
+            int value = cells[row, 0].IntValue;               // fast read of cell value
+            var style = cells[row, 0].GetDisplayStyle();      // fast read of display style
+            // (no modifications are performed while the cache is active)
         }
 
-        // Close the cache to release resources and return to normal access mode.
-        wb.CloseAccessCache(AccessCacheOptions.CellsData | AccessCacheOptions.CellDisplay);
+        // -----------------------------------------------------------------
+        // Close the cache to release resources and return to normal mode
+        // -----------------------------------------------------------------
+        workbook.CloseAccessCache(AccessCacheOptions.CellsData | AccessCacheOptions.CellDisplay);
 
-        // Save the workbook. Subsequent openings can reuse the same caching pattern
-        // to reduce load time when the same data is accessed repeatedly.
-        wb.Save("CachedWorkbook.xlsx");
+        // -----------------------------------------------------------------
+        // Save the workbook (uses the standard Save method – no custom code)
+        // -----------------------------------------------------------------
+        workbook.Save("CachedWorkbook.xlsx");
     }
 }

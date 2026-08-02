@@ -1,36 +1,56 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook (default worksheet is already added)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add an additional worksheet (optional, demonstrates adding a sheet)
-            int newSheetIndex = workbook.Worksheets.Add();
-            Worksheet newSheet = workbook.Worksheets[newSheetIndex];
-            newSheet.Name = "DataSheet";
+            // Add a new worksheet to the workbook
+            int sheetIndex = workbook.Worksheets.Add();
+            Worksheet worksheet = workbook.Worksheets[sheetIndex];
+            worksheet.Name = "DataSheet";
 
-            // Path to the XSD file that defines the XML schema
-            // Ensure that "schema.xsd" exists at the specified location
-            string xsdPath = "schema.xsd";
+            // Define an XSD schema as a string
+            string xsdSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+                                    <xs:element name='Root'>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name='Item' type='xs:string'/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                 </xs:schema>";
 
-            // Define an XML map in the workbook using the XSD file
-            // The Add method returns the index of the newly added XmlMap
-            int xmlMapIndex = workbook.Worksheets.XmlMaps.Add(xsdPath);
+            // Write the schema to a temporary file (required by Aspose.Cells API)
+            string tempXsdPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xsd");
+            File.WriteAllText(tempXsdPath, xsdSchema);
 
-            // Optionally set a friendly name for the XML map
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[xmlMapIndex];
-            xmlMap.Name = "MyXmlMap";
+            // Ensure the temporary XSD file exists before adding the XML map
+            if (File.Exists(tempXsdPath))
+            {
+                // Add the XML map to the workbook using the schema file
+                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempXsdPath);
+                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+                xmlMap.Name = "RootMap";
+            }
+            else
+            {
+                throw new FileNotFoundException("Temporary XSD schema file was not created.", tempXsdPath);
+            }
 
-            // Save the workbook to a file
-            workbook.Save("MappedWorkbook.xlsx");
-
-            Console.WriteLine("Workbook created, worksheet added, and XML map defined successfully.");
+            // Save the workbook
+            string outputPath = "WorkbookWithXmlMap.xlsx";
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

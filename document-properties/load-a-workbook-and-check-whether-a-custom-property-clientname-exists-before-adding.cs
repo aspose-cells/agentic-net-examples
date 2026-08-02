@@ -7,24 +7,21 @@ class Program
     static void Main()
     {
         // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-        // Access the custom document properties collection
-        CustomDocumentPropertyCollection customProps = workbook.CustomDocumentProperties;
+        // Check if the custom property "ClientName" already exists
+        bool hasClientName = workbook.CustomDocumentProperties.Contains("ClientName");
 
-        // Check if the property "ClientName" already exists
-        if (!customProps.Contains("ClientName"))
+        // Add the property only if it does not exist
+        if (!hasClientName)
         {
-            // Property does not exist, add it with a sample value
-            customProps.Add("ClientName", "Acme Corp");
-            Console.WriteLine("Custom property 'ClientName' added.");
-        }
-        else
-        {
-            Console.WriteLine("Custom property 'ClientName' already exists.");
+            // Add a new custom document property of type string
+            workbook.CustomDocumentProperties.Add("ClientName", "Acme Corp");
         }
 
-        // Save the workbook with the (potentially) new property
-        workbook.Save("output.xlsx");
+        // Save the workbook (overwrites the original or saves to a new file)
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
     }
 }

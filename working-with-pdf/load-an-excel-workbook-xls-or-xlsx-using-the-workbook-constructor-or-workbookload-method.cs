@@ -5,22 +5,16 @@ class Program
 {
     static void Main()
     {
-        // Path to the source Excel file (XLS or XLSX)
-        string sourcePath = "input.xlsx";
+        // Author: Load an Excel workbook (XLS/XLSX) using Aspose.Cells
+        string filePath = "sample.xlsx";
 
-        // Load the workbook using the string constructor
-        Workbook workbook = new Workbook(sourcePath);
+        // Create load options (auto-detect format)
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load the workbook from the specified file with the given options
+        Workbook workbook = new Workbook(filePath, loadOptions);
 
-        // Display basic information about the worksheet
-        Console.WriteLine($"Worksheet Name: {worksheet.Name}");
-        Console.WriteLine($"Cell A1 Value: {worksheet.Cells["A1"].StringValue}");
-
-        // Optionally, save a copy of the loaded workbook
-        string destinationPath = "copy.xlsx";
-        workbook.Save(destinationPath, SaveFormat.Xlsx);
-        Console.WriteLine($"Workbook saved to: {destinationPath}");
+        // Verify loading by outputting the number of worksheets
+        Console.WriteLine($"Number of worksheets: {workbook.Worksheets.Count}");
     }
 }

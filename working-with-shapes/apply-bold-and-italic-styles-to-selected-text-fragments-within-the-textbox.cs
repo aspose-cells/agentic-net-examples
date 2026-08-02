@@ -1,67 +1,62 @@
+// Title: C# – Apply Bold and Italic Formatting to Words in an Aspose.Cells TextBox Shape
+// Description: Creates a workbook, inserts a TextBox shape, sets its text, and uses FontSettingCollection with Style and StyleFlag to make the word “Bold” bold and the word “Italic” italic, then saves the file as BoldItalicTextBox.xlsx.
+// Keywords: Aspose.Cells C# textbox formatting | apply bold to shape text Aspose.Cells | apply italic to shape text Aspose.Cells | FontSettingCollection partial formatting | StyleFlag text styling Excel | C# Excel shape text styling | Aspose.Cells partial character formatting | Excel automation text styling
+// Common Searches: how to bold part of a textbox in Aspose.Cells C# | italic text inside a shape using Aspose.Cells | C# format specific characters in Aspose.Cells TextBox | Aspose.Cells StyleFlag example for partial text | apply mixed font styles to Excel shape text
+// Developer Intent: Apply bold and italic styles to individual words inside a TextBox shape in an Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Generate a sales report where key terms inside a textbox need distinct emphasis. | Create instructional worksheets that highlight action verbs with bold or italic styling programmatically. | Automate marketing templates that format product names differently within shape captions.
+// AI Prompts: Show how to underline and change the color of a specific word in an Aspose.Cells TextBox using C#. | Provide a C# snippet that applies three different font styles to non‑contiguous words in a shape's TextBody. | Explain how to retrieve a TextBox's FontSettingCollection, modify alignment, line spacing, and then apply the changes.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+// Creates a workbook, inserts a TextBox shape, sets its text, and uses FontSettingCollection with Style and StyleFlag to make the word “Bold” bold and the word “Italic” italic, then saves the file as BoldItalicTextBox.xlsx.
+class ApplyBoldItalicInTextBox
 {
-    public class TextBoxBoldItalicDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a textbox shape to the worksheet
-                // Parameters: upper left row, upper left column, top, left, width, height
-                Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 250, 80);
-                textBox.Text = "Bold and Italic text example";
+        // Add a textbox shape to the worksheet
+        // Parameters: upper left row, upper left column, top, left, width, height
+        Shape textBox = worksheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 50);
 
-                // ---------- Apply Bold to the word "Bold" ----------
-                // Create a font based on the textbox's current font
-                Aspose.Cells.Font boldFont = textBox.Font;
-                boldFont.IsBold = true; // set bold property
+        // Set the initial text of the textbox
+        textBox.Text = "Bold and Italic text";
 
-                // Define which font attributes to apply (only bold in this case)
-                StyleFlag boldFlag = new StyleFlag { FontBold = true };
+        // Get the FontSettingCollection that represents the text body of the shape
+        FontSettingCollection textBody = textBox.TextBody;
 
-                // Apply formatting to characters starting at index 0 with length 4 ("Bold")
-                textBox.FormatCharacters(0, 4, boldFont, boldFlag);
+        // -------------------------------------------------
+        // Apply Bold to the word "Bold"
+        // -------------------------------------------------
+        // Create a style to hold the font settings
+        Style boldStyle = workbook.CreateStyle();
+        boldStyle.Font.IsBold = true;          // set bold
+        // Define which font properties should be applied
+        StyleFlag boldFlag = new StyleFlag();
+        boldFlag.FontBold = true;
 
-                // ---------- Apply Italic to the word "Italic" ----------
-                // Create a separate font for italic formatting
-                Aspose.Cells.Font italicFont = textBox.Font;
-                italicFont.IsItalic = true; // set italic property
+        // Apply formatting: start index 0, length 4 ("Bold")
+        textBody.Format(0, 4, boldStyle.Font, boldFlag);
 
-                // Define style flag for italic
-                StyleFlag italicFlag = new StyleFlag { FontItalic = true };
+        // -------------------------------------------------
+        // Apply Italic to the word "Italic"
+        // -------------------------------------------------
+        Style italicStyle = workbook.CreateStyle();
+        italicStyle.Font.IsItalic = true;      // set italic
+        StyleFlag italicFlag = new StyleFlag();
+        italicFlag.FontItalic = true;
 
-                // "Italic" starts at index 9 and has length 6
-                textBox.FormatCharacters(9, 6, italicFont, italicFlag);
+        // "Italic" starts after "Bold and " (9 characters)
+        int italicStart = "Bold and ".Length; // 9
+        int italicLength = "Italic".Length;   // 6
+        textBody.Format(italicStart, italicLength, italicStyle.Font, italicFlag);
 
-                // Determine output file path
-                string outputPath = "TextBoxBoldItalicDemo.xlsx";
-
-                // Save the workbook to a file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            TextBoxBoldItalicDemo.Run();
-        }
+        // Save the workbook to a file
+        workbook.Save("BoldItalicTextBox.xlsx");
     }
 }

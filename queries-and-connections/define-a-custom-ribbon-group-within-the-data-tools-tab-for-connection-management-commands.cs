@@ -1,38 +1,51 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsRibbonDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class CustomRibbonDataToolsDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new empty workbook
+                Workbook workbook = new Workbook();
 
-            // Define Ribbon XML that adds a custom group to the built‑in "Data Tools" tab (idMso="TabData")
-            // The group contains a button for connection management commands.
-            string ribbonXml =
-                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-                "  <ribbon>" +
-                "    <tabs>" +
-                "      <tab idMso=\"TabData\">" +                     // Existing Data Tools tab
-                "        <group id=\"customConnGroup\" label=\"Connection Management\">" +
-                "          <button id=\"btnRefresh\" label=\"Refresh Connection\" size=\"large\" onAction=\"RefreshConnection\" />" +
-                "          <button id=\"btnEdit\"    label=\"Edit Connection\"    size=\"large\" onAction=\"EditConnection\" />" +
-                "        </group>" +
-                "      </tab>" +
-                "    </tabs>" +
-                "  </ribbon>" +
-                "</customUI>";
+                // Define custom Ribbon XML for the "Data Tools" tab (idMso="TabData")
+                string ribbonXml =
+                    "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                    "  <ribbon>" +
+                    "    <tabs>" +
+                    "      <tab idMso=\"TabData\">" +
+                    "        <group id=\"ConnectionManagementGroup\" label=\"Connection Management\">" +
+                    "          <button id=\"RefreshConnection\" label=\"Refresh\" size=\"large\" imageMso=\"RefreshAll\" />" +
+                    "          <button id=\"EditConnection\" label=\"Edit Connection\" size=\"large\" imageMso=\"DataConnectionProperties\" />" +
+                    "        </group>" +
+                    "      </tab>" +
+                    "    </tabs>" +
+                    "  </ribbon>" +
+                    "</customUI>";
 
-            // Assign the custom Ribbon XML to the workbook (property rule)
-            workbook.RibbonXml = ribbonXml;
+                // Assign the custom UI to the workbook
+                workbook.RibbonXml = ribbonXml;
 
-            // Save the workbook (lifecycle rule: save). Use .xlsm because custom UI requires a macro‑enabled file.
-            workbook.Save("ConnectionManagementDemo.xlsm");
+                // Save as macro‑enabled workbook (required for custom UI)
+                workbook.Save("CustomRibbonDataTools.xlsm");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            Console.WriteLine("Workbook with custom Ribbon group saved successfully.");
+    // Entry point required for console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CustomRibbonDataToolsDemo.Run();
         }
     }
 }

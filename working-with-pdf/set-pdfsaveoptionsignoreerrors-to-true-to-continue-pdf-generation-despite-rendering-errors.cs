@@ -1,23 +1,32 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfIgnoreErrorDemo
+namespace AsposeCellsPdfExample
 {
+    // Author: Aspose.Cells .NET example – sets IgnoreError to true for PDF conversion
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // Example: new Workbook("input.xlsx");
+            // Create a new workbook (in‑memory)
+            Workbook workbook = new Workbook();
 
-            // Instantiate PDF save options
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some sample data (optional – demonstrates rendering)
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["A3"].PutValue(DateTime.Now);
+
+            // Create PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set IgnoreError to true so rendering errors do not stop PDF generation
+            // Enable ignoring rendering errors (e.g., shape, chart, image issues)
             pdfOptions.IgnoreError = true;
 
-            // Save the workbook as a PDF using the configured options
-            workbook.Save("output.pdf", pdfOptions);
+            // Save the workbook as PDF using the configured options
+            workbook.Save("OutputWithIgnoreError.pdf", pdfOptions);
         }
     }
 }

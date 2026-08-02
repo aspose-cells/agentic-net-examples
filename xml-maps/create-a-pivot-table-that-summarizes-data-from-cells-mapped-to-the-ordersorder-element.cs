@@ -11,84 +11,59 @@ namespace AsposeCellsPivotExample
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // Sample data that mimics the /Orders/Order element
-            // -------------------------------------------------
-            // Assume the XML mapping has been imported and the data resides in the first worksheet.
-            // Columns: OrderID, Customer, Product, Quantity, Price
+            // Add a worksheet that will hold the source data
             Worksheet dataSheet = workbook.Worksheets[0];
             dataSheet.Name = "Orders";
 
-            // Header row
+            // Populate sample data that mimics the /Orders/Order XML element mapping
+            // Columns: OrderID, Customer, Amount
             dataSheet.Cells["A1"].PutValue("OrderID");
             dataSheet.Cells["B1"].PutValue("Customer");
-            dataSheet.Cells["C1"].PutValue("Product");
-            dataSheet.Cells["D1"].PutValue("Quantity");
-            dataSheet.Cells["E1"].PutValue("Price");
+            dataSheet.Cells["C1"].PutValue("Amount");
 
             // Sample rows
             dataSheet.Cells["A2"].PutValue(1001);
             dataSheet.Cells["B2"].PutValue("Alice");
-            dataSheet.Cells["C2"].PutValue("Laptop");
-            dataSheet.Cells["D2"].PutValue(2);
-            dataSheet.Cells["E2"].PutValue(1200);
+            dataSheet.Cells["C2"].PutValue(250);
 
             dataSheet.Cells["A3"].PutValue(1002);
             dataSheet.Cells["B3"].PutValue("Bob");
-            dataSheet.Cells["C3"].PutValue("Phone");
-            dataSheet.Cells["D3"].PutValue(5);
-            dataSheet.Cells["E3"].PutValue(800);
+            dataSheet.Cells["C3"].PutValue(150);
 
             dataSheet.Cells["A4"].PutValue(1003);
             dataSheet.Cells["B4"].PutValue("Alice");
-            dataSheet.Cells["C4"].PutValue("Tablet");
-            dataSheet.Cells["D4"].PutValue(3);
-            dataSheet.Cells["E4"].PutValue(500);
+            dataSheet.Cells["C4"].PutValue(300);
 
             dataSheet.Cells["A5"].PutValue(1004);
             dataSheet.Cells["B5"].PutValue("Charlie");
-            dataSheet.Cells["C5"].PutValue("Laptop");
-            dataSheet.Cells["D5"].PutValue(1);
-            dataSheet.Cells["E5"].PutValue(1200);
+            dataSheet.Cells["C5"].PutValue(400);
 
-            // -------------------------------------------------
-            // Create a worksheet to host the pivot table
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotReport");
+            // Add a new worksheet that will contain the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-            // Define the source data range (including headers)
-            string sourceData = "=Orders!A1:E5";
+            // Define the source data range for the pivot table
+            // Using the full range including headers
+            string sourceData = "=Orders!A1:C5";
 
-            // Add a new pivot table at cell A3 of the pivot sheet
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "OrdersPivot");
+            // Add the pivot table to the pivot sheet at cell A3
+            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "OrdersSummary");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // -------------------------------------------------
-            // Configure the pivot table fields
-            // -------------------------------------------------
-            // Row: Customer
+            // Configure the pivot table:
+            // - Row field: Customer
+            // - Data field: Amount (sum)
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Customer");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Column: Product
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-
-            // Data: Sum of Quantity
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
-
-            // Data: Sum of Price (optional, can be added as another data field)
-            // pivotTable.AddFieldToArea(PivotFieldType.Data, "Price");
-
-            // Optional: Show the pivot table in compact form for better readability
+            // Optional: set the pivot table to display in compact form
             pivotTable.ShowInCompactForm();
 
-            // Refresh the pivot cache and calculate the results
+            // Refresh the pivot cache and calculate the data
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // -------------------------------------------------
-            // Save the workbook
-            // -------------------------------------------------
-            workbook.Save("OrdersPivotReport.xlsx");
+            // Save the workbook to a file
+            workbook.Save("OrdersPivotTable.xlsx");
         }
     }
 }

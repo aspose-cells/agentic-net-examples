@@ -1,41 +1,33 @@
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-class PreserveCellBackground
+class Program
 {
     static void Main()
     {
-        try
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Put a value into a cell and set its background color
+        var cell = worksheet.Cells["A1"];
+        cell.PutValue("Background Color Demo");
+        var style = cell.GetStyle();
+        style.ForegroundColor = Color.Yellow;          // Desired background color
+        style.Pattern = BackgroundType.Solid;          // Apply solid fill
+        cell.SetStyle(style);
+
+        // Configure PDF save options – background colors are preserved by default.
+        // Setting GridlineColor to Transparent ensures gridlines do not obscure the cell fill.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            GridlineColor = Color.Transparent
+        };
 
-            // Define a solid background style for cell A1
-            Style style = workbook.CreateStyle();
-            style.Pattern = BackgroundType.Solid;          // solid fill
-            style.ForegroundColor = Color.Yellow;          // background color (foreground used for solid pattern)
-
-            // Apply style to cell A1
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue("Cell with yellow background");
-            cell.SetStyle(style);
-
-            // Configure PDF save options (cell shading is preserved by default)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Define output file path
-            string outputPath = "CellBackgroundPreserved.pdf";
-
-            // Save the workbook as PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as PDF with the specified options
+        workbook.Save("BackgroundColorDemo.pdf", pdfOptions);
     }
 }
+// Author: Aspose.Cells .NET example – preserves cell background colors when saving to PDF.

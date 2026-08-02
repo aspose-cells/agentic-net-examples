@@ -1,100 +1,85 @@
 using System;
 using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
     public class XmlMapQueryErrorHandlingDemo
     {
-        // Entry point required for console application
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Define a simple XML schema (XSD) as a string
-            string xsd = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                            <xs:element name='Root'>
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name='Item' type='xs:string' />
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                          </xs:schema>";
-
-            // Add the XML map to the workbook
-            int mapIndex = workbook.Worksheets.XmlMaps.Add(xsd);
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "SimpleMap";
-
-            // Optionally link a cell to a valid XML path
-            worksheet.Cells["A1"].PutValue("Sample");
-            worksheet.Cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/Item");
-
-            // Query a path that exists – should return a non‑empty list
             try
             {
-                ArrayList areas = worksheet.XmlMapQuery("/Root/Item", xmlMap);
-                Console.WriteLine($"Existing path query returned {areas.Count} area(s).");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error querying existing path: {ex.Message}");
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Query a path that does NOT exist – demonstrate error handling
-            try
-            {
-                // This path is not defined in the schema; Aspose.Cells may throw an exception
-                ArrayList missingAreas = worksheet.XmlMapQuery("/Root/NonExisting", xmlMap);
-                if (missingAreas.Count == 0)
+                // Get the first worksheet (already present)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Sample XML schema (XSD) defining a simple structure
+                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+                                        <xs:element name='Root'>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name='ExistingElement' type='xs:string'/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                     </xs:schema>";
+
+                // Add the XML map to the workbook using the schema
+                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
+                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+                xmlMap.Name = "DemoMap";
+
+                // Link a cell to an existing element (optional, just for completeness)
+                worksheet.Cells["A1"].PutValue("Sample");
+                worksheet.Cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Root/ExistingElement");
+
+                // Define a path that does NOT exist in the schema
+                string invalidPath = "/Root/NonExistingElement";
+
+                // Query the worksheet for cell areas mapped to the invalid path
+                ArrayList cellAreas = worksheet.XmlMapQuery(invalidPath, xmlMap);
+
+                // If the path is not present, the returned list will be empty
+                if (cellAreas.Count == 0)
                 {
-                    Console.WriteLine("Path not found in XML map – returned empty list.");
+                    Console.WriteLine($"No cells are mapped to the path '{invalidPath}'.");
                 }
                 else
                 {
-                    Console.WriteLine($"Unexpectedly found {missingAreas.Count} area(s) for non‑existing path.");
+                    // This block would execute only if the path somehow returned results
+                    CellArea area = (CellArea)cellAreas[0];
+                    Console.WriteLine($"Found mapping at Row {area.StartRow}, Column {area.StartColumn}");
                 }
-            }
-            catch (CellsException cex)
-            {
-                // Handle Aspose.Cells specific exception
-                Console.WriteLine($"CellsException caught: {cex.Message}");
-                Console.WriteLine($"Exception Type Code: {cex.Code}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any other exception
-                Console.WriteLine($"General exception caught: {ex.Message}");
-            }
 
-            // Save the workbook (optional)
-            try
-            {
-                string outputPath = "XmlMapQueryDemo.xlsx";
+                // Save the workbook (optional, demonstrates lifecycle rule usage)
+                string outputPath = "XmlMapQueryErrorHandlingDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (CellsException ex)
+            {
+                // Handle specific Aspose.Cells exceptions (e.g., invalid path)
+                Console.WriteLine($"Aspose.Cells exception caught: {ex.Message}");
+                Console.WriteLine($"Exception Type Code: {ex.Code}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                // Handle any other unexpected exceptions
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            XmlMapQueryErrorHandlingDemo.Run();
         }
     }
 }

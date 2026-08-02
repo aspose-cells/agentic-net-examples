@@ -1,76 +1,43 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace HiddenExternalLinkVerification
 {
-    public class VerifyHiddenExternalLinksAfterEncryption
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            // Path for the encrypted workbook
-            const string encryptedPath = "HiddenExternalLink_Encrypted.xlsx";
+            // ------------------- Create workbook with hidden external link -------------------
+            Workbook workbook = new Workbook();                         // create new workbook
+            Worksheet sheet = workbook.Worksheets[0];                  // get first worksheet
+            sheet.Cells["A1"].PutValue("Demo");                        // add some data
 
-            // Ensure any previous file is removed to avoid load conflicts
-            if (File.Exists(encryptedPath))
-            {
-                File.Delete(encryptedPath);
-            }
+            // Add an external link; by default such links are hidden (IsVisible == false)
+            workbook.Worksheets.ExternalLinks.Add("external.xlsx", new string[] { "Sheet1!A1" });
 
-            Workbook wb = null;
-            Workbook loadedWb = null;
+            // Retrieve the external link and check its visibility before encryption
+            ExternalLink linkBefore = workbook.Worksheets.ExternalLinks[0];
+            bool isVisibleBefore = linkBefore.IsVisible;
+            Console.WriteLine($"External link visibility before encryption: {isVisibleBefore}");
 
-            try
-            {
-                // -------------------- Create workbook with external link --------------------
-                wb = new Workbook(); // create new workbook
+            // ------------------- Encrypt workbook with password -------------------
+            workbook.Settings.Password = "SecretPwd123";               // set encryption password
+            workbook.Save("HiddenLinkEncrypted.xlsx");                 // save encrypted file
 
-                // Add an external link to a non‑existent file (the file does not need to exist for the link object)
-                wb.Worksheets.ExternalLinks.Add("external_source.xlsx", new[] { "Sheet1!A1" });
+            // ------------------- Load encrypted workbook and verify link visibility -------------------
+            LoadOptions loadOptions = new LoadOptions { Password = "SecretPwd123" };
+            Workbook loadedWorkbook = new Workbook("HiddenLinkEncrypted.xlsx", loadOptions);
 
-                // Retrieve the external link
-                ExternalLink link = wb.Worksheets.ExternalLinks[0];
+            // Access the external link after loading
+            ExternalLink linkAfter = loadedWorkbook.Worksheets.ExternalLinks[0];
+            bool isVisibleAfter = linkAfter.IsVisible;
+            Console.WriteLine($"External link visibility after encryption: {isVisibleAfter}");
 
-                // Check visibility before encryption (IsVisible is read‑only; hidden links return false)
-                Console.WriteLine($"Before encryption - External link visible: {link.IsVisible}");
-
-                // -------------------- Encrypt workbook with password --------------------
-                wb.Settings.Password = "SecretPwd123"; // set encryption password
-                wb.Save(encryptedPath); // save encrypted workbook
-
-                // Verify workbook reports as encrypted
-                Console.WriteLine($"Workbook IsEncrypted after save: {wb.Settings.IsEncrypted}");
-
-                // -------------------- Load encrypted workbook --------------------
-                LoadOptions loadOpts = new LoadOptions { Password = "SecretPwd123" };
-                loadedWb = new Workbook(encryptedPath, loadOpts); // load with password
-
-                // Retrieve the external link from the loaded workbook
-                ExternalLink loadedLink = loadedWb.Worksheets.ExternalLinks[0];
-
-                // Verify that the hidden status is preserved after encryption/decryption
-                Console.WriteLine($"After decryption - External link visible: {loadedLink.IsVisible}");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up resources
-                wb?.Dispose();
-                loadedWb?.Dispose();
-            }
-        }
-    }
-
-    // Entry point for the console application
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-            VerifyHiddenExternalLinksAfterEncryption.Run();
+            // Final verification output
+            if (isVisibleBefore == isVisibleAfter)
+                Console.WriteLine("Hidden external link remained hidden after encryption.");
+            else
+                Console.WriteLine("External link visibility changed after encryption.");
         }
     }
 }

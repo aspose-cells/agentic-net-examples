@@ -1,53 +1,22 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – sets a uniform row height for all rows
+
+class Program
 {
-    public class UniformRowHeightDemo
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (lifecycle: create)
+        Workbook workbook = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Apply a uniform row height (in points) to all rows in the worksheet
+        worksheet.Cells.StandardHeight = 20; // adjust the value as needed
 
-            // Set a uniform row height (in points) for all rows in the worksheet
-            worksheet.Cells.StandardHeight = 25.0;
-
-            // Add sample data to visualize the row height
-            worksheet.Cells["A1"].PutValue("Row 1");
-            worksheet.Cells["A2"].PutValue("Row 2");
-            worksheet.Cells["A3"].PutValue("Row 3");
-
-            // Define output file path
-            string outputPath = "UniformRowHeightDemo.xlsx";
-
-            // Ensure the directory exists
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
+        // Save the workbook (lifecycle: save)
+        workbook.Save("UniformRowHeight.xlsx");
     }
 }

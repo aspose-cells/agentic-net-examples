@@ -7,38 +7,40 @@ class CrossSheetChartDemo
     static void Main()
     {
         // Create a new workbook
-        Workbook wb = new Workbook();
+        Workbook workbook = new Workbook();
 
-        // Add a worksheet that will hold the source data
-        Worksheet dataSheet = wb.Worksheets.Add("DataSheet");
+        // ---------- Source worksheet with data ----------
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        sourceSheet.Name = "SourceData";
 
-        // Populate sample data in the data sheet
-        dataSheet.Cells["A1"].PutValue("Category");
-        dataSheet.Cells["B1"].PutValue("Value");
-        dataSheet.Cells["A2"].PutValue("A");
-        dataSheet.Cells["B2"].PutValue(10);
-        dataSheet.Cells["A3"].PutValue("B");
-        dataSheet.Cells["B3"].PutValue(20);
-        dataSheet.Cells["A4"].PutValue("C");
-        dataSheet.Cells["B4"].PutValue(30);
+        // Populate sample data
+        sourceSheet.Cells["A1"].PutValue("Category");
+        sourceSheet.Cells["B1"].PutValue("Value");
+        sourceSheet.Cells["A2"].PutValue("A");
+        sourceSheet.Cells["B2"].PutValue(10);
+        sourceSheet.Cells["A3"].PutValue("B");
+        sourceSheet.Cells["B3"].PutValue(20);
+        sourceSheet.Cells["A4"].PutValue("C");
+        sourceSheet.Cells["B4"].PutValue(30);
 
-        // Access the first worksheet where the chart will be placed
-        Worksheet chartSheet = wb.Worksheets[0];
-        chartSheet.Name = "ChartSheet";
+        // Optional: place a title in the source sheet to link the chart title
+        sourceSheet.Cells["D1"].PutValue("Sales Chart");
 
-        // Add a column chart to the chart sheet
+        // ---------- Destination worksheet for the chart ----------
+        Worksheet chartSheet = workbook.Worksheets.Add("ChartSheet");
+
+        // Add a column chart to the destination sheet
         int chartIndex = chartSheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = chartSheet.Charts[chartIndex];
 
-        // Set the chart's data range to a range on a different worksheet (cross‑sheet reference)
-        // Note the sheet name must be enclosed in single quotes if it contains spaces or special characters
-        chart.SetChartDataRange("'DataSheet'!$A$1:$B$4", true);
+        // Set the chart data range to reference the source worksheet
+        // The range string includes the sheet name, e.g., "SourceData!$A$1:$B$4"
+        chart.SetChartDataRange("SourceData!$A$1:$B$4", true);
 
-        // Optionally link the chart title to a cell on the data sheet
-        dataSheet.Cells["C1"].PutValue("Sales Chart");
-        chart.Title.LinkedSource = "'DataSheet'!$C$1";
+        // Link the chart title to the cell on the source sheet (optional)
+        chart.Title.LinkedSource = "='SourceData'!$D$1";
 
         // Save the workbook
-        wb.Save("CrossSheetChart.xlsx");
+        workbook.Save("CrossSheetChart.xlsx");
     }
 }

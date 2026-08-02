@@ -1,70 +1,49 @@
-using Aspose.Cells;
 using System;
-using System.Collections.Generic;
+using Aspose.Cells;
 
-class ThemeColorChecker
+namespace ThemeColorChecker
 {
-    static void Main()
+    class Program
     {
-        // Load an existing workbook (replace the path with your file)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // List to hold addresses of cells that use ThemeColor
-        List<string> themeColorCells = new List<string>();
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            Cells cells = sheet.Cells;
-
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Load an existing workbook (replace with your file path) or create a new one if the file does not exist.
+            Workbook workbook;
+            string inputPath = "input.xlsx";
+            if (System.IO.File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a new workbook with one worksheet
+            }
+
+            // Iterate through all worksheets.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through all cells that are part of the used range.
+                foreach (Cell cell in sheet.Cells)
                 {
-                    Cell cell = cells[row, col];
-
-                    // Skip null or empty cells
-                    if (cell == null || cell.Type == CellValueType.IsNull)
-                        continue;
-
-                    // Get the cell's style
+                    // Retrieve the cell's style.
                     Style style = cell.GetStyle();
 
-                    bool usesTheme = false;
+                    // Check for any theme color usage in the style.
+                    bool usesThemeColor =
+                        style.ForegroundThemeColor != null ||
+                        style.BackgroundThemeColor != null ||
+                        (style.Font != null && style.Font.ThemeColor != null);
 
-                    // Font theme color
-                    if (style.Font != null && style.Font.ThemeColor != null)
-                        usesTheme = true;
-
-                    // Foreground theme color
-                    if (style.ForegroundThemeColor != null)
-                        usesTheme = true;
-
-                    // Background theme color (if available)
-                    if (style.BackgroundThemeColor != null)
-                        usesTheme = true;
-
-                    if (usesTheme)
+                    if (usesThemeColor)
                     {
-                        // Record the address in "SheetName!A1" format
-                        themeColorCells.Add($"{sheet.Name}!{cell.Name}");
+                        // Log the address of the cell that uses a theme color.
+                        Console.WriteLine($"Cell {cell.Name} in worksheet \"{sheet.Name}\" uses a ThemeColor.");
                     }
                 }
             }
-        }
 
-        // Output the results
-        Console.WriteLine("Cells that use ThemeColor:");
-        foreach (string address in themeColorCells)
-        {
-            Console.WriteLine(address);
+            // Save the workbook (optional – here we just save a copy).
+            workbook.Save("output.xlsx");
         }
-
-        // Save the workbook (no modifications made, just to follow lifecycle rule)
-        workbook.Save("output.xlsx");
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedRangeFromValidations
+namespace AsposeCellsValidationNamedRange
 {
     class Program
     {
@@ -12,58 +12,56 @@ namespace AsposeCellsNamedRangeFromValidations
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
-            // Add sample data validations to demonstrate the logic
-            // -------------------------------------------------
-            ValidationCollection validations = sheet.Validations;
+            // ----- Sample data validations (for demonstration) -----
+            // Validation 1 on A1:A3
+            Validation val1 = sheet.Validations[sheet.Validations.Add()];
+            val1.Type = ValidationType.List;
+            val1.Formula1 = "Option1,Option2,Option3";
+            val1.AddArea(CellArea.CreateCellArea(0, 0, 2, 0)); // A1:A3
 
-            // Validation 1: Whole number between 1 and 10 on A1:A5
-            Validation v1 = validations[validations.Add(CellArea.CreateCellArea(0, 0, 4, 0))];
-            v1.Type = ValidationType.WholeNumber;
-            v1.Operator = OperatorType.Between;
-            v1.Formula1 = "1";
-            v1.Formula2 = "10";
+            // Validation 2 on C5
+            Validation val2 = sheet.Validations[sheet.Validations.Add()];
+            val2.Type = ValidationType.WholeNumber;
+            val2.Operator = OperatorType.Between;
+            val2.Formula1 = "1";
+            val2.Formula2 = "10";
+            val2.AddArea(CellArea.CreateCellArea(4, 2, 4, 2)); // C5
 
-            // Validation 2: List on C3:C4
-            Validation v2 = validations[validations.Add(CellArea.CreateCellArea(2, 2, 3, 2))];
-            v2.Type = ValidationType.List;
-            v2.Formula1 = "Red,Green,Blue";
+            // Validation 3 on E2:E4 (multiple separate areas)
+            Validation val3 = sheet.Validations[sheet.Validations.Add()];
+            val3.Type = ValidationType.Custom;
+            val3.Formula1 = "=ISNUMBER(A1)";
+            val3.AddArea(CellArea.CreateCellArea(1, 4, 1, 4)); // E2
+            val3.AddArea(CellArea.CreateCellArea(2, 4, 2, 4)); // E3
+            val3.AddArea(CellArea.CreateCellArea(3, 4, 3, 4)); // E4
 
-            // Validation 3: Custom formula on E1
-            Validation v3 = validations[validations.Add(CellArea.CreateCellArea(0, 4, 0, 4))];
-            v3.Type = ValidationType.Custom;
-            v3.Formula1 = "=LEN(A1)>3";
-
-            // -------------------------------------------------
-            // Collect all validation areas and build a RefersTo formula
-            // -------------------------------------------------
+            // ----- Collect all validation areas -----
             List<string> areaRefs = new List<string>();
-
-            foreach (Validation val in validations)
+            foreach (Validation validation in sheet.Validations)
             {
-                foreach (CellArea area in val.Areas)
+                foreach (CellArea area in validation.Areas)
                 {
-                    // Convert start and end cells to absolute A1 style (e.g., $A$1)
-                    string start = "$" + CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                    string end = "$" + CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
-                    string areaRef = $"{sheet.Name}!{start}:{end}";
-                    areaRefs.Add(areaRef);
+                    // Convert start and end indices to A1 style addresses
+                    string startAddr = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                    string endAddr = CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
+                    string fullRef = $"'{sheet.Name}'!{startAddr}:{endAddr}";
+                    areaRefs.Add(fullRef);
                 }
             }
 
-            // Join multiple areas with commas – this creates a multi‑area named range
-            string refersTo = "=" + string.Join(",", areaRefs);
+            // If there are validation areas, create a named range that references only those cells
+            if (areaRefs.Count > 0)
+            {
+                // Join the individual area references with commas to form a union range
+                string refersToFormula = "=" + string.Join(",", areaRefs);
 
-            // -------------------------------------------------
-            // Create the named range that includes only the validation cells
-            // -------------------------------------------------
-            int nameIndex = workbook.Worksheets.Names.Add("ValidatedCells");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-            namedRange.RefersTo = refersTo;
+                // Add the named range to the workbook
+                int nameIndex = workbook.Worksheets.Names.Add("ValidatedCells");
+                Name namedRange = workbook.Worksheets.Names[nameIndex];
+                namedRange.RefersTo = refersToFormula;
+            }
 
-            // -------------------------------------------------
             // Save the workbook
-            // -------------------------------------------------
             workbook.Save("ValidatedCellsNamedRange.xlsx");
         }
     }

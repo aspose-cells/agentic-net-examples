@@ -1,10 +1,19 @@
+// Title: C# Aspose.Cells Example – Compare instantiated cell count before and after removing formatting‑only cells
+// Description: Creates a workbook, adds data and style‑only cells, records CountLarge, resets empty cells with custom styles to the default, removes unused styles, then shows the before/after cell count to illustrate memory savings.
+// Keywords: Aspose.Cells CountLarge | formatting‑only cells | remove unused styles | C# spreadsheet optimization | cell instantiation reduction | Aspose.Cells memory cleanup | worksheet cell count comparison
+// Common Searches: Aspose.Cells count cells before after removing formatting only | how to delete empty styled cells in Aspose.Cells C# | reduce workbook size by cleaning up styles Aspose.Cells | C# example for resetting cell style to default Aspose.Cells | compare instantiated cells Aspose.Cells
+// Developer Intent: Show how resetting the style of empty cells removes formatting‑only cells and lowers the instantiated cell count reported by CountLarge.
+// Use Cases: Quantify memory and performance impact of cleaning up style‑only cells in large Excel files. | Validate that ResetStyle on empty cells decreases the CountLarge value of a worksheet. | Generate a quick before/after report for workbook optimization audits.
+// AI Prompts: Generate a C# method that scans a worksheet, clears formatting‑only cells, and returns the CountLarge values before and after the cleanup using Aspose.Cells. | Explain why resetting a cell's style to the default removes a formatting‑only cell and how this affects the CountLarge property. | Suggest scalable techniques for detecting and removing formatting‑only cells in worksheets with millions of rows in Aspose.Cells.
+
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    public class FormattingOnlyCellsReductionDemo
+    // Creates a workbook, adds data and style‑only cells, records CountLarge, resets empty cells with custom styles to the default, removes unused styles, then shows the before/after cell count to illustrate memory savings.
+    public class FormattingOnlyCellsComparison
     {
         public static void Main(string[] args)
         {
@@ -21,92 +30,78 @@ namespace AsposeCellsExamples
         public static void Run()
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
             // -------------------------------------------------
-            // 1. Populate cells with values and formatting‑only cells
+            // 1. Add regular data cells
             // -------------------------------------------------
-            // Cells with actual data
-            cells["A1"].PutValue("Data 1");
-            cells["B2"].PutValue(123);
-            cells["C3"].PutValue(DateTime.Now);
+            cells["A1"].PutValue("Header");
+            cells["A2"].PutValue("Data1");
+            cells["A3"].PutValue("Data2");
 
-            // Cells that have only formatting (no value)
-            Style fmtStyle = workbook.CreateStyle();
-            fmtStyle.Font.Name = "Arial";
-            fmtStyle.Font.Size = 14;
+            // -------------------------------------------------
+            // 2. Add formatting‑only cells (no value, only style)
+            // -------------------------------------------------
+            Style fmtStyle = wb.CreateStyle();
             fmtStyle.Font.IsBold = true;
+            fmtStyle.Font.Color = Color.Red;
 
-            // Apply the style to cells without setting a value
-            cells["D4"].SetStyle(fmtStyle);
-            cells["E5"].SetStyle(fmtStyle);
-            cells["F6"].SetStyle(fmtStyle);
+            cells["B1"].SetStyle(fmtStyle); // formatting only
+            cells["C2"].SetStyle(fmtStyle); // formatting only
+            cells["D4"].SetStyle(fmtStyle); // formatting only (outside data range)
 
             // -------------------------------------------------
-            // 2. Count instantiated cells before removal
+            // 3. Count instantiated cells before cleanup
             // -------------------------------------------------
             long countBefore = cells.CountLarge;
-            Console.WriteLine($"Instantiated cells before removal: {countBefore}");
+            Console.WriteLine($"Instantiated cells before removing formatting‑only cells: {countBefore}");
 
             // -------------------------------------------------
-            // 3. Remove formatting‑only cells
-            //    A cell is considered formatting‑only if it has no value
-            //    and its style differs from the default workbook style.
+            // 4. Remove formatting‑only cells
+            //    If a cell has no value but has a custom style, reset its style to the default.
             // -------------------------------------------------
-            Style defaultStyle = workbook.DefaultStyle;
-
-            // Determine used range
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Define a reasonable scan area that includes possible formatting‑only cells.
+            int maxRow = Math.Max(cells.MaxDataRow, 10);
+            int maxCol = Math.Max(cells.MaxDataColumn, 10);
 
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
                     Cell cell = cells[row, col];
+                    if (cell == null) continue; // cell not instantiated yet
 
-                    // Skip cells that were never instantiated
-                    if (cell == null) continue;
+                    bool hasValue = cell.Value != null && !(cell.Value is string s && string.IsNullOrEmpty(s));
+                    bool hasCustomStyle = !cell.GetStyle().Equals(wb.DefaultStyle);
 
-                    // Check if the cell has no value
-                    bool hasNoValue = cell.Value == null || string.IsNullOrEmpty(cell.StringValue);
-
-                    // Check if the cell's style is not the default one
-                    bool hasCustomStyle = !cell.GetStyle().Equals(defaultStyle);
-
-                    if (hasNoValue && hasCustomStyle)
+                    if (!hasValue && hasCustomStyle)
                     {
-                        // Reset style to default; this will de‑instantiate the cell
-                        cell.SetStyle(defaultStyle);
+                        // Reset to default style, effectively removing the formatting‑only cell
+                        cell.SetStyle(wb.DefaultStyle);
                     }
                 }
             }
 
+            // Remove any styles that are no longer used after the cleanup
+            wb.RemoveUnusedStyles();
+
             // -------------------------------------------------
-            // 4. Count instantiated cells after removal
+            // 5. Count instantiated cells after cleanup
             // -------------------------------------------------
             long countAfter = cells.CountLarge;
-            Console.WriteLine($"Instantiated cells after removal: {countAfter}");
+            Console.WriteLine($"Instantiated cells after removing formatting‑only cells: {countAfter}");
 
             // -------------------------------------------------
-            // 5. Show reduction
+            // 6. Report reduction
             // -------------------------------------------------
-            long reduction = countBefore - countAfter;
-            Console.WriteLine($"Number of cells removed: {reduction}");
+            Console.WriteLine($"Reduction in instantiated cells: {countBefore - countAfter}");
 
-            // Save the workbook for verification (optional)
-            string outputPath = "FormattingOnlyCellsReductionDemo.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // -------------------------------------------------
+            // 7. Save the workbook for visual verification
+            // -------------------------------------------------
+            wb.Save("FormattingOnlyCellsComparison.xlsx");
         }
     }
 }

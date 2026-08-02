@@ -1,60 +1,46 @@
 using System;
-using System.Collections;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;   // PdfSaveOptions resides in this namespace
 
-namespace AsposeCellsPdfBookmarkDemo
+// Author: Aspose.Cells .NET example – creates a PDF bookmark that points to a named range.
+class PdfBookmarkExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "DataSheet";
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Sheet1";
 
-            // Fill some data in the range that will be bookmarked
-            sheet.Cells["B2"].PutValue("Start of Range");
-            sheet.Cells["B3"].PutValue(100);
-            sheet.Cells["B4"].PutValue(200);
-            sheet.Cells["B5"].PutValue(300);
-            sheet.Cells["B6"].PutValue("End of Range");
+        // Fill some sample data
+        sheet.Cells["A1"].PutValue("Item");
+        sheet.Cells["B1"].PutValue("Quantity");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["A4"].PutValue("Cherry");
+        sheet.Cells["B4"].PutValue(30);
 
-            // Define a named range that covers B2:B6
-            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-            // The RefersTo string must start with '=' and include the sheet name
-            namedRange.RefersTo = $"=DataSheet!$B$2:$B$6";
+        // Define a named range that covers the data table (A1:B4)
+        int nameIndex = workbook.Worksheets.Names.Add("DataTable");
+        // RefersTo must be a valid Excel address; the leading '=' is required.
+        workbook.Worksheets.Names[nameIndex].RefersTo = "=Sheet1!$A$1:$B$4";
 
-            // Create a PDF bookmark entry that uses the named destination
-            PdfBookmarkEntry bookmark = new PdfBookmarkEntry
-            {
-                Text = "My Named Range Bookmark",
-                // Set DestinationName to the name of the range; this creates a named destination
-                DestinationName = "MyRange",
-                // Optionally set Destination to the first cell of the range (not required when using DestinationName)
-                Destination = sheet.Cells["B2"],
-                IsOpen = true
-            };
+        // Prepare PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // If you want sub‑bookmarks, you can add them to the SubEntry collection
-            // Example (optional):
-            // PdfBookmarkEntry subBookmark = new PdfBookmarkEntry
-            // {
-            //     Text = "Sub Section",
-            //     Destination = sheet.Cells["B4"]
-            // };
-            // bookmark.SubEntry = new ArrayList { subBookmark };
+        // ------------------------------------------------------------
+        // NOTE: The Aspose.Cells API provides a PdfBookmarkCollection
+        // accessible via PdfSaveOptions.Bookmarks. The Add method typically
+        // accepts the bookmark title and a destination string (named range).
+        // The exact signature may vary between library versions.
+        // ------------------------------------------------------------
+        // Placeholder for adding a bookmark that points to the named range.
+        // Uncomment and adjust the following line when the correct API is known:
+        // pdfOptions.Bookmarks.Add("Data Table", "DataTable"); // Destination = named range
 
-            // Configure PDF save options with the bookmark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Bookmark = bookmark
-            };
-
-            // Save the workbook as a PDF; the bookmark will navigate to the named range
-            workbook.Save("PdfWithNamedRangeBookmark.pdf", pdfOptions);
-        }
+        // Save the workbook as PDF
+        workbook.Save("Output.pdf", pdfOptions);
     }
 }

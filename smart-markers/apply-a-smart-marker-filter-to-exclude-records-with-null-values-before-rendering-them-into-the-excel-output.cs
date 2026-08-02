@@ -1,52 +1,59 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 
 class Program
 {
     static void Main()
     {
-        // ---------- Create a workbook template ----------
-        Workbook workbook = new Workbook();                     // create
+        // ---------- Create a workbook (template) ----------
+        Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
         // Header row
         sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Price");
+        sheet.Cells["B1"].PutValue("Score");
 
         // Smart markers for data rows
-        sheet.Cells["A2"].PutValue("&=$Products.Name");
-        sheet.Cells["B2"].PutValue("&=$Products.Price");
+        sheet.Cells["A2"].PutValue("&=$Data.Name");
+        sheet.Cells["B2"].PutValue("&=$Data.Score");
 
-        // Mark the range that contains smart markers (required for processing)
+        // Mark the range that contains smart markers
         sheet.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
 
         // ---------- Prepare data source with null values ----------
-        DataTable dt = new DataTable("Products");
-        dt.Columns.Add("Name", typeof(string));
-        dt.Columns.Add("Price", typeof(double));
-
-        dt.Rows.Add("Apple", 1.2);
-        dt.Rows.Add(DBNull.Value, 2.5);          // Null Name
-        dt.Rows.Add("Banana", DBNull.Value);    // Null Price
-        dt.Rows.Add("Cherry", 3.0);
+        var data = new List<Person>
+        {
+            new Person { Name = "Alice",   Score = 85 },
+            new Person { Name = null,     Score = 90 },   // Name is null
+            new Person { Name = "Charlie",Score = null } // Score is null
+        };
 
         // ---------- Process smart markers ----------
-        WorkbookDesigner designer = new WorkbookDesigner(); // create designer
-        designer.Workbook = workbook;
-        designer.UpdateEmptyStringAsNull = true;           // treat empty strings as null
-        designer.SetDataSource(dt);
-        designer.Process();                               // process smart markers
+        WorkbookDesigner designer = new WorkbookDesigner
+        {
+            Workbook = workbook,
+            // Optional: treat empty strings as null
+            UpdateEmptyStringAsNull = true
+        };
+        designer.SetDataSource("Data", data);
+        designer.Process();
 
-        // ---------- Apply AutoFilter to exclude rows with null (blank) values ----------
-        // Determine the used range after processing
-        int lastRow = sheet.Cells.MaxDataRow + 1; // +1 because rows are zero‑based
-        sheet.AutoFilter.Range = $"A1:B{lastRow}";
-        // Exclude rows where the Name column (index 0) is blank/null
+        // ---------- Apply AutoFilter to exclude rows with null/blank Name ----------
+        // The range includes header and all possible data rows (max 4 rows here)
+        sheet.AutoFilter.Range = "A1:B4";
+        // Show only rows where column A (Name) is not blank
         sheet.AutoFilter.MatchNonBlanks(0);
-        sheet.AutoFilter.Refresh();                       // apply filter
+        sheet.AutoFilter.Refresh();
 
-        // ---------- Save the result ----------
-        workbook.Save("FilteredOutput.xlsx");              // save
+        // ---------- Save the workbook ----------
+        workbook.Save("SmartMarkerFilteredOutput.xlsx");
+    }
+
+    // Simple POCO used as data source
+    public class Person
+    {
+        public string Name { get; set; }
+        public int? Score { get; set; }
     }
 }

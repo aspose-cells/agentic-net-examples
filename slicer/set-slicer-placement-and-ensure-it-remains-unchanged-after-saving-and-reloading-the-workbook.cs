@@ -10,11 +10,11 @@ namespace SlicerPlacementDemo
     {
         static void Main()
         {
-            // ---------- Create a new workbook and add data ----------
+            // ---------- Create workbook and add data ----------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data for a pivot table
+            // Sample data for pivot table
             sheet.Cells["A1"].Value = "Fruit";
             sheet.Cells["A2"].Value = "Apple";
             sheet.Cells["A3"].Value = "Orange";
@@ -24,34 +24,32 @@ namespace SlicerPlacementDemo
             sheet.Cells["B3"].Value = 150;
             sheet.Cells["B4"].Value = 200;
 
-            // ---------- Create a pivot table ----------
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
+            // ---------- Create pivot table ----------
+            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D3", "FruitPivot");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
             pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
             pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // ---------- Add a slicer linked to the pivot table ----------
-            // Destination cell for the slicer is A6, base field index is 0 (Fruit)
-            int slicerIdx = sheet.Slicers.Add(pivot, "A6", 0);
+            // ---------- Add slicer linked to the pivot table ----------
+            // Destination cell for slicer upper‑left corner is "F3"
+            int slicerIdx = sheet.Slicers.Add(pivot, "F3", "Fruit");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // ---------- Set the slicer placement ----------
-            // Using the obsolete Slicer.Placement property (as per available rule)
+            // ---------- Set slicer placement ----------
+            // Use the (obsolete) Placement property as required
             slicer.Placement = PlacementType.MoveAndSize;
 
             // Save the workbook
             string filePath = "SlicerPlacementDemo.xlsx";
             workbook.Save(filePath);
 
-            // ---------- Reload the workbook and verify placement ----------
+            // ---------- Reload workbook and verify placement ----------
             Workbook loadedWb = new Workbook(filePath);
             Worksheet loadedSheet = loadedWb.Worksheets[0];
             Slicer loadedSlicer = loadedSheet.Slicers[0];
 
-            // Check if the placement persisted
-            PlacementType placement = loadedSlicer.Placement;
-            Console.WriteLine("Slicer placement after reload: " + placement);
-            // Expected output: MoveAndSize
+            // Output the placement value to confirm it persisted
+            Console.WriteLine("Slicer placement after reload: " + loadedSlicer.Placement);
         }
     }
 }

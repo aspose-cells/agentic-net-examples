@@ -3,26 +3,20 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomEngineDemo
 {
-    // Custom engine that replaces the TODAY() function with a fixed date.
+    // Custom engine that overrides TODAY() to return a fixed date (e.g., 2023‑01‑01)
     public class FixedTodayEngine : AbstractCalculationEngine
     {
-        // Override Calculate to handle the TODAY function.
+        // Override Calculate method
         public override void Calculate(CalculationData data)
         {
-            // Check if the function being evaluated is TODAY (case‑insensitive).
-            if (string.Equals(data.FunctionName, "TODAY", StringComparison.OrdinalIgnoreCase))
+            // Check if the function being evaluated is TODAY
+            if (data.FunctionName != null && data.FunctionName.Equals("TODAY", StringComparison.OrdinalIgnoreCase))
             {
-                // Set the calculated value to a fixed date, e.g., 2020‑01‑01.
-                data.CalculatedValue = new DateTime(2020, 1, 1);
-                // No need to call base.Calculate() because the abstract class has no implementation.
+                // Return the fixed date as the calculated value
+                data.CalculatedValue = new DateTime(2023, 1, 1);
+                // No need to call base.Calculate() because the abstract class has no implementation
             }
-            // For all other functions let the default engine handle them (do nothing here).
-        }
-
-        // Ensure TODAY is always recalculated (optional but safe for shared formulas).
-        public override bool ForceRecalculate(string functionName)
-        {
-            return string.Equals(functionName, "TODAY", StringComparison.OrdinalIgnoreCase);
+            // For all other functions, do nothing and let the default engine handle them
         }
     }
 
@@ -30,29 +24,28 @@ namespace AsposeCellsCustomEngineDemo
     {
         static void Main()
         {
-            // Create a new workbook.
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet.
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Place the TODAY() formula in cell A1.
+            // Set a formula that uses TODAY()
             sheet.Cells["A1"].Formula = "=TODAY()";
 
-            // Set up calculation options with the custom engine.
+            // Configure calculation options to use the custom engine
             CalculationOptions options = new CalculationOptions
             {
                 CustomEngine = new FixedTodayEngine()
             };
 
-            // Calculate all formulas using the custom engine.
+            // Calculate all formulas using the custom engine
             workbook.CalculateFormula(options);
 
-            // Retrieve and display the result of the TODAY() formula.
-            object result = sheet.Cells["A1"].Value;
-            Console.WriteLine("A1 (TODAY) calculated value: " + result);
+            // Output the result of the TODAY() formula (should be the fixed date)
+            Console.WriteLine("A1 value (fixed TODAY): " + sheet.Cells["A1"].Value);
 
-            // Save the workbook to demonstrate that the custom calculation persisted.
+            // Save the workbook (demonstrates lifecycle usage)
             workbook.Save("FixedTodayDemo.xlsx");
         }
     }

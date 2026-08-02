@@ -4,59 +4,59 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomObjectImport
 {
-    // Define a custom class with an HTML‑formatted description field
+    // Sample custom object with an HTML formatted description
     public class Product
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public string Description { get; set; }   // HTML content, e.g., "<b>Best seller</b>"
+        public string Description { get; set; } // May contain HTML tags
     }
 
     public class Program
     {
         public static void Main()
         {
-            // 1. Create a new workbook (uses the Workbook() constructor rule)
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
 
-            // 2. Access the first worksheet (the workbook already contains one)
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet (already added by default)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // 3. Prepare a collection of custom objects with HTML in the Description field
+            // Prepare a list of custom objects
             List<Product> products = new List<Product>
             {
                 new Product
                 {
                     Name = "Apple",
                     Price = 2.99m,
-                    Description = "<b>Fresh and juicy</b>"
+                    Description = "<b>Fresh</b> and <i>crisp</i> apples."
                 },
                 new Product
                 {
                     Name = "Orange",
                     Price = 1.99m,
-                    Description = "<i>Sweet and tangy</i>"
+                    Description = "<u>Juicy</u> oranges with <span style=\"color:orange;\">vibrant color</span>."
                 }
             };
 
-            // 4. Convert the collection to an ICellsDataTable using the factory (rule: Workbook.CellsDataTableFactory)
+            // Obtain the factory for building ICellsDataTable from custom objects (rule usage)
             CellsDataTableFactory factory = workbook.CellsDataTableFactory;
+
+            // Create a data table from the custom object list
             ICellsDataTable dataTable = factory.GetInstance(products);
 
-            // 5. Set import options to treat cell values as HTML strings
+            // Configure import options to treat string values as HTML
             ImportTableOptions importOptions = new ImportTableOptions
             {
-                IsFieldNameShown = true,   // optional: include property names as header row
-                IsHtmlString = true        // preserve HTML formatting
+                IsFieldNameShown = true,   // Include property names as header row
+                IsHtmlString = true        // Preserve HTML formatting
             };
 
-            // 6. Import the data table into the worksheet starting at cell A1 (row 0, column 0)
-            sheet.Cells.ImportData(dataTable, 0, 0, importOptions);
+            // Import the data table into the worksheet starting at cell A1
+            worksheet.Cells.ImportData(dataTable, 0, 0, importOptions);
 
-            // 7. Save the workbook to a file (uses Workbook.Save(string) rule)
+            // Save the workbook to a file (lifecycle rule)
             workbook.Save("CustomObjectsWithHtml.xlsx");
-
-            Console.WriteLine("Workbook created and saved successfully.");
         }
     }
 }

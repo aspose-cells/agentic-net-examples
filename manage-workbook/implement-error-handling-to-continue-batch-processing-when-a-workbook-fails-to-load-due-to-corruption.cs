@@ -1,57 +1,62 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-class BatchProcessor
+public class BatchWorkbookProcessor
 {
-    // Processes a collection of Excel files.
-    // If a file is corrupted, it logs the error and continues with the next file.
-    public static void ProcessWorkbooks(IEnumerable<string> filePaths)
+    // Processes a collection of Excel files, attempting to load each one.
+    // If a file is corrupted, the error is logged and processing continues with the next file.
+    public void ProcessWorkbooks(string[] inputFiles, string outputDirectory)
     {
-        foreach (var path in filePaths)
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDirectory);
+
+        foreach (string filePath in inputFiles)
         {
             try
             {
-                // Load the workbook. Aspose.Cells will attempt to open the file.
-                Workbook workbook = new Workbook(path);
+                // Attempt to load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                // Indicate that the workbook was opened in repair mode (safe mode).
+                // Optional: indicate that the workbook was loaded in repair mode (if needed later)
                 workbook.Settings.RepairLoad = true;
 
-                // Example processing: calculate all formulas.
-                workbook.CalculateFormula();
-
-                // Save the processed workbook to an output folder.
-                string outputFolder = "Processed";
-                System.IO.Directory.CreateDirectory(outputFolder);
-                string outputPath = System.IO.Path.Combine(outputFolder, System.IO.Path.GetFileName(path));
+                // Example processing: simply save a copy to the output folder
+                string outputPath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
                 workbook.Save(outputPath);
 
-                Console.WriteLine($"Successfully processed and saved: {outputPath}");
+                Console.WriteLine($"Successfully processed: {filePath}");
             }
             catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
             {
-                // Handle corrupted file without stopping the batch.
-                Console.WriteLine($"Skipped corrupted file '{path}': {ex.Message}");
+                // Specific handling for corrupted files – log and continue
+                Console.WriteLine($"Corrupted file skipped: {filePath} (Reason: {ex.Message})");
             }
             catch (Exception ex)
             {
-                // Handle any other unexpected errors.
-                Console.WriteLine($"Error processing '{path}': {ex.Message}");
+                // General error handling – log and continue
+                Console.WriteLine($"Error processing file {filePath}: {ex.Message}");
             }
         }
     }
+}
 
-    static void Main()
+// Example usage
+public class Program
+{
+    public static void Main()
     {
-        // Example list of workbook file paths to process.
-        var files = new List<string>
+        string[] filesToProcess = new string[]
         {
-            "Workbook1.xlsx",
-            "CorruptedWorkbook.xlsx",
-            "Workbook2.xlsx"
+            @"C:\Data\Workbook1.xlsx",
+            @"C:\Data\Workbook2.xlsx",
+            @"C:\Data\CorruptedWorkbook.xlsx",
+            @"C:\Data\Workbook3.xlsx"
         };
 
-        ProcessWorkbooks(files);
+        string outputFolder = @"C:\Data\Processed";
+
+        BatchWorkbookProcessor processor = new BatchWorkbookProcessor();
+        processor.ProcessWorkbooks(filesToProcess, outputFolder);
     }
 }

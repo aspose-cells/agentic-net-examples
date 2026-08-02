@@ -1,62 +1,42 @@
+// Title: Split and Freeze Panes to Create a Fixed Header in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to split a worksheet window, then freeze the first five rows to keep a header visible while scrolling. The example populates sample data, calls Worksheet.Split(), applies Worksheet.FreezePanes(5,0,5,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
+// Keywords: Aspose.Cells split panes | Aspose.Cells freeze panes | fixed header Excel C# | Worksheet.Split | Worksheet.FreezePanes | C# Aspose.Cells example
+// Common Searches: Aspose.Cells split panes and freeze rows | How to freeze top rows after splitting in Aspose.Cells .NET | Create fixed header in Excel using Aspose.Cells C# | Split window then freeze panes Aspose.Cells
+// Developer Intent: The developer wants to split the worksheet view and then lock the first five rows so the header stays in place while the rest of the sheet scrolls.
+// Use Cases: Build a large data report where column headers remain visible during vertical scrolling. | Design an interactive Excel dashboard that separates scrolling areas while keeping a static header. | Prepare a printable workbook where the top rows are locked for consistent header display across pages.
+// AI Prompts: Show a C# snippet that splits a worksheet at row 5 and freezes the top five rows using Aspose.Cells. | Explain the difference between Worksheet.Split() and Worksheet.FreezePanes() and when to combine them. | Give guidance on freezing both rows and columns after a split with Aspose.Cells, including parameter calculations.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to split a worksheet window, then freeze the first five rows to keep a header visible while scrolling. The example populates sample data, calls Worksheet.Split(), applies Worksheet.FreezePanes(5,0,5,0), and saves the workbook as SplitAndFreezeDemo.xlsx.
+class Program
 {
-    public class SplitAndFreezeDemo
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate some sample data (optional, just for visual verification)
+        for (int row = 0; row < 30; row++)
         {
-            try
+            for (int col = 0; col < 5; col++)
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
             }
         }
 
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // First, split the window. This creates separate panes without freezing them.
+        sheet.Split();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Then freeze the top rows to keep the header visible while scrolling.
+        // Freeze the first 5 rows (row index 5) and no columns.
+        sheet.FreezePanes(5, 0, 5, 0);
 
-                // Add sample data with a header row
-                sheet.Cells["A1"].PutValue("Header");
-                for (int i = 0; i < 100; i++)
-                {
-                    sheet.Cells[i + 1, 0].PutValue($"Row {i + 1}");
-                    sheet.Cells[i + 1, 1].PutValue(i * 10);
-                }
-
-                // Split the worksheet window (creates separate panes)
-                sheet.Split();
-
-                // Freeze the top pane so the header row stays visible while scrolling
-                // Freeze at row index 1 (second row), column index 0, freezing 1 row and 0 columns
-                sheet.FreezePanes(1, 0, 1, 0);
-
-                // Define output file path
-                string outputPath = "SplitAndFreezeDemo.xlsx";
-
-                // Save the workbook (overwrite if it already exists)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors
-                Console.WriteLine($"Runtime error: {ex.Message}");
-                throw;
-            }
-        }
+        // Save the workbook to a file
+        workbook.Save("SplitAndFreezeDemo.xlsx");
     }
 }

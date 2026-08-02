@@ -26,25 +26,22 @@ namespace AsposeCellsPivotHeaderFormatting
             sheet.Cells["B5"].Value = 60;
 
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIdx];
 
-            // Configure the pivot table: rows and data fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Calculate the pivot table data
-            pivotTable.CalculateData();
+            // Configure the pivot table: rows = Category, data = Sum of Amount
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
 
             // Create a style with a custom background color for emphasis
             Style headerStyle = workbook.CreateStyle();
-            headerStyle.ForegroundColor = Color.LightCoral;   // Desired background color
-            headerStyle.Pattern = BackgroundType.Solid;      // Apply solid fill
-            headerStyle.Font.IsBold = true;                  // Optional: make header text bold
+            headerStyle.ForegroundColor = Color.LightGoldenrodYellow; // custom background
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.IsBold = true; // make header text bold
 
-            // Apply the style to the entire pivot table using FormatAll
-            // (This highlights the header row as part of the whole table)
-            pivotTable.FormatAll(headerStyle);
+            // Apply the style to the entire pivot table using FormatAll.
+            // This will affect the header row as part of the pivot area.
+            pivot.FormatAll(headerStyle);
 
             // Save the workbook
             workbook.Save("PivotTableHeaderFormatted.xlsx", SaveFormat.Xlsx);

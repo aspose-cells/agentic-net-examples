@@ -1,61 +1,46 @@
+// Title: Encrypt an Excel Workbook with Strong 128‑Bit Encryption Using Aspose.Cells (C#) and Compare File Sizes
+// Description: Demonstrates how to create a workbook with Aspose.Cells, save it unencrypted, apply a password and 128‑bit strong cryptographic provider, save the encrypted file, and programmatically measure the size difference between the two files.
+// Keywords: Aspose.Cells encrypt workbook C# | 128‑bit strong encryption Excel | compare file size before after encryption | set workbook password Aspose.Cells | EncryptionType.StrongCryptographicProvider | measure XLSX size change | C# Excel security example
+// Common Searches: How to apply strong 128‑bit encryption to an Excel file with Aspose.Cells | C# code to get size of encrypted vs unencrypted workbook | Aspose.Cells set password and encryption options | Compare XLSX file size before and after encryption | Programmatic Excel file protection using Aspose.Cells .NET
+// Developer Intent: Apply strong 128‑bit encryption to a workbook with Aspose.Cells and obtain the before/after file sizes.
+// Use Cases: Protect confidential spreadsheets before distribution while quantifying the storage overhead. | Automate compliance checks that require encrypted reports and size tracking. | Integrate encryption and size logging into batch generation of multiple Excel files.
+// AI Prompts: Generate C# code that encrypts an existing workbook with 256‑bit AES using Aspose.Cells and reports the size difference. | Explain how different Aspose.Cells encryption settings impact XLSX file size and suggest ways to reduce the increase. | Refactor the sample to process a list of workbooks, encrypt each with a password, and write before/after sizes to a CSV file.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDemo
+// Demonstrates how to create a workbook with Aspose.Cells, save it unencrypted, apply a password and 128‑bit strong cryptographic provider, save the encrypted file, and programmatically measure the size difference between the two files.
+class EncryptionComparison
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Encryption Test");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["A3"].PutValue(12345);
+        // Create a new workbook and add some data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sensitive Information");
 
-            // Define file paths for the unencrypted and encrypted workbooks
-            string unencryptedPath = "UnencryptedWorkbook.xlsx";
-            string encryptedPath = "EncryptedWorkbook.xlsx";
+        // Save the workbook without encryption
+        string unencryptedFile = "Unencrypted.xlsx";
+        workbook.Save(unencryptedFile, SaveFormat.Xlsx);
 
-            // Save the workbook without any protection
-            workbook.Save(unencryptedPath, SaveFormat.Xlsx);
+        // Get file size before encryption
+        long sizeBefore = new FileInfo(unencryptedFile).Length;
 
-            // Get the file size of the unencrypted workbook
-            long unencryptedSize = new FileInfo(unencryptedPath).Length;
-            Console.WriteLine($"Unencrypted file size: {unencryptedSize} bytes");
+        // Apply strong encryption settings
+        workbook.Settings.Password = "StrongPassword123";
+        workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
 
-            // Apply strong encryption settings
-            // Set a password that will be required to open the workbook
-            workbook.Settings.Password = "StrongPassword123";
+        // Save the encrypted workbook
+        string encryptedFile = "Encrypted.xlsx";
+        workbook.Save(encryptedFile, SaveFormat.Xlsx);
 
-            // Use the StrongCryptographicProvider encryption type with a 128‑bit key
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+        // Get file size after encryption
+        long sizeAfter = new FileInfo(encryptedFile).Length;
 
-            // Save the encrypted workbook
-            workbook.Save(encryptedPath, SaveFormat.Xlsx);
-
-            // Get the file size of the encrypted workbook
-            long encryptedSize = new FileInfo(encryptedPath).Length;
-            Console.WriteLine($"Encrypted file size: {encryptedSize} bytes");
-
-            // Compare the sizes
-            if (encryptedSize > unencryptedSize)
-            {
-                Console.WriteLine("Encryption increased the file size.");
-            }
-            else if (encryptedSize < unencryptedSize)
-            {
-                Console.WriteLine("Encryption decreased the file size.");
-            }
-            else
-            {
-                Console.WriteLine("File size unchanged after encryption.");
-            }
-
-            // Clean up
-            workbook.Dispose();
-        }
+        // Output the size comparison
+        Console.WriteLine($"Size before encryption: {sizeBefore} bytes");
+        Console.WriteLine($"Size after encryption: {sizeAfter} bytes");
+        Console.WriteLine($"Size increase: {sizeAfter - sizeBefore} bytes");
     }
 }

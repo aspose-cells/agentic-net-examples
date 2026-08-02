@@ -1,32 +1,48 @@
 using System;
 using Aspose.Cells;
 
-class BackupAndModifyExternalLinks
+namespace BackupAndModifyExternalLinks
 {
-    static void Main()
+    class Program
     {
-        // Load the original workbook
-        string sourcePath = "input.xlsx";
-        Workbook originalWorkbook = new Workbook(sourcePath);
-
-        // Create a backup copy of the workbook
-        Workbook backupWorkbook = new Workbook();
-        backupWorkbook.Copy(originalWorkbook);               // use the Copy method (create‑>copy)
-        backupWorkbook.Save("backup_input.xlsx");            // save the backup
-
-        // Modify external link paths in the original workbook
-        ExternalLinkCollection externalLinks = originalWorkbook.Worksheets.ExternalLinks;
-        for (int i = 0; i < externalLinks.Count; i++)
+        static void Main()
         {
-            ExternalLink link = externalLinks[i];
+            // Path to the original workbook
+            string originalPath = "OriginalWorkbook.xlsx";
 
-            // Example modification: replace an old folder path with a new one
-            string oldPath = link.DataSource;
-            string newPath = oldPath.Replace(@"C:\OldFolder\", @"D:\NewFolder\");
-            link.DataSource = newPath;
+            // Load the original workbook (load rule)
+            Workbook originalWorkbook = new Workbook(originalPath);
+
+            // Create a backup workbook (create rule)
+            Workbook backupWorkbook = new Workbook();
+
+            // Copy the content of the original workbook to the backup (copy rule)
+            backupWorkbook.Copy(originalWorkbook);
+
+            // Save the backup workbook (save rule)
+            string backupPath = "OriginalWorkbook_Backup.xlsx";
+            backupWorkbook.Save(backupPath);
+
+            // Modify external link paths in the original workbook
+            ExternalLinkCollection externalLinks = originalWorkbook.Worksheets.ExternalLinks;
+            for (int i = 0; i < externalLinks.Count; i++)
+            {
+                // Example modification: replace a folder name in the data source
+                string currentSource = externalLinks[i].DataSource;
+                string modifiedSource = currentSource.Replace(@"C:\OldFolder\", @"D:\NewFolder\");
+                externalLinks[i].DataSource = modifiedSource;
+            }
+
+            // Save the modified original workbook (save rule)
+            string modifiedPath = "OriginalWorkbook_Modified.xlsx";
+            originalWorkbook.Save(modifiedPath);
+
+            // Clean up
+            originalWorkbook.Dispose();
+            backupWorkbook.Dispose();
+
+            Console.WriteLine("Backup created at: " + backupPath);
+            Console.WriteLine("Modified workbook saved at: " + modifiedPath);
         }
-
-        // Save the workbook after modifications
-        originalWorkbook.Save("output_modified.xlsx");
     }
 }

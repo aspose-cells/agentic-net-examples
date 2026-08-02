@@ -3,7 +3,7 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerAutoSelectDemo
+namespace AsposeCellsSlicerSelectionDemo
 {
     class Program
     {
@@ -16,12 +16,12 @@ namespace SlicerAutoSelectDemo
 
             // Populate sample data for the pivot table
             cells["A1"].PutValue("Fruit");
-            cells["A2"].PutValue("Apple");
-            cells["A3"].PutValue("Orange");
-            cells["A4"].PutValue("Banana");
             cells["B1"].PutValue("Sales");
+            cells["A2"].PutValue("Apple");
             cells["B2"].PutValue(100);
+            cells["A3"].PutValue("Orange");
             cells["B3"].PutValue(200);
+            cells["A4"].PutValue("Banana");
             cells["B4"].PutValue(300);
 
             // Add a pivot table based on the data
@@ -36,39 +36,32 @@ namespace SlicerAutoSelectDemo
             int slicerIdx = sheet.Slicers.Add(pivot, "F1", "Fruit");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Refresh the slicer to ensure cache is up‑to‑date
-            slicer.Refresh();
-
-            // BEFORE saving: ensure each slicer has at least one selected item
-            foreach (Worksheet ws in workbook.Worksheets)
+            // OPTIONAL: Deselect all items to simulate a slicer with no selection
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
             {
-                foreach (Slicer s in ws.Slicers)
+                item.Selected = false;
+            }
+
+            // BEFORE saving: ensure at least one item is selected.
+            // If none are selected, select the first item.
+            bool anySelected = false;
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+            {
+                if (item.Selected)
                 {
-                    SlicerCacheItemCollection items = s.SlicerCache.SlicerCacheItems;
-                    bool anySelected = false;
-
-                    // Check if any item is already selected
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        if (items[i].Selected)
-                        {
-                            anySelected = true;
-                            break;
-                        }
-                    }
-
-                    // If none selected, select the first item
-                    if (!anySelected && items.Count > 0)
-                    {
-                        items[0].Selected = true;
-                        // Optionally set the first visible item index
-                        s.FirstItemIndex = 0;
-                    }
+                    anySelected = true;
+                    break;
                 }
             }
 
+            if (!anySelected && slicer.SlicerCache.SlicerCacheItems.Count > 0)
+            {
+                // Select the first slicer item
+                slicer.SlicerCache.SlicerCacheItems[0].Selected = true;
+            }
+
             // Save the workbook
-            workbook.Save("SlicerAutoSelectDemo.xlsx");
+            workbook.Save("SlicerSelectionDemo.xlsx");
         }
     }
 }

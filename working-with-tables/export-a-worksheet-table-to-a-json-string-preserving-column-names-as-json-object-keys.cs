@@ -1,11 +1,19 @@
+// Title: C# – Export an Excel worksheet table to JSON with column names as keys using Aspose.Cells
+// Description: Demonstrates how to create a workbook, fill a header row and data rows, define a range, configure ExportRangeToJsonOptions (header row, numeric values, empty cells, custom indentation), and call JsonUtility.ExportRangeToJson to generate a formatted JSON string printed to the console.
+// Keywords: Aspose.Cells | ExportRangeToJson | JsonUtility | C# Excel to JSON | Export worksheet range to JSON | pretty‑printed JSON | header row as keys | .NET Excel JSON conversion | sample code | GitHub example
+// Common Searches: Aspose.Cells export range to JSON C# | How to convert Excel table to JSON with column headers | Export Excel range as JSON string using Aspose.Cells | JsonUtility ExportRangeToJsonOptions example | C# pretty printed JSON from worksheet
+// Developer Intent: Create a JSON string from a worksheet range where each row becomes an object and the first row supplies the property names.
+// Use Cases: Return JSON data directly from an in‑memory workbook for a web API without writing a file. | Serialize tabular data for front‑end JavaScript consumption while preserving original column names. | Generate a readable JSON payload with indentation and empty‑cell placeholders for logging or debugging.
+// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet range to a formatted JSON string, using the first row as property names. | Show how to modify ExportRangeToJsonOptions to output numeric values as strings and to omit rows that are completely empty. | Provide a snippet that deserializes the JSON produced by JsonUtility.ExportRangeToJson into a List<T> with System.Text.Json.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsJsonExport
+namespace AsposeCellsJsonExportDemo
 {
+    // Demonstrates how to create a workbook, fill a header row and data rows, define a range, configure ExportRangeToJsonOptions (header row, numeric values, empty cells, custom indentation), and call JsonUtility.ExportRangeToJson to generate a formatted JSON string printed to the console.
     class Program
     {
         static void Main()
@@ -35,29 +43,28 @@ namespace AsposeCellsJsonExport
                 cells["C4"].PutValue("Paris");
 
                 // Define the range that includes the header and all data rows
-                // start row = 0, start column = 0, total rows = 4, total columns = 3
+                // startRow = 0 (A1), startColumn = 0 (A), totalRows = 4, totalColumns = 3
                 AsposeRange exportRange = cells.CreateRange(0, 0, 4, 3);
 
-                // Configure JSON export options
-                JsonSaveOptions jsonOptions = new JsonSaveOptions
+                // Configure export options
+                ExportRangeToJsonOptions jsonOptions = new ExportRangeToJsonOptions
                 {
-                    HasHeaderRow = true,          // first row contains column names
-                    ExportEmptyCells = true,      // export empty cells as null
-                    Indent = "    "               // pretty‑print with 4 spaces
+                    HasHeaderRow = true,
+                    ExportAsString = false,
+                    ExportEmptyCells = true,
+                    Indent = "  "
                 };
 
-                // Export the defined range to a JSON string
+                // Export the range to a JSON string
                 string jsonResult = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
 
-                // Output the JSON string to the console
+                // Output the JSON string
                 Console.WriteLine("Exported JSON:");
                 Console.WriteLine(jsonResult);
             }
             catch (Exception ex)
             {
-                // Log the exception details
-                Console.Error.WriteLine($"Error: {ex.Message}");
-                Console.Error.WriteLine(ex.StackTrace);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

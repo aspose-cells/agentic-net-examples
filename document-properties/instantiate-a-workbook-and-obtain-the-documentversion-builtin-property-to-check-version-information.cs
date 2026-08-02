@@ -8,16 +8,20 @@ class Program
         // Create a new workbook instance
         Workbook workbook = new Workbook();
 
-        // Set the built‑in DocumentVersion property (optional)
-        workbook.BuiltInDocumentProperties.DocumentVersion = "1.0";
+        // Retrieve the built‑in DocumentVersion property
+        string version = workbook.BuiltInDocumentProperties.DocumentVersion;
 
-        // Retrieve the DocumentVersion property value
-        string docVersion = workbook.BuiltInDocumentProperties.DocumentVersion;
+        // If the property is not set, assign a value for demonstration
+        if (string.IsNullOrEmpty(version))
+        {
+            workbook.BuiltInDocumentProperties.DocumentVersion = "1.0";
+            version = workbook.BuiltInDocumentProperties.DocumentVersion;
+        }
 
-        // Output the version information
-        Console.WriteLine("Document Version: " + docVersion);
+        // Display the document version
+        Console.WriteLine("Document Version: " + version);
 
-        // Save the workbook to demonstrate the full lifecycle
+        // Save the workbook (optional, demonstrates lifecycle usage)
         workbook.Save("DocumentVersionDemo.xlsx", SaveFormat.Xlsx);
     }
 }

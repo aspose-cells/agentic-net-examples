@@ -1,39 +1,37 @@
 using System;
 using Aspose.Cells;
 
+// Author: Aspose.Cells .NET example – copy rows with absolute references unchanged
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (replace with the provided create rule if available)
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate some data that will be referenced by absolute formulas
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["B1"].PutValue(20);
+        // Source worksheet with formulas that use absolute references
+        Worksheet srcSheet = workbook.Worksheets[0];
+        srcSheet.Cells["A1"].Formula = "$B$1+10";
+        srcSheet.Cells["A2"].Formula = "$B$2*2";
 
-        // Add a formula with absolute references in row 2 (zero‑based index 1)
-        // The formula refers to $A$1 and $B$1, which should stay unchanged after copying
-        sheet.Cells["C2"].Formula = "=$A$1+$B$1";
+        // Destination worksheet
+        Worksheet dstSheet = workbook.Worksheets.Add("Destination");
 
-        // Prepare copy and paste options
-        // CopyOptions – default behavior (no special handling required)
+        // Configure copy and paste options
         CopyOptions copyOptions = new CopyOptions();
 
-        // PasteOptions – copy formulas only and do not apply any operation type
-        // This prevents Excel‑like relative adjustment of formulas during the copy
         PasteOptions pasteOptions = new PasteOptions
         {
-            PasteType = PasteType.Formulas,          // copy formulas as they are
-            OperationType = PasteOperationType.None  // no arithmetic operation on the copied data
+            // Disable formula adjustment (relative reference shifting) by using No operation type
+            OperationType = PasteOperationType.None,
+            // Ensure formulas are copied
+            PasteType = PasteType.Formulas
         };
 
-        // Copy the entire row 2 (index 1) to row 4 (index 3)
-        // Parameters: source cells, source row index, destination row index, number of rows, copy options, paste options
-        sheet.Cells.CopyRows(sheet.Cells, 1, 3, 1, copyOptions, pasteOptions);
+        // Copy the first two rows from source to destination starting at row index 5 (row 6 in Excel)
+        dstSheet.Cells.CopyRows(srcSheet.Cells, 0, 5, 2, copyOptions, pasteOptions);
 
-        // Save the workbook to verify that the formula in C4 remains "=$A$1+$B$1"
-        workbook.Save("AbsoluteReferenceCopy_Output.xlsx");
+        // Save the workbook (replace with the provided save rule if available)
+        workbook.Save("RowsCopy_NoFormulaAdjustment.xlsx");
     }
 }

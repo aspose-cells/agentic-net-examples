@@ -1,27 +1,25 @@
 using System;
 using Aspose.Cells;
 
-class Program
+class SharedWorkbookDemo
 {
     static void Main()
     {
         // Create a new workbook instance
         Workbook workbook = new Workbook();
 
-        // Enable shared mode for concurrent editing by multiple users
+        // Enable shared mode to allow concurrent editing by multiple users
         workbook.Settings.Shared = true;
 
-        // Optional: add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Shared Workbook");
-        sheet.Cells["A2"].PutValue(DateTime.Now);
+        // (Optional) Protect the shared workbook with a password
+        // workbook.ProtectSharedWorkbook("myPassword");
 
-        // Save the shared workbook
-        string filePath = "SharedWorkbook.xlsx";
-        workbook.Save(filePath);
+        // Save the shared workbook to disk
+        string outputPath = "SharedWorkbook.xlsx";
+        workbook.Save(outputPath);
 
-        // Load the workbook to verify that the Shared property is set
-        Workbook loadedWorkbook = new Workbook(filePath);
+        // Load the workbook back to verify that the Shared property is set
+        Workbook loadedWorkbook = new Workbook(outputPath);
         Console.WriteLine("Shared property value: " + loadedWorkbook.Settings.Shared);
     }
 }

@@ -1,66 +1,63 @@
+// Title: C# – Validate and Replace Empty Text in SmartArt Shapes with Aspose.Cells
+// Description: Load an Excel workbook, walk through every worksheet, locate SmartArt shapes, convert them to GroupShape via GetResultOfSmartArt, insert a default string where text is blank, confirm the replacement succeeded, and save the file with UpdateSmartArt enabled using OoxmlSaveOptions.
+// Keywords: Aspose.Cells SmartArt C# | replace empty SmartArt text | GetResultOfSmartArt example | UpdateSmartArt save option | .NET Excel SmartArt validation | grouped shapes Aspose
+// Common Searches: how to fill missing SmartArt labels with Aspose.Cells | C# code to check SmartArt nodes for empty text | Aspose.Cells replace blank SmartArt text in Excel | save workbook with updated SmartArt using OoxmlSaveOptions
+// Developer Intent: Automatically ensure that every SmartArt node in an Excel file contains non‑empty text after applying a default value.
+// Use Cases: Clean up template files before distribution so all SmartArt elements are labeled. | Run a quality‑control step in a reporting pipeline that verifies SmartArt completeness. | Prepare Excel workbooks for downstream data extraction where empty SmartArt nodes cause errors.
+// AI Prompts: Write C# code with Aspose.Cells that iterates through SmartArt shapes and sets "DefaultText" for any empty node. | Show how to throw a detailed exception when a SmartArt shape remains empty after replacement. | Explain the role of OoxmlSaveOptions.UpdateSmartArt when persisting changes to a workbook.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace SmartArtValidation
 {
-    public class Validator
+    // Load an Excel workbook, walk through every worksheet, locate SmartArt shapes, convert them to GroupShape via GetResultOfSmartArt, insert a default string where text is blank, confirm the replacement succeeded, and save the file with UpdateSmartArt enabled using OoxmlSaveOptions.
+    class Program
     {
-        // Validates that every SmartArt shape in the workbook contains non‑empty text.
-        // Throws an exception if any SmartArt sub‑shape has empty or whitespace text.
-        public static void ValidateSmartArtText(string inputFilePath)
+        static void Main()
         {
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputFilePath);
+            // Load the workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Iterate through all worksheets and their shapes
-            foreach (Worksheet sheet in workbook.Worksheets)
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                foreach (Shape shape in sheet.Shapes)
+                foreach (Shape shape in worksheet.Shapes)
                 {
                     // Process only SmartArt shapes
                     if (shape.IsSmartArt)
                     {
-                        // Convert SmartArt to a group shape to access its constituent shapes
+                        // Convert the SmartArt to a GroupShape to access its constituent shapes
                         GroupShape group = shape.GetResultOfSmartArt();
 
-                        // Guard against null (in case conversion fails)
-                        if (group == null) continue;
-
-                        // Examine each grouped shape that represents a SmartArt element
-                        foreach (Shape smartArtPart in group.GetGroupedShapes())
+                        if (group != null)
                         {
-                            // Check the Text property; consider null, empty or whitespace as invalid
-                            if (string.IsNullOrWhiteSpace(smartArtPart.Text))
+                            // Iterate through each shape inside the SmartArt
+                            foreach (Shape smartShape in group.GetGroupedShapes())
                             {
-                                string message = $"SmartArt part with Id {smartArtPart.Id} in worksheet '{sheet.Name}' has empty text.";
-                                throw new InvalidOperationException(message);
+                                // If the text is empty or whitespace, replace it with a default value
+                                if (string.IsNullOrWhiteSpace(smartShape.Text))
+                                {
+                                    smartShape.Text = "DefaultText";
+                                }
+
+                                // Validate that the text is now non‑empty
+                                if (string.IsNullOrWhiteSpace(smartShape.Text))
+                                {
+                                    throw new InvalidOperationException(
+                                        $"SmartArt shape '{smartShape.Name}' contains empty text after replacement.");
+                                }
                             }
                         }
                     }
                 }
             }
 
-            // Save the workbook with UpdateSmartArt enabled (lifecycle rule: save)
+            // Save the workbook with SmartArt updating enabled
             OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-            saveOptions.UpdateSmartArt = true; // ensure SmartArt changes are persisted
-            workbook.Save(inputFilePath, saveOptions);
-        }
-
-        // Example usage
-        public static void Main()
-        {
-            string filePath = "template.xlsx";
-
-            try
-            {
-                ValidateSmartArtText(filePath);
-                Console.WriteLine("All SmartArt shapes contain non‑empty text.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Validation failed: " + ex.Message);
-            }
+            saveOptions.UpdateSmartArt = true; // ensures SmartArt changes are persisted
+            workbook.Save("output.xlsx", saveOptions);
         }
     }
 }

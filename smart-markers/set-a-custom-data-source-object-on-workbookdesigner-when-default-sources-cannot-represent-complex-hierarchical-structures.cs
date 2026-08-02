@@ -1,3 +1,11 @@
+// Title: Custom hierarchical data source for WorkbookDesigner using ICellsDataTable (C# Aspose.Cells)
+// Description: Demonstrates how to bind a complex department‑employee hierarchy to WorkbookDesigner by implementing a custom ICellsDataTable that flattens the nested collections. The example creates Department and Employee classes, builds a DepartmentDataSource, registers it with designer.SetDataSource("Dept", …), uses smart markers (&=Dept.DeptName, & =Dept.EmployeeName, & =Dept.EmployeeAge) and saves the populated workbook as an Excel file.
+// Keywords: Aspose.Cells | WorkbookDesigner | custom data source | ICellsDataTable | C# | smart markers | hierarchical data | flatten nested collections | department employee report | Excel generation
+// Common Searches: Aspose.Cells custom ICellsDataTable example | WorkbookDesigner hierarchical data source C# | bind nested objects to smart markers Aspose | flatten list of objects for smart markers | SetDataSource with custom data table Aspose
+// Developer Intent: Bind a multi‑level object model (departments with employee lists) to WorkbookDesigner by providing a custom ICellsDataTable that presents the data in a flat tabular form for smart marker processing.
+// Use Cases: Create an employee directory Excel report where each row shows department, employee name, and age via smart markers. | Reuse the same DepartmentDataSource across multiple worksheets or templates in a single reporting job. | Integrate the custom data source into a server‑side reporting service that converts nested business objects into Excel files.
+// AI Prompts: Guide me through building a custom ICellsDataTable that flattens a list of departments and their employees for WorkbookDesigner. | Show how to extend DepartmentDataSource to add columns like EmployeeTitle and Salary while keeping smart marker compatibility. | What are common troubleshooting steps when smart markers return null or incorrect values from a custom data source?
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,7 +13,8 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomDataSourceDemo
 {
-    // Sample hierarchical classes
+    // Hierarchical data model: Department contains a list of Employees
+    // Demonstrates how to bind a complex department‑employee hierarchy to WorkbookDesigner by implementing a custom ICellsDataTable that flattens the nested collections. The example creates Department and Employee classes, builds a DepartmentDataSource, registers it with designer.SetDataSource("Dept", …), uses smart markers (&=Dept.DeptName, & =Dept.EmployeeName, & =Dept.EmployeeAge) and saves the populated workbook as an Excel file.
     public class Department
     {
         public string DeptName { get; set; }
@@ -30,24 +39,25 @@ namespace AsposeCellsCustomDataSourceDemo
         }
     }
 
-    // Custom ICellsDataTable implementation that flattens the hierarchy
-    public class DeptEmployeeDataTable : ICellsDataTable
+    // Custom ICellsDataTable implementation that flattens the hierarchical structure
+    public class DepartmentDataSource : ICellsDataTable
     {
         private readonly List<Department> _departments;
-        private readonly List<(string DeptName, string EmpName, int EmpAge)> _rows;
+        private readonly List<(string DeptName, Employee Emp)> _flatRows;
         private int _currentRow = -1;
 
-        public DeptEmployeeDataTable(List<Department> departments)
+        public DepartmentDataSource(List<Department> departments)
         {
-            _departments = departments;
-            _rows = new List<(string, string, int)>();
+            _departments = departments ?? throw new ArgumentNullException(nameof(departments));
+            _flatRows = new List<(string, Employee)>();
 
-            // Flatten hierarchical data into rows
+            // Flatten the hierarchy: each employee becomes a row with its department name
             foreach (var dept in _departments)
             {
+                if (dept?.Employees == null) continue;
                 foreach (var emp in dept.Employees)
                 {
-                    _rows.Add((dept.DeptName, emp.Name, emp.Age));
+                    _flatRows.Add((dept.DeptName, emp));
                 }
             }
         }
@@ -57,43 +67,36 @@ namespace AsposeCellsCustomDataSourceDemo
         {
             get
             {
-                var row = _rows[rowIndex];
-                return columnIndex switch
-                {
-                    0 => row.DeptName,
-                    1 => row.EmpName,
-                    2 => row.EmpAge,
-                    _ => null
-                };
+                var row = _flatRows[rowIndex];
+                return columnIndex == 0 ? (object)row.DeptName : row.Emp.Name;
             }
         }
 
-        // Indexer by row (returns the whole row object)
-        public object this[int rowIndex] => _rows[rowIndex];
+        // Indexer by row (returns the whole row object, not used by Aspose but required)
+        public object this[int rowIndex] => _flatRows[rowIndex];
 
-        // Indexer by column name
+        // Indexer by column name (used in smart markers)
         public object this[string columnName]
         {
             get
             {
-                if (_currentRow < 0 || _currentRow >= _rows.Count) return null;
-                var row = _rows[_currentRow];
+                var row = _flatRows[_currentRow];
                 return columnName switch
                 {
                     "DeptName" => row.DeptName,
-                    "EmpName" => row.EmpName,
-                    "EmpAge" => row.EmpAge,
+                    "EmployeeName" => row.Emp.Name,
+                    "EmployeeAge" => row.Emp.Age,
                     _ => null
                 };
             }
         }
 
-        public int RowCount => _rows.Count;
-        public int ColumnCount => 3;
-        public int Count => _rows.Count;
+        public int RowCount => _flatRows.Count;
+        public int ColumnCount => 2; // DeptName, EmployeeName (Age accessed via column name)
+        public int Count => _flatRows.Count;
 
-        // Column names used in smart markers
-        public string[] Columns => new[] { "DeptName", "EmpName", "EmpAge" };
+        // Column names exposed to smart markers
+        public string[] Columns => new[] { "DeptName", "EmployeeName", "EmployeeAge" };
 
         public void BeforeFirst()
         {
@@ -103,7 +106,7 @@ namespace AsposeCellsCustomDataSourceDemo
         public bool Next()
         {
             _currentRow++;
-            return _currentRow < _rows.Count;
+            return _currentRow < _flatRows.Count;
         }
     }
 
@@ -131,40 +134,36 @@ namespace AsposeCellsCustomDataSourceDemo
                 // Create a new workbook and add smart markers
                 var workbook = new Workbook();
                 var sheet = workbook.Worksheets[0];
+
+                // Header row
                 sheet.Cells["A1"].PutValue("Department");
-                sheet.Cells["B1"].PutValue("Employee");
-                sheet.Cells["C1"].PutValue("Age");
-                sheet.Cells["A2"].PutValue("&=DeptEmp.DeptName");
-                sheet.Cells["B2"].PutValue("&=DeptEmp.EmpName");
-                sheet.Cells["C2"].PutValue("&=DeptEmp.EmpAge");
+                sheet.Cells["B1"].PutValue("Employee Name");
+                sheet.Cells["C1"].PutValue("Employee Age");
+
+                // Data rows with smart markers
+                sheet.Cells["A2"].PutValue("&=Dept.DeptName");
+                sheet.Cells["B2"].PutValue("&=Dept.EmployeeName");
+                sheet.Cells["C2"].PutValue("&=Dept.EmployeeAge");
 
                 // Initialize WorkbookDesigner with the workbook
                 var designer = new WorkbookDesigner(workbook);
 
-                // Create custom data source object
-                ICellsDataTable customTable = new DeptEmployeeDataTable(departments);
+                // Set the custom hierarchical data source
+                designer.SetDataSource("Dept", new DepartmentDataSource(departments));
 
-                // Bind the custom data source to a name used in smart markers
-                designer.SetDataSource("DeptEmp", customTable);
-
-                // Process the smart markers
+                // Process smart markers
                 designer.Process();
 
-                // Define output path and ensure directory exists
-                string outputPath = "CustomHierarchicalDataOutput.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+                // Define output file path
+                string outputPath = "CustomHierarchicalDataSource.xlsx";
 
                 // Save the result
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

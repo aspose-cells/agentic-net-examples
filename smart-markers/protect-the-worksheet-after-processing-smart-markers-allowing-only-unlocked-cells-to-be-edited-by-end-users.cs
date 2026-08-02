@@ -1,66 +1,56 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-class ProtectWorksheetAfterSmartMarkers
+namespace AsposeCellsSmartMarkerProtection
 {
-    static void Main()
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook and add sample smart markers
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Load the workbook template that contains smart markers
+            Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
 
-            // Header row
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Score");
-
-            // Smart markers that will be replaced by data source values
-            cells["A2"].PutValue("&=$Name");
-            cells["B2"].PutValue("&=$Score");
-
-            // Simple data source
-            var data = new List<Dictionary<string, object>>
+            // Prepare a simple data source for the smart markers
+            var people = new List<Person>
             {
-                new Dictionary<string, object> { ["Name"] = "Alice", ["Score"] = 85 },
-                new Dictionary<string, object> { ["Name"] = "Bob",   ["Score"] = 92 }
+                new Person { Name = "John Doe", Age = 30 },
+                new Person { Name = "Jane Smith", Age = 28 }
             };
 
-            // Bind data source and process smart markers
+            // Set the data source and process the smart markers
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Data", data);
+            designer.SetDataSource("People", people);
             designer.Process();
 
-            // Create a style for editable cells (unlocked)
-            Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;
+            // Unlock cells that should remain editable after the worksheet is protected
+            Worksheet sheet = workbook.Worksheets[0];
+            // Example: unlock column B (index 1) for rows 2 and 3 (zero‑based indices 1 and 2)
+            for (int row = 1; row <= 2; row++)
+            {
+                Cell cell = sheet.Cells[row, 1];
+                Style style = cell.GetStyle();
+                style.IsLocked = false; // make this cell editable when the sheet is protected
+                cell.SetStyle(style);
+            }
 
-            // Apply the unlocked style to the score column
-            AsposeRange editableRange = worksheet.Cells.CreateRange("B2:B3");
-            StyleFlag flag = new StyleFlag();
-            flag.Locked = true; // Apply the Locked attribute from the style
-            editableRange.ApplyStyle(unlockedStyle, flag);
+            // Configure protection options
+            Protection protection = sheet.Protection;
+            protection.AllowSelectingUnlockedCell = true; // allow users to select unlocked cells
+            protection.Password = "pwd123";               // set a password for the worksheet
 
-            // Protect the worksheet; only unlocked cells can be edited
-            // The third parameter (oldPassword) is not required here, pass null
-            worksheet.Protect(ProtectionType.All, "pwd123", null);
+            // Protect the worksheet with all protection types and the specified password
+            sheet.Protect(ProtectionType.All, protection.Password, null);
 
-            // Fine‑tune selection behavior
-            worksheet.Protection.AllowSelectingUnlockedCell = true;
-            worksheet.Protection.AllowSelectingLockedCell = false;
-
-            // Save the workbook
-            string outputPath = "Result.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            // Save the processed and protected workbook
+            workbook.Save("SmartMarkersProtected.xlsx");
         }
-        catch (Exception ex)
+
+        // Simple POCO class used as a data source for smart markers
+        public class Person
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            public string Name { get; set; }
+            public int Age { get; set; }
         }
     }
 }

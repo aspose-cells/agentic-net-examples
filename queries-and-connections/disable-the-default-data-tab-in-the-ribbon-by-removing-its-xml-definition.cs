@@ -1,55 +1,50 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    public class DisableDataTabDemo
+    public class DisableDataTabInRibbonDemo
     {
-        public static void Run()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Custom Ribbon XML that omits the default "Data" tab.
-                string ribbonXml =
-                    "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-                    "  <ribbon>" +
-                    "    <tabs>" +
-                    "      <tab idMso=\"TabHome\" />" +
-                    "      <tab idMso=\"TabInsert\" />" +
-                    "      <tab idMso=\"TabPageLayout\" />" +
-                    "      <tab idMso=\"TabFormulas\" />" +
-                    "      <tab idMso=\"TabReview\" />" +
-                    "      <tab idMso=\"TabView\" />" +
-                    "    </tabs>" +
-                    "  </ribbon>" +
-                    "</customUI>";
-
-                // Apply the custom Ribbon XML to the workbook
-                workbook.RibbonXml = ribbonXml;
-
-                string outputPath = "WorkbookWithoutDataTab.xlsm";
-
-                // Save the workbook (macro-enabled format preserves Ribbon customizations)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Run();
+                Console.WriteLine("Workbook created successfully.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            DisableDataTabDemo.Run();
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+
+            // Custom Ribbon XML that defines the visible tabs.
+            // The default "Data" tab is omitted, effectively disabling it.
+            string ribbonXml =
+                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                "  <ribbon>" +
+                "    <tabs>" +
+                // Include only the desired built‑in tabs (Home, Insert, Page Layout, Formulas, Review, View)
+                "      <tab idMso=\"TabHome\" visible=\"true\" />" +
+                "      <tab idMso=\"TabInsert\" visible=\"true\" />" +
+                "      <tab idMso=\"TabPageLayout\" visible=\"true\" />" +
+                "      <tab idMso=\"TabFormulas\" visible=\"true\" />" +
+                "      <tab idMso=\"TabReview\" visible=\"true\" />" +
+                "      <tab idMso=\"TabView\" visible=\"true\" />" +
+                "    </tabs>" +
+                "  </ribbon>" +
+                "</customUI>";
+
+            // Apply the custom Ribbon XML to the workbook (property set)
+            workbook.RibbonXml = ribbonXml;
+
+            // Save the workbook (lifecycle: save). Use .xlsm because Ribbon customizations require a macro‑enabled format.
+            workbook.Save("WorkbookWithoutDataTab.xlsm");
         }
     }
 }

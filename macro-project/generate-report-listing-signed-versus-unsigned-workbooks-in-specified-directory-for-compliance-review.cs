@@ -1,100 +1,65 @@
+// Title: C# – Create CSV report of signed vs unsigned Excel workbooks with Aspose.Cells
+// Description: Scans a given folder for Excel files, loads each workbook via Aspose.Cells, reads the Workbook.IsDigitallySigned flag, and writes a CSV that records the full path and signature status (true, false or error).
+// Keywords: Aspose.Cells | C# | .NET | Excel digital signature | IsDigitallySigned | compliance CSV | file enumeration | security audit | workbook signature check | batch Excel processing
+// Common Searches: list Excel files with digital signatures using Aspose.Cells | C# generate CSV of signed workbooks | how to check IsDigitallySigned for multiple Excel files | Aspose.Cells batch signature verification | create compliance report for Excel macros
+// Developer Intent: Produce a CSV that shows each Excel workbook in a directory and whether it is digitally signed.
+// Use Cases: Regulatory audit to confirm all spreadsheets are signed before distribution | Automated build step that flags unsigned macro‑enabled workbooks | Inventory of signed versus unsigned Excel assets for legal record‑keeping
+// AI Prompts: Write a function that recursively scans folders for Excel files and returns a map of file paths to their digital‑signature status using Aspose.Cells. | Extend the sample to include a timestamp column and log errors to a separate file. | Generate PowerShell code that invokes the compiled .NET tool and uploads the resulting CSV to SharePoint.
+
 using System;
 using System.IO;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace ComplianceReport
+namespace ComplianceReportGenerator
 {
+    // Scans a given folder for Excel files, loads each workbook via Aspose.Cells, reads the Workbook.IsDigitallySigned flag, and writes a CSV that records the full path and signature status (true, false or error).
     class Program
     {
         static void Main(string[] args)
         {
-            try
+            // Specify the directory containing the workbooks to scan
+            string sourceDirectory = @"C:\Workbooks";
+
+            // Specify the output report file (CSV format)
+            string reportPath = Path.Combine(sourceDirectory, "ComplianceReport.csv");
+
+            // Prepare a list to hold report lines
+            List<string> reportLines = new List<string>();
+            // Add CSV header
+            reportLines.Add("FilePath,IsDigitallySigned");
+
+            // Define the file extensions to consider as Excel workbooks
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".xltx", ".xltm" };
+
+            // Enumerate all files with the defined extensions in the directory (non‑recursive)
+            foreach (string filePath in Directory.GetFiles(sourceDirectory))
             {
-                // Directory containing the workbooks to scan
-                string sourceDirectory = @"C:\Workbooks"; // TODO: change to your directory
-
-                // Output report file path
-                string reportPath = @"C:\ComplianceReport\SignedStatusReport.xlsx";
-
-                // Collect workbook file paths (common Excel extensions)
-                List<string> workbookFiles = new List<string>();
-                string[] extensions = new[] { "*.xlsx", "*.xls", "*.xlsm", "*.xlsb", "*.xlsxml", "*.ods" };
-                if (Directory.Exists(sourceDirectory))
+                if (Array.Exists(extensions, ext => ext.Equals(Path.GetExtension(filePath), StringComparison.OrdinalIgnoreCase)))
                 {
-                    foreach (string ext in extensions)
-                    {
-                        workbookFiles.AddRange(Directory.GetFiles(sourceDirectory, ext, SearchOption.AllDirectories));
-                    }
-                }
-
-                // Prepare data for the report
-                List<(string FilePath, bool IsSigned)> results = new List<(string, bool)>();
-                foreach (string file in workbookFiles)
-                {
-                    // Ensure the file exists before attempting to load
-                    if (!File.Exists(file))
-                        continue;
-
-                    bool signed = false;
                     try
                     {
-                        // Load the workbook
-                        using (Workbook wb = new Workbook(file))
-                        {
-                            // Check digital signature status
-                            signed = wb.IsDigitallySigned;
-                        }
-                    }
-                    catch (CellsException)
-                    {
-                        // Password‑protected or otherwise unreadable files are treated as not signed
-                        signed = false;
-                    }
-                    catch (Exception)
-                    {
-                        // Any other loading issue – skip this file
-                        continue;
-                    }
+                        // Load the workbook using the constructor that accepts a file path
+                        Workbook workbook = new Workbook(filePath);
 
-                    results.Add((file, signed));
+                        // Determine if the workbook is digitally signed
+                        bool isSigned = workbook.IsDigitallySigned;
+
+                        // Add the result to the report
+                        reportLines.Add($"{filePath},{isSigned}");
+                    }
+                    catch (Exception ex)
+                    {
+                        // If loading fails, record the error state
+                        reportLines.Add($"{filePath},Error: {ex.Message}");
+                    }
                 }
-
-                // Create a new workbook for the report
-                using (Workbook reportWorkbook = new Workbook())
-                {
-                    Worksheet sheet = reportWorkbook.Worksheets[0];
-
-                    // Write header
-                    sheet.Cells["A1"].PutValue("File Path");
-                    sheet.Cells["B1"].PutValue("Digitally Signed");
-
-                    // Write data rows
-                    int rowIndex = 1; // zero‑based index; row 1 is the second row (after header)
-                    foreach (var item in results)
-                    {
-                        sheet.Cells[rowIndex, 0].PutValue(item.FilePath);
-                        sheet.Cells[rowIndex, 1].PutValue(item.IsSigned);
-                        rowIndex++;
-                    }
-
-                    // Ensure the output directory exists
-                    string? reportDir = Path.GetDirectoryName(reportPath);
-                    if (!string.IsNullOrEmpty(reportDir) && !Directory.Exists(reportDir))
-                    {
-                        Directory.CreateDirectory(reportDir);
-                    }
-
-                    // Save the report workbook
-                    reportWorkbook.Save(reportPath, SaveFormat.Xlsx);
-                }
-
-                Console.WriteLine($"Compliance report generated at: {reportPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Write all report lines to the CSV file
+            File.WriteAllLines(reportPath, reportLines);
+
+            Console.WriteLine($"Compliance report generated at: {reportPath}");
         }
     }
 }

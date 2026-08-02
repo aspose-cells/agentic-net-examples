@@ -2,43 +2,51 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-public class SmartMarkerCallbackDemo : ISmartMarkerCallBack
+namespace AsposeCellsSmartMarkerCallbackDemo
 {
-    // This method is called for each smart marker that is processed.
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+    // Implement the callback interface to receive processing notifications
+    public class SmartMarkerLogger : ISmartMarkerCallBack
     {
-        Console.WriteLine($"SmartMarker processing - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+        // This method is called for each smart marker being processed
+        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+        {
+            Console.WriteLine($"SmartMarker processed - Sheet: {sheetIndex}, Row: {rowIndex}, Column: {colIndex}, Table: {tableName}, Column: {columnName}");
+        }
     }
 
-    public static void Main()
+    class Program
     {
-        // Initialize WorkbookDesigner
-        WorkbookDesigner designer = new WorkbookDesigner();
+        static void Main()
+        {
+            // Create a new WorkbookDesigner instance
+            WorkbookDesigner designer = new WorkbookDesigner();
 
-        // Create a new workbook and assign it to the designer
-        designer.Workbook = new Workbook();
+            // Initialize a new workbook and assign it to the designer
+            designer.Workbook = new Workbook();
 
-        // Add a smart marker to the first worksheet (cell A1)
-        Worksheet sheet = designer.Workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("&=$Products.ProductName");
+            // Add a smart marker to the first worksheet (e.g., &=$Employees.Name)
+            Worksheet sheet = designer.Workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("&=$Employees.Name");
+            sheet.Cells["B1"].PutValue("&=$Employees.Age");
 
-        // Register the callback implementation
-        designer.CallBack = new SmartMarkerCallbackDemo();
+            // Register the callback to receive detailed processing notifications
+            designer.CallBack = new SmartMarkerLogger();
 
-        // Prepare a DataTable as the data source
-        DataTable dt = new DataTable("Products");
-        dt.Columns.Add("ProductName", typeof(string));
-        dt.Rows.Add("Apple");
-        dt.Rows.Add("Banana");
-        dt.Rows.Add("Cherry");
+            // Prepare a simple data source (DataTable) matching the smart marker names
+            DataTable dt = new DataTable("Employees");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Age", typeof(int));
+            dt.Rows.Add("John Doe", 30);
+            dt.Rows.Add("Jane Smith", 28);
 
-        // Bind the data source to the designer
-        designer.SetDataSource(dt);
+            // Set the data source for the designer
+            designer.SetDataSource(dt);
 
-        // Process the smart markers (this will invoke the callback for each marker)
-        designer.Process();
+            // Process the smart markers (populate data into the worksheet)
+            designer.Process();
 
-        // Save the resulting workbook
-        designer.Workbook.Save("SmartMarkerCallbackResult.xlsx");
+            // Save the resulting workbook
+            designer.Workbook.Save("SmartMarkerCallbackResult.xlsx");
+        }
     }
 }

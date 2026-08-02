@@ -2,71 +2,64 @@ using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsEnumerationTiming
+namespace AsposeCellsExamples
 {
-    class Program
+    public class EnumerationTimingDemo
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Populate sample data (5 rows, 3 columns)
-            for (int row = 0; row < 5; row++)
+            // Populate the worksheet with sample data (100 rows, 2 columns)
+            for (int i = 0; i < 100; i++)
             {
-                for (int col = 0; col < 3; col++)
-                {
-                    cells[row, col].PutValue($"R{row}_C{col}");
-                }
+                worksheet.Cells[i, 0].PutValue($"Row {i}");
+                worksheet.Cells[i, 1].PutValue(i);
             }
 
-            // Perform multiple enumeration passes and log timestamps
-            const int passes = 3;
-            for (int pass = 1; pass <= passes; pass++)
+            // Perform enumeration passes multiple times to capture timestamps
+            for (int run = 1; run <= 3; run++)
             {
-                // Log start time for row enumeration
-                DateTime rowStart = DateTime.Now;
-                Console.WriteLine($"Pass {pass} - Row enumeration start: {rowStart:O}");
+                Console.WriteLine($"--- Run {run} ---");
 
-                // Enumerate rows using the RowCollection enumerator
-                IEnumerator rowEnum = worksheet.Cells.Rows.GetEnumerator();
-                while (rowEnum.MoveNext())
+                // ----- Row enumeration -----
+                DateTime startRows = DateTime.Now;                     // Log start time
+                Console.WriteLine($"Rows enumeration start: {startRows:O}");
+
+                IEnumerator rowEnumerator = worksheet.Cells.Rows.GetEnumerator();
+                while (rowEnumerator.MoveNext())
                 {
-                    Row currentRow = (Row)rowEnum.Current;
-                    // Access the first cell in the row to simulate work
-                    Cell firstCell = currentRow[0];
-                    // (No operation needed; just iterating)
+                    Row row = (Row)rowEnumerator.Current;
+                    // Access a cell to ensure the row is processed
+                    string _ = row[0].StringValue;
                 }
 
-                // Log end time for row enumeration
-                DateTime rowEnd = DateTime.Now;
-                Console.WriteLine($"Pass {pass} - Row enumeration end:   {rowEnd:O}");
-                Console.WriteLine($"Pass {pass} - Row enumeration duration: {(rowEnd - rowStart).TotalMilliseconds} ms");
+                DateTime endRows = DateTime.Now;                       // Log end time
+                Console.WriteLine($"Rows enumeration end:   {endRows:O}");
+                Console.WriteLine($"Rows enumeration duration: {(endRows - startRows).TotalMilliseconds} ms");
 
-                // Log start time for cell enumeration
-                DateTime cellStart = DateTime.Now;
-                Console.WriteLine($"Pass {pass} - Cell enumeration start: {cellStart:O}");
+                // ----- Cell enumeration -----
+                DateTime startCells = DateTime.Now;                    // Log start time
+                Console.WriteLine($"Cells enumeration start: {startCells:O}");
 
-                // Enumerate all cells using the Cells enumerator
-                IEnumerator cellEnum = cells.GetEnumerator();
-                while (cellEnum.MoveNext())
+                IEnumerator cellEnumerator = worksheet.Cells.GetEnumerator();
+                while (cellEnumerator.MoveNext())
                 {
-                    Cell currentCell = (Cell)cellEnum.Current;
-                    // Access the cell value to simulate work
-                    var value = currentCell.Value;
+                    Cell cell = (Cell)cellEnumerator.Current;
+                    // Access the cell value
+                    var _ = cell.Value;
                 }
 
-                // Log end time for cell enumeration
-                DateTime cellEnd = DateTime.Now;
-                Console.WriteLine($"Pass {pass} - Cell enumeration end:   {cellEnd:O}");
-                Console.WriteLine($"Pass {pass} - Cell enumeration duration: {(cellEnd - cellStart).TotalMilliseconds} ms");
-                Console.WriteLine(new string('-', 60));
+                DateTime endCells = DateTime.Now;                      // Log end time
+                Console.WriteLine($"Cells enumeration end:   {endCells:O}");
+                Console.WriteLine($"Cells enumeration duration: {(endCells - startCells).TotalMilliseconds} ms");
+                Console.WriteLine();
             }
 
-            // Save the workbook (output file name can be adjusted as needed)
-            workbook.Save("EnumerationTimingResult.xlsx");
+            // Save the workbook using the standard pattern
+            workbook.Save("EnumerationTimingDemo.xlsx");
         }
     }
 }

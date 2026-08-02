@@ -8,18 +8,18 @@ class ImportArrayListExample
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
-
-        // Get the Cells collection of the first worksheet
         Cells cells = workbook.Worksheets[0].Cells;
 
         // Prepare an ArrayList with sample data
         ArrayList data = new ArrayList();
         data.Add("Alice");
         data.Add(28);
-        data.Add(DateTime.Now);
+        data.Add("Engineer");
 
-        // Import the ArrayList into the worksheet.
-        // Start at row 3 (zero‑based index 2), column 1 (index 0), horizontally (isVertical = false)
+        // Import the ArrayList into the worksheet
+        // Row index 2 corresponds to the third row (row 3 in Excel)
+        // Column index 0 corresponds to column A
+        // false => import horizontally (across columns)
         cells.ImportArrayList(data, 2, 0, false);
 
         // Save the workbook to a file

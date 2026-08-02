@@ -1,79 +1,71 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsXmlMapQuery
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add sample XML maps (replace with actual file paths as needed)
-            // Ensure the schema files exist before adding them
-            string schemaPath1 = "schema1.xsd";
-            if (File.Exists(schemaPath1))
+            try
             {
-                try
+                // Prepare dummy XSD files if they do not exist to avoid FileNotFoundException
+                string schemaPath1 = "schema1.xsd";
+                string schemaPath2 = "schema2.xsd";
+
+                if (!File.Exists(schemaPath1))
                 {
-                    int mapIndex1 = workbook.Worksheets.XmlMaps.Add(schemaPath1);
-                    XmlMap xmlMap1 = workbook.Worksheets.XmlMaps[mapIndex1];
-                    xmlMap1.Name = "ExampleMap";
+                    File.WriteAllText(schemaPath1,
+                        @"<?xml version=""1.0"" encoding=""utf-8""?>
+                        <xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema""></xs:schema>");
                 }
-                catch (Exception ex)
+
+                if (!File.Exists(schemaPath2))
                 {
-                    Console.WriteLine($"Failed to add XML map from '{schemaPath1}': {ex.Message}");
+                    File.WriteAllText(schemaPath2,
+                        @"<?xml version=""1.0"" encoding=""utf-8""?>
+                        <xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema""></xs:schema>");
                 }
-            }
-            else
-            {
-                Console.WriteLine($"Schema file not found: {schemaPath1}");
-            }
 
-            string schemaPath2 = "schema2.xsd";
-            if (File.Exists(schemaPath2))
-            {
-                try
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Add XML maps with different namespaces (using local XSD files)
+                int mapIndex1 = workbook.Worksheets.XmlMaps.Add(schemaPath1);
+                XmlMap xmlMap1 = workbook.Worksheets.XmlMaps[mapIndex1];
+                xmlMap1.Name = "Map1";
+
+                int mapIndex2 = workbook.Worksheets.XmlMaps.Add(schemaPath2);
+                XmlMap xmlMap2 = workbook.Worksheets.XmlMaps[mapIndex2];
+                xmlMap2.Name = "Map2";
+
+                // Define the namespace (or part of it) to search for
+                string targetNamespace = "schema1.xsd";
+
+                // LINQ query on the XmlMaps collection to find maps containing the specific namespace
+                List<XmlMap> matchingMaps = workbook.Worksheets.XmlMaps
+                    .Cast<XmlMap>()
+                    .Where(m => m.DataBinding != null &&
+                                !string.IsNullOrEmpty(m.DataBinding.Url) &&
+                                m.DataBinding.Url.Contains(targetNamespace, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                // Output the results
+                foreach (XmlMap map in matchingMaps)
                 {
-                    int mapIndex2 = workbook.Worksheets.XmlMaps.Add(schemaPath2);
-                    XmlMap xmlMap2 = workbook.Worksheets.XmlMaps[mapIndex2];
-                    xmlMap2.Name = "OtherMap";
+                    Console.WriteLine($"Found map: Name = {map.Name}, URL = {map.DataBinding.Url}");
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to add XML map from '{schemaPath2}': {ex.Message}");
-                }
+
+                // Save the workbook (output file)
+                workbook.Save("XmlMapNamespaceQuery.xlsx");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Schema file not found: {schemaPath2}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Namespace to search for within the XML map's DataBinding URL
-            string targetNamespace = "example.com";
-
-            // LINQ query: find all XmlMap objects whose DataBinding URL contains the target namespace
-            var matchingMaps = workbook.Worksheets.XmlMaps
-                .Where(map => map.DataBinding != null &&
-                              !string.IsNullOrEmpty(map.DataBinding.Url) &&
-                              map.DataBinding.Url.Contains(targetNamespace))
-                .ToList();
-
-            // Output the names and URLs of the matching maps
-            foreach (var map in matchingMaps)
-            {
-                Console.WriteLine($"Found map: {map.Name}, URL: {map.DataBinding.Url}");
-            }
-
-            // Save the workbook (optional, demonstrates usage of the save rule)
-            workbook.Save("XmlMapsQueryResult.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

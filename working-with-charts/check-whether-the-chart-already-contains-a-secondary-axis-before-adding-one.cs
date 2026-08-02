@@ -1,52 +1,79 @@
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class CheckSecondaryAxis
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class CheckAndAddSecondaryAxis
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-
-        worksheet.Cells["B1"].PutValue("Series 1");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-
-        worksheet.Cells["C1"].PutValue("Series 2");
-        worksheet.Cells["C2"].PutValue(100);
-        worksheet.Cells["C3"].PutValue(200);
-        worksheet.Cells["C4"].PutValue(300);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-
-        // Add two series and set the category axis data
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.Add("C2:C4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Check whether a secondary value axis already exists
-        bool hasSecondaryValueAxis = chart.HasAxis(AxisType.Value, false);
-
-        // If the secondary axis does not exist, plot the second series on it
-        if (!hasSecondaryValueAxis)
+        public static void Run()
         {
-            chart.NSeries[1].PlotOnSecondAxis = true;
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+
+                sheet.Cells["B1"].PutValue("Series 1");
+                sheet.Cells["B2"].PutValue(100);
+                sheet.Cells["B3"].PutValue(200);
+                sheet.Cells["B4"].PutValue(300);
+
+                sheet.Cells["C1"].PutValue("Series 2");
+                sheet.Cells["C2"].PutValue(5000);
+                sheet.Cells["C3"].PutValue(3000);
+                sheet.Cells["C4"].PutValue(1000);
+
+                // Add a column chart
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Add two series to the chart
+                chart.NSeries.Add("B2:B4", true); // Series 1
+                chart.NSeries.Add("C2:C4", true); // Series 2
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Check if a secondary value axis already exists
+                bool hasSecondaryValueAxis = chart.HasAxis(AxisType.Value, false);
+
+                if (!hasSecondaryValueAxis)
+                {
+                    // No secondary axis – enable it by plotting the second series on it
+                    chart.NSeries[1].PlotOnSecondAxis = true;
+
+                    // Customize the newly created secondary axis
+                    Axis secondValueAxis = chart.SecondValueAxis;
+                    secondValueAxis.Title.Text = "Secondary Axis";
+                    secondValueAxis.IsVisible = true;
+                }
+
+                // Define output file path
+                string outputPath = "CheckAndAddSecondaryAxis.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
+    }
 
-        // Ensure the secondary axis is visible (optional)
-        chart.SecondValueAxis.IsVisible = true;
-
-        // Save the workbook
-        workbook.Save("CheckSecondaryAxis.xlsx");
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CheckAndAddSecondaryAxis.Run();
+        }
     }
 }

@@ -2,23 +2,26 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class ScaleCropDemo
+namespace AsposeCellsScaleCropDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook instance
+            Workbook workbook = new Workbook();
 
-        // Access the built‑in document properties collection
-        BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
+            // Access the built‑in document properties collection
+            BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
 
-        // Enable ScaleCrop to preserve image proportions in the thumbnail
-        properties.ScaleCrop = true;
+            // Enable the ScaleCrop property to preserve image proportions
+            properties.ScaleCrop = true;
 
-        // Output the current value to verify
-        Console.WriteLine("ScaleCrop property value: " + properties.ScaleCrop);
+            // Optional: display the current value of the property
+            Console.WriteLine("ScaleCrop property value: " + properties.ScaleCrop);
 
-        // Save the workbook to a file (XLSX format)
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to verify the setting
+            workbook.Save("ScaleCropDemo.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

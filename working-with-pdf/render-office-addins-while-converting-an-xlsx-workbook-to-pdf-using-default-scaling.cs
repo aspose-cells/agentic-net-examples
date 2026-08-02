@@ -1,44 +1,44 @@
+// Title: C# – Convert XLSX with Office Add‑Ins to PDF using Aspose.Cells default scaling
+// Description: Loads an XLSX workbook that may contain Office Add‑Ins (charts, embedded objects, etc.) and converts it to PDF with Aspose.Cells.Utility.ConversionUtility.Convert, relying on the library's default page‑scaling settings to preserve the original layout.
+// Keywords: Aspose.Cells C# PDF conversion | XLSX to PDF default scaling | render Office Add‑Ins | ConversionUtility Convert example | preserve embedded objects Excel PDF
+// Common Searches: Aspose.Cells convert Excel with add‑ins to PDF C# | ConversionUtility default page scaling example | How to export XLSX charts to PDF using Aspose | C# code to render Office Add‑Ins in PDF conversion
+// Developer Intent: Generate a PDF from an Excel file that includes Office Add‑Ins without specifying custom scaling.
+// Use Cases: Create printable PDF reports from Excel templates that contain embedded charts or SmartArt. | Batch‑process multiple workbooks with add‑ins while keeping their original layout. | Expose a web service that receives an XLSX file and returns a PDF rendering of all embedded objects.
+// AI Prompts: Provide C# code that uses Aspose.Cells ConversionUtility to convert an XLSX with Office Add‑Ins to PDF and captures conversion errors. | Explain how Aspose.Cells handles page scaling by default when exporting Excel to PDF and how to change it if needed. | Show a verification script that checks whether embedded objects from the source workbook appear in the generated PDF.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsAddInRenderDemo
+namespace AsposeCellsAddInPdfConversion
 {
-    public class Program
+    // Loads an XLSX workbook that may contain Office Add‑Ins (charts, embedded objects, etc.) and converts it to PDF with Aspose.Cells.Utility.ConversionUtility.Convert, relying on the library's default page‑scaling settings to preserve the original layout.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Path to the source XLSX workbook
+            // Path to the source Excel workbook (XLSX)
             string sourcePath = "input.xlsx";
 
             // Path where the resulting PDF will be saved
             string pdfPath = "output.pdf";
 
-            // Load the workbook (create & load)
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Prepare rendering options (default scaling, no explicit Zoom)
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            try
             {
-                // OnePagePerSheet = false (default) allows normal pagination
-                // No Zoom is set, so default scaling will be used
-            };
+                // Load the workbook (creates a Workbook instance from the XLSX file)
+                Workbook workbook = new Workbook(sourcePath);
 
-            // Create a SheetRender for the first worksheet to obtain the calculated page scale
-            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], renderOptions);
+                // The workbook may contain Office Add‑Ins (e.g., embedded objects, charts, etc.).
+                // ConversionUtility.Convert will render the workbook to PDF using the default
+                // page scaling (no explicit scaling is applied, which matches the requirement).
+                ConversionUtility.Convert(sourcePath, pdfPath);
 
-            // Retrieve the default page scale (calculated based on FitToPages settings)
-            double defaultPageScale = sheetRender.PageScale;
-            Console.WriteLine($"Default page scale (percentage): {defaultPageScale * 100}%");
-
-            // Dispose the render object as it is no longer needed
-            sheetRender.Dispose();
-
-            // Convert the workbook to PDF using the ConversionUtility (save)
-            ConversionUtility.Convert(sourcePath, pdfPath);
-
-            Console.WriteLine($"Workbook successfully converted to PDF at: {pdfPath}");
+                Console.WriteLine($"Workbook successfully converted to PDF: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during conversion: {ex.Message}");
+            }
         }
     }
 }

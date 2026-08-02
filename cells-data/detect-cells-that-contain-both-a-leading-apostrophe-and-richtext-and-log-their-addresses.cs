@@ -1,44 +1,50 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsRichTextApostropheDemo
 {
-    class DetectApostropheRichTextCells
+    class Program
     {
         static void Main()
         {
-            // Load an existing workbook (replace with your actual file path)
+            // Load an existing workbook (replace with your file path)
             Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet (you can iterate over all worksheets if needed)
+            // Access the first worksheet (modify as needed)
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Determine the used range to limit the iteration
+            // Determine the used range of the worksheet
             int maxRow = cells.MaxDataRow;
-            int maxColumn = cells.MaxDataColumn;
+            int maxCol = cells.MaxDataColumn;
 
             // Iterate through each cell in the used range
             for (int row = 0; row <= maxRow; row++)
             {
-                for (int col = 0; col <= maxColumn; col++)
+                for (int col = 0; col <= maxCol; col++)
                 {
                     Cell cell = cells[row, col];
 
-                    // Check if the cell has a leading apostrophe (QuotePrefix) and contains rich text
+                    // Skip empty cells
+                    if (cell == null || string.IsNullOrEmpty(cell.StringValue))
+                        continue;
+
+                    // Check if the cell starts with a leading apostrophe (QuotePrefix)
                     bool hasLeadingApostrophe = cell.GetStyle().QuotePrefix;
+
+                    // Check if the cell contains rich‑text formatting
                     bool isRichText = cell.IsRichText();
 
+                    // If both conditions are true, log the cell address
                     if (hasLeadingApostrophe && isRichText)
                     {
-                        // Log the cell address (e.g., "A1")
-                        Console.WriteLine($"Cell with leading apostrophe and rich text found at: {cell.Name}");
+                        Console.WriteLine($"Cell {cell.Name} (Row {cell.Row + 1}, Column {cell.Column + 1}) contains a leading apostrophe and rich text.");
                     }
                 }
             }
 
-            // Optionally, save the workbook if any modifications were made
-            // workbook.Save("output.xlsx");
+            // Optionally save the workbook (if any modifications were made)
+            workbook.Save("output.xlsx");
         }
     }
 }

@@ -8,44 +8,39 @@ namespace AsposeCellsHighlightPending
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Sample data (optional – in real scenario the workbook would already contain data)
-            cells["A1"].PutValue("Pending");
-            cells["B2"].PutValue("Completed");
-            cells["C3"].PutValue("Pending Review");
-            cells["D4"].PutValue("Pending");
-
-            // Configure find options to search for cells whose value contains "Pending"
+            // Configure find options to search for cells whose values contain the text "Pending"
             FindOptions findOptions = new FindOptions
             {
-                LookInType = LookInType.Values,          // Search in cell values
-                LookAtType = LookAtType.Contains          // Match if the value contains the text
+                LookInType = LookInType.Values,      // Search in cell values
+                LookAtType = LookAtType.Contains      // Match if the value contains the target text
             };
 
-            // Prepare the style with yellow fill
-            Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.ForegroundColor = Color.Yellow;
-            highlightStyle.Pattern = BackgroundType.Solid;
-
-            // Iterate through all cells that contain the text "Pending"
+            // Repeatedly find cells containing "Pending"
             Cell previousCell = null;
-            Cell foundCell = cells.Find("Pending", previousCell, findOptions);
-            while (foundCell != null)
+            while (true)
             {
-                // Apply the yellow fill style to the found cell
+                Cell foundCell = worksheet.Cells.Find("Pending", previousCell, findOptions);
+                if (foundCell == null)
+                    break; // No more matches
+
+                // Create a style with yellow fill
+                Style highlightStyle = workbook.CreateStyle();
+                highlightStyle.ForegroundColor = Color.Yellow;
+                highlightStyle.Pattern = BackgroundType.Solid;
+
+                // Apply the style to the found cell
                 foundCell.SetStyle(highlightStyle);
 
-                // Continue searching from the next cell
+                // Continue searching from the cell just found
                 previousCell = foundCell;
-                foundCell = cells.Find("Pending", previousCell, findOptions);
             }
 
-            // Save the workbook with highlighted cells
-            workbook.Save("HighlightedPending.xlsx");
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("output.xlsx");
         }
     }
 }

@@ -2,13 +2,13 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeCheck
+namespace AsposeCellsThemeCheckDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Example file list – replace with actual file paths
+            // List of workbook file paths to process
             string[] workbookFiles = new string[]
             {
                 "Book1.xlsx",
@@ -16,42 +16,33 @@ namespace AsposeCellsThemeCheck
                 "Book3.xlsx"
             };
 
-            ApplyBulkThemeUpdates(workbookFiles);
-        }
+            // Define a new theme color to apply (example: change Accent1 to Orange)
+            ThemeColorType targetThemeColor = ThemeColorType.Accent1;
+            Color newColor = Color.Orange;
 
-        /// <summary>
-        /// Loads each workbook, checks if it has a theme, and if so applies bulk theme color updates.
-        /// </summary>
-        /// <param name="files">Array of workbook file paths.</param>
-        static void ApplyBulkThemeUpdates(string[] files)
-        {
-            foreach (string filePath in files)
+            foreach (string filePath in workbookFiles)
             {
-                // Load the workbook (uses the provided load rule)
+                // Load the workbook (lifecycle rule: load)
                 Workbook workbook = new Workbook(filePath);
 
-                // Check whether the workbook contains a theme.
-                // The Theme property returns the theme name; an empty string means no theme.
+                // Check if the workbook has a theme name (default theme is always present,
+                // but a missing or empty name indicates no theme information)
                 if (!string.IsNullOrEmpty(workbook.Theme))
                 {
-                    // Example bulk update: change a few theme colors.
-                    // You can modify any ThemeColorType as needed.
-                    workbook.SetThemeColor(ThemeColorType.Accent1, Color.FromArgb(255, 0, 120, 215)); // Blue accent
-                    workbook.SetThemeColor(ThemeColorType.Accent2, Color.FromArgb(255, 232, 17, 35)); // Red accent
-                    workbook.SetThemeColor(ThemeColorType.Accent3, Color.FromArgb(255, 255, 185, 0)); // Yellow accent
-
-                    // Save the workbook (uses the provided save rule)
-                    workbook.Save(filePath);
-                    Console.WriteLine($"Theme updated and saved for: {filePath}");
+                    // The workbook contains a theme, so apply the bulk update
+                    workbook.SetThemeColor(targetThemeColor, newColor);
                 }
                 else
                 {
-                    Console.WriteLine($"No theme found in workbook: {filePath}. Skipping update.");
+                    // No theme detected; you may choose to skip or apply a custom theme here
+                    Console.WriteLine($"Workbook '{filePath}' does not contain a theme. Skipping update.");
                 }
 
-                // Dispose the workbook to release resources.
-                workbook.Dispose();
+                // Save the workbook back to the same file (lifecycle rule: save)
+                workbook.Save(filePath);
             }
+
+            Console.WriteLine("Theme update process completed.");
         }
     }
 }

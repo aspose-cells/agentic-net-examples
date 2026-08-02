@@ -12,56 +12,53 @@ namespace SensorReadingsExample
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Sample sensor readings matrix (rows: time points, columns: sensors)
-            double[,] sensorReadings = new double[,]
+            // Sample sensor readings matrix (rows = time points, columns = sensors)
+            double[,] sensorData = new double[,]
             {
                 { 12.5, 15.2, 13.8 },
-                { 14.1, 16.0, 15.3 },
-                { 13.7, 15.5, 14.9 },
-                { 15.0, 16.8, 16.2 }
+                { 11.7, 14.9, 13.1 },
+                { 13.0, 15.5, 14.2 },
+                { 12.2, 15.0, 13.9 }
             };
 
-            int rowCount = sensorReadings.GetLength(0);
-            int colCount = sensorReadings.GetLength(1);
+            int rowCount = sensorData.GetLength(0);
+            int colCount = sensorData.GetLength(1);
 
-            // Import each row of the matrix into the worksheet using ImportArray (horizontal import)
-            for (int i = 0; i < rowCount; i++)
+            // Import each row of the matrix horizontally using ImportArray
+            for (int r = 0; r < rowCount; r++)
             {
-                double[] rowData = new double[colCount];
-                for (int j = 0; j < colCount; j++)
+                double[] rowValues = new double[colCount];
+                for (int c = 0; c < colCount; c++)
                 {
-                    rowData[j] = sensorReadings[i, j];
+                    rowValues[c] = sensorData[r, c];
                 }
 
-                // Import the row horizontally starting at column 0 (A column)
-                // Parameters: double[] array, firstRow (0‑based), firstColumn, isVertical = false
-                cells.ImportArray(rowData, i, 0, false);
+                // ImportArray(double[] array, int firstRow, int firstColumn, bool isVertical)
+                // isVertical = false for horizontal import
+                cells.ImportArray(rowValues, r, 0, false);
             }
 
-            // Calculate column‑wise averages
+            // Calculate column-wise averages
             double[] columnAverages = new double[colCount];
-            for (int j = 0; j < colCount; j++)
+            for (int c = 0; c < colCount; c++)
             {
                 double sum = 0;
-                for (int i = 0; i < rowCount; i++)
+                for (int r = 0; r < rowCount; r++)
                 {
-                    sum += sensorReadings[i, j];
+                    sum += sensorData[r, c];
                 }
-                columnAverages[j] = sum / rowCount;
+                columnAverages[c] = sum / rowCount;
             }
 
             // Insert a summary row after the data rows
-            int summaryRowIndex = rowCount; // 0‑based index for the new row
-            // Optional label in the first column
+            int summaryRowIndex = rowCount; // zero‑based index; next row after data
+            // Optionally label the summary row
             cells[summaryRowIndex, 0].PutValue("Average");
 
-            // Write the average values starting from the second column
-            for (int j = 1; j < colCount; j++)
-            {
-                cells[summaryRowIndex, j].PutValue(columnAverages[j]);
-            }
+            // Import the averages horizontally starting from column 1
+            cells.ImportArray(columnAverages, summaryRowIndex, 1, false);
 
-            // Save the workbook to a file
+            // Save the workbook
             workbook.Save("SensorReadingsWithAverages.xlsx");
         }
     }

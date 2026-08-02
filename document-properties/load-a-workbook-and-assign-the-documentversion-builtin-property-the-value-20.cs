@@ -1,26 +1,46 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDocumentVersionDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class SetDocumentVersion
     {
-        static void Main()
+        public static void Run()
         {
-            // Path to the existing workbook to be loaded
-            string inputPath = "input.xlsx";
+            try
+            {
+                string inputPath = "input.xlsx";
 
-            // Load the workbook from the file system
-            Workbook workbook = new Workbook(inputPath);
+                // Ensure the input file exists; create a blank workbook if it does not.
+                if (!File.Exists(inputPath))
+                {
+                    Workbook blank = new Workbook();
+                    blank.Save(inputPath, SaveFormat.Xlsx);
+                }
 
-            // Set the built‑in DocumentVersion property to "2.0"
-            workbook.BuiltInDocumentProperties.DocumentVersion = "2.0";
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the modified workbook to a new file
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+                // Set the built‑in DocumentVersion property.
+                workbook.BuiltInDocumentProperties.DocumentVersion = "2.0";
 
-            Console.WriteLine($"DocumentVersion set to \"2.0\" and saved to {outputPath}");
+                // Save the modified workbook.
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SetDocumentVersion.Run();
         }
     }
 }

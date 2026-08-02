@@ -1,49 +1,22 @@
 using System;
 using Aspose.Cells;
 
-namespace CustomCalculationEngineDemo
+namespace CustomEngineDemo
 {
-    // Custom engine that handles a user‑defined function MYFUNC
-    public class MyCustomEngine : AbstractCalculationEngine
-    {
-        // Override Calculate to provide custom logic
-        public override void Calculate(CalculationData data)
-        {
-            // Check if the function being calculated is MYFUNC
-            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-            {
-                // Retrieve the two parameters passed to MYFUNC
-                object param0 = data.GetParamValue(0);
-                object param1 = data.GetParamValue(1);
-
-                // Convert parameters to double and compute the sum
-                double val0 = Convert.ToDouble(param0);
-                double val1 = Convert.ToDouble(param1);
-                double result = val0 + val1;
-
-                // Set the calculated result so Aspose.Cells can use it
-                data.CalculatedValue = result;
-            }
-        }
-
-        // No special handling for shared formulas; use default behavior
-        public override bool ForceRecalculate(string functionName) => false;
-    }
-
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Populate cells that will be used as arguments for the custom function
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
+            // Populate cells that will be used as parameters for the custom function
+            ws.Cells["A1"].PutValue(5);
+            ws.Cells["A2"].PutValue(7);
 
-            // Set a formula that calls the custom function MYFUNC(A1, A2)
-            sheet.Cells["B1"].Formula = "=MYFUNC(A1, A2)";
+            // Set a formula that calls the custom function MYFUNC
+            ws.Cells["A3"].Formula = "=MYFUNC(A1, A2)";
 
             // Create calculation options and assign the custom engine
             CalculationOptions options = new CalculationOptions
@@ -51,14 +24,36 @@ namespace CustomCalculationEngineDemo
                 CustomEngine = new MyCustomEngine()
             };
 
-            // Perform calculation using the options (custom engine will be invoked)
-            workbook.CalculateFormula(options);
+            // Register the custom engine and calculate all formulas in the workbook
+            wb.CalculateFormula(options);
 
-            // Output the result of the custom function
-            Console.WriteLine("Result of MYFUNC(A1, A2): " + sheet.Cells["B1"].Value);
+            // Display the result of the custom function
+            Console.WriteLine("Result of MYFUNC(A1, A2): " + ws.Cells["A3"].Value);
 
-            // Save the workbook (uses the standard save rule)
-            workbook.Save("CustomEngineResult.xlsx");
+            // Save the workbook (optional, demonstrates that the result is persisted)
+            wb.Save("CustomEngineResult.xlsx");
+        }
+    }
+
+    // Custom calculation engine that extends the default Aspose.Cells engine
+    public class MyCustomEngine : AbstractCalculationEngine
+    {
+        public override void Calculate(CalculationData data)
+        {
+            // Process only the custom function named "MYFUNC"
+            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
+            {
+                // Retrieve the first parameter as a ReferredArea and extract its value
+                ReferredArea area1 = (ReferredArea)data.GetParamValue(0);
+                double val1 = Convert.ToDouble(area1.GetValue(0, 0));
+
+                // Retrieve the second parameter as a ReferredArea and extract its value
+                ReferredArea area2 = (ReferredArea)data.GetParamValue(1);
+                double val2 = Convert.ToDouble(area2.GetValue(0, 0));
+
+                // Example custom logic: return the product of the two parameters
+                data.CalculatedValue = val1 * val2;
+            }
         }
     }
 }

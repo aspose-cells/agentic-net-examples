@@ -1,32 +1,42 @@
 using System;
 using Aspose.Cells;
 
-namespace Example
+namespace AsposeCellsSelectWorksheet
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (contains a default worksheet)
+            // Create a new workbook (lifecycle start)
             Workbook workbook = new Workbook();
 
-            // Rename the default worksheet
-            workbook.Worksheets[0].Name = "DataSheet";
+            // Rename the default first worksheet for demonstration
+            Worksheet firstSheet = workbook.Worksheets[0];
+            firstSheet.Name = "DataSheet";
 
-            // Add another worksheet with a specific name
-            workbook.Worksheets.Add("Report");
+            // Add another worksheet
+            Worksheet secondSheet = workbook.Worksheets.Add("ReportSheet");
 
-            // Select the worksheet by its name
-            Worksheet reportSheet = workbook.Worksheets["Report"];
+            // Select a worksheet by its name
+            // Here we select the worksheet we just renamed to "DataSheet"
+            Worksheet selectedSheet = workbook.Worksheets["DataSheet"];
 
-            // Get the Cells collection of the selected worksheet
-            Cells cells = reportSheet.Cells;
+            // Obtain the Cells collection from the selected worksheet
+            Cells cells = selectedSheet.Cells;
 
-            // Example operation: write a value to cell A1
-            cells["A1"].PutValue("Hello from Report sheet");
+            // Perform some operations on the cells collection
+            cells["A1"].PutValue("Hello");
+            cells["B2"].PutValue(12345);
+            cells["C3"].Formula = "=SUM(B2,B2)";
 
-            // Save the workbook
-            workbook.Save("SelectWorksheetByName.xlsx", SaveFormat.Xlsx);
+            // Calculate formulas to ensure the result is up‑to‑date
+            workbook.CalculateFormula();
+
+            // Output a cell value to the console for verification
+            Console.WriteLine("C3 value (SUM of B2+B2): " + cells["C3"].IntValue);
+
+            // Save the workbook (lifecycle end)
+            workbook.Save("SelectWorksheetDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

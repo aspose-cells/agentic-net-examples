@@ -1,95 +1,87 @@
+// Title: Show Value & Percentage in Stacked Bar Chart Labels and Resize Chart/Shapes – Aspose.Cells for .NET
+// Description: Creates a workbook, adds a stacked bar chart, configures each series to display both the cell value and its percentage in data labels, locks label dimensions, resizes the chart object, and inserts a rectangle shape positioned by percentage coordinates.
+// Keywords: Aspose.Cells stacked bar chart | data labels value and percentage | C# chart resizing | fixed label size Aspose.Cells | add shape by scale Aspose.Cells | .NET Excel chart example
+// Common Searches: how to show value and percentage in Aspose.Cells chart labels | resize chart object C# Aspose.Cells | prevent data label auto‑size Aspose.Cells | insert rectangle shape in chart using percentage coordinates | Aspose.Cells stacked bar chart tutorial
+// Developer Intent: Generate a stacked bar chart that presents both absolute values and percentages in its labels, enforce uniform label dimensions, adjust the chart size, and embed a styled annotation shape.
+// Use Cases: Financial statements where each segment needs its amount and share displayed. | Executive dashboards that require consistent label sizing for readability. | Highlighting a specific range in a chart with a colored annotation rectangle.
+// AI Prompts: Write C# code with Aspose.Cells to add a stacked bar chart whose data labels show both the cell value and percentage, and set a fixed width and height for the labels. | Provide an example that resizes the ChartObject and places a rectangle shape inside the chart using scale (percentage) coordinates, then apply custom fill and line colors. | Explain how to disable automatic resizing of data label shapes in Aspose.Cells and why fixed dimensions are useful for report consistency.
+
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsStackedBarDataLabels
 {
-    public class StackedBarChartDataLabelsAndShapeResize
+    // Creates a workbook, adds a stacked bar chart, configures each series to display both the cell value and its percentage in data labels, locks label dimensions, resizes the chart object, and inserts a rectangle shape positioned by percentage coordinates.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-            worksheet.Cells["A5"].PutValue("Q4");
+            // Categories
+            sheet.Cells["A2"].PutValue("Q1");
+            sheet.Cells["A3"].PutValue("Q2");
+            sheet.Cells["A4"].PutValue("Q3");
+            sheet.Cells["A5"].PutValue("Q4");
 
-            worksheet.Cells["B1"].PutValue("Product A");
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["B3"].PutValue(40);
-            worksheet.Cells["B4"].PutValue(20);
-            worksheet.Cells["B5"].PutValue(10);
+            // Series 1 values
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["B5"].PutValue(200);
 
-            worksheet.Cells["C1"].PutValue("Product B");
-            worksheet.Cells["C2"].PutValue(20);
-            worksheet.Cells["C3"].PutValue(30);
-            worksheet.Cells["C4"].PutValue(25);
-            worksheet.Cells["C5"].PutValue(15);
+            // Series 2 values
+            sheet.Cells["C2"].PutValue(80);
+            sheet.Cells["C3"].PutValue(110);
+            sheet.Cells["C4"].PutValue(130);
+            sheet.Cells["C5"].PutValue(170);
 
             // Add a stacked bar chart
-            int chartIndex = worksheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 12);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 20, 15);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set data range for the chart
-            chart.NSeries.Add("B2:C5", true);               // Values
-            chart.NSeries.CategoryData = "A2:A5";           // Categories
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:C5", true);          // Values
+            chart.NSeries.CategoryData = "A2:A5";     // Categories
 
             // Enable data labels to show both value and percentage for each series
-            foreach (Series series in chart.NSeries)
+            foreach (Series ser in chart.NSeries)
             {
-                series.DataLabels.ShowValue = true;          // Show cell value
-                series.DataLabels.ShowPercentage = true;    // Show percentage
+                ser.DataLabels.ShowValue = true;          // Show cell value
+                ser.DataLabels.ShowPercentage = true;    // Show percentage
 
                 // Prevent automatic resizing of the label shape so we can set a fixed size
-                series.DataLabels.IsResizeShapeToFitText = false;
-
-                // Set a fixed width for the data label shape (in pixels)
-                series.DataLabels.WidthPixel = 80;
+                ser.DataLabels.IsResizeShapeToFitText = false;
+                ser.DataLabels.WidthPixel = 80;   // Fixed width in pixels
+                ser.DataLabels.HeightPixel = 30;  // Fixed height in pixels
             }
 
-            // Resize the chart shape itself (using points)
-            ChartShape chartShape = chart.ChartObject;
-            chartShape.Width = 800;   // Width in points
-            chartShape.Height = 600;  // Height in points
+            // Resize the whole chart shape (ChartObject) to a specific size
+            chart.ChartObject.Width = 600;   // Width in pixels
+            chart.ChartObject.Height = 350;  // Height in pixels
 
-            // Add a rectangle shape inside the chart area using scale coordinates
-            Shape rectangle = chart.Shapes.AddShapeInChartByScale(
+            // Add a rectangle shape inside the chart area using percentage coordinates
+            Shape rect = chart.Shapes.AddShapeInChartByScale(
                 MsoDrawingType.Rectangle,
                 PlacementType.Move,
-                0.10,   // left  = 10% from left edge of chart area
-                0.10,   // top   = 10% from top edge of chart area
-                0.30,   // right = 30% from left edge of chart area
-                0.30);  // bottom= 30% from top edge of chart area
+                0.10,   // left  = 10% of chart width
+                0.10,   // top   = 10% of chart height
+                0.30,   // right = 30% of chart width
+                0.25);  // bottom= 25% of chart height
 
-            // Customize the rectangle appearance
-            rectangle.Fill.SolidFill.Color = Color.LightBlue;
-            rectangle.Line.SolidFill.Color = Color.DarkBlue;
-            rectangle.Line.Weight = 1.5;
+            // Format the added shape
+            rect.Fill.SolidFill.Color = Color.LightBlue;
+            rect.Line.SolidFill.Color = Color.DarkBlue;
+            rect.Text = "Custom Annotation";
 
             // Save the workbook
-            string outputPath = "StackedBarChart_WithDataLabelsAndResizedShapes.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save("StackedBar_With_Value_And_Percentage.xlsx");
         }
     }
 }

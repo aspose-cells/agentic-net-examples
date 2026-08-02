@@ -1,50 +1,49 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-class TiffMemoryLogger
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook and add some data
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the worksheet with sample data
-        for (int i = 0; i < 100; i++)
+        worksheet.Cells["A1"].PutValue("Memory usage assessment for TIFF conversion");
+        // Populate additional cells to simulate a realistic workload
+        for (int row = 0; row < 500; row++)
         {
-            worksheet.Cells[i, 0].PutValue($"Row {i}");
-            worksheet.Cells[i, 1].PutValue(i);
+            for (int col = 0; col < 20; col++)
+            {
+                worksheet.Cells[row, col].PutValue(row * col);
+            }
         }
 
-        // Configure TIFF rendering options
+        // Configure rendering options for TIFF output
         ImageOrPrintOptions options = new ImageOrPrintOptions
         {
             ImageType = ImageType.Tiff,
-            OnePagePerSheet = true,
-            TiffCompression = TiffCompression.CompressionLZW,
-            HorizontalResolution = 300,
-            VerticalResolution = 300
+            OnePagePerSheet = true
         };
 
-        // Initialize the sheet renderer with the worksheet and options
+        // Initialize the sheet renderer (uses the provided ToTiff rule)
         SheetRender renderer = new SheetRender(worksheet, options);
 
-        // Log memory usage before conversion
-        long memoryBefore = GC.GetTotalMemory(true);
+        // Capture memory usage before conversion
+        long memoryBefore = GC.GetTotalMemory(forceFullCollection: true);
         Console.WriteLine($"Memory before TIFF conversion: {memoryBefore} bytes");
 
-        // Render the worksheet to a TIFF image using a memory stream
+        // Perform the TIFF conversion and write to a file via a stream
         using (MemoryStream tiffStream = new MemoryStream())
         {
-            renderer.ToTiff(tiffStream);
-            Console.WriteLine($"Generated TIFF size in memory: {tiffStream.Length} bytes");
+            renderer.ToTiff(tiffStream); // Rule: SheetRender.ToTiff(Stream)
+            File.WriteAllBytes("output.tiff", tiffStream.ToArray());
         }
 
-        // Log memory usage after conversion
-        long memoryAfter = GC.GetTotalMemory(true);
+        // Capture memory usage after conversion
+        long memoryAfter = GC.GetTotalMemory(forceFullCollection: true);
         Console.WriteLine($"Memory after TIFF conversion: {memoryAfter} bytes");
         Console.WriteLine($"Memory delta: {memoryAfter - memoryBefore} bytes");
     }

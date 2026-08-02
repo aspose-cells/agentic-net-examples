@@ -1,61 +1,50 @@
+// Title: C# – Handle missing image file when applying texture fill to a shape in Aspose.Cells
+// Description: Demonstrates how to add a rectangle shape to a workbook, set its FillType to Texture, load image data from a file, and use try‑catch to apply a built‑in fallback texture (BlueTissuePaper) if the file is absent or unreadable, then save the workbook.
+// Keywords: Aspose.Cells texture fill C# | shape texture error handling | fallback texture Aspose.Cells | FileNotFoundException shape fill | Aspose.Cells missing image | C# workbook shape texture | Aspose.Cells built‑in textures
+// Common Searches: Aspose.Cells catch missing image for shape texture | C# set fallback texture when image file not found | How to use built‑in texture in Aspose.Cells | Error handling for TextureFill.ImageData | Apply default texture if external PNG missing Aspose.Cells
+// Developer Intent: Add resilient code that substitutes a built‑in texture when the external image for a shape’s texture cannot be loaded.
+// Use Cases: Load a PNG as a texture for a rectangle and automatically switch to TextureType.BlueTissuePaper if the file does not exist. | Log a clear console warning while allowing the workbook generation to continue. | Guarantee successful workbook saving regardless of texture image availability.
+// AI Prompts: Generate C# Aspose.Cells code that applies a texture fill to a shape and falls back to a built‑in texture when the image file is missing. | Create an example that validates an image path before assigning it to TextureFill.ImageData and uses TextureType.BlueTissuePaper as a default. | Write a reusable method in C# that sets a shape’s texture from a file path with try‑catch handling for FileNotFoundException.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Demonstrates how to add a rectangle shape to a workbook, set its FillType to Texture, load image data from a file, and use try‑catch to apply a built‑in fallback texture (BlueTissuePaper) if the file is absent or unreadable, then save the workbook.
+class ShapeTextureExample
 {
-    public class ShapeTextureErrorHandlingDemo
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Add a rectangle shape
+        Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 300);
+        shape.Fill.FillType = FillType.Texture;
+        TextureFill textureFill = shape.Fill.TextureFill;
+
+        string imagePath = "texture.png";
+
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a rectangle shape that will receive the texture fill
-                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 300);
-                shape.Fill.FillType = FillType.Texture; // Enable texture fill
-
-                // Path to the image that should be used as texture
-                string imagePath = Path.Combine("Images", "texture.png");
-
-                // Load image data; use placeholder if file is missing
-                if (File.Exists(imagePath))
-                {
-                    shape.Fill.TextureFill.ImageData = File.ReadAllBytes(imagePath);
-                    Console.WriteLine($"Texture image loaded from '{imagePath}'.");
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Image file '{imagePath}' not found. Using a default 1x1 pixel PNG as texture.");
-                    const string base64Placeholder = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAFgwJ/lXcV6wAAAABJRU5ErkJggg==";
-                    shape.Fill.TextureFill.ImageData = Convert.FromBase64String(base64Placeholder);
-                }
-
-                // Optional: adjust additional texture properties
-                shape.Fill.TextureFill.IsTiling = true;
-                shape.Fill.TextureFill.Scale = 0.5;
-
-                // Save the workbook
-                string outputPath = "ShapeTextureErrorHandlingDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Try to load image data from file
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            textureFill.ImageData = imageData;
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (FileNotFoundException)
         {
-            ShapeTextureErrorHandlingDemo.Run();
+            Console.WriteLine($"Image file '{imagePath}' not found. Applying fallback texture.");
+            // Use a built‑in texture as a fallback
+            textureFill.Type = TextureType.BlueTissuePaper;
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading texture: {ex.Message}");
+        }
+
+        // Save the workbook
+        workbook.Save("ShapeTextureDemo.xlsx");
     }
 }

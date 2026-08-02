@@ -1,90 +1,95 @@
+// Title: Cancel Aspose.Cells CalculateFormula with a CancellationToken and custom InterruptMonitor (C#)
+// Description: Demonstrates how to abort a long‑running Workbook.CalculateFormula by attaching a TokenInterruptMonitor (derived from AbstractInterruptMonitor) to a workbook, using a CancellationToken that is triggered from a background task.
+// Keywords: Aspose.Cells CancellationToken | InterruptMonitor C# | Abort CalculateFormula | Cancel long running formula calculation | CellsException Interrupted | Aspose.Cells multithreading | Workbook.CalculateFormula cancel | C# Excel library cancellation
+// Common Searches: how to stop Aspose.Cells CalculateFormula with CancellationToken | Aspose.Cells interrupt monitor example | cancel long running workbook calculation C# | use CancellationToken to abort Excel formula evaluation | Aspose.Cells custom InterruptMonitor usage
+// Developer Intent: Implement a mechanism that lets a user or service abort a lengthy CalculateFormula operation in Aspose.Cells.
+// Use Cases: Add a UI Cancel button that stops formula calculation on demand. | Enforce a maximum execution time for server‑side workbook processing to prevent timeouts. | Gracefully shut down a background service by cancelling ongoing calculations.
+// AI Prompts: Generate a WinForms sample that wires a Cancel button to a CancellationTokenSource and uses TokenInterruptMonitor to stop Workbook.CalculateFormula. | Show how to catch CellsException with code Interrupted and log the cancellation event in an ASP.NET Core API. | Create a reusable helper method that configures a Workbook with a CancellationToken, runs CalculateFormula, and handles interruption exceptions.
+
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-class CancelableCalculationDemo
+namespace AsposeCellsCancellationDemo
 {
-    static void Main()
+    // Custom interrupt monitor that checks a CancellationToken
+    // Demonstrates how to abort a long‑running Workbook.CalculateFormula by attaching a TokenInterruptMonitor (derived from AbstractInterruptMonitor) to a workbook, using a CancellationToken that is triggered from a background task.
+    public class TokenInterruptMonitor : AbstractInterruptMonitor
     {
-        try
+        private readonly CancellationToken _token;
+
+        public TokenInterruptMonitor(CancellationToken token)
         {
-            // Create a new workbook and populate it with sample data and formulas
+            _token = token;
+        }
+
+        // Return true when the token is cancelled – this will cause Aspose.Cells to interrupt the operation
+        public override bool IsInterruptionRequested => _token.IsCancellationRequested;
+
+        // Keep default behavior (throw CellsException when interrupted)
+        public override bool TerminateWithoutException => false;
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // Prepare a cancellation token source
+            var cts = new CancellationTokenSource();
+
+            // Create a workbook and fill it with sample data and formulas
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            for (int i = 0; i < 20000; i++)
+            Cells cells = sheet.Cells;
+
+            // Populate many rows to make calculation take noticeable time
+            for (int i = 0; i < 50000; i++)
             {
-                sheet.Cells[i, 0].PutValue(i);                     // Column A values
-                sheet.Cells[i, 1].Formula = $"=A{i}+10";          // Column B formulas
+                cells[i, 0].PutValue(i);               // Column A
+                cells[i, 1].Formula = $"=A{i + 1}*2";   // Column B depends on A
             }
 
-            // Set up a cancellation token source that the user can trigger
-            CancellationTokenSource cts = new CancellationTokenSource();
+            // Set a formula that sums a large range (adds more load)
+            cells[0, 2].Formula = $"=SUM(B1:B50000)";
 
-            // Attach a custom interrupt monitor that checks the token
+            // Attach the custom interrupt monitor to the workbook
             workbook.InterruptMonitor = new TokenInterruptMonitor(cts.Token);
 
-            // Optional: a calculation monitor to observe progress (can be omitted)
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                CalculationMonitor = new SimpleCalcMonitor()
-            };
-
-            // Simulate a user abort after a short delay
+            // Start a background task that will request cancellation after a short delay
             Task.Run(() =>
             {
-                Thread.Sleep(500);               // Wait 0.5 seconds
-                Console.WriteLine("User requested abort.");
-                cts.Cancel();                    // Signal cancellation
+                Thread.Sleep(2000); // wait 2 seconds
+                Console.WriteLine("Cancellation requested.");
+                cts.Cancel();       // signal cancellation
             });
 
-            Console.WriteLine("Starting formula calculation...");
-            workbook.CalculateFormula(calcOptions);
-            Console.WriteLine("Calculation finished normally.");
+            try
+            {
+                Console.WriteLine("Starting calculation...");
+                // Perform calculation; it will be interrupted when the token is set
+                workbook.CalculateFormula();
+                Console.WriteLine("Calculation completed successfully.");
+            }
+            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+            {
+                Console.WriteLine("Calculation was interrupted as requested.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
 
-            // Save the workbook (partial results may be present)
-            string outputPath = "CancelableResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook (if calculation finished, otherwise partial results may be saved)
+            try
+            {
+                workbook.Save("CancellationDemo.xlsx");
+                Console.WriteLine("Workbook saved.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            // Calculation was interrupted by the cancellation token
-            Console.WriteLine("Calculation was interrupted by the cancellation token.");
-        }
-        catch (Exception ex)
-        {
-            // General exception handling
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-// Custom interrupt monitor that reads from a CancellationToken
-class TokenInterruptMonitor : AbstractInterruptMonitor
-{
-    private readonly CancellationToken _token;
-
-    public TokenInterruptMonitor(CancellationToken token)
-    {
-        _token = token;
-    }
-
-    // Return true when cancellation is requested
-    public override bool IsInterruptionRequested => _token.IsCancellationRequested;
-}
-
-// Simple calculation monitor (optional, can be left empty)
-class SimpleCalcMonitor : AbstractCalculationMonitor
-{
-    public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
-    {
-        // No action needed before each cell calculation
-    }
-
-    public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
-    {
-        // No action needed after each cell calculation
     }
 }

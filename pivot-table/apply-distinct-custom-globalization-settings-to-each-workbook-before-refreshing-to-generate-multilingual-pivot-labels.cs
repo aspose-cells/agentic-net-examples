@@ -3,103 +3,101 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Settings;
 
-namespace AsposeCellsMultilingualPivot
+namespace AsposeCellsPivotGlobalizationDemo
 {
     class Program
     {
         static void Main()
         {
-            // Create workbooks with different language settings
-            CreateWorkbookWithCustomPivotLabels("Pivot_EN.xlsx", Language.English);
-            CreateWorkbookWithCustomPivotLabels("Pivot_FR.xlsx", Language.French);
-            CreateWorkbookWithCustomPivotLabels("Pivot_DE.xlsx", Language.German);
+            // First workbook – English-like labels
+            Workbook wbEn = new Workbook();
+            Worksheet wsEn = wbEn.Worksheets[0];
+            PopulateSampleData(wsEn);
+            CreatePivotTable(wsEn, "E5", "PivotEn");
+
+            // Configure English-like globalization settings
+            SettableGlobalizationSettings enSettings = new SettableGlobalizationSettings();
+            SettablePivotGlobalizationSettings enPivotSettings = new SettablePivotGlobalizationSettings();
+            enPivotSettings.SetTextOfColumnLabels("Column Headers");
+            enPivotSettings.SetTextOfRowLabels("Row Headers");
+            enPivotSettings.SetTextOfTotal("Total Amount");
+            enPivotSettings.SetTextOfGrandTotal("Grand Total Amount");
+            enPivotSettings.SetTextOfMultipleItems("Multiple Items Selected");
+            enSettings.PivotSettings = enPivotSettings;
+            wbEn.Settings.GlobalizationSettings = enSettings;
+
+            // Refresh pivot to apply settings
+            wsEn.PivotTables[0].RefreshData();
+            wsEn.PivotTables[0].CalculateData();
+
+            // Save the first workbook
+            wbEn.Save("Pivot_English.xlsx");
+
+            // Second workbook – French-like labels
+            Workbook wbFr = new Workbook();
+            Worksheet wsFr = wbFr.Worksheets[0];
+            PopulateSampleData(wsFr);
+            CreatePivotTable(wsFr, "E5", "PivotFr");
+
+            // Configure French-like globalization settings
+            SettableGlobalizationSettings frSettings = new SettableGlobalizationSettings();
+            SettablePivotGlobalizationSettings frPivotSettings = new SettablePivotGlobalizationSettings();
+            frPivotSettings.SetTextOfColumnLabels("En-têtes de colonne");
+            frPivotSettings.SetTextOfRowLabels("En-têtes de ligne");
+            frPivotSettings.SetTextOfTotal("Montant total");
+            frPivotSettings.SetTextOfGrandTotal("Total général");
+            frPivotSettings.SetTextOfMultipleItems("Éléments multiples");
+            frSettings.PivotSettings = frPivotSettings;
+            wbFr.Settings.GlobalizationSettings = frSettings;
+
+            // Refresh pivot to apply French settings
+            wsFr.PivotTables[0].RefreshData();
+            wsFr.PivotTables[0].CalculateData();
+
+            // Save the second workbook
+            wbFr.Save("Pivot_French.xlsx");
         }
 
-        // Enum to identify language variants
-        enum Language
+        // Helper method to add sample data to a worksheet
+        private static void PopulateSampleData(Worksheet sheet)
         {
-            English,
-            French,
-            German
+            // Header row
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Region");
+            sheet.Cells["C1"].PutValue("Sales");
+
+            // Data rows
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue("North");
+            sheet.Cells["C2"].PutValue(1200);
+
+            sheet.Cells["A3"].PutValue("Apple");
+            sheet.Cells["B3"].PutValue("South");
+            sheet.Cells["C3"].PutValue(1500);
+
+            sheet.Cells["A4"].PutValue("Orange");
+            sheet.Cells["B4"].PutValue("North");
+            sheet.Cells["C4"].PutValue(800);
+
+            sheet.Cells["A5"].PutValue("Orange");
+            sheet.Cells["B5"].PutValue("South");
+            sheet.Cells["C5"].PutValue(950);
         }
 
-        // Creates a workbook, applies language‑specific pivot globalization settings,
-        // builds a simple pivot table, refreshes it and saves the file.
-        static void CreateWorkbookWithCustomPivotLabels(string fileName, Language lang)
+        // Helper method to create a simple pivot table
+        private static void CreatePivotTable(Worksheet sheet, string destinationCell, string pivotName)
         {
-            // ----- Workbook and sample data -----
-            Workbook wb = new Workbook();
-            Worksheet dataSheet = wb.Worksheets[0];
-            Cells cells = dataSheet.Cells;
+            // Define source range (including headers)
+            string sourceRange = "A1:C5";
 
-            // Sample data: Category | Amount
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("Fruit");
-            cells["B2"].PutValue(1200);
-            cells["A3"].PutValue("Vegetable");
-            cells["B3"].PutValue(800);
-            cells["A4"].PutValue("Fruit");
-            cells["B4"].PutValue(1500);
-            cells["A5"].PutValue("Vegetable");
-            cells["B5"].PutValue(950);
+            // Add pivot table
+            int pivotIndex = sheet.PivotTables.Add(sourceRange, destinationCell, pivotName);
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // ----- Globalization settings -----
-            // General settings container
-            SettableGlobalizationSettings globalSettings = new SettableGlobalizationSettings();
-
-            // Pivot‑specific settings container
-            SettablePivotGlobalizationSettings pivotSettings = new SettablePivotGlobalizationSettings();
-
-            // Apply language‑specific texts
-            switch (lang)
-            {
-                case Language.English:
-                    pivotSettings.SetTextOfColumnLabels("Column Labels");
-                    pivotSettings.SetTextOfRowLabels("Row Labels");
-                    pivotSettings.SetTextOfTotal("Total");
-                    pivotSettings.SetTextOfGrandTotal("Grand Total");
-                    pivotSettings.SetTextOfMultipleItems("(Multiple Items)");
-                    break;
-
-                case Language.French:
-                    pivotSettings.SetTextOfColumnLabels("Étiquettes de colonne");
-                    pivotSettings.SetTextOfRowLabels("Étiquettes de ligne");
-                    pivotSettings.SetTextOfTotal("Total");
-                    pivotSettings.SetTextOfGrandTotal("Total général");
-                    pivotSettings.SetTextOfMultipleItems("(Éléments multiples)");
-                    break;
-
-                case Language.German:
-                    pivotSettings.SetTextOfColumnLabels("Spaltenbeschriftungen");
-                    pivotSettings.SetTextOfRowLabels("Zeilenbeschriftungen");
-                    pivotSettings.SetTextOfTotal("Summe");
-                    pivotSettings.SetTextOfGrandTotal("Gesamtsumme");
-                    pivotSettings.SetTextOfMultipleItems("(Mehrere Elemente)");
-                    break;
-            }
-
-            // Attach pivot settings to the global settings
-            globalSettings.PivotSettings = pivotSettings;
-
-            // Assign the globalization settings to the workbook
-            wb.Settings.GlobalizationSettings = globalSettings;
-
-            // ----- Pivot table creation -----
-            Worksheet pivotSheet = wb.Worksheets.Add("PivotTable");
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B5", "A1", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Add fields: Category as row, Amount as data
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Amount
-
-            // Refresh and calculate to apply the custom labels
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // ----- Save the workbook -----
-            wb.Save(fileName);
+            // Add fields: Product as row, Region as column, Sales as data
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);      // Product
+            pivot.AddFieldToArea(PivotFieldType.Column, 1);   // Region
+            pivot.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
         }
     }
 }

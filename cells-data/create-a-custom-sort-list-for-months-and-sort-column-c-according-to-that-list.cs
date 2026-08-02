@@ -7,39 +7,52 @@ class Program
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add header and unsorted month data in column C
-        cells["C1"].PutValue("Month");
-        cells["C2"].PutValue("March");
-        cells["C3"].PutValue("January");
-        cells["C4"].PutValue("December");
-        cells["C5"].PutValue("July");
-        cells["C6"].PutValue("May");
+        // Add header row
+        worksheet.Cells["A1"].PutValue("ID");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["C1"].PutValue("Month");
 
-        // Add some additional columns to demonstrate full‑row sorting
-        cells["A1"].PutValue("ID");
-        cells["B1"].PutValue("Value");
-        cells["A2"].PutValue(1); cells["B2"].PutValue(10);
-        cells["A3"].PutValue(2); cells["B3"].PutValue(20);
-        cells["A4"].PutValue(3); cells["B4"].PutValue(30);
-        cells["A5"].PutValue(4); cells["B5"].PutValue(40);
-        cells["A6"].PutValue(5); cells["B6"].PutValue(50);
+        // Add sample data (months are in column C)
+        worksheet.Cells["A2"].PutValue(1);
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["C2"].PutValue("March");
 
-        // Configure the DataSorter with a custom month list
+        worksheet.Cells["A3"].PutValue(2);
+        worksheet.Cells["B3"].PutValue(200);
+        worksheet.Cells["C3"].PutValue("January");
+
+        worksheet.Cells["A4"].PutValue(3);
+        worksheet.Cells["B4"].PutValue(150);
+        worksheet.Cells["C4"].PutValue("December");
+
+        worksheet.Cells["A5"].PutValue(4);
+        worksheet.Cells["B5"].PutValue(120);
+        worksheet.Cells["C5"].PutValue("July");
+
+        // Define a custom sort list for months
+        string monthCustomList = "January,February,March,April,May,June,July,August,September,October,November,December";
+
+        // Configure the DataSorter
         DataSorter sorter = workbook.DataSorter;
         sorter.HasHeaders = true; // First row contains headers
-        string monthList = "January,February,March,April,May,June,July,August,September,October,November,December";
-        sorter.AddKey(2, SortOrder.Ascending, monthList); // Column C index = 2
+        // Add sorting key for column C (index 2) using the custom month list
+        sorter.AddKey(2, SortOrder.Ascending, monthCustomList);
 
-        // Define the range to sort (columns A‑C, rows 1‑6)
-        CellArea area = CellArea.CreateCellArea("A1", "C6");
+        // Define the range to sort (including the header row)
+        CellArea sortArea = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = 4,
+            EndColumn = 2
+        };
 
         // Perform the sort
-        sorter.Sort(sheet.Cells, area);
+        sorter.Sort(worksheet.Cells, sortArea);
 
-        // Save the sorted workbook
+        // Save the workbook
         workbook.Save("SortedMonths.xlsx");
     }
 }

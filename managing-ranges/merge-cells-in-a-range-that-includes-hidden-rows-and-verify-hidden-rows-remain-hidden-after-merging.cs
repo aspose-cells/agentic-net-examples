@@ -1,38 +1,38 @@
 using System;
 using Aspose.Cells;
 
-namespace MergeHiddenRowsDemo
+class MergeHiddenRowsDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Fill some sample data in rows 0-4 and columns 0-2
+        for (int row = 0; row < 5; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate some data for visual reference
-            for (int row = 0; row < 10; row++)
+            for (int col = 0; col < 3; col++)
             {
-                cells[row, 0].PutValue($"Row {row + 1}");
+                cells[row, col].PutValue($"R{row}C{col}");
             }
-
-            // Hide rows 3 to 5 (zero‑based indices 2,3,4)
-            cells.HideRows(2, 3);
-
-            // Merge cells A1:A5 (rows 0‑4, column 0) – this range includes the hidden rows
-            cells.Merge(0, 0, 5, 1);
-
-            // Verify that the hidden rows are still hidden after merging
-            for (int i = 2; i <= 4; i++)
-            {
-                bool isHidden = worksheet.Cells.Rows[i].IsHidden;
-                Console.WriteLine($"Row {i + 1} hidden status after merge: {isHidden}");
-            }
-
-            // Save the workbook to verify the result manually if needed
-            workbook.Save("MergeHiddenRowsDemo.xlsx");
         }
+
+        // Hide rows 1 to 3 (zero‑based indices)
+        cells.HideRows(1, 3);
+
+        // Merge a range that includes the hidden rows (rows 0‑4, columns 0‑1)
+        cells.Merge(0, 0, 5, 2);
+
+        // Verify that the rows that were hidden remain hidden after merging
+        for (int row = 0; row < 5; row++)
+        {
+            bool isHidden = worksheet.Cells.Rows[row].IsHidden;
+            Console.WriteLine($"Row {row} hidden: {isHidden}");
+        }
+
+        // Save the workbook
+        workbook.Save("MergeHiddenRowsDemo.xlsx");
     }
 }

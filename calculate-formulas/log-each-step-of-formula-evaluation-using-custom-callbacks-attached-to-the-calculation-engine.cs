@@ -1,10 +1,19 @@
+// Title: Log Formula Evaluation Steps with a Custom Calculation Monitor in Aspose.Cells (C#)
+// Description: This example shows how to create a LoggingCalculationMonitor that inherits from AbstractCalculationMonitor and overrides BeforeCalculate, AfterCalculate, and OnCircular. The monitor writes cell coordinates, original values, calculated results, and circular‑reference details to the console. It is attached to CalculationOptions, which are then passed to Workbook.CalculateFormula to execute the workbook while providing a step‑by‑step trace, followed by output of final values and optional workbook saving.
+// Keywords: Aspose.Cells | C# | CalculationMonitor | AbstractCalculationMonitor | formula logging | custom callbacks | cell calculation trace | circular reference detection | CalculationOptions | Workbook.CalculateFormula | debug Excel formulas | spreadsheet performance monitoring
+// Common Searches: Aspose.Cells log each formula calculation | custom calculation monitor C# example | how to detect circular references with Aspose.Cells | trace formula evaluation steps Aspose.Cells | before and after calculate callbacks Aspose.Cells
+// Developer Intent: Implement a custom monitor to capture detailed information before and after each cell’s formula is evaluated and to handle circular references during workbook calculation.
+// Use Cases: Debug complex workbooks by printing the original and computed values of every formula cell. | Automatically identify circular references and decide whether to continue or abort the calculation. | Integrate logging with existing CalculationOptions to audit spreadsheet calculations in production or testing environments.
+// AI Prompts: Write a C# class that extends AbstractCalculationMonitor and logs cell coordinates, original value, and calculated result for every formula evaluation in Aspose.Cells. | Demonstrate how to assign a custom CalculationMonitor to CalculationOptions and invoke Workbook.CalculateFormula with logging enabled. | Provide code that captures circular reference information inside OnCircular, prints the involved cells, and returns true to allow the engine to continue.
+
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaMonitoring
+namespace FormulaEvaluationLoggingDemo
 {
-    // Custom monitor that logs each step of formula evaluation
+    // Custom monitor to log each step of formula calculation
+    // This example shows how to create a LoggingCalculationMonitor that inherits from AbstractCalculationMonitor and overrides BeforeCalculate, AfterCalculate, and OnCircular. The monitor writes cell coordinates, original values, calculated results, and circular‑reference details to the console. It is attached to CalculationOptions, which are then passed to Workbook.CalculateFormula to execute the workbook while providing a step‑by‑step trace, followed by output of final values and optional workbook saving.
     public class LoggingCalculationMonitor : AbstractCalculationMonitor
     {
         // Called before a cell is calculated
@@ -18,9 +27,7 @@ namespace AsposeCellsFormulaMonitoring
         public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
             Console.WriteLine($"[After]  Sheet {sheetIndex}, Row {rowIndex}, Column {columnIndex}");
-            Console.WriteLine($"    Original Value: {OriginalValue}");
-            Console.WriteLine($"    Calculated Value: {CalculatedValue}");
-            Console.WriteLine($"    Value Changed: {ValueChanged}");
+            Console.WriteLine($"    Original: {OriginalValue}, Calculated: {CalculatedValue}, Changed: {ValueChanged}");
         }
 
         // Called when a circular reference is detected
@@ -29,18 +36,25 @@ namespace AsposeCellsFormulaMonitoring
             Console.WriteLine("Circular reference detected among the following cells:");
             while (circularCellsData.MoveNext())
             {
-                // Use dynamic to avoid compile‑time binding to unavailable members
-                var cell = circularCellsData.Current as dynamic;
+                var cell = circularCellsData.Current;
                 if (cell != null)
                 {
-                    try
+                    // Try to retrieve SheetIndex, Row, Column via reflection (API may vary by version)
+                    var type = cell.GetType();
+                    var sheetIdxProp = type.GetProperty("SheetIndex");
+                    var rowProp = type.GetProperty("Row");
+                    var colProp = type.GetProperty("Column");
+
+                    if (sheetIdxProp != null && rowProp != null && colProp != null)
                     {
-                        Console.WriteLine($"    Sheet {cell.SheetIndex}, Row {cell.Row}, Column {cell.Column}");
+                        int sheetIdx = (int)sheetIdxProp.GetValue(cell);
+                        int row = (int)rowProp.GetValue(cell);
+                        int col = (int)colProp.GetValue(cell);
+                        Console.WriteLine($"    Sheet {sheetIdx}, Row {row}, Column {col}");
                     }
-                    catch
+                    else
                     {
-                        // Fallback if properties are not accessible
-                        Console.WriteLine("    (cell details unavailable)");
+                        Console.WriteLine($"    Cell info: {cell}");
                     }
                 }
             }
@@ -55,23 +69,26 @@ namespace AsposeCellsFormulaMonitoring
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Set up sample formulas
-                sheet.Cells["A1"].Formula = "=1+2";               // Simple arithmetic
-                sheet.Cells["A2"].Formula = "=A1*3";              // Dependent on A1
-                sheet.Cells["A3"].Formula = "=SUM(A1:A2)";        // Built‑in function
+                // Populate cells with sample data and formulas
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["A2"].PutValue(10);
+                sheet.Cells["A3"].Formula = "=A1+A2";          // Simple addition
+                sheet.Cells["A4"].Formula = "=A3*2";           // Dependent on A3
+                sheet.Cells["A5"].Formula = "=SUM(A1:A4)";     // Aggregate function
 
                 // Introduce a circular reference for demonstration
                 sheet.Cells["B1"].Formula = "=B2";
                 sheet.Cells["B2"].Formula = "=B1";
 
-                // Configure calculation options with the custom monitor
+                // Set up calculation options with the custom monitor
                 CalculationOptions options = new CalculationOptions
                 {
                     CalculationMonitor = new LoggingCalculationMonitor(),
+                    // Optional: keep default behavior for other options
                     IgnoreError = false,
                     Recursive = true
                 };
@@ -79,22 +96,20 @@ namespace AsposeCellsFormulaMonitoring
                 // Perform calculation with monitoring
                 workbook.CalculateFormula(options);
 
-                // Output final values for verification
-                Console.WriteLine("\nFinal cell values:");
-                Console.WriteLine($"A1 = {sheet.Cells["A1"].Value}");
-                Console.WriteLine($"A2 = {sheet.Cells["A2"].Value}");
+                // Output final values of the calculated cells
+                Console.WriteLine("\nFinal calculated values:");
                 Console.WriteLine($"A3 = {sheet.Cells["A3"].Value}");
-                Console.WriteLine($"B1 = {sheet.Cells["B1"].Value}");
-                Console.WriteLine($"B2 = {sheet.Cells["B2"].Value}");
+                Console.WriteLine($"A4 = {sheet.Cells["A4"].Value}");
+                Console.WriteLine($"A5 = {sheet.Cells["A5"].Value}");
 
-                // Save the workbook (optional, demonstrates lifecycle rule usage)
-                string outputPath = "FormulaMonitoringResult.xlsx";
+                // Save the workbook (optional)
+                string outputPath = "FormulaEvaluationLoggingDemo.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"\nWorkbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

@@ -1,84 +1,73 @@
+// Title: Cut a range that includes a chart and paste it into a new workbook with Aspose.Cells for .NET
+// Description: Demonstrates how to copy a cell range that contains a chart, paste it into another workbook while preserving the chart and its data source, and then remove the original range and chart to emulate a cut operation. The example uses Aspose.Cells' PasteOptions with PasteType.All and shows saving both the source and destination workbooks.
+// Keywords: Aspose.Cells copy range with chart | cut and paste chart between workbooks .NET | preserve chart data Aspose.Cells | PasteOptions PasteType.All example | copy drawings and charts Aspose.Cells | C# Aspose.Cells chart migration | move chart and data to new workbook
+// Common Searches: Aspose.Cells copy range that includes a chart | cut range with chart and paste to another workbook .NET | preserve chart objects when moving cells Aspose.Cells | how to use PasteOptions to copy charts in C# | remove original chart after copying range Aspose.Cells
+// Developer Intent: Copy a range containing a chart to a new workbook and delete the original range and chart to achieve a cut‑and‑paste effect.
+// Use Cases: Extract a chart and its source data from a template to generate a standalone report file. | Automate the relocation of a chart section to a separate workbook for distribution while cleaning up the source file. | Create identical chart areas across multiple workbooks to ensure visual consistency in automated reporting.
+// AI Prompts: Write C# code using Aspose.Cells to cut a range that includes a chart and paste it into a new workbook, keeping the chart linked to its data. | Show how to configure PasteOptions with PasteType.All to copy cells, formats, drawings, and charts between workbooks in Aspose.Cells. | Explain the steps to delete the original chart and range after copying them to simulate a cut operation in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using AsposeRange = Aspose.Cells.Range;
 
-class CutRangeWithChart
+// Demonstrates how to copy a cell range that contains a chart, paste it into another workbook while preserving the chart and its data source, and then remove the original range and chart to emulate a cut operation. The example uses Aspose.Cells' PasteOptions with PasteType.All and shows saving both the source and destination workbooks.
+class Program
 {
     static void Main()
     {
         try
         {
-            // ---------- Create source workbook ----------
+            // ---------- Create source workbook with data and a chart ----------
             Workbook srcWb = new Workbook();
             Worksheet srcSheet = srcWb.Worksheets[0];
-            srcSheet.Name = "Source";
 
-            // Fill sample data (A1:B5)
+            // Populate sample data
             srcSheet.Cells["A1"].PutValue("Category");
             srcSheet.Cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 5; i++)
+            for (int i = 0; i < 5; i++)
             {
-                srcSheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
-                srcSheet.Cells[$"B{i}"].PutValue(i * 10);
+                srcSheet.Cells[i + 1, 0].PutValue($"Item {i + 1}");
+                srcSheet.Cells[i + 1, 1].PutValue((i + 1) * 10);
             }
 
-            // Add a chart that uses the data range A1:B5
-            int chartIdx = srcSheet.Charts.Add(ChartType.Column, 7, 0, 20, 5);
-            Chart srcChart = srcSheet.Charts[chartIdx];
-            srcChart.NSeries.Add("=Source!$B$2:$B$5", true);
-            srcChart.NSeries.CategoryData = "=Source!$A$2:$A$5";
-            srcChart.Title.Text = "Sample Chart";
+            // Add a column chart anchored to rows 0‑10 and columns 2‑7
+            int chartIdx = srcSheet.Charts.Add(ChartType.Column, 0, 2, 10, 7);
+            Chart chart = srcSheet.Charts[chartIdx];
+            chart.NSeries.Add("B2:B6", true);               // Values
+            chart.NSeries.CategoryData = "A2:A6";           // Categories
 
-            // ---------- Define the range to cut (including data) ----------
-            // The chart itself is a drawing object, not part of cells, so we only cut the data range.
-            AsposeRange srcDataRange = srcSheet.Cells.CreateRange("A1:B5");
+            // Define source range that includes both data and chart area (11 rows × 8 columns)
+            AsposeRange srcRange = srcSheet.Cells.CreateRange(0, 0, 11, 8);
 
             // ---------- Create destination workbook ----------
             Workbook destWb = new Workbook();
             Worksheet destSheet = destWb.Worksheets[0];
-            destSheet.Name = "Destination";
+            AsposeRange destRange = destSheet.Cells.CreateRange(0, 0, 11, 8);
 
-            // Destination range where data will be pasted (same size)
-            AsposeRange destDataRange = destSheet.Cells.CreateRange("A1:B5");
-
-            // ---------- Copy (cut) the data range ----------
+            // Paste options – copy everything (values, formats, drawings, charts, etc.)
             PasteOptions pasteOptions = new PasteOptions
             {
-                PasteType = PasteType.All // copy values, formulas, formats, etc.
+                PasteType = PasteType.All
             };
-            destDataRange.Copy(srcDataRange, pasteOptions);
 
-            // ---------- Recreate the chart in the destination sheet ----------
-            // Use the same chart type and position; adjust data source to the destination sheet.
-            int destChartIdx = destSheet.Charts.Add(srcChart.Type, 7, 0, 20, 5);
-            Chart destChart = destSheet.Charts[destChartIdx];
-            // Data source now points to the destination sheet.
-            destChart.NSeries.Add("=Destination!$B$2:$B$5", true);
-            destChart.NSeries.CategoryData = "=Destination!$A$2:$A$5";
-            destChart.Title.Text = srcChart.Title.Text;
+            // ---------- Cut (copy then remove) ----------
+            // Copy the range with the chart to the destination workbook
+            destRange.Copy(srcRange, pasteOptions);
+
+            // Remove the original range from the source sheet to simulate a cut operation
+            srcSheet.Cells.DeleteRange(0, 0, 11, 8, ShiftType.None);
+
+            // Remove the original chart object (optional, because range deletion does not delete drawings)
+            srcSheet.Charts.RemoveAt(chartIdx);
 
             // ---------- Save both workbooks ----------
-            string srcPath = "SourceWorkbook.xlsx";
-            string destPath = "DestinationWorkbook.xlsx";
-
-            // Ensure we can write to the target locations
-            try
-            {
-                srcWb.Save(srcPath);
-                destWb.Save(destPath);
-                Console.WriteLine($"Workbooks saved successfully: {srcPath}, {destPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Error saving workbooks: {saveEx.Message}");
-            }
+            srcWb.Save("SourceAfterCut.xlsx");
+            destWb.Save("DestinationWithChart.xlsx");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions to prevent crashes
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

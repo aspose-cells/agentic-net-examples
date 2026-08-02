@@ -1,83 +1,74 @@
 using System;
-using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-class JsonRowCountValidator
+namespace AsposeCellsJsonRowValidation
 {
-    static void Main()
+    class Program
     {
-        // ---------- Create a workbook and populate data ----------
-        Workbook workbook = new Workbook();                     // create workbook
-        Worksheet sheet = workbook.Worksheets[0];              // get first worksheet
-        Cells cells = sheet.Cells;
-
-        // Fill some data with a few empty rows in between
-        cells["A1"].PutValue("Header1");
-        cells["B1"].PutValue("Header2");
-        cells["A2"].PutValue("Row1Col1");
-        cells["B2"].PutValue("Row1Col2");
-        // Row 3 left empty intentionally
-        cells["A4"].PutValue("Row3Col1");
-        cells["B4"].PutValue("Row3Col2");
-
-        // Determine the expected number of rows.
-        // MaxDataRow returns the zero‑based index of the last row that contains data.
-        // Adding 1 gives the total count of rows that have data (including empty rows before the last data row).
-        int expectedRowCount = sheet.Cells.MaxDataRow + 1;
-
-        // ---------- Export the worksheet to JSON ----------
-        JsonSaveOptions saveOptions = new JsonSaveOptions
+        static void Main()
         {
-            // Ensure empty rows are NOT skipped so the JSON reflects the original row layout.
-            SkipEmptyRows = false,
-            // Export as a simple array (default) because we have only one sheet.
-            AlwaysExportAsJsonObject = false
-        };
+            // ---------- Create a workbook and populate sample data ----------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        string jsonPath = "exported.json";
-        workbook.Save(jsonPath, saveOptions);                  // save workbook as JSON
+            // Header row
+            cells["A1"].PutValue("ID");
+            cells["B1"].PutValue("Name");
 
-        // ---------- Load the JSON and count rows ----------
-        string jsonContent = File.ReadAllText(jsonPath);
+            // Data rows
+            cells["A2"].PutValue(1);
+            cells["B2"].PutValue("Alice");
+            cells["A3"].PutValue(2);
+            cells["B3"].PutValue("Bob");
 
-        // The default export format for a single sheet is a JSON array where each element represents a row.
-        // Parse the JSON and count the array elements.
-        using JsonDocument doc = JsonDocument.Parse(jsonContent);
-        JsonElement root = doc.RootElement;
+            // Intentionally leave row 4 empty
+            // Add another data row after the empty row
+            cells["A5"].PutValue(3);
+            cells["B5"].PutValue("Charlie");
 
-        int exportedRowCount = 0;
+            // Original row count (including empty rows up to the last used row)
+            int originalRowCount = cells.MaxDataRow + 1; // MaxDataRow is zero‑based
 
-        if (root.ValueKind == JsonValueKind.Array)
-        {
-            exportedRowCount = root.GetArrayLength();
-        }
-        else if (root.ValueKind == JsonValueKind.Object)
-        {
-            // When AlwaysExportAsJsonObject is true, each sheet is a property.
-            // Retrieve the first property (the sheet name) and count its array elements.
-            foreach (JsonProperty prop in root.EnumerateObject())
+            // ---------- Export the worksheet to JSON ----------
+            JsonSaveOptions saveOptions = new JsonSaveOptions
             {
-                if (prop.Value.ValueKind == JsonValueKind.Array)
-                {
-                    exportedRowCount = prop.Value.GetArrayLength();
-                }
-                break; // only need the first sheet for this validation
+                // Do not skip empty rows so the row count in JSON matches the worksheet
+                SkipEmptyRows = false,
+                // Export as a single JSON object (optional, but keeps structure simple)
+                AlwaysExportAsJsonObject = true
+            };
+
+            string jsonPath = "workbook.json";
+            workbook.Save(jsonPath, saveOptions);
+
+            // ---------- Load the JSON back into a new workbook ----------
+            JsonLoadOptions loadOptions = new JsonLoadOptions
+            {
+                // Load each JSON attribute as a separate worksheet if needed (default false)
+                MultipleWorksheets = false
+            };
+
+            Workbook jsonWorkbook = new Workbook(jsonPath, loadOptions);
+            Worksheet jsonSheet = jsonWorkbook.Worksheets[0];
+            Cells jsonCells = jsonSheet.Cells;
+
+            // Row count after loading JSON
+            int jsonRowCount = jsonCells.MaxDataRow + 1;
+
+            // ---------- Validate row counts ----------
+            Console.WriteLine($"Original worksheet row count : {originalRowCount}");
+            Console.WriteLine($"Row count after JSON export/load : {jsonRowCount}");
+
+            if (originalRowCount == jsonRowCount)
+            {
+                Console.WriteLine("Validation succeeded: Row counts match.");
             }
-        }
-
-        // ---------- Validate ----------
-        Console.WriteLine($"Expected row count (from worksheet): {expectedRowCount}");
-        Console.WriteLine($"Exported row count (from JSON): {exportedRowCount}");
-
-        if (expectedRowCount == exportedRowCount)
-        {
-            Console.WriteLine("Validation succeeded: row counts match.");
-        }
-        else
-        {
-            Console.WriteLine("Validation failed: row counts do not match.");
+            else
+            {
+                Console.WriteLine("Validation failed: Row counts do not match.");
+            }
         }
     }
 }

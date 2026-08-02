@@ -1,98 +1,70 @@
+// Title: Sort a converted table range while preserving other cells – Aspose.Cells for .NET
+// Description: Demonstrates how to convert a ListObject to a normal range, apply DataSorter to the range, and verify that cells outside the sorted area remain unchanged. The example creates a workbook, fills data, adds a table on A1:B5, converts it, sorts by the ID column, and checks the value in D2 before saving.
+// Keywords: Aspose.Cells sort range after ConvertToRange | C# DataSorter CellArea | ListObject to range Aspose.Cells | preserve external cells during sort | Aspose.Cells sorting with headers
+// Common Searches: Aspose.Cells sort only a specific range after converting a table | DataSorter.Sort affect cells outside CellArea | Convert ListObject to range and sort C# | keep side columns unchanged when sorting Aspose.Cells
+// Developer Intent: Apply sorting to the cells that were part of a table after it has been converted to a regular range, ensuring that any other worksheet data stays untouched.
+// Use Cases: Reorder rows of a data block that originated from a ListObject without disturbing adjacent summary columns. | Generate reports where only a defined area (e.g., A1:B5) needs sorting while other sections remain static. | Validate that a cell outside the sorted area (such as D2) retains its original value after the operation.
+// AI Prompts: Write C# code using Aspose.Cells to convert a ListObject to a range and sort it by the first column without changing other cells. | Explain how DataSorter.Sort works with a CellArea and how to confirm that external cells are unaffected. | Provide a unit‑test snippet that asserts cell D2 still contains 999 after sorting the converted range.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// Demonstrates how to convert a ListObject to a normal range, apply DataSorter to the range, and verify that cells outside the sorted area remain unchanged. The example creates a workbook, fills data, adds a table on A1:B5, converts it, sorts by the ID column, and checks the value in D2 before saving.
+class Program
 {
-    public class TableToRangeSortDemo
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate data with a header row and several data rows
+        cells["A1"].PutValue("ID");
+        cells["B1"].PutValue("Value");
+        cells["A2"].PutValue(3);
+        cells["B2"].PutValue(30);
+        cells["A3"].PutValue(1);
+        cells["B3"].PutValue(10);
+        cells["A4"].PutValue(4);
+        cells["B4"].PutValue(40);
+        cells["A5"].PutValue(2);
+        cells["B5"].PutValue(20);
+
+        // Add some data outside the intended range to prove sorting is limited
+        cells["D1"].PutValue("Outside");
+        cells["D2"].PutValue(999);
+
+        // Create a table (ListObject) that covers the data range A1:B5
+        int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
+        ListObject table = worksheet.ListObjects[tableIndex];
+        table.DisplayName = "SampleTable";
+
+        // Convert the table back to a normal range
+        table.ConvertToRange();
+
+        // Define the area that should be sorted (including the header row)
+        CellArea sortArea = new CellArea
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            StartRow = 0,      // Row 1 (zero‑based)
+            StartColumn = 0,   // Column A
+            EndRow = 4,        // Row 5
+            EndColumn = 1      // Column B
+        };
 
-                // Populate header row
-                cells["A1"].PutValue("ID");
-                cells["B1"].PutValue("Name");
-                cells["C1"].PutValue("Score");
-                cells["D1"].PutValue("Category");
+        // Configure the DataSorter
+        DataSorter sorter = workbook.DataSorter;
+        sorter.HasHeaders = true;                     // First row contains headers
+        sorter.AddKey(0, SortOrder.Ascending);        // Sort by the first column (ID)
 
-                // Populate sample data rows
-                cells["A2"].PutValue(1); cells["B2"].PutValue("Alice");   cells["C2"].PutValue(85); cells["D2"].PutValue("X");
-                cells["A3"].PutValue(2); cells["B3"].PutValue("Bob");     cells["C3"].PutValue(92); cells["D3"].PutValue("Y");
-                cells["A4"].PutValue(3); cells["B4"].PutValue("Charlie"); cells["C4"].PutValue(78); cells["D4"].PutValue("X");
-                cells["A5"].PutValue(4); cells["B5"].PutValue("Diana");   cells["C5"].PutValue(88); cells["D5"].PutValue("Y");
+        // Perform the sort on the defined area
+        sorter.Sort(worksheet.Cells, sortArea);
 
-                // Add a table (ListObject) covering the data range A1:D5
-                int tableIndex = sheet.ListObjects.Add("A1", "D5", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "SampleTable";
+        // Optional: output a cell outside the sorted area to confirm it stayed unchanged
+        Console.WriteLine("Value in D2 (should be 999): " + cells["D2"].IntValue);
 
-                // Capture the data range of the table (including header)
-                AsposeRange tableRange = table.DataRange; // includes header row
-
-                // Convert the table to a normal range (the table object will be removed)
-                table.ConvertToRange();
-
-                // Verify that the table has been removed
-                Console.WriteLine("ListObjects count after conversion: " + sheet.ListObjects.Count);
-
-                // Set up the DataSorter to sort by the "Score" column (third column, index 2)
-                DataSorter sorter = workbook.DataSorter;
-                sorter.HasHeaders = true;               // First row is header
-                sorter.AddKey(2, SortOrder.Descending); // Sort by column C (Score) descending
-
-                // Define the sort area using the previously captured range address
-                CellArea sortArea = new CellArea
-                {
-                    StartRow = tableRange.FirstRow,
-                    StartColumn = tableRange.FirstColumn,
-                    EndRow = tableRange.FirstRow + tableRange.RowCount - 1,
-                    EndColumn = tableRange.FirstColumn + tableRange.ColumnCount - 1
-                };
-
-                // Perform the sort
-                sorter.Sort(cells, sortArea);
-
-                // Confirm that sorting affected only the defined range
-                Console.WriteLine("Value in cell E1 (should be empty): '" + cells["E1"].StringValue + "'");
-
-                // Output the sorted data to console for verification
-                Console.WriteLine("Sorted data (including header):");
-                for (int r = sortArea.StartRow; r <= sortArea.EndRow; r++)
-                {
-                    for (int c = sortArea.StartColumn; c <= sortArea.EndColumn; c++)
-                    {
-                        Console.Write(cells[r, c].StringValue + "\t");
-                    }
-                    Console.WriteLine();
-                }
-
-                // Save the workbook (overwrite if it already exists)
-                string outputPath = "TableToRangeSorted.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            TableToRangeSortDemo.Run();
-        }
+        // Save the workbook
+        workbook.Save("SortedAfterConvertToRange.xlsx");
     }
 }

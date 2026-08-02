@@ -1,37 +1,37 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitOnLoad
+namespace AsposeCellsExamples
 {
-    class Program
+    // Author: Aspose.Cells .NET example
+    class AutoFitRowsOnLoad
     {
         static void Main()
         {
-            // Path to the source workbook (replace with actual file path)
-            string inputPath = "input.xlsx";
-
-            // Create AutoFitterOptions to enable auto‑fit during loading.
-            // Setting OnlyAuto to false ensures all rows are evaluated.
-            AutoFitterOptions autoFitOptions = new AutoFitterOptions
+            // Create AutoFitterOptions to control row auto‑fitting during load
+            AutoFitterOptions fitterOptions = new AutoFitterOptions
             {
-                OnlyAuto = false
+                // False – auto‑fit all rows (including those with custom height)
+                OnlyAuto = false,
+                // Optional: also auto‑fit merged cells if needed
+                AutoFitMergedCells = true
             };
 
-            // Assign the options to LoadOptions.
+            // Assign the options to LoadOptions
             LoadOptions loadOptions = new LoadOptions
             {
-                AutoFitterOptions = autoFitOptions
+                AutoFitterOptions = fitterOptions
             };
 
-            // Load the workbook with the specified options.
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook with the specified options; rows will be auto‑fitted
+            Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-            // At this point row heights have been auto‑fitted automatically.
-            // Save the workbook to verify the changes (replace with desired output path).
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Example: retrieve a row height after auto‑fit
+            double firstRowHeight = workbook.Worksheets[0].Cells.GetRowHeight(0);
+            Console.WriteLine($"First row height after auto‑fit: {firstRowHeight}");
 
-            Console.WriteLine($"Workbook loaded with auto‑fit rows and saved to: {outputPath}");
+            // Save the workbook (preserving the adjusted row heights)
+            workbook.Save("output.xlsx");
         }
     }
 }

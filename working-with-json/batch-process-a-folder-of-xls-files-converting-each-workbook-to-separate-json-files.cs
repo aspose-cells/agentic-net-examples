@@ -6,43 +6,51 @@ namespace AsposeCellsBatchJsonExport
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Folder containing the source Excel files (XLS format)
-            string sourceFolder = @"C:\InputExcelFiles";
+            // Input folder containing Excel files (XLS/XLSX)
+            string inputFolder = @"C:\InputExcelFiles";
 
-            // Ensure the folder exists
-            if (!Directory.Exists(sourceFolder))
+            // Output folder where JSON files will be saved
+            string outputFolder = @"C:\OutputJsonFiles";
+
+            // Verify input directory exists
+            if (!Directory.Exists(inputFolder))
             {
-                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                Console.WriteLine($"Input folder not found: {inputFolder}");
                 return;
             }
 
-            // Get all .xls files in the folder (non‑recursive)
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xls");
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
 
-            if (excelFiles.Length == 0)
-            {
-                Console.WriteLine("No XLS files found in the specified folder.");
-                return;
-            }
+            // Get all Excel files with .xls or .xlsx extensions
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xls*");
 
             foreach (string excelPath in excelFiles)
             {
                 try
                 {
-                    // Build the output JSON file path – same name, .json extension, placed in the same folder
-                    string jsonPath = Path.ChangeExtension(excelPath, ".json");
+                    // Verify the source file still exists
+                    if (!File.Exists(excelPath))
+                    {
+                        Console.WriteLine($"File not found (skipped): {excelPath}");
+                        continue;
+                    }
 
-                    // Convert the Excel workbook to JSON using Aspose.Cells.Utility.ConversionUtility
-                    // This uses the rule: ConversionUtility.Convert(string source, string saveAs)
+                    // Build the JSON file name based on the Excel file name
+                    string jsonFileName = Path.GetFileNameWithoutExtension(excelPath) + ".json";
+                    string jsonPath = Path.Combine(outputFolder, jsonFileName);
+
+                    // Convert the Excel workbook to JSON using Aspose.Cells ConversionUtility
                     ConversionUtility.Convert(excelPath, jsonPath);
 
-                    Console.WriteLine($"Converted '{Path.GetFileName(excelPath)}' to '{Path.GetFileName(jsonPath)}'.");
+                    Console.WriteLine($"Converted: {excelPath} -> {jsonPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting file '{excelPath}': {ex.Message}");
+                    Console.WriteLine($"Error converting '{excelPath}': {ex.Message}");
                 }
             }
 

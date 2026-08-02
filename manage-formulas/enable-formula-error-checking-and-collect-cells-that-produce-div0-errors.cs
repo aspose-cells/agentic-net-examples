@@ -1,80 +1,71 @@
+// Title: Aspose.Cells for .NET – Enable Evaluation Error Checking and List #DIV/0! Cells
+// Description: Demonstrates how to turn on evaluation‑error checking with ErrorCheckOptionCollection, calculate formulas, and programmatically collect the addresses of cells that return the #DIV/0! error in a workbook.
+// Keywords: Aspose.Cells error checking | C# detect #DIV/0! cells | EvaluationError option Aspose | collect division by zero errors | Aspose.Cells formula validation
+// Common Searches: Aspose.Cells enable evaluation error checking .NET | list cells with #DIV/0! using Aspose.Cells | ErrorCheckOptionCollection example C# | how to find division by zero errors in Aspose workbook | retrieve error cell addresses Aspose.Cells
+// Developer Intent: Turn on formula evaluation error detection and extract the cell references that produce #DIV/0! after calculation.
+// Use Cases: Generate a validation report highlighting all division‑by‑zero errors before publishing a workbook. | Automate data‑quality checks by flagging cells that contain #DIV/0! and applying corrective actions. | Integrate error detection into a larger ETL pipeline to prevent downstream processing failures.
+// AI Prompts: Write C# code with Aspose.Cells that enables EvaluationError checking and returns a list of cell names containing #DIV/0! after workbook.CalculateFormula(). | Show how to configure ErrorCheckOptionCollection for a specific range to monitor evaluation errors and log offending cell addresses. | Provide an example that iterates through all cells, identifies any error value, and groups them by error type using Aspose.Cells for .NET.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace AsposeCellsErrorCheckDemo
 {
+    // Demonstrates how to turn on evaluation‑error checking with ErrorCheckOptionCollection, calculate formulas, and programmatically collect the addresses of cells that return the #DIV/0! error in a workbook.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // -------------------------------------------------
-            // 1. Set up formulas that will generate #DIV/0! errors
-            // -------------------------------------------------
-            cells["A1"].PutValue(10);          // divisor
-            cells["B1"].PutValue(0);           // divisor zero
-            cells["C1"].Formula = "=A1/B1";    // #DIV/0! error
-            cells["D1"].Formula = "=10/0";     // #DIV/0! error
-            cells["E1"].Formula = "=SUM(A1:B1)"; // valid formula
+            // 2. Populate some cells with formulas that will cause #DIV/0! errors
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(0);
+            cells["B1"].Formula = "=A1/A2";          // Division by zero
+            cells["B2"].Formula = "=A1/5";           // Valid formula
+            cells["C1"].Formula = "=SUM(A1:A2)";     // Valid formula
+            cells["C2"].Formula = "=A2/A2";          // 0/0 -> #DIV/0!
 
-            // -------------------------------------------------
-            // 2. Enable error checking for evaluation errors (e.g., #DIV/0!)
-            // -------------------------------------------------
-            ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
-            int optionIndex = errorCheckOptions.Add();
-            ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
-
-            // Enable checking for evaluation errors (green triangle will appear in Excel)
-            errorCheckOption.SetErrorCheck(ErrorCheckType.EvaluationError, true);
-
-            // Apply the check to the whole used range of the worksheet
-            CellArea usedArea = CellArea.CreateCellArea(0, 0, cells.MaxRow, cells.MaxColumn);
-            errorCheckOption.AddRange(usedArea);
-
-            // -------------------------------------------------
-            // 3. Calculate all formulas (do not ignore errors)
-            // -------------------------------------------------
-            workbook.CalculateFormula(new CalculationOptions() { IgnoreError = false });
-
-            // -------------------------------------------------
-            // 4. Collect addresses of cells that contain #DIV/0! errors
-            // -------------------------------------------------
-            List<string> divZeroCells = new List<string>();
-
-            // Iterate through all cells that have data
-            for (int row = 0; row <= cells.MaxRow; row++)
+            // 3. Enable error checking for evaluation errors (e.g., #DIV/0!)
+            ErrorCheckOptionCollection errorOptions = sheet.ErrorCheckOptions;
+            int optionIdx = errorOptions.Add();                     // Add a new option
+            ErrorCheckOption option = errorOptions[optionIdx];
+            option.SetErrorCheck(ErrorCheckType.EvaluationError, true); // Enable checking
+            // Apply the option to the whole used range
+            CellArea usedArea = new CellArea
             {
-                for (int col = 0; col <= cells.MaxColumn; col++)
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = cells.MaxRow,
+                EndColumn = cells.MaxColumn
+            };
+            option.AddRange(usedArea);
+
+            // 4. Calculate all formulas (errors will be generated)
+            workbook.CalculateFormula();
+
+            // 5. Collect cells that contain the #DIV/0! error
+            List<string> divZeroCells = new List<string>();
+            foreach (Cell cell in cells)
+            {
+                if (cell.IsErrorValue && cell.StringValue == "#DIV/0!")
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.IsErrorValue)
-                    {
-                        // Get the rich value to determine the specific error type
-                        CellRichValue richValue = cell.GetRichValue();
-                        if (richValue != null && richValue.ErrorValue == ErrorCellValueType.Calc)
-                        {
-                            // #DIV/0! is represented by the Calc error type
-                            divZeroCells.Add(cell.Name);
-                        }
-                    }
+                    divZeroCells.Add(cell.Name);
                 }
             }
 
-            // Output the collected cell addresses
-            Console.WriteLine("Cells containing #DIV/0! errors:");
+            // 6. Output the addresses of cells with #DIV/0! errors
+            Console.WriteLine("Cells containing #DIV/0! error:");
             foreach (string address in divZeroCells)
             {
                 Console.WriteLine(address);
             }
 
-            // -------------------------------------------------
-            // 5. Save the workbook (lifecycle rule)
-            // -------------------------------------------------
+            // 7. Save the workbook (optional, demonstrates lifecycle rule)
             workbook.Save("ErrorCheckDivZeroDemo.xlsx");
         }
     }

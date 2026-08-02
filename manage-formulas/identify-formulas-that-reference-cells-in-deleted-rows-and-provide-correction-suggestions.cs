@@ -1,89 +1,84 @@
+// Title: Identify and Fix Formulas That Reference Deleted Rows Using Aspose.Cells for .NET
+// Description: This .NET example creates a workbook, fills column A, adds formulas in column B that point to rows scheduled for removal, and uses DeleteOptions with UpdateReference and a custom FormulaChangeMonitor. After deleting rows 5‑7, the monitor captures every cell whose formula was altered, prints the updated expressions, and offers a quick recommendation to verify or wrap potentially empty ranges with IFERROR.
+// Keywords: Aspose.Cells | C# | .NET | formula change monitor | DeleteOptions UpdateReference | detect formulas after row deletion | correct formulas referencing removed rows | Excel automation | global developers | US .NET community
+// Common Searches: track formula changes after deleting rows Aspose.Cells | list cells with updated formulas .NET | how to monitor formula adjustments during row removal | suggest corrections for formulas that lost referenced rows | Aspose.Cells FormulaChangeMonitor example
+// Developer Intent: Find formulas that were automatically modified when rows are deleted and obtain guidance on how to validate or adjust the new references.
+// Use Cases: Run the sample to obtain a collection of cells whose formulas changed after a bulk row delete. | Display or log each updated formula and prompt the user to confirm the referenced range is still valid. | Integrate the monitor into larger data‑cleaning workflows to ensure financial or statistical calculations remain accurate after structural edits.
+// AI Prompts: Generate a method that iterates over ChangedCells and returns a map of cell addresses to validation messages based on empty range detection. | Create a reusable FormulaChangeMonitor subclass that records original and new formulas and automatically suggests IFERROR wrapping when a range becomes empty. | Write code that logs every formula change to a JSON file and sends a summary email with recommended adjustments.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaReferenceChecker
+// This .NET example creates a workbook, fills column A, adds formulas in column B that point to rows scheduled for removal, and uses DeleteOptions with UpdateReference and a custom FormulaChangeMonitor. After deleting rows 5‑7, the monitor captures every cell whose formula was altered, prints the updated expressions, and offers a quick recommendation to verify or wrap potentially empty ranges with IFERROR.
+class FormulaChangeMonitor : AbstractFormulaChangeMonitor
 {
-    class Program
+    // Stores the coordinates of cells whose formulas were changed during deletion
+    public List<(int sheetIndex, int rowIndex, int columnIndex)> ChangedCells { get; } = new List<(int, int, int)>();
+
+    public override void OnCellFormulaChanged(int sheetIndex, int rowIndex, int columnIndex)
     {
-        static void Main()
+        ChangedCells.Add((sheetIndex, rowIndex, columnIndex));
+    }
+
+    // Not needed for this scenario
+    public override void OnFormatConditionFormulaChanged(FormatCondition fc) { }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        Cells cells = ws.Cells;
+
+        // Populate column A with values in rows 1‑10 (zero‑based indices 0‑9)
+        for (int i = 0; i < 10; i++)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Define the range of rows to be deleted (zero‑based indices)
-            int firstRowToDelete = 2;   // e.g., third row in Excel
-            int rowsToDeleteCount = 2;  // delete rows 3 and 4
-
-            // -----------------------------------------------------------------
-            // Step 1: Find all formulas that reference any cell in the rows to be deleted
-            // -----------------------------------------------------------------
-            // Use a HashSet to avoid duplicate dependent cells
-            HashSet<Cell> dependentCells = new HashSet<Cell>();
-
-            // Iterate through each cell in the rows slated for deletion
-            for (int r = firstRowToDelete; r < firstRowToDelete + rowsToDeleteCount; r++)
-            {
-                // Determine the last column that contains data in the worksheet
-                int lastCol = cells.MaxDataColumn;
-                for (int c = 0; c <= lastCol; c++)
-                {
-                    // Get all dependents (direct and indirect) of the current cell
-                    // The first argument 'true' means search in all worksheets as well
-                    Cell[] deps = cells.GetDependents(true, r, c);
-                    if (deps != null)
-                    {
-                        foreach (Cell dep in deps)
-                        {
-                            // Only consider cells that actually contain a formula
-                            if (dep.IsFormula)
-                                dependentCells.Add(dep);
-                        }
-                    }
-                }
-            }
-
-            // Output the formulas that will be affected by the deletion
-            Console.WriteLine("Formulas referencing cells in the rows to be deleted:");
-            foreach (Cell dep in dependentCells)
-            {
-                Console.WriteLine($"{dep.Name}: {dep.Formula}");
-            }
-
-            // -----------------------------------------------------------------
-            // Step 2: Delete the rows while updating references
-            // -----------------------------------------------------------------
-            DeleteOptions delOptions = new DeleteOptions
-            {
-                // Ensure that references are automatically updated after deletion
-                UpdateReference = true
-            };
-            // DeleteRows updates the worksheet and shifts remaining rows up
-            cells.DeleteRows(firstRowToDelete, rowsToDeleteCount, delOptions);
-
-            // -----------------------------------------------------------------
-            // Step 3: Verify formulas after deletion and suggest corrections if needed
-            // -----------------------------------------------------------------
-            Console.WriteLine("\nFormulas after row deletion (check for #REF! errors):");
-            foreach (Cell dep in dependentCells)
-            {
-                // After deletion the Cell object still points to the same location,
-                // but its formula may have been adjusted automatically.
-                string formula = dep.Formula;
-                Console.WriteLine($"{dep.Name}: {formula}");
-
-                // Simple heuristic: if the formula contains #REF! it means Aspose could not adjust it
-                if (formula != null && formula.Contains("#REF!"))
-                {
-                    // Suggest a manual correction: remove the #REF! part or adjust the range
-                    Console.WriteLine($"  -> Suggestion: Review and correct the reference in {dep.Name}.");
-                }
-            }
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
+            cells[i, 0].PutValue(i + 1);
         }
+
+        // Add formulas that reference rows which will be deleted
+        cells["B1"].Formula = "=SUM(A5:A10)";   // references rows that will be removed
+        cells["B2"].Formula = "=AVERAGE(A1:A4)"; // safe, not affected
+        cells["B3"].Formula = "=SUM(A6:A9)";    // partially affected
+
+        // Set up DeleteOptions with a custom formula change monitor
+        FormulaChangeMonitor monitor = new FormulaChangeMonitor();
+        DeleteOptions options = new DeleteOptions
+        {
+            UpdateReference = true,               // let Aspose.Cells adjust references
+            FormulaChangeMonitor = monitor        // capture formula changes
+        };
+
+        // Delete rows 5‑7 (zero‑based indices 4,5,6) – three rows total
+        cells.DeleteRows(4, 3, options);
+
+        // Display formulas after the deletion operation
+        Console.WriteLine("Formulas after row deletion:");
+        for (int r = 0; r < 3; r++)
+        {
+            Cell c = cells[r, 1]; // column B (index 1)
+            Console.WriteLine($"{c.Name}: {c.Formula}");
+        }
+
+        // Provide correction suggestions for each formula that changed
+        Console.WriteLine("\nCorrection suggestions for changed formulas:");
+        foreach (var (sheetIdx, rowIdx, colIdx) in monitor.ChangedCells)
+        {
+            Cell changedCell = wb.Worksheets[sheetIdx].Cells[rowIdx, colIdx];
+            string newFormula = changedCell.Formula;
+
+            // Simple heuristic: if the formula contains a range that may now be empty,
+            // suggest reviewing or wrapping with IFERROR.
+            Console.WriteLine($"- Cell {changedCell.Name} formula updated to \"{newFormula}\".");
+            Console.WriteLine("  Suggestion: Verify that the referenced range still contains the intended rows. " +
+                              "If the range could become empty, consider using IFERROR or adjusting the range manually.");
+        }
+
+        // Save the workbook (optional, demonstrates that the file is valid)
+        wb.Save("DeletedRowsFormulaCheck.xlsx");
     }
 }

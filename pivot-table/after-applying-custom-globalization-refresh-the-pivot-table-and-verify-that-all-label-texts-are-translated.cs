@@ -5,17 +5,32 @@ using Aspose.Cells.Settings;
 
 namespace AsposeCellsPivotGlobalizationDemo
 {
-    // Demonstrates applying custom globalization to a PivotTable,
-    // refreshing it and verifying that all label texts are translated.
-    public class Program
+    // Custom globalization settings that override various pivot table labels
+    public class CustomPivotGlobalizationSettings : SettablePivotGlobalizationSettings
     {
-        public static void Main()
+        public CustomPivotGlobalizationSettings()
         {
-            // 1. Create a new workbook and get the first worksheet.
+            // Set custom texts for pivot table UI elements
+            SetTextOfColumnLabels("Custom Column Headers");
+            SetTextOfRowLabels("Custom Row Headers");
+            SetTextOfTotal("Custom Total");
+            SetTextOfGrandTotal("Custom Grand Total");
+            SetTextOfAll("Custom All");
+            SetTextOfDataFieldHeader("Custom Data Header");
+            SetTextOfEmptyData("Custom Empty");
+            SetTextOfMultipleItems("Custom Multiple Items");
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet dataSheet = workbook.Worksheets[0];
 
-            // 2. Populate sample data for the PivotTable.
+            // Populate sample data for the pivot table
             dataSheet.Cells["A1"].PutValue("Product");
             dataSheet.Cells["B1"].PutValue("Region");
             dataSheet.Cells["C1"].PutValue("Sales");
@@ -32,57 +47,43 @@ namespace AsposeCellsPivotGlobalizationDemo
             dataSheet.Cells["B4"].PutValue("North");
             dataSheet.Cells["C4"].PutValue(25000);
 
-            // 3. Add a new worksheet to host the PivotTable.
+            // Add a new worksheet for the pivot table
             Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-            // 4. Create the PivotTable.
+            // Create the pivot table
             int pivotIndex = pivotSheet.PivotTables.Add("A1:C4", "E5", "SalesPivot");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // 5. Configure the PivotTable fields.
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Product as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region as column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales as data field
+            // Configure pivot fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Product
+            pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales
 
-            // 6. Create customizable globalization settings.
-            //    SettableGlobalizationSettings holds a PivotSettings property of type SettablePivotGlobalizationSettings.
-            SettableGlobalizationSettings globalizationSettings = new SettableGlobalizationSettings();
-            SettablePivotGlobalizationSettings pivotSettings = new SettablePivotGlobalizationSettings();
+            // Apply custom globalization settings
+            GlobalizationSettings globalSettings = new GlobalizationSettings();
+            globalSettings.PivotSettings = new CustomPivotGlobalizationSettings();
+            workbook.Settings.GlobalizationSettings = globalSettings;
 
-            // 7. Set custom texts for various PivotTable labels.
-            pivotSettings.SetTextOfAll("(All Items)");
-            pivotSettings.SetTextOfColumnLabels("Custom Column Headers");
-            pivotSettings.SetTextOfRowLabels("Custom Row Headers");
-            pivotSettings.SetTextOfTotal("Custom Total");
-            pivotSettings.SetTextOfGrandTotal("Custom Grand Total");
-            pivotSettings.SetTextOfDataFieldHeader("Custom Data Header");
-            pivotSettings.SetTextOfEmptyData("No Data");
-            pivotSettings.SetTextOfMultipleItems("(Multiple Selections)");
-
-            // 8. Attach the pivot settings to the globalization settings.
-            globalizationSettings.PivotSettings = pivotSettings;
-
-            // 9. Apply the globalization settings to the workbook.
-            workbook.Settings.GlobalizationSettings = globalizationSettings;
-
-            // 10. Refresh and calculate the PivotTable so that the new labels take effect.
+            // Refresh and calculate the pivot table to apply the custom labels
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // 11. Verify that the custom texts are applied by reading them back.
-            Console.WriteLine("Verification of customized PivotTable labels:");
-            Console.WriteLine($"All label: {pivotSettings.GetTextOfAll()}");
-            Console.WriteLine($"Column Labels: {pivotSettings.GetTextOfColumnLabels()}");
-            Console.WriteLine($"Row Labels: {pivotSettings.GetTextOfRowLabels()}");
-            Console.WriteLine($"Total: {pivotSettings.GetTextOfTotal()}");
-            Console.WriteLine($"Grand Total: {pivotSettings.GetTextOfGrandTotal()}");
-            Console.WriteLine($"Data Field Header: {pivotSettings.GetTextOfDataFieldHeader()}");
-            Console.WriteLine($"Empty Data: {pivotSettings.GetTextOfEmptyData()}");
-            Console.WriteLine($"Multiple Items: {pivotSettings.GetTextOfMultipleItems()}");
+            // Verify that the custom texts are applied
+            var pivotGlobals = (CustomPivotGlobalizationSettings)workbook.Settings.GlobalizationSettings.PivotSettings;
 
-            // 12. Save the workbook to demonstrate successful execution.
-            workbook.Save("CustomPivotGlobalizationDemo.xlsx");
-            Console.WriteLine("Workbook saved as 'CustomPivotGlobalizationDemo.xlsx'.");
+            Console.WriteLine("Verification of custom globalization labels:");
+            Console.WriteLine($"Column Labels: {pivotGlobals.GetTextOfColumnLabels()}");
+            Console.WriteLine($"Row Labels: {pivotGlobals.GetTextOfRowLabels()}");
+            Console.WriteLine($"Total: {pivotGlobals.GetTextOfTotal()}");
+            Console.WriteLine($"Grand Total: {pivotGlobals.GetTextOfGrandTotal()}");
+            Console.WriteLine($"(All): {pivotGlobals.GetTextOfAll()}");
+            Console.WriteLine($"Data Field Header: {pivotGlobals.GetTextOfDataFieldHeader()}");
+            Console.WriteLine($"Empty Data: {pivotGlobals.GetTextOfEmptyData()}");
+            Console.WriteLine($"Multiple Items: {pivotGlobals.GetTextOfMultipleItems()}");
+
+            // Save the workbook
+            workbook.Save("CustomPivotGlobalization.xlsx");
+            Console.WriteLine("Workbook saved as 'CustomPivotGlobalization.xlsx'.");
         }
     }
 }

@@ -2,64 +2,46 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotCalculatedFieldDemo
 {
-    public class AddCalculatedFieldConcatenateDemo
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data with two text columns
-                cells["A1"].Value = "First";
-                cells["B1"].Value = "Second";
-
-                cells["A2"].Value = "Apple";
-                cells["B2"].Value = "Red";
-
-                cells["A3"].Value = "Banana";
-                cells["B3"].Value = "Yellow";
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B3", "D1", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Add source fields to the pivot (optional, just to have a visible pivot)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "First");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Second");
-                // Add a dummy data field so the pivot has a data area (required for calculated field)
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "First");
-
-                // Add a calculated field that concatenates the two text fields with a hyphen
-                // Formula syntax: =First & "-" & Second
-                pivotTable.AddCalculatedField("First-Second", "=First & \"-\" & Second", true);
-
-                // Refresh and calculate the pivot table to apply the new field
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotTable_With_ConcatenatedField.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Log any runtime errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            AddCalculatedFieldConcatenateDemo.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data with two text columns
+            cells["A1"].Value = "FirstName";
+            cells["B1"].Value = "LastName";
+
+            cells["A2"].Value = "John";
+            cells["B2"].Value = "Doe";
+
+            cells["A3"].Value = "Jane";
+            cells["B3"].Value = "Smith";
+
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B3", "D1", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+            // Place the original text fields in the row area (optional, just for visibility)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "FirstName");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "LastName");
+
+            // Add a calculated field that concatenates the two text fields with a hyphen
+            // Formula syntax uses the '&' operator for string concatenation in Excel
+            string formula = "=FirstName & \"-\" & LastName";
+            pivotTable.AddCalculatedField("FullName", formula, true); // drag to data area
+
+            // Refresh and calculate the pivot table to apply the new field
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook
+            workbook.Save("PivotTable_With_CalculatedField.xlsx");
         }
     }
 }

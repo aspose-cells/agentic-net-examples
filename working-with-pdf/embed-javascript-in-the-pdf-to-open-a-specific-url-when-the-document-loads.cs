@@ -1,36 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Rendering; // For PdfSaveOptions
 
-class EmbedJavaScriptInPdf
+class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and add some content
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("This PDF will open a URL on load");
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define output PDF path
-            string outputPdfPath = "output.pdf";
+        // (Optional) Add a hyperlink to a cell – this demonstrates hyperlink usage
+        worksheet.Hyperlinks.Add("A1", 1, 1, "http://example.com");
+        worksheet.Hyperlinks[0].TextToDisplay = "Open Example";
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // ------------------------------------------------------------
+        // NOTE: Aspose.Cells does not expose a documented API for embedding
+        // JavaScript into a PDF (e.g., app.launchURL) in the current version.
+        // The following placeholder shows where such code would be placed
+        // once the appropriate property/method is available.
+        // ------------------------------------------------------------
+        // PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // pdfOptions.JavaScript = "app.launchURL('http://example.com', true);";
+        // workbook.Save("Output.pdf", pdfOptions);
 
-            // NOTE: Aspose.Cells for .NET does not provide a direct JavaScript property for PDF.
-            // If JavaScript embedding is required, consider using Aspose.Pdf after conversion.
-
-            // Save the workbook as PDF
-            workbook.Save(outputPdfPath, pdfOptions);
-
-            Console.WriteLine($"PDF saved to '{outputPdfPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Fallback: save PDF without JavaScript
+        workbook.Save("Output.pdf");
     }
 }

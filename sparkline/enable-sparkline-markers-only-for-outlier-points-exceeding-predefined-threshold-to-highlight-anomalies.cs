@@ -3,58 +3,73 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsSparklineOutlierDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class SparklineOutlierMarkersDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Sample data – values above 15 will be considered outliers
-            double[] data = { 5, 8, 12, 20, 7, 30, 9, 4 };
-            for (int i = 0; i < data.Length; i++)
+            try
             {
-                sheet.Cells[0, i].PutValue(data[i]);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Sample data – some values exceed the outlier threshold (e.g., > 8)
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["B1"].PutValue(12); // outlier
+                sheet.Cells["C1"].PutValue(3);
+                sheet.Cells["D1"].PutValue(15); // outlier
+                sheet.Cells["E1"].PutValue(4);
+
+                // Define the location where the sparkline will be placed (column F, row 1)
+                CellArea sparklineLocation = new CellArea
+                {
+                    StartColumn = 5, // column F (0‑based index)
+                    EndColumn = 5,
+                    StartRow = 0,
+                    EndRow = 0
+                };
+
+                // Add a sparkline group for the data range A1:E1
+                int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:E1", false, sparklineLocation);
+                SparklineGroup group = sheet.SparklineGroups[groupIdx];
+
+                // Add the sparkline to the group (the same range, placed at F1)
+                group.Sparklines.Add(sheet.Name + "!A1:E1", 0, 5);
+
+                // Enable markers – this will draw a marker for every point
+                group.ShowMarkers = true;
+
+                // Set a distinct color for the markers (e.g., Red) to make outliers stand out
+                CellsColor markersColor = workbook.CreateCellsColor();
+                markersColor.Color = Color.Red;
+                group.MarkersColor = markersColor;
+
+                // OPTIONAL: Highlight the highest and lowest points as additional visual cues
+                group.ShowHighPoint = true;
+                group.HighPointColor.Color = Color.Green;
+                group.ShowLowPoint = true;
+                group.LowPointColor.Color = Color.Blue;
+
+                // Save the workbook
+                string outputPath = "SparklineOutlierMarkersDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Define the location where the sparkline will be placed (cell E1)
-            CellArea sparklineLocation = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 0,
-                EndRow = 0,
-                StartColumn = 4,
-                EndColumn = 4
-            };
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            // Add a line sparkline group for the data range A1:H1
-            int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:H1", false, sparklineLocation);
-            SparklineGroup group = sheet.SparklineGroups[groupIdx];
-
-            // Add the sparkline to the group (the Add method also creates the sparkline)
-            group.Sparklines.Add(sheet.Name + "!A1:H1", 0, 4);
-
-            // Enable markers – this will display a marker for each point
-            group.ShowMarkers = true;
-
-            // Set marker color to red to make outliers stand out
-            CellsColor markerColor = workbook.CreateCellsColor();
-            markerColor.Color = Color.Red;
-            group.MarkersColor = markerColor;
-
-            // OPTIONAL: Highlight the highest and lowest points as well
-            group.ShowHighPoint = true;
-            group.HighPointColor = workbook.CreateCellsColor();
-            group.HighPointColor.Color = Color.Green;
-
-            group.ShowLowPoint = true;
-            group.LowPointColor = workbook.CreateCellsColor();
-            group.LowPointColor.Color = Color.Blue;
-
-            // Save the workbook
-            workbook.Save("SparklineOutlierDemo.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SparklineOutlierMarkersDemo.Run();
         }
     }
 }

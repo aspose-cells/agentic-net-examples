@@ -1,66 +1,48 @@
+// Title: C# – Verify a Chart’s Parent Worksheet Name with Aspose.Cells for .NET
+// Description: Creates a workbook, renames the first worksheet, adds a column chart, retrieves the chart’s parent worksheet via Chart.Worksheet, compares the name to the expected value, outputs the result, and saves the file.
+// Keywords: Aspose.Cells chart worksheet name | Chart.Worksheet property C# | verify chart parent worksheet | Aspose.Cells .NET chart verification | retrieve chart parent sheet
+// Common Searches: Aspose.Cells get chart worksheet name C# | How to check chart parent sheet in Aspose.Cells | Validate chart worksheet name Aspose.Cells .NET | Chart.Worksheet.Name example Aspose.Cells | Verify chart location before saving workbook
+// Developer Intent: Confirm that a chart’s Worksheet.Name matches a predefined worksheet name.
+// Use Cases: Automated tests to ensure charts are placed on the correct sheet. | Pre‑publish validation of report workbooks that contain charts. | Conditional formatting or data binding that depends on a specific chart sheet.
+// AI Prompts: Generate C# code using Aspose.Cells to read a chart’s parent worksheet name and compare it with an expected string. | Explain how to log or throw an exception when a chart’s worksheet name does not match the expected value. | Show a loop that iterates through all charts in a workbook and validates each chart’s Worksheet.Name against a naming convention.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsChartWorksheetVerification
 {
-    public class VerifyChartParentWorksheet
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook (creation rule)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet and set a known name
-                Worksheet worksheet = workbook.Worksheets[0];
-                string expectedWorksheetName = "DataSheet";
-                worksheet.Name = expectedWorksheetName;
-
-                // Add sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Retrieve the worksheet that contains the chart
-                Worksheet chartParentWorksheet = chart.Worksheet;
-
-                // Verify that the retrieved worksheet name matches the expected name
-                bool namesMatch = string.Equals(chartParentWorksheet.Name, expectedWorksheetName, StringComparison.Ordinal);
-                Console.WriteLine($"Expected worksheet name: {expectedWorksheetName}");
-                Console.WriteLine($"Chart's parent worksheet name: {chartParentWorksheet.Name}");
-                Console.WriteLine($"Names match: {namesMatch}");
-
-                // Save the workbook (save rule)
-                string outputPath = "VerifyChartParentWorksheet_out.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
+    // Creates a workbook, renames the first worksheet, adds a column chart, retrieves the chart’s parent worksheet via Chart.Worksheet, compares the name to the expected value, outputs the result, and saves the file.
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            VerifyChartParentWorksheet.Run();
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet and set a known name
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Name = "ExpectedSheet";
+
+            // Add a sample chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
+
+            // Retrieve the worksheet name via the chart's Worksheet property
+            string chartParentWorksheetName = chart.Worksheet.Name;
+
+            // Verify that the retrieved name matches the expected worksheet name
+            if (chartParentWorksheetName == worksheet.Name)
+            {
+                Console.WriteLine("Verification successful: Chart's parent worksheet name matches expected name.");
+            }
+            else
+            {
+                Console.WriteLine($"Verification failed: Expected '{worksheet.Name}' but got '{chartParentWorksheetName}'.");
+            }
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("ChartWorksheetVerification_out.xlsx");
         }
     }
 }

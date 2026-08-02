@@ -1,60 +1,31 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // for PdfSaveOptions
 
-namespace AsposeCellsExamples
+// Author: Aspose.Cells .NET example – demonstrates that PDF respects TextCrossType (CrossStringInPdf) setting
+class Program
 {
-    public class PdfCrossStringVerification
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Put a long string that will overflow the cell width
+        sheet.Cells["A1"].PutValue("This is a very long text that should cross cell boundaries when rendered to PDF.");
+
+        // Reduce column width so the text definitely exceeds the cell width
+        sheet.Cells.SetColumnWidth(0, 5); // column A width = 5 characters
+
+        // Configure PDF save options to use the CrossKeep behavior (cross‑string in PDF)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            TextCrossType = TextCrossType.CrossKeep // ensures the string crosses into adjacent cells
+        };
 
-                // Put a long text in A1 that will exceed the column width
-                sheet.Cells["A1"].PutValue(
-                    "This is a very long text that should cross the cell boundary and demonstrate the TextCrossType behavior in PDF.");
+        // Save the workbook as PDF
+        workbook.Save("CrossStringDemo.pdf", pdfOptions);
 
-                // Set a narrow column width to force the text to overflow
-                sheet.Cells.SetColumnWidth(0, 5); // Column A width
-
-                // Prepare PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Example 1: Default behavior (like Excel)
-                pdfOptions.TextCrossType = TextCrossType.Default;
-                workbook.Save("CrossString_Default.pdf", pdfOptions);
-
-                // Example 2: Keep the overflow text and keep existing cell contents
-                pdfOptions.TextCrossType = TextCrossType.CrossKeep;
-                workbook.Save("CrossString_CrossKeep.pdf", pdfOptions);
-
-                // Example 3: Keep the overflow text and override the contents of crossed cells
-                pdfOptions.TextCrossType = TextCrossType.CrossOverride;
-                workbook.Save("CrossString_CrossOverride.pdf", pdfOptions);
-
-                // Example 4: Strictly keep text inside the cell (truncate overflow)
-                pdfOptions.TextCrossType = TextCrossType.StrictInCell;
-                workbook.Save("CrossString_StrictInCell.pdf", pdfOptions);
-
-                Console.WriteLine("PDF files generated with different TextCrossType settings.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PdfCrossStringVerification.Run();
-        }
+        Console.WriteLine("PDF saved with TextCrossType.CrossKeep – verify cross‑string behavior in the output file.");
     }
 }

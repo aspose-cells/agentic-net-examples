@@ -1,40 +1,48 @@
+// Title: Add PDF title, author, and subject metadata using Aspose.Cells for .NET (C#)
+// Description: Creates a Workbook, sets the built‑in Title, Author, and Subject properties, configures PdfSaveOptions to show the document title and export standard properties, then saves the workbook as a PDF that contains the specified metadata.
+// Keywords: Aspose.Cells PDF metadata | C# set PDF title | Aspose.Cells author property | PdfSaveOptions DisplayDocTitle | export PDF built‑in properties | Aspose.Cells .NET PDF export
+// Common Searches: Aspose.Cells set PDF title C# | how to add author to PDF with Aspose.Cells | export Excel to PDF with metadata Aspose | PdfSaveOptions DisplayDocTitle example | include subject in PDF using Aspose.Cells
+// Developer Intent: Embed Title, Author, and Subject information into a PDF generated from an Excel workbook via Aspose.Cells.
+// Use Cases: Produce PDFs where the viewer window displays the workbook title. | Create compliance‑ready PDFs that carry author and subject details in their metadata. | Automate report generation with searchable PDF metadata for document management systems.
+// AI Prompts: Generate C# code that sets custom PDF properties and exports them with Aspose.Cells. | Show how to read PDF metadata after saving a workbook using Aspose.Cells. | Explain the impact of PdfSaveOptions.DisplayDocTitle on PDF viewer behavior.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Properties;
 
 namespace AsposeCellsPdfMetadataExample
 {
+    // Creates a Workbook, sets the built‑in Title, Author, and Subject properties, configures PdfSaveOptions to show the document title and export standard properties, then saves the workbook as a PDF that contains the specified metadata.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Access built‑in document properties and set PDF metadata
-            // Title, Author, and Subject will be written to the PDF file
-            workbook.BuiltInDocumentProperties.Title = "Quarterly Report Q1 2026";
-            workbook.BuiltInDocumentProperties.Author = "Jane Doe";
-            workbook.BuiltInDocumentProperties.Subject = "Financial Overview";
+            // Add some sample data (optional)
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample data for PDF export");
 
-            // (Optional) Add a custom property that can also be exported to PDF
-            workbook.CustomDocumentProperties.Add("Department", "Finance");
+            // Set built‑in document properties (title, author, subject)
+            workbook.BuiltInDocumentProperties.Title = "Sample PDF Title";
+            workbook.BuiltInDocumentProperties.Author = "John Doe";
+            workbook.BuiltInDocumentProperties.Subject = "Demonstration of PDF metadata";
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Ensure the PDF viewer shows the document title in the title bar
-                DisplayDocTitle = true,
+            // Create PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Export custom properties to the PDF Info dictionary
-                CustomPropertiesExport = PdfCustomPropertiesExport.Standard
-            };
+            // Ensure the PDF window title displays the document title
+            pdfOptions.DisplayDocTitle = true;
 
-            // Save the workbook as PDF with the specified metadata (lifecycle: save)
-            workbook.Save("QuarterlyReport_Q1_2026.pdf", pdfOptions);
+            // Export built‑in (and custom, if any) properties to the PDF Info dictionary
+            pdfOptions.CustomPropertiesExport = PdfCustomPropertiesExport.Standard;
 
-            Console.WriteLine("PDF file saved with title, author, and subject metadata.");
+            // Save the workbook as PDF with the specified options (lifecycle rule: save)
+            workbook.Save("OutputWithMetadata.pdf", pdfOptions);
+
+            Console.WriteLine("PDF saved with title, author, and subject metadata.");
         }
     }
 }

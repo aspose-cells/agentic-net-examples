@@ -3,54 +3,57 @@ using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-class FormulaValidator
+namespace FormulaValidationExample
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Collection to store information about cells with formula errors
-        List<string> errorReport = new List<string>();
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            Cells cells = sheet.Cells;
+            // Load the workbook (replace with your actual file path)
+            string inputFile = "input.xlsx";
+            Workbook workbook = new Workbook(inputFile);
 
-            // Determine the used range of the worksheet
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Prepare a list to hold error information
+            List<string> errorReport = new List<string>();
 
-            // Scan every cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in sheet.Cells)
                 {
-                    Cell cell = cells[row, col];
-
                     // Process only cells that contain a formula
                     if (cell.IsFormula)
                     {
                         try
                         {
-                            // Evaluate the formula; any exception indicates a problem
-                            sheet.CalculateFormula(cell.Formula);
+                            // Attempt to calculate the formula directly.
+                            // If the formula is invalid, an exception will be thrown.
+                            object result = sheet.CalculateFormula(cell.Formula);
+                            // Optionally, you could store successful results here.
                         }
                         catch (Exception ex)
                         {
-                            // Record the worksheet name, cell address, and error message
-                            errorReport.Add($"{sheet.Name}!{cell.Name}: {ex.Message}");
+                            // Record the cell address, worksheet name and the exception message
+                            string cellAddress = cell.Name; // e.g., "A1"
+                            string message = $"{sheet.Name}!{cellAddress}: {ex.Message}";
+                            errorReport.Add(message);
                         }
                     }
                 }
             }
+
+            // Write the report to a text file
+            string reportFile = "FormulaErrorsReport.txt";
+            File.WriteAllLines(reportFile, errorReport);
+
+            // Optionally, calculate all formulas (ignoring errors) after validation
+            CalculationOptions calcOptions = new CalculationOptions { IgnoreError = true };
+            workbook.CalculateFormula(calcOptions);
+
+            // Save the workbook (if any changes were made)
+            string outputFile = "output.xlsx";
+            workbook.Save(outputFile);
         }
-
-        // Output the report to a text file
-        File.WriteAllLines("FormulaErrorsReport.txt", errorReport);
-
-        // Optional console feedback
-        Console.WriteLine($"Formula validation completed. Problems found: {errorReport.Count}");
     }
 }

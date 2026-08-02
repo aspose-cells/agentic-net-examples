@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Slicers;
 
 namespace SlicerStyleDemo
 {
@@ -12,24 +12,24 @@ namespace SlicerStyleDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
-            cells["A1"].Value = "Fruit";
-            cells["A2"].Value = "Apple";
-            cells["A3"].Value = "Orange";
-            cells["A4"].Value = "Banana";
-            cells["B1"].Value = "Quantity";
-            cells["B2"].Value = 10;
-            cells["B3"].Value = 15;
-            cells["B4"].Value = 20;
+            sheet.Cells["A1"].Value = "Fruit";
+            sheet.Cells["A2"].Value = "Apple";
+            sheet.Cells["A3"].Value = "Orange";
+            sheet.Cells["A4"].Value = "Banana";
+            sheet.Cells["B1"].Value = "Quantity";
+            sheet.Cells["B2"].Value = 10;
+            sheet.Cells["B3"].Value = 15;
+            sheet.Cells["B4"].Value = 20;
 
-            // Add a pivot table based on the data range
+            // Add a pivot table based on the sample data
             int pivotIdx = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0); // Fruit field
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Add "Fruit" as row field
+            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Add "Quantity" as data field
 
-            // Add a slicer linked to the pivot table
+            // Add a slicer linked to the pivot table's first field ("Fruit")
             int slicerIdx = sheet.Slicers.Add(pivot, "A1", "Fruit");
             Slicer slicer = sheet.Slicers[slicerIdx];
 

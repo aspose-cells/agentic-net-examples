@@ -1,55 +1,70 @@
+// Title: Hide chart legend when a chart has more than 10 data points with Aspose.Cells for .NET
+// Description: C# example that loads an Excel workbook, walks through every worksheet and chart, totals the points in all series, disables the chart's ShowLegend property if the count exceeds ten, and saves the updated file. Demonstrates conditional legend control using Aspose.Cells.
+// Keywords: Aspose.Cells | C# chart legend hide | conditional legend visibility | count chart data points | ShowLegend property | Excel chart manipulation | large data set chart | automate legend settings
+// Common Searches: Aspose.Cells hide legend based on data points | C# count points in Excel chart series | conditional chart legend .NET | iterate charts in workbook Aspose.Cells | remove legend from complex Excel charts programmatically
+// Developer Intent: Automatically suppress the legend of any Excel chart that contains more than ten data points when generating or processing workbooks with Aspose.Cells.
+// Use Cases: Clean up dashboards by removing legends from densely populated charts. | Apply a uniform rule across all sheets in a report to avoid visual clutter. | Prepare Excel files for presentation where legends are unnecessary for large data sets.
+// AI Prompts: Generate C# code using Aspose.Cells that hides a chart legend when the total number of points across all series exceeds a configurable limit. | Explain how to retrieve the point count for each series in an Aspose.Cells chart and use it to set ShowLegend conditionally. | Suggest ways to improve performance when processing many worksheets and charts for legend visibility rules.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class HideLegendForLargeCharts
+namespace AsposeCellsLegendControl
 {
-    static void Main()
+    // C# example that loads an Excel workbook, walks through every worksheet and chart, totals the points in all series, disables the chart's ShowLegend property if the count exceeds ten, and saves the updated file. Demonstrates conditional legend control using Aspose.Cells.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data with more than ten data points
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 2; i <= 13; i++)
+        static void Main()
         {
-            sheet.Cells[$"A{i}"].PutValue($"Item{i - 1}");
-            sheet.Cells[$"B{i}"].PutValue((i - 1) * 10);
-        }
+            const string inputPath = "InputData.xlsx";
+            const string outputPath = "OutputData.xlsx";
 
-        // Add a column chart that uses the data range
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B13", true);          // values
-        chart.NSeries.CategoryData = "A2:A13";     // categories
-
-        // Determine the number of data points in the first series.
-        // The Values property returns the range string (e.g., "B2:B13").
-        // We parse the range to calculate the count.
-        string range = chart.NSeries[0].Values;    // e.g., "B2:B13"
-        int dataPointCount = 0;
-        if (!string.IsNullOrEmpty(range))
-        {
-            // Simple parsing assuming a single contiguous range like "B2:B13"
-            string[] parts = range.Split(':');
-            if (parts.Length == 2)
+            try
             {
-                // Extract row numbers
-                int startRow = int.Parse(System.Text.RegularExpressions.Regex.Match(parts[0], @"\d+").Value);
-                int endRow   = int.Parse(System.Text.RegularExpressions.Regex.Match(parts[1], @"\d+").Value);
-                dataPointCount = Math.Abs(endRow - startRow) + 1;
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all charts in the worksheet
+                    foreach (Chart chart in sheet.Charts)
+                    {
+                        int totalDataPoints = 0;
+
+                        // Sum data points across all series of the chart
+                        foreach (Series series in chart.NSeries)
+                        {
+                            // Use series.Points.Count to get the number of points in the series
+                            totalDataPoints += series.Points.Count;
+                        }
+
+                        // Hide legend if the chart has more than ten data points
+                        if (totalDataPoints > 10)
+                        {
+                            chart.ShowLegend = false;
+                        }
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Hide the legend if the chart contains more than ten data points
-        if (dataPointCount > 10)
-        {
-            chart.ShowLegend = false;   // using Chart.ShowLegend property
-        }
-
-        // Save the workbook
-        workbook.Save("ChartHideLegend.xlsx");
     }
 }

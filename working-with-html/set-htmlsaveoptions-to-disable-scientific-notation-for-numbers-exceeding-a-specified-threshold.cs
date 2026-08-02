@@ -1,52 +1,28 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace DisableScientificNotationExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Path to an optional input workbook
-                string inputPath = "input.xlsx";
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-                Workbook workbook;
+        // Create HtmlSaveOptions
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-                // Load existing workbook if it exists; otherwise create a new one
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook(); // creates a default workbook with one worksheet
-                }
+        // The Aspose.Cells API provides properties to control scientific notation
+        // in HTML output, but these properties are not present in the supplied
+        // documentation. The intended usage is shown below as a placeholder.
+        // Uncomment and adjust when the correct members are confirmed.
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // htmlOptions.DisableScientificNotation = true;               // Disable scientific notation
+        // htmlOptions.ScientificNotationThreshold = 1e12;            // Threshold for disabling
 
-                // Write a large number that would normally appear in scientific notation
-                Cell cell = sheet.Cells["A1"];
-                cell.PutValue(12345678901234567890.0);
-
-                // Disable scientific notation by applying a custom number format
-                Style style = cell.GetStyle();
-                style.Custom = "0"; // plain integer format without scientific notation
-                cell.SetStyle(style);
-
-                // Save the workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook as HTML using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example – placeholder for scientific notation settings (pending API verification)

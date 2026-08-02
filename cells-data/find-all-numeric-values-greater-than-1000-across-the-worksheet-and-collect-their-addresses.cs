@@ -2,53 +2,62 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace FindLargeNumbers
+namespace FindLargeValues
 {
     class Program
     {
         static void Main()
         {
-            // Load an existing workbook (replace with actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Get the first worksheet (or iterate through all worksheets if needed)
+            // Load the workbook (create/load rule)
+            Workbook workbook = new Workbook(inputPath);
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // List to hold addresses of cells with numeric values greater than 1000
+            // List to store addresses of cells with numeric values > 1000
             List<string> largeValueAddresses = new List<string>();
 
-            // Iterate through all instantiated cells in the worksheet
+            // Iterate through all cells in the worksheet
             foreach (Cell cell in worksheet.Cells)
             {
-                // Ensure the cell contains a numeric value
-                if (cell.Value is double numericValue)
+                // Skip empty cells
+                if (cell.Value == null) continue;
+
+                // Check for numeric types (double, int, decimal)
+                if (cell.Value is double d && d > 1000)
                 {
-                    // Check if the value exceeds 1000
-                    if (numericValue > 1000)
-                    {
-                        // Add the cell address (e.g., "B5") to the list
-                        largeValueAddresses.Add(cell.Name);
-                    }
+                    largeValueAddresses.Add(cell.Name);
                 }
-                else if (cell.Value is int intValue)
+                else if (cell.Value is int i && i > 1000)
                 {
-                    if (intValue > 1000)
-                    {
-                        largeValueAddresses.Add(cell.Name);
-                    }
+                    largeValueAddresses.Add(cell.Name);
                 }
-                // Add other numeric types if necessary (e.g., decimal, long)
+                else if (cell.Value is decimal dec && dec > 1000)
+                {
+                    largeValueAddresses.Add(cell.Name);
+                }
+                // If the cell contains a numeric string, try to parse it
+                else if (cell.Value is string s && double.TryParse(s, out double parsed) && parsed > 1000)
+                {
+                    largeValueAddresses.Add(cell.Name);
+                }
             }
 
-            // Output the collected addresses
-            Console.WriteLine("Cells with numeric values > 1000:");
-            foreach (string address in largeValueAddresses)
+            // Create a new worksheet to output the results
+            int resultSheetIndex = workbook.Worksheets.Add();
+            Worksheet resultSheet = workbook.Worksheets[resultSheetIndex];
+            resultSheet.Name = "LargeValues";
+
+            // Write the collected addresses to the result sheet
+            for (int i = 0; i < largeValueAddresses.Count; i++)
             {
-                Console.WriteLine(address);
+                resultSheet.Cells[i, 0].PutValue(largeValueAddresses[i]);
             }
 
-            // Save the workbook (optional – modify as needed)
-            workbook.Save("output.xlsx");
+            // Save the workbook (save rule)
+            workbook.Save(outputPath);
         }
     }
 }

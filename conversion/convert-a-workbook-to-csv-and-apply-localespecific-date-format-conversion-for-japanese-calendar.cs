@@ -1,68 +1,51 @@
+// Title: C# – Convert Aspose.Cells Workbook to CSV with Japanese Era Date Formatting
+// Description: This example shows how to set a workbook's region to Japan, apply a Japanese era custom date format (yyyy年M月d日), save as XLSX, and use Aspose.Cells ConversionUtility to export the file to CSV while preserving the locale‑specific date strings.
+// Keywords: Aspose.Cells CSV conversion | C# Japanese era date format | locale specific CSV Aspose | Workbook.Settings.Region Japan | ConversionUtility XLSX to CSV | Japanese calendar formatting .NET | Excel to CSV with era dates | Aspose.Cells date locale
+// Common Searches: Aspose.Cells export to CSV with Japanese era dates | How to keep Japanese calendar format when converting Excel to CSV in C# | ConversionUtility respect workbook region Japan | Set workbook region for locale‑aware CSV output | C# sample for Japanese date format in CSV using Aspose
+// Developer Intent: Create a CSV file from an Excel workbook while retaining Japanese era date representations.
+// Use Cases: Generate CSV reports for Japanese accounting systems that require era‑based dates. | Batch‑process localized Excel files for data pipelines that consume CSV with Japanese date strings. | Provide CSV exports for web applications targeting users in Japan, preserving familiar calendar format.
+// AI Prompts: Write C# code using Aspose.Cells to convert an XLSX workbook to CSV and keep dates in Japanese era format. | Explain the effect of Workbook.Settings.Region = CountryCode.Japan on CSV output with ConversionUtility. | Show how to apply a custom Japanese calendar format to a cell before CSV conversion in Aspose.Cells.
+
 using System;
-using System.IO;
+using System.Globalization;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCsvJapaneseDate
 {
-    public class WorkbookToCsvJapaneseCalendar
+    // This example shows how to set a workbook's region to Japan, apply a Japanese era custom date format (yyyy年M月d日), save as XLSX, and use Aspose.Cells ConversionUtility to export the file to CSV while preserving the locale‑specific date strings.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            Run();
-        }
+            // Create a new workbook
+            Workbook wb = new Workbook();
 
-        public static void Run()
-        {
-            try
-            {
-                // Path to the source Excel workbook
-                string sourcePath = "input.xlsx";
+            // Set the workbook region to Japan to enable Japanese calendar handling
+            wb.Settings.Region = CountryCode.Japan;
 
-                // Verify the source file exists
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+            // Access the first worksheet and a cell
+            Worksheet sheet = wb.Worksheets[0];
+            Cell dateCell = sheet.Cells["A1"];
 
-                // Load the workbook (using default LoadOptions)
-                Workbook workbook = new Workbook(sourcePath);
+            // Put a sample date value (e.g., 2023-09-15)
+            dateCell.PutValue(new DateTime(2023, 9, 15));
 
-                // Set the workbook region to Japan to enable Japanese calendar formatting
-                workbook.Settings.Region = CountryCode.Japan;
+            // Apply a custom format that uses the Japanese calendar year/month/day
+            Style style = dateCell.GetStyle();
+            style.Custom = "[$-F800]yyyy年m月d日"; // Japanese era format
+            dateCell.SetStyle(style);
 
-                // Apply a Japanese date format to all cells that contain DateTime values
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-                    // Iterate through the used range of the worksheet
-                    for (int row = 0; row <= cells.MaxDataRow; row++)
-                    {
-                        for (int col = 0; col <= cells.MaxDataColumn; col++)
-                        {
-                            Cell cell = cells[row, col];
-                            if (cell.Type == CellValueType.IsDateTime)
-                            {
-                                // Retrieve the cell style
-                                Style style = cell.GetStyle();
-                                // Japanese calendar custom format (example: 2020年9月15日)
-                                style.Custom = "[$-F800]yyyy年m月d日";
-                                cell.SetStyle(style);
-                            }
-                        }
-                    }
-                }
+            // Save the workbook to a temporary XLSX file (required for ConversionUtility)
+            string tempXlsxPath = "tempWorkbook.xlsx";
+            wb.Save(tempXlsxPath, SaveFormat.Xlsx);
 
-                // Save the workbook as CSV
-                string destinationPath = "output.csv";
-                workbook.Save(destinationPath, SaveFormat.Csv);
+            // Convert the XLSX workbook to CSV using ConversionUtility.
+            // The conversion respects the workbook's regional settings.
+            string csvPath = "output.csv";
+            ConversionUtility.Convert(tempXlsxPath, csvPath);
 
-                Console.WriteLine($"Workbook converted to CSV with Japanese date formatting: {destinationPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Workbook converted to CSV at: {csvPath}");
         }
     }
 }

@@ -1,28 +1,34 @@
 using System;
 using Aspose.Cells;
 
-class BatchStandardWidth
+namespace AsposeCellsBatchStandardWidth
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-
-        // Add extra worksheets for demonstration purposes
-        workbook.Worksheets.Add();
-        workbook.Worksheets.Add();
-
-        // Desired default column width (in character units)
-        double standardWidth = 18.25;
-
-        // Apply the same StandardWidth to every worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Cells.StandardWidth gets or sets the default column width for the worksheet
-            sheet.Cells.StandardWidth = standardWidth;
-        }
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // For loading: new Workbook("input.xlsx");
 
-        // Save the workbook with the updated column settings
-        workbook.Save("BatchStandardWidth.xlsx");
+            // Add sample worksheets (optional, for demonstration)
+            workbook.Worksheets.Add();
+            workbook.Worksheets.Add();
+
+            // Desired standard column width (in characters)
+            double standardWidth = 18.25;
+
+            // Apply the standard width to every worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.Cells.StandardWidth = standardWidth;
+                // Verify the assignment (optional)
+                Console.WriteLine($"Worksheet '{sheet.Name}' StandardWidth set to {sheet.Cells.StandardWidth}");
+            }
+
+            // Save the modified workbook
+            workbook.Save("BatchStandardWidth.xlsx");
+        }
     }
 }
+
+// Author: Example demonstrating batch application of Cells.StandardWidth across all worksheets.

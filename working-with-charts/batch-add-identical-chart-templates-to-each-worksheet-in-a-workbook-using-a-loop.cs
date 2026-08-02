@@ -3,65 +3,63 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartBatch
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (contains a default worksheet)
+            Workbook workbook = new Workbook();
+
+            // Remove the default worksheet to avoid name conflicts
+            if (workbook.Worksheets.Count > 0)
+                workbook.Worksheets.RemoveAt(0);
+
+            // Add worksheets with unique names
+            workbook.Worksheets.Add("Sheet1");
+            workbook.Worksheets.Add("Sheet2");
+            workbook.Worksheets.Add("Sheet3");
+
+            // Verify that the chart template file exists
+            const string templatePath = "ChartTemplate.crtx";
+            if (!File.Exists(templatePath))
             {
-                const string inputWorkbookPath = "InputWorkbook.xlsx";
-                const string chartTemplatePath = "ChartTemplate.crtx";
-                const string outputWorkbookPath = "OutputWorkbook.xlsx";
-
-                // Verify the input workbook exists
-                if (!File.Exists(inputWorkbookPath))
-                {
-                    Console.WriteLine($"Input workbook not found: {inputWorkbookPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputWorkbookPath);
-
-                // Verify the chart template exists
-                if (!File.Exists(chartTemplatePath))
-                {
-                    Console.WriteLine($"Chart template not found: {chartTemplatePath}");
-                    return;
-                }
-
-                // Load the chart template into a byte array
-                byte[] chartTemplateData = File.ReadAllBytes(chartTemplatePath);
-
-                // Define the data range for the charts
-                string dataRange = "A1:B4";
-
-                // Add a chart to each worksheet using the template
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    int chartIndex = sheet.Charts.Add(
-                        chartTemplateData, // template data
-                        dataRange,         // data range
-                        true,              // plot series by column (vertical)
-                        0,                 // top row
-                        0,                 // left column
-                        15,                // bottom row
-                        8);                // right column
-
-                    Chart chart = sheet.Charts[chartIndex];
-                    chart.Title.Text = $"Chart on {sheet.Name}";
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputWorkbookPath);
-                Console.WriteLine($"Workbook saved to {outputWorkbookPath}");
+                Console.WriteLine($"Template file \"{templatePath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the chart template (.crtx) into a byte array
+            byte[] templateData = File.ReadAllBytes(templatePath);
+
+            // Loop through each worksheet and add the same chart template
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Populate sample data that the chart will use (range A1:B5)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                for (int i = 1; i <= 4; i++)
+                {
+                    sheet.Cells[$"A{i + 1}"].PutValue($"Item {i}");
+                    sheet.Cells[$"B{i + 1}"].PutValue(i * 10);
+                }
+
+                // Add a chart using the template.
+                // Parameters: template bytes, data range, isVertical, topRow, leftColumn, bottomRow, rightColumn
+                int chartIndex = sheet.Charts.Add(templateData, "A1:B5", true, 5, 0, 20, 7);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Optional: set a title to identify the sheet
+                chart.Title.Text = $"Chart on {sheet.Name}";
             }
+
+            // Save the workbook with the added charts
+            workbook.Save("WorkbookWithCharts.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

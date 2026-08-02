@@ -7,18 +7,17 @@ namespace AsposeCellsExample
     {
         static void Main()
         {
-            // Create a new workbook (in-memory)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Set calculation mode to AutomaticExceptTable
-            // This mode tells Excel to recalculate formulas automatically
-            // except those that belong to Excel tables.
+            // This mode excludes table formulas from automatic recalculation.
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
 
-            // Optional: display the current mode to verify
-            Console.WriteLine("Current CalculationMode: " + workbook.Settings.FormulaSettings.CalculationMode);
+            // Output the current setting to verify
+            Console.WriteLine("Calculation Mode: " + workbook.Settings.FormulaSettings.CalculationMode);
 
-            // Save the workbook (the calculation mode is stored in the file)
+            // Save the workbook (the file can be opened in Excel to see the setting)
             workbook.Save("CalculationMode_AutomaticExceptTable.xlsx");
         }
     }

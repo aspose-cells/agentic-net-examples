@@ -3,47 +3,42 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class MacroWorkbookCheck
+namespace AsposeCellsMacroCheck
 {
-    static void Main()
+    class Program
     {
-        // -------------------------------------------------
-        // 1. Create a workbook and ensure it has a VBA project
-        // -------------------------------------------------
-        Workbook wb = new Workbook();
-
-        // Save as a macro‑enabled file to a temporary stream and reload
-        // to initialize the VbaProject (VbaProject is read‑only until a macro file is loaded)
-        using (MemoryStream tempStream = new MemoryStream())
+        static void Main()
         {
-            wb.Save(tempStream, SaveFormat.Xlsm);
-            tempStream.Position = 0;
-            wb = new Workbook(tempStream);
+            // Step 1: Create a macro‑enabled workbook in memory
+            Workbook sourceWorkbook = new Workbook();
+            // Add a VBA module so the workbook contains a macro
+            int moduleIndex = sourceWorkbook.VbaProject.Modules.Add(VbaModuleType.Class, "DemoModule");
+            VbaModule module = sourceWorkbook.VbaProject.Modules[moduleIndex];
+            module.Codes = "Sub Hello()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
+
+            // Save the workbook to a memory stream in macro‑enabled format (XLSM)
+            using (MemoryStream macroStream = new MemoryStream())
+            {
+                sourceWorkbook.Save(macroStream, SaveFormat.Xlsm);
+                // Reset the stream position for reading
+                macroStream.Position = 0;
+
+                // Step 2: Load the workbook from the memory stream
+                Workbook loadedWorkbook = new Workbook(macroStream);
+
+                // Step 3: Verify that the workbook contains macros and at least one VBA module
+                bool hasMacro = loadedWorkbook.HasMacro;
+                bool hasModules = loadedWorkbook.VbaProject != null && loadedWorkbook.VbaProject.Modules.Count > 0;
+
+                Console.WriteLine($"Workbook loaded from stream. HasMacro: {hasMacro}");
+                Console.WriteLine($"Number of VBA modules: {(hasModules ? loadedWorkbook.VbaProject.Modules.Count.ToString() : "0")}");
+                Console.WriteLine(hasMacro && hasModules
+                    ? "Verification succeeded: workbook contains at least one VBA module."
+                    : "Verification failed: workbook does not contain VBA modules.");
+            }
+
+            // Clean up
+            sourceWorkbook.Dispose();
         }
-
-        // -------------------------------------------------
-        // 2. Add a VBA module to the workbook
-        // -------------------------------------------------
-        int moduleIndex = wb.VbaProject.Modules.Add(VbaModuleType.Class, "TestModule");
-        VbaModule module = wb.VbaProject.Modules[moduleIndex];
-        module.Codes = "Sub Test()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
-
-        // -------------------------------------------------
-        // 3. Save the macro‑enabled workbook to a memory stream
-        // -------------------------------------------------
-        MemoryStream macroStream = new MemoryStream();
-        wb.Save(macroStream, SaveFormat.Xlsm);
-        macroStream.Position = 0; // Reset for reading
-
-        // -------------------------------------------------
-        // 4. Load the workbook from the memory stream
-        // -------------------------------------------------
-        Workbook loadedWb = new Workbook(macroStream);
-
-        // -------------------------------------------------
-        // 5. Verify that the loaded workbook contains at least one VBA module
-        // -------------------------------------------------
-        bool hasAtLeastOneModule = loadedWb.VbaProject != null && loadedWb.VbaProject.Modules.Count > 0;
-        Console.WriteLine("Workbook contains VBA module: " + hasAtLeastOneModule);
     }
 }

@@ -8,34 +8,42 @@ namespace AsposeCellsCompressionComparison
     {
         static void Main()
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            for (int row = 0; row < 1000; row++)
-            {
-                for (int col = 0; col < 10; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
-                }
-            }
+            // Path to the source workbook (replace with an actual file if needed)
+            string sourcePath = "source.xlsx";
 
-            // Save with default compression (Level2 is default)
-            string defaultPath = "DefaultCompression.xlsx";
-            workbook.Save(defaultPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
 
+            // -------------------------------------------------
+            // Save with default compression (no OoxmlSaveOptions)
+            // -------------------------------------------------
+            string defaultCompressedPath = "default_compressed.xlsx";
+            workbook.Save(defaultCompressedPath); // uses default OoxmlCompressionType.Level2
+
+            // Get file size of the default compressed file
+            long defaultSize = new FileInfo(defaultCompressedPath).Length;
+
+            // -------------------------------------------------
             // Save with OoxmlCompressionType.Level5
-            string level5Path = "Level5Compression.xlsx";
-            OoxmlSaveOptions level5Options = new OoxmlSaveOptions();
-            level5Options.CompressionType = OoxmlCompressionType.Level5;
-            workbook.Save(level5Path, level5Options);
+            // -------------------------------------------------
+            string level5CompressedPath = "level5_compressed.xlsx";
 
-            // Get file sizes
-            long defaultSize = new FileInfo(defaultPath).Length;
-            long level5Size = new FileInfo(level5Path).Length;
+            // Create OoxmlSaveOptions and set the compression type to Level5
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
+            saveOptions.CompressionType = OoxmlCompressionType.Level5;
 
-            // Output comparison
-            Console.WriteLine($"Default compression file size: {defaultSize} bytes");
+            // Save the workbook using the specified options
+            workbook.Save(level5CompressedPath, saveOptions);
+
+            // Get file size of the Level5 compressed file
+            long level5Size = new FileInfo(level5CompressedPath).Length;
+
+            // -------------------------------------------------
+            // Compare the file sizes and output the result
+            // -------------------------------------------------
+            Console.WriteLine($"Default compression (Level2) file size: {defaultSize} bytes");
             Console.WriteLine($"Level5 compression file size: {level5Size} bytes");
+
             if (level5Size < defaultSize)
             {
                 Console.WriteLine("Level5 compression produced a smaller file.");

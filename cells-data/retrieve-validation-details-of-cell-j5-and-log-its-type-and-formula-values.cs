@@ -1,62 +1,40 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsValidationInfo
 {
     class Program
     {
         static void Main()
         {
-            try
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
+
+            // Access the first worksheet (or specify the required one)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get cell J5
+            Cell cell = worksheet.Cells["J5"];
+
+            // Retrieve the validation applied to the cell
+            Validation validation = cell.GetValidation();
+
+            if (validation != null)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Log validation type
+                Console.WriteLine("Validation Type: " + validation.Type);
 
-                // Define the cell area for J5 (start and end are the same)
-                CellArea area = CellArea.CreateCellArea("J5", "J5");
-
-                // Add validation to the defined cell area
-                int validationIndex = worksheet.Validations.Add(area);
-                Validation demoValidation = worksheet.Validations[validationIndex];
-                demoValidation.Type = ValidationType.WholeNumber;
-                demoValidation.Operator = OperatorType.Between;
-                demoValidation.Formula1 = "10";
-                demoValidation.Formula2 = "20";
-
-                // Retrieve the validation applied to J5
-                Cell cell = worksheet.Cells["J5"];
-                Validation validation = cell.GetValidation();
-
-                if (validation != null)
-                {
-                    Console.WriteLine("Validation Type: " + validation.Type);
-                    Console.WriteLine("Formula1: " + validation.Formula1);
-                    Console.WriteLine("Formula2: " + validation.Formula2);
-                }
-                else
-                {
-                    Console.WriteLine("No validation applied to cell J5.");
-                }
-
-                // Save the workbook (optional)
-                string outputPath = "ValidationJ5.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Log formula values (Formula1 and Formula2)
+                Console.WriteLine("Formula1: " + validation.Formula1);
+                Console.WriteLine("Formula2: " + validation.Formula2);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("No validation applied to cell J5.");
             }
+
+            // Optionally save the workbook (if any changes were made)
+            workbook.Save("output.xlsx");
         }
     }
 }

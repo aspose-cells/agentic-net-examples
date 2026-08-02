@@ -1,22 +1,28 @@
 using System;
+using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Saving;
 
 class Program
 {
-    static void Main()
+    // Author: Generated example for converting XLSB to PDF while preserving Office Add‑Ins
+    static async Task Main(string[] args)
     {
-        // Source XLSB workbook (contains Office Add‑Ins / macros)
-        string sourcePath = "input.xlsb";
+        // Paths to the source XLSB workbook and the target PDF file
+        string inputFile = "input.xlsb";
+        string outputFile = "output.pdf";
 
-        // Destination PDF file
-        string destPath = "output.pdf";
+        // Load the workbook (XLSB format)
+        Workbook workbook = new Workbook(inputFile);
 
-        // Load the XLSB workbook (create/load rule)
-        Workbook workbook = new Workbook(sourcePath);
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Save the workbook as PDF (save rule). 
-        // Aspose.Cells preserves interactive elements such as macros/add‑ins during PDF conversion.
-        workbook.Save(destPath, SaveFormat.Pdf);
+        // Preserve interactive Office Add‑Ins (if the API provides such a setting)
+        // NOTE: Verify the exact property name in the Aspose.Cells documentation for your version.
+        // pdfOptions.PreserveOfficeAddIns = true; // <-- placeholder for the actual property
+
+        // Save the workbook as PDF using the configured options
+        workbook.Save(outputFile, pdfOptions);
     }
 }

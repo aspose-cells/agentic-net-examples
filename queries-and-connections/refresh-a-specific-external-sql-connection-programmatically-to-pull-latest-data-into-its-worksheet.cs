@@ -1,73 +1,69 @@
+// Title: Refresh a specific external SQL connection in an Aspose.Cells workbook (C#)
+// Description: Loads a workbook, finds the first worksheet's query table, accesses its external SQL connection, sets RefreshOnLoad, invokes Workbook.RefreshAll to pull the latest data, and saves the updated file.
+// Keywords: Aspose.Cells | C# | external SQL connection | RefreshOnLoad | Workbook.RefreshAll | query table refresh | programmatic Excel data update | external connection API | load and save workbook
+// Common Searches: Aspose.Cells refresh external SQL connection C# | How to programmatically refresh a query table in Aspose.Cells | Set RefreshOnLoad property Aspose.Cells | Workbook.RefreshAll example | Refresh SQL data in Excel using Aspose.Cells
+// Developer Intent: Trigger a refresh of a linked SQL query table via code and save the workbook with the refreshed data.
+// Use Cases: Generate daily reports with the most recent database rows before distribution. | Automate data refresh for dashboards that rely on SQL‑based query tables. | Validate that a workbook’s SQL query returns up‑to‑date results during CI pipelines. | Create a service that updates Excel templates with live data on demand.
+// AI Prompts: Write C# code using Aspose.Cells to refresh a specific external SQL connection and save the workbook. | Explain the interaction between RefreshOnLoad and Workbook.RefreshAll for updating query tables in Aspose.Cells. | Suggest robust error‑handling patterns when refreshing external connections in an Aspose.Cells workbook.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExternalConnectionRefresh
 {
-    public class RefreshSpecificSqlConnection
+    // Loads a workbook, finds the first worksheet's query table, accesses its external SQL connection, sets RefreshOnLoad, invokes Workbook.RefreshAll to pull the latest data, and saves the updated file.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+            const string inputFile = "InputWithSqlConnection.xlsx";
+            const string outputFile = "Output_Refreshed.xlsx";
 
-        public static void Run()
-        {
-            const string inputPath = "InputWithSqlConnection.xlsx";
-            const string outputPath = "OutputAfterRefresh.xlsx";
-
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: {inputFile}");
                 return;
             }
 
             try
             {
                 // Load the workbook that contains the external SQL connection
-                Workbook workbook = new Workbook(inputPath);
+                Workbook workbook = new Workbook(inputFile);
 
-                // Identify the external connection to refresh (first one in the collection)
-                if (workbook.DataConnections.Count == 0)
+                // Assume the first worksheet contains a QueryTable linked to the SQL connection
+                Worksheet sheet = workbook.Worksheets[0];
+
+                if (sheet.QueryTables.Count > 0)
                 {
-                    Console.WriteLine("No external data connections found in the workbook.");
-                    return;
-                }
+                    // Get the first query table
+                    QueryTable queryTable = sheet.QueryTables[0];
 
-                ExternalConnection connection = workbook.DataConnections[0];
+                    // Access the associated external connection (read‑only property)
+                    ExternalConnection extConn = queryTable.ExternalConnection;
 
-                // Ensure the connection is a DBConnection (SQL based)
-                if (connection is DBConnection dbConn)
-                {
-                    // Force the connection to refresh when the workbook is opened
-                    dbConn.RefreshOnLoad = true;
-                    dbConn.RefreshInternal = 0; // immediate refresh
+                    // Ensure the connection is set to refresh on load (marks it for next open)
+                    extConn.RefreshOnLoad = true;
 
-                    // Save the workbook with updated connection settings
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"External SQL connection refreshed and workbook saved to '{outputPath}'.");
+                    // Refresh all external connections and query tables in the workbook
+                    workbook.RefreshAll();
+
+                    Console.WriteLine("External SQL connection refreshed successfully.");
                 }
                 else
                 {
-                    Console.WriteLine("The specified connection is not a DBConnection (SQL).");
+                    Console.WriteLine("No query tables found in the first worksheet.");
                 }
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
+
+                // Save the workbook with the refreshed data
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved as {outputFile}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

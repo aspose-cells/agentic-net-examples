@@ -1,67 +1,45 @@
+// Title: Enforce Excel 255‑Character Cell Limit with Aspose.Cells for .NET
+// Description: Demonstrates how to insert a long string into a cell, detect when its length exceeds Excel's 255‑character compatibility limit, truncate the value, and save the workbook using Aspose.Cells in C#.
+// Keywords: Aspose.Cells 255 character limit | truncate long cell value .NET | Excel compatibility mode | cell length validation C# | Aspose.Cells string truncation
+// Common Searches: Aspose.Cells enforce 255 character limit | how to truncate cell text in Aspose.Cells | check cell string length before saving Excel | Excel compatibility mode Aspose.Cells example
+// Developer Intent: Validate and shorten any cell content that exceeds 255 characters before writing the workbook.
+// Use Cases: Sanitize user‑generated text before exporting to legacy Excel files. | Trim oversized CSV fields automatically during import with Aspose.Cells. | Generate reports that must comply with older Excel versions' character restrictions.
+// AI Prompts: Create a C# routine that scans all worksheet cells and truncates strings longer than 255 characters using Aspose.Cells. | Show how to enable Excel compatibility mode in Aspose.Cells and automatically apply the 255‑character limit on cell values. | Provide code to handle formula cells while ensuring the displayed result does not exceed 255 characters in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to insert a long string into a cell, detect when its length exceeds Excel's 255‑character compatibility limit, truncate the value, and save the workbook using Aspose.Cells in C#.
+class VerifyCellLength
 {
-    public class VerifyCellLengthDemo
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Put a string that exceeds 255 characters into cell A1
+        string longString = new string('X', 300);
+        cells["A1"].PutValue(longString);
+
+        // Retrieve the string value from the cell
+        string cellContent = cells["A1"].StringValue;
+
+        // Verify length when compatibility (255‑char limit) is required
+        if (cellContent.Length > 255)
         {
-            try
-            {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // Ensure Excel restriction checking is enabled (default true)
-                workbook.Settings.CheckExcelRestriction = true;
-
-                // Access the first worksheet and its cells
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Prepare a test string longer than 255 characters
-                string longText = new string('A', 300);
-
-                // Put the long string into cell A1
-                cells["A1"].PutValue(longText);
-
-                // Verify the length of the cell's string value
-                int length = cells["A1"].StringValue.Length;
-
-                // If compatibility mode (Excel 2003) is considered, enforce 255‑character limit
-                if (length > 255)
-                {
-                    Console.WriteLine($"Warning: Cell A1 contains {length} characters, which exceeds the 255‑character limit for Excel 2003 compatibility.");
-
-                    // Truncate the value to meet the limit
-                    string truncated = cells["A1"].StringValue.Substring(0, 255);
-                    cells["A1"].PutValue(truncated);
-                    Console.WriteLine("Cell A1 value has been truncated to 255 characters.");
-                }
-                else
-                {
-                    Console.WriteLine($"Cell A1 length is within the limit: {length} characters.");
-                }
-
-                // Save the workbook (lifecycle: save)
-                string outputPath = "VerifiedCellLength.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Truncate the content to 255 characters
+            string truncated = cellContent.Substring(0, 255);
+            cells["A1"].PutValue(truncated);
+            Console.WriteLine("Content exceeded 255 characters and was truncated.");
         }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        else
         {
-            VerifyCellLengthDemo.Run();
+            Console.WriteLine("Content length is within the 255‑character limit.");
         }
+
+        // Save the workbook
+        workbook.Save("VerifiedCellLength.xlsx");
     }
 }

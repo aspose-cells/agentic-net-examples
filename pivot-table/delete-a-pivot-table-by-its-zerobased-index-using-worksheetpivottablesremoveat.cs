@@ -2,42 +2,38 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDeleteDemo
+namespace AsposeCellsPivotDeleteExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for pivot tables
             sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
             sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["B4"].PutValue(300);
 
-            // Add two pivot tables to demonstrate removal
-            // First pivot table at D1
+            // Add three pivot tables to the worksheet
             sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            // Second pivot table at D10
             sheet.PivotTables.Add("A1:B4", "D10", "PivotTable2");
+            sheet.PivotTables.Add("A1:B4", "D20", "PivotTable3");
 
-            // Verify count before removal
-            Console.WriteLine("Pivot tables before removal: " + sheet.PivotTables.Count);
+            // Remove the pivot table at zero‑based index 1 (the second pivot table)
+            sheet.PivotTables.RemoveAt(1);
 
-            // Delete the pivot table at zero‑based index 0 (the first pivot table)
-            sheet.PivotTables.RemoveAt(0);
+            // Optional: display remaining count to verify removal
+            Console.WriteLine("Remaining Pivot Tables Count: " + sheet.PivotTables.Count);
 
-            // Verify count after removal
-            Console.WriteLine("Pivot tables after removal: " + sheet.PivotTables.Count);
-
-            // Save the workbook to a file
+            // Save the workbook
             workbook.Save("PivotTableRemoved.xlsx");
         }
     }

@@ -1,48 +1,33 @@
+// Title: Refresh Pivot Tables Programmatically with Aspose.Cells for .NET (C#)
+// Description: Load a workbook, modify the source range of a pivot table, invoke Worksheet.RefreshPivotTables() to recalculate all pivots on the sheet, and save the updated file. This example demonstrates how to keep pivot reports in sync after data changes using Aspose.Cells.
+// Keywords: Aspose.Cells | C# | .NET | RefreshPivotTables | pivot table refresh | update pivot after data change | programmatic pivot update | worksheet.RefreshPivotTables method | Excel automation
+// Common Searches: Aspose.Cells refresh pivot tables C# | how to update pivot after editing cells .NET | Worksheet.RefreshPivotTables example | programmatically recalculate Excel pivots | refresh all pivots in a worksheet using Aspose
+// Developer Intent: Recalculate pivot tables so they reflect modified source data before saving the workbook.
+// Use Cases: After adjusting sales figures in the source sheet, call RefreshPivotTables to produce an up‑to‑date summary report. | When importing external CSV data into a workbook, use the method to ensure any existing pivots display the new totals. | In an automated nightly job that alters multiple worksheets, invoke RefreshPivotTables on each sheet to keep all analyses current.
+// AI Prompts: Show how to refresh a single pivot table by name with Aspose.Cells. | Demonstrate refreshing pivots after appending new rows to the source range in C#. | Explain error handling for RefreshPivotTables when the data source is missing or corrupted.
+
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace RefreshPivotExample
+// Load a workbook, modify the source range of a pivot table, invoke Worksheet.RefreshPivotTables() to recalculate all pivots on the sheet, and save the updated file. This example demonstrates how to keep pivot reports in sync after data changes using Aspose.Cells.
+class RefreshPivotExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
+        // Load an existing workbook that contains a pivot table
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Populate source data for the pivot table
-            dataSheet.Cells["A1"].PutValue("Product");
-            dataSheet.Cells["B1"].PutValue("Sales");
-            dataSheet.Cells["A2"].PutValue("Apple");
-            dataSheet.Cells["B2"].PutValue(1200);
-            dataSheet.Cells["A3"].PutValue("Banana");
-            dataSheet.Cells["B3"].PutValue(850);
-            dataSheet.Cells["A4"].PutValue("Orange");
-            dataSheet.Cells["B4"].PutValue(950);
+        // Assume the first worksheet holds the source data and the pivot table
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a pivot table based on the source data
-            int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
-            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+        // Modify the source data that the pivot table is based on
+        worksheet.Cells["B2"].PutValue(1500);
+        worksheet.Cells["B3"].PutValue(2500);
 
-            // Initial calculation so the pivot shows the original data
-            pivotTable.CalculateData();
+        // Refresh all pivot tables in this worksheet so they reflect the new data
+        worksheet.RefreshPivotTables();
 
-            // ----- Modify the underlying source data -----
-            dataSheet.Cells["B2"].PutValue(1300); // Apple sales changed
-            dataSheet.Cells["B3"].PutValue(900);  // Banana sales changed
-
-            // Refresh all pivot tables in the worksheet to reflect the changes
-            dataSheet.RefreshPivotTables();
-
-            // Optionally, recalculate the pivot data after refresh (not required for RefreshPivotTables)
-            // pivotTable.CalculateData();
-
-            // Save the workbook with refreshed pivot data
-            workbook.Save("RefreshedPivot.xlsx");
-        }
+        // Save the workbook with the refreshed pivot tables
+        workbook.Save("output.xlsx");
     }
 }

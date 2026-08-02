@@ -1,42 +1,29 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Author: Aspose.Cells .NET example – embed a QR code image in a PDF
+
+        // 1. Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("QR Code embedded at (200,300)");
 
-        // Load QR code image bytes (ensure "qr.png" exists in the executable directory)
-        byte[] qrImageData = File.ReadAllBytes("qr.png");
+        // (Optional) Add some placeholder text
+        sheet.Cells["A1"].PutValue("QR Code Demo");
 
-        // Create an image watermark using the QR code bytes
-        RenderingWatermark watermark = new RenderingWatermark(qrImageData)
-        {
-            // Position the watermark at the required coordinates (pixels)
-            OffsetX = 200,          // X coordinate
-            OffsetY = 300,          // Y coordinate
-            // Align to the top‑left corner so offsets are absolute
-            HAlignment = TextAlignmentType.Left,
-            VAlignment = TextAlignmentType.Top,
-            // Make the watermark fully opaque and keep original size
-            Opacity = 1.0f,
-            ScaleToPagePercent = 100,
-            IsBackground = false   // Place in front of page content
-        };
+        // 2. Add the QR code image to the worksheet.
+        //    The picture is added at the cell position (row 10, column 5).
+        //    Adjust these indices to approximate the desired PDF coordinates (200,300).
+        //    The image file "qr.png" must exist in the executable's working directory.
+        PictureCollection pictures = sheet.Pictures;
+        pictures.Add(10, 5, "qr.png");   // topRow = 10, leftColumn = 5
 
-        // Configure PDF save options to include the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as a PDF with the QR code positioned at (200,300)
-        workbook.Save("QrCodeEmbedded.pdf", pdfOptions);
+        // 3. Save the workbook as a PDF. The picture will be rendered at the
+        //    location defined above, which corresponds to the requested coordinates.
+        workbook.Save("QrCodeOutput.pdf", SaveFormat.Pdf);
     }
 }

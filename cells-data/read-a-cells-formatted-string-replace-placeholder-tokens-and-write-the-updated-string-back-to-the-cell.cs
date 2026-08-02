@@ -1,34 +1,38 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsPlaceholderReplacement
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Put a formatted string containing placeholder tokens into cell A1
-        worksheet.Cells["A1"].PutValue("Dear {Name}, your balance is {Balance} USD.");
-
-        // Configure replace options (case‑insensitive, partial match)
-        ReplaceOptions replaceOptions = new ReplaceOptions
+        static void Main()
         {
-            CaseSensitive = false,
-            MatchEntireCellContents = false
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Replace the {Name} placeholder
-        worksheet.Cells["A1"].Replace("{Name}", "John Doe", replaceOptions);
+            // Put a sample text containing placeholders into cell A1
+            // Example placeholder format: {Name}
+            cells["A1"].PutValue("Dear {Name}, your order {OrderId} is confirmed.");
 
-        // Replace the {Balance} placeholder
-        worksheet.Cells["A1"].Replace("{Balance}", "1234.56", replaceOptions);
+            // Define replace options (case‑insensitive, replace within the cell content)
+            ReplaceOptions options = new ReplaceOptions
+            {
+                CaseSensitive = false,
+                MatchEntireCellContents = false
+            };
 
-        // Output the final formatted string to the console (optional)
-        Console.WriteLine(worksheet.Cells["A1"].StringValue);
+            // Replace the placeholders with actual values
+            cells["A1"].Replace("{Name}", "John Doe", options);
+            cells["A1"].Replace("{OrderId}", "12345", options);
 
-        // Save the workbook
-        workbook.Save("Result.xlsx");
+            // Optionally, read the formatted string after replacement
+            string result = cells["A1"].StringValue;
+            Console.WriteLine("Updated cell value: " + result);
+
+            // Save the workbook
+            workbook.Save("PlaceholderReplacement.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

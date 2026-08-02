@@ -1,3 +1,11 @@
+// Title: Batch Export Workbook Charts with Chinese Localization via Aspose.Cells for .NET
+// Description: Loads an Excel workbook, configures Chinese chart globalization (titles, series, legend, axis units), applies the settings to the entire workbook, iterates every worksheet to export each chart as a uniquely‑named PNG image, and optionally saves the localized workbook.
+// Keywords: Aspose.Cells | .NET | C# | chart export | PNG image | Chinese localization | chart globalization settings | batch chart processing | Excel chart image | SetChartTitleName | DisplayUnitType
+// Common Searches: Aspose.Cells export all charts to PNG | How to apply Chinese labels to Excel charts with Aspose.Cells | Batch process charts in a workbook using .NET | Set Chinese axis unit names in Aspose.Cells charts | Localize Excel chart titles to 中文 with Aspose.Cells
+// Developer Intent: Apply Chinese chart globalization to every chart in a workbook and generate PNG images for each chart.
+// Use Cases: Create a set of Chinese‑language chart images for a reporting dashboard. | Produce PNG assets of all workbook charts for a presentation that requires localized labels. | Save a workbook with Chinese chart captions while also providing image copies for downstream systems.
+// AI Prompts: Show how to export the charts as JPEG with a custom quality level. | Add a semi‑transparent watermark to each exported chart image using Aspose.Cells. | Log the total number of charts processed after applying the Chinese globalization settings.
+
 using System;
 using System.IO;
 using Aspose.Cells;
@@ -6,105 +14,57 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartLocalization
 {
-    // Custom globalization settings that provide Chinese labels for chart elements
-    public class ChineseChartGlobalizationSettings : ChartGlobalizationSettings
-    {
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            // Chinese unit names
-            return type switch
-            {
-                DisplayUnitType.Hundreds => "百",
-                DisplayUnitType.Thousands => "千",
-                DisplayUnitType.TenThousands => "万",
-                DisplayUnitType.Millions => "百万",
-                DisplayUnitType.Billions => "十亿",
-                _ => base.GetAxisUnitName(type),
-            };
-        }
-
-        public override string GetChartTitleName()
-        {
-            return "图表标题";
-        }
-
-        public override string GetAxisTitleName()
-        {
-            return "轴标题";
-        }
-
-        public override string GetLegendIncreaseName()
-        {
-            return "增加";
-        }
-
-        public override string GetLegendDecreaseName()
-        {
-            return "减少";
-        }
-
-        public override string GetLegendTotalName()
-        {
-            return "总计";
-        }
-
-        public override string GetOtherName()
-        {
-            return "其他";
-        }
-
-        public override string GetSeriesName()
-        {
-            return "系列";
-        }
-    }
-
+    // Loads an Excel workbook, configures Chinese chart globalization (titles, series, legend, axis units), applies the settings to the entire workbook, iterates every worksheet to export each chart as a uniquely‑named PNG image, and optionally saves the localized workbook.
     class Program
     {
         static void Main()
         {
-            // Path to the source workbook
+            // Input workbook path
             string inputPath = "input.xlsx";
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
-
-            // Apply Chinese globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
-            {
-                ChartSettings = new ChineseChartGlobalizationSettings()
-            };
-
-            // Ensure output directory exists
+            // Output folder for chart images
             string outputDir = "ChartImages";
             Directory.CreateDirectory(outputDir);
 
-            // Iterate through all worksheets
-            for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create customizable Chinese globalization settings
+            SettableChartGlobalizationSettings chineseSettings = new SettableChartGlobalizationSettings();
+            chineseSettings.SetChartTitleName("图表标题");
+            chineseSettings.SetSeriesName("系列");
+            chineseSettings.SetLegendIncreaseName("增加");
+            chineseSettings.SetLegendDecreaseName("减少");
+            chineseSettings.SetOtherName("其他");
+            chineseSettings.SetAxisUnitName(DisplayUnitType.Hundreds, "百");
+            chineseSettings.SetAxisUnitName(DisplayUnitType.Thousands, "千");
+            chineseSettings.SetAxisUnitName(DisplayUnitType.TenThousands, "万");
+
+            // Apply the settings to the workbook's globalization settings
+            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
             {
-                Worksheet sheet = workbook.Worksheets[wsIndex];
-                ChartCollection charts = sheet.Charts;
+                ChartSettings = chineseSettings
+            };
 
-                // Iterate through all charts in the worksheet
-                for (int chartIndex = 0; chartIndex < charts.Count; chartIndex++)
+            // Iterate through all worksheets and their charts
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int chartIdx = 0;
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Chart chart = charts[chartIndex];
-
-                    // Recalculate chart layout after applying globalization (optional but safe)
-                    chart.Calculate();
-
                     // Build a unique file name for each chart image
                     string imageFile = Path.Combine(outputDir,
-                        $"Sheet{wsIndex + 1}_Chart{chartIndex + 1}.png");
+                        $"Sheet{sheet.Index}_Chart{chartIdx}.png");
 
-                    // Export chart to PNG image (rule: ToImage(string, ImageType))
+                    // Export chart to PNG image
                     chart.ToImage(imageFile, ImageType.Png);
+
+                    chartIdx++;
                 }
             }
 
-            // Optionally save the workbook with applied settings (lifecycle rule: save)
-            string outputWorkbook = "output_localized.xlsx";
-            workbook.Save(outputWorkbook);
+            // Optionally save the workbook with applied settings
+            workbook.Save("LocalizedWorkbook.xlsx");
         }
     }
 }

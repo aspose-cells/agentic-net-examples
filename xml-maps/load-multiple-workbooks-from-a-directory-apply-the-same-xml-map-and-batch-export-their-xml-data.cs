@@ -2,64 +2,74 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchXmlExport
+namespace AsposeCellsBatchExport
 {
-    class Program
+    public class XmlBatchExporter
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Loads all Excel workbooks from the specified directory, uses the first XML map found in each workbook,
+        /// and exports the mapped data to individual XML files in the output directory.
+        /// </summary>
+        /// <param name="inputFolder">Folder containing the source Excel files.</param>
+        /// <param name="outputFolder">Folder where the exported XML files will be saved.</param>
+        public static void Run(string inputFolder, string outputFolder)
         {
-            // Directory containing the source Excel workbooks
-            string sourceDirectory = @"C:\InputWorkbooks";
-
-            // Directory where the exported XML files will be saved
-            string outputDirectory = @"C:\ExportedXml";
-
-            // Path to the XML schema (XSD) that defines the XML map to be applied
-            string xmlMapPath = @"C:\Schema\SampleMap.xsd";
-
             // Ensure the output directory exists
-            if (!Directory.Exists(outputDirectory))
+            if (!Directory.Exists(outputFolder))
             {
-                Directory.CreateDirectory(outputDirectory);
+                Directory.CreateDirectory(outputFolder);
             }
 
-            // Get all Excel files in the source directory (you can adjust the pattern as needed)
-            string[] workbookFiles = Directory.GetFiles(sourceDirectory, "*.xlsx");
-
-            foreach (string workbookFile in workbookFiles)
+            // Get all Excel files in the input folder (supports .xlsx, .xls, .xlsm)
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string filePath in excelFiles)
             {
-                try
-                {
-                    // Load the workbook from file
-                    Workbook workbook = new Workbook(workbookFile);
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm")
+                    continue; // Skip non‑Excel files
 
-                    // If the workbook does not contain any XML maps, add the required map
+                // Load the workbook using the constructor rule
+                using (Workbook workbook = new Workbook(filePath))
+                {
+                    // Verify that the workbook contains at least one XML map
                     if (workbook.Worksheets.XmlMaps.Count == 0)
                     {
-                        // Add the XML map using the XSD file path
-                        workbook.Worksheets.XmlMaps.Add(xmlMapPath);
+                        Console.WriteLine($"No XML map found in '{Path.GetFileName(filePath)}'. Skipping.");
+                        continue;
                     }
 
-                    // Retrieve the first (or the intended) XML map
+                    // Use the first XML map (you can adjust the selection logic as needed)
                     XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
+                    string mapName = xmlMap.Name;
 
-                    // Determine the output XML file path (same name as workbook, different extension)
-                    string outputXmlPath = Path.Combine(
-                        outputDirectory,
-                        Path.GetFileNameWithoutExtension(workbookFile) + ".xml");
+                    // Build the output XML file path
+                    string xmlFileName = Path.GetFileNameWithoutExtension(filePath) + ".xml";
+                    string xmlOutputPath = Path.Combine(outputFolder, xmlFileName);
 
-                    // Export the XML data using the map's name
-                    workbook.ExportXml(xmlMap.Name, outputXmlPath);
-
-                    Console.WriteLine($"Exported XML for '{Path.GetFileName(workbookFile)}' to '{outputXmlPath}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing '{Path.GetFileName(workbookFile)}': {ex.Message}");
+                    try
+                    {
+                        // Export XML using the ExportXml(string, string) rule
+                        workbook.ExportXml(mapName, xmlOutputPath);
+                        Console.WriteLine($"Exported XML for '{Path.GetFileName(filePath)}' to '{xmlFileName}'.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error exporting '{Path.GetFileName(filePath)}': {ex.Message}");
+                    }
                 }
             }
+        }
+    }
 
-            Console.WriteLine("Batch XML export completed.");
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            string sourceFolder = @"C:\InputWorkbooks";
+            string destinationFolder = @"C:\ExportedXml";
+
+            XmlBatchExporter.Run(sourceFolder, destinationFolder);
         }
     }
 }

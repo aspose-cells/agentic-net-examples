@@ -1,32 +1,33 @@
+using System;
 using Aspose.Cells;
 
-class Program
+class MergeHeaderDemo
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Number of columns the header should span (e.g., A to E)
-        int totalColumns = 5; // columns are zero‑based, so this spans columns 0‑4
+        // Define how many columns the header should span (e.g., 10 columns)
+        int totalColumns = 10;
 
-        // Merge the first row across the specified columns
-        // Parameters: firstRow, firstColumn, totalRows, totalColumns
+        // Merge the first row (row index 0) across the defined columns
+        // Parameters: firstRow, firstColumn, totalRows (1), totalColumns
         cells.Merge(0, 0, 1, totalColumns);
 
         // Set the header text in the merged cell
         cells[0, 0].PutValue("Report Header");
 
-        // Apply a style to center the text and make it bold
-        Style headerStyle = workbook.CreateStyle();
-        headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-        headerStyle.VerticalAlignment = TextAlignmentType.Center;
-        headerStyle.Font.IsBold = true;
-        cells[0, 0].SetStyle(headerStyle);
+        // Apply a simple style: centered and bold
+        Style style = cells[0, 0].GetStyle();
+        style.HorizontalAlignment = TextAlignmentType.Center;
+        style.VerticalAlignment = TextAlignmentType.Center;
+        style.Font.IsBold = true;
+        cells[0, 0].SetStyle(style);
 
-        // Save the workbook
+        // Save the workbook to a file
         workbook.Save("HeaderMerged.xlsx");
     }
 }

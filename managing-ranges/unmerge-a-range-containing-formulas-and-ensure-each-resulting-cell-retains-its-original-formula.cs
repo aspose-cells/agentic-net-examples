@@ -1,74 +1,79 @@
+// Title: Aspose.Cells for .NET – Unmerge a merged range while preserving each cell’s original formula (C#)
+// Description: Shows how to capture the formula of every cell in a merged block, unmerge the range with Range.UnMerge, and restore the original formulas to the individual cells before saving the workbook. The sample creates a 3×3 range (B2:D4), assigns a formula, merges, stores formulas in a 2‑D array, unmerges, and reapplies the formulas.
+// Keywords: Aspose.Cells unmerge range C# | preserve formulas after unmerge | Range.UnMerge Aspose.Cells | restore cell formulas .NET | merged cells to individual cells Aspose | C# spreadsheet formula preservation | Aspose.Cells example unmerge preserve formulas
+// Common Searches: how to unmerge merged cells without losing formulas Aspose.Cells | preserve individual formulas when unmerging a range C# | Aspose.Cells unmerge range keep formulas | save formulas before unmerge Aspose.Cells .NET | restore formulas after unmerge spreadsheet
+// Developer Intent: Unmerge a previously merged range and ensure each resulting cell retains the formula it had before the merge.
+// Use Cases: Create a report layout with merged cells, then split them for further calculations while keeping all formulas intact. | Clean up imported workbooks that contain merged cells with formulas before exporting to another system. | Automate worksheet preparation where merged regions serve as temporary placeholders and must be unmerged without losing formula data.
+// AI Prompts: Generate C# code using Aspose.Cells that unmerges a merged range and automatically restores each cell’s original formula without external storage. | Explain step‑by‑step how to capture formulas from a merged block, unmerge it with Range.UnMerge, and reapply the formulas to the individual cells in Aspose.Cells for .NET. | Provide an alternative method (e.g., Clone, Copy, or Style) to preserve formulas when unmerging a range, including sample C# code.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Shows how to capture the formula of every cell in a merged block, unmerge the range with Range.UnMerge, and restore the original formulas to the individual cells before saving the workbook. The sample creates a 3×3 range (B2:D4), assigns a formula, merges, stores formulas in a 2‑D array, unmerges, and reapplies the formulas.
+class UnmergePreserveFormulas
 {
-    public class UnmergePreserveFormulas
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Define the range to merge (B2:D4) – zero‑based indices
+            int firstRow = 1;   // B2 row index
+            int firstCol = 1;   // B2 column index
+            int totalRows = 3;  // B2 to D4 spans 3 rows
+            int totalCols = 3;  // B2 to D4 spans 3 columns
+
+            // Populate each cell in the range with its own formula
+            // Example formula: =ROW()+COLUMN()
+            for (int r = 0; r < totalRows; r++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Define the merged range (e.g., B2:D4)
-                int firstRow = 1;      // zero‑based index for row 2
-                int firstColumn = 1;   // zero‑based index for column B
-                int totalRows = 3;     // rows 2‑4
-                int totalColumns = 3;  // columns B‑D
-
-                // Put some sample data that the formula will use
-                cells[0, 1].PutValue(10); // B1
-                cells[0, 2].PutValue(20); // C1
-                cells[0, 3].PutValue(30); // D1
-
-                // Set a formula in the top‑left cell of the range
-                cells[firstRow, firstColumn].Formula = "=B1+C1+D1";
-
-                // Create the range object and merge the cells
-                Aspose.Cells.Range range = worksheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
-                range.Merge();
-
-                // Store the formula string before unmerging
-                string originalFormula = cells[firstRow, firstColumn].Formula;
-
-                // Unmerge the range – after this only the top‑left cell keeps the formula
-                range.UnMerge();
-
-                // Apply the stored formula to every cell that was part of the merged area
-                for (int r = firstRow; r < firstRow + totalRows; r++)
+                for (int c = 0; c < totalCols; c++)
                 {
-                    for (int c = firstColumn; c < firstColumn + totalColumns; c++)
+                    cells[firstRow + r, firstCol + c].Formula = "=ROW()+COLUMN()";
+                }
+            }
+
+            // Merge the defined range
+            Aspose.Cells.Range range = worksheet.Cells.CreateRange(firstRow, firstCol, totalRows, totalCols);
+            range.Merge();
+
+            // Store the formulas of each cell before unmerging
+            string[,] savedFormulas = new string[totalRows, totalCols];
+            for (int r = 0; r < totalRows; r++)
+            {
+                for (int c = 0; c < totalCols; c++)
+                {
+                    savedFormulas[r, c] = cells[firstRow + r, firstCol + c].Formula;
+                }
+            }
+
+            // Unmerge the range using the Range.UnMerge method
+            range.UnMerge();
+
+            // Restore the original formulas to each cell after unmerge
+            for (int r = 0; r < totalRows; r++)
+            {
+                for (int c = 0; c < totalCols; c++)
+                {
+                    if (!string.IsNullOrEmpty(savedFormulas[r, c]))
                     {
-                        cells[r, c].Formula = originalFormula;
+                        cells[firstRow + r, firstCol + c].Formula = savedFormulas[r, c];
                     }
                 }
-
-                // Calculate formulas to populate values
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                string outputPath = "UnmergedPreserveFormulas.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook
+            string outputPath = "UnmergedPreserveFormulas.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            UnmergePreserveFormulas.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

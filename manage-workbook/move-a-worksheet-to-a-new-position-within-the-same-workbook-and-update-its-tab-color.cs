@@ -1,29 +1,53 @@
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class MoveWorksheetAndSetTabColor
     {
-        // Create a new workbook (lifecycle create)
-        Workbook workbook = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Add sample worksheets
-        workbook.Worksheets.Add("SheetA");
-        workbook.Worksheets.Add("SheetB");
-        workbook.Worksheets.Add("SheetC");
+                // Add three worksheets with custom names
+                workbook.Worksheets.Add("Sheet1");
+                workbook.Worksheets.Add("Sheet2");
+                workbook.Worksheets.Add("Sheet3");
 
-        // Select the worksheet to move (e.g., "SheetC")
-        Worksheet sheetToMove = workbook.Worksheets["SheetC"];
+                // Add a new worksheet that we will move
+                Worksheet movedSheet = workbook.Worksheets.Add("MovedSheet");
 
-        // Move the worksheet to the desired index (e.g., position 1)
-        sheetToMove.MoveTo(1); // Moves "SheetC" to be the second tab
+                // Move the worksheet to index 1 (second position)
+                movedSheet.MoveTo(1);
 
-        // Update the tab color of the moved worksheet
-        sheetToMove.TabColor = Color.LightBlue;
+                // Change the tab color of the moved worksheet to Green
+                movedSheet.TabColor = Color.Green;
 
-        // Save the workbook (lifecycle save)
-        workbook.Save("MovedAndColoredSheet.xlsx");
+                // Define output file path
+                string outputPath = "MovedSheetWithTabColor.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            MoveWorksheetAndSetTabColor.Run();
+        }
     }
 }

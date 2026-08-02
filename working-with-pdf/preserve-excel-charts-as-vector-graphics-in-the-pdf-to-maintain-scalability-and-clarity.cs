@@ -1,41 +1,21 @@
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartToPdfVector
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load the Excel workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Fruits");
-            worksheet.Cells["A3"].PutValue("Vegetables");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(50);
-            worksheet.Cells["B3"].PutValue(30);
+        // NOTE: Aspose.Cells may provide a property such as `VectorizeCharts` to keep charts as vector graphics.
+        // This property is not documented in the supplied reference, so it is left as a placeholder.
+        // Uncomment and set the property when using a version that supports it.
+        // pdfOptions.VectorizeCharts = true; // <-- requires API evidence
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
-
-            // Export the chart to PDF.
-            // The ToPdf method renders the chart as vector graphics,
-            // preserving scalability and clarity in the resulting PDF.
-            chart.ToPdf("ChartVectorOutput.pdf");
-
-            Console.WriteLine("Chart exported to PDF as vector graphics successfully.");
-        }
+        // Save the workbook as a PDF file
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

@@ -3,59 +3,49 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class Program
+class PdfOptimizationComparison
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
+        // Create a workbook with sample data
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Aspose.Cells PDF Optimization Example");
+        worksheet.Cells["A2"].PutValue("Comparing Standard vs MinimumSize PDF sizes.");
 
-        // Populate the worksheet with a sizable amount of data to make the PDF noticeable
-        for (int row = 0; row < 500; row++)
+        // Save PDF with Standard optimization (default high quality)
+        string standardPath = "StandardPdf.pdf";
+        PdfSaveOptions standardOptions = new PdfSaveOptions
         {
-            for (int col = 0; col < 20; col++)
-            {
-                sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-            }
-        }
+            OptimizationType = PdfOptimizationType.Standard
+        };
+        workbook.Save(standardPath, standardOptions);
 
-        // Define file names for the two PDF outputs
-        string standardPdfPath = "StandardOptimization.pdf";
-        string minimumPdfPath = "MinimumSizeOptimization.pdf";
-
-        // -----------------------------------------------------------------
-        // Save with the default (Standard) optimization
-        // -----------------------------------------------------------------
-        // No special options are needed; the default OptimizationType is Standard
-        workbook.Save(standardPdfPath, SaveFormat.Pdf);
-
-        // Get the file size of the Standard optimized PDF
-        long standardSize = new FileInfo(standardPdfPath).Length;
-        Console.WriteLine($"Standard optimization PDF size: {standardSize} bytes");
-
-        // -----------------------------------------------------------------
-        // Save with MinimumSize optimization
-        // -----------------------------------------------------------------
-        PdfSaveOptions minSizeOptions = new PdfSaveOptions();
-        minSizeOptions.OptimizationType = PdfOptimizationType.MinimumSize; // Apply MinimumSize optimization
-
-        workbook.Save(minimumPdfPath, minSizeOptions);
-
-        // Get the file size of the MinimumSize optimized PDF
-        long minimumSize = new FileInfo(minimumPdfPath).Length;
-        Console.WriteLine($"MinimumSize optimization PDF size: {minimumSize} bytes");
-
-        // -----------------------------------------------------------------
-        // Verify that the MinimumSize PDF is smaller than the Standard PDF
-        // -----------------------------------------------------------------
-        if (minimumSize < standardSize)
+        // Save PDF with MinimumSize optimization (prioritizes smaller file size)
+        string minSizePath = "MinimumSizePdf.pdf";
+        PdfSaveOptions minSizeOptions = new PdfSaveOptions
         {
-            Console.WriteLine("Verification passed: MinimumSize PDF is smaller than Standard PDF.");
+            OptimizationType = PdfOptimizationType.MinimumSize
+        };
+        workbook.Save(minSizePath, minSizeOptions);
+
+        // Retrieve file sizes for comparison
+        long standardSize = new FileInfo(standardPath).Length;
+        long minSize = new FileInfo(minSizePath).Length;
+
+        Console.WriteLine($"Standard PDF size: {standardSize} bytes");
+        Console.WriteLine($"MinimumSize PDF size: {minSize} bytes");
+
+        // Verify that MinimumSize produces a smaller file
+        if (minSize < standardSize)
+        {
+            Console.WriteLine("MinimumSize optimization reduced the PDF file size.");
         }
         else
         {
-            Console.WriteLine("Verification failed: MinimumSize PDF is not smaller than Standard PDF.");
+            Console.WriteLine("MinimumSize optimization did not reduce the PDF file size.");
         }
     }
 }
+
+// Author: Aspose.Cells .NET example demonstrating PDF optimization types.

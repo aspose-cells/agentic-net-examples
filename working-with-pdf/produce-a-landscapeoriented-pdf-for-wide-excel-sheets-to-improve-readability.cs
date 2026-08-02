@@ -1,45 +1,31 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-class LandscapePdfGenerator
+// Author: Aspose.Cells .NET example – generate a landscape PDF for wide worksheets
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load the Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate the worksheet with many columns to simulate a wide sheet
-        const int totalColumns = 30;
-        const int totalRows = 20;
-
-        for (int col = 0; col < totalColumns; col++)
-        {
-            // Header row
-            sheet.Cells[0, col].PutValue($"Header {col + 1}");
-
-            // Data rows
-            for (int row = 1; row <= totalRows; row++)
-            {
-                sheet.Cells[row, col].PutValue($"R{row}C{col + 1}");
-            }
-        }
-
-        // Set page orientation to Landscape for better horizontal space
+        // Set page orientation to Landscape
         sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-        // Fit all columns onto a single page width; height adjusts automatically
-        sheet.PageSetup.FitToPagesWide = 1;   // one page wide
-        sheet.PageSetup.FitToPagesTall = 0;   // auto height
+        // Fit all columns to a single page width; height can span multiple pages
+        sheet.PageSetup.SetFitToPages(1, 0);
 
-        // Configure PDF save options to keep the entire sheet on one page
+        // Configure PDF save options to keep all columns on one page per sheet
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            OnePagePerSheet = true,
             AllColumnsInOnePagePerSheet = true
         };
 
-        // Save the workbook as a landscape‑oriented PDF
-        workbook.Save("WideSheet_Landscape.pdf", pdfOptions);
+        // Save the workbook as a PDF file
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

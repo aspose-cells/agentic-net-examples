@@ -1,52 +1,32 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMultiThreadCalculation
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Enable multi‑threaded reading for the cells collection.
+        // This allows the calculation engine to read cell data concurrently,
+        // improving performance on large data sets.
+        workbook.Worksheets[0].Cells.MultiThreadReading = true;
+
+        // Populate sample data and formulas
+        Cells cells = workbook.Worksheets[0].Cells;
+        for (int i = 0; i < 1000; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate a large data set with formulas to demonstrate performance
-            int rows = 5000;
-            int cols = 10;
-
-            // Fill cells with numeric values
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    cells[r, c].PutValue(r + c);
-                }
-            }
-
-            // Add a formula that sums a row – this will be calculated for each row
-            for (int r = 0; r < rows; r++)
-            {
-                // Example: sum of the first 10 columns in the current row
-                cells[r, cols].Formula = $"=SUM(A{r + 1}:J{r + 1})";
-            }
-
-            // Enable multi‑threaded processing for the cells data model.
-            // This allows Aspose.Cells to evaluate formulas using multiple threads,
-            // which speeds up calculation on large data sets.
-            cells.MultiThreadReading = true;
-
-            // Calculate all formulas in the workbook.
-            // The calculation will take advantage of the multi‑thread setting above.
-            workbook.CalculateFormula();
-
-            // Save the workbook to verify the results
-            workbook.Save("MultiThreadCalculationResult.xlsx", SaveFormat.Xlsx);
-
-            Console.WriteLine("Workbook saved with multi‑threaded calculation enabled.");
+            // Simple numeric values
+            cells[i, 0].PutValue(i + 1);
+            // Formula that depends on the value in column A
+            cells[i, 1].Formula = $"=A{i + 1}*2";
         }
+
+        // Calculate all formulas in the workbook
+        workbook.CalculateFormula();
+
+        // Save the workbook to a file
+        workbook.Save("MultiThreadedCalculation.xlsx", SaveFormat.Xlsx);
     }
 }

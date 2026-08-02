@@ -1,60 +1,69 @@
+// Title: Remove temporary defined names (temp_*) from an Excel workbook using Aspose.Cells LoadOptions and a custom LoadFilter (C#)
+// Description: Shows how to configure LoadOptions with a custom LoadFilter that loads all worksheet data, open a workbook, iterate its NameCollection, and delete any defined name whose text starts with "temp_" before saving the file.
+// Keywords: Aspose.Cells | LoadOptions | LoadFilter | defined names | temporary named ranges | C# | Excel | remove temp_ | NameCollection
+// Common Searches: Aspose.Cells remove defined names starting with temp_ | C# LoadFilter exclude temporary named ranges | LoadOptions filter defined names Aspose.Cells | How to delete temp_ named ranges in Excel using Aspose | Custom LoadFilter to clean up workbook
+// Developer Intent: Load an Excel workbook and automatically discard any defined names that begin with the prefix "temp_".
+// Use Cases: Clean up helper named ranges imported from third‑party systems before further processing. | Prepare a workbook for distribution by stripping internal temporary names that users should not see. | Lower memory usage and improve performance by omitting unnecessary defined names during initial load.
+// AI Prompts: Generate a C# example that uses Aspose.Cells LoadOptions with a custom LoadFilter to delete defined names starting with "temp_" after the workbook is loaded. | Refactor the provided code so the temporary defined names are removed inside the LoadFilter instead of iterating the NameCollection later. | Explain how LoadDataFilterOptions and a custom LoadFilter can be combined to selectively load worksheet content and exclude specific defined names in Aspose.Cells.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-class CustomLoadFilter : LoadFilter
-{
-    // Load all data for each worksheet (including defined names)
-    public override void StartSheet(Worksheet sheet)
-    {
-        this.LoadDataFilterOptions = LoadDataFilterOptions.All;
-    }
-}
-
+// Shows how to configure LoadOptions with a custom LoadFilter that loads all worksheet data, open a workbook, iterate its NameCollection, and delete any defined name whose text starts with "temp_" before saving the file.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
         try
         {
-            // Verify input file exists
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Set load options with the custom filter
-            var loadOptions = new LoadOptions
+            // Create LoadOptions and assign a custom LoadFilter
+            LoadOptions loadOptions = new LoadOptions
             {
-                LoadFilter = new CustomLoadFilter()
+                LoadFilter = new TempNameFilter()
             };
 
-            // Load workbook using the specified options
-            var workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
             // Remove defined names that start with "temp_"
-            NameCollection names = workbook.Worksheets.Names;
-            for (int i = names.Count - 1; i >= 0; i--)
+            NameCollection definedNames = workbook.Worksheets.Names;
+            for (int i = definedNames.Count - 1; i >= 0; i--)
             {
-                Name definedName = names[i];
-                // The name string is accessed via the Text property
+                Name definedName = definedNames[i];
                 if (definedName.Text.StartsWith("temp_", StringComparison.OrdinalIgnoreCase))
                 {
-                    names.RemoveAt(i);
+                    definedNames.RemoveAt(i);
                 }
             }
 
             // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Custom LoadFilter that loads all data for each worksheet
+    private class TempNameFilter : LoadFilter
+    {
+        public override void StartSheet(Worksheet sheet)
+        {
+            // Ensure all data (including defined names) are loaded
+            this.LoadDataFilterOptions = LoadDataFilterOptions.All;
         }
     }
 }

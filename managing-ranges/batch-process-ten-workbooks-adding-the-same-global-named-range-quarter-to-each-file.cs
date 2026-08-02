@@ -21,9 +21,10 @@ class BatchAddGlobalNamedRange
             @"C:\Workbooks\Book10.xlsx"
         };
 
-        // Define the reference for the global named range "Quarter"
-        // Adjust the sheet name and address as needed for your scenario
-        const string quarterRefersTo = "=Sheet1!$A$1:$A$4";
+        // The global named range to add
+        const string globalName = "Quarter";
+        // Example reference – adjust as needed
+        const string refersToFormula = "=Sheet1!$A$1:$A$4";
 
         foreach (string filePath in workbookFiles)
         {
@@ -37,40 +38,35 @@ class BatchAddGlobalNamedRange
             // Load the workbook (using the constructor that accepts a file path)
             using (Workbook workbook = new Workbook(filePath))
             {
-                // Access the global (workbook‑scope) name collection
+                // Access the global names collection
                 NameCollection names = workbook.Worksheets.Names;
 
-                // Check if a global name "Quarter" already exists
-                // Global names have SheetIndex = 0
-                bool quarterExists = false;
-                foreach (Name existingName in names)
+                // Check if the global name already exists
+                bool exists = false;
+                foreach (Name n in names)
                 {
-                    if (existingName.Text.Equals("Quarter", StringComparison.OrdinalIgnoreCase) &&
-                        existingName.SheetIndex == 0)
+                    if (n.Text.Equals(globalName, StringComparison.OrdinalIgnoreCase) && n.SheetIndex == 0)
                     {
-                        quarterExists = true;
-                        // Update the reference in case it differs
-                        existingName.RefersTo = quarterRefersTo;
+                        exists = true;
                         break;
                     }
                 }
 
-                // If the name does not exist, add it as a global name
-                if (!quarterExists)
+                // Add the global named range if it does not exist
+                if (!exists)
                 {
-                    int index = names.Add("Quarter");
-                    Name quarterName = names[index];
-                    quarterName.RefersTo = quarterRefersTo;
-                    // SheetIndex = 0 indicates a global (workbook‑scope) name
-                    quarterName.SheetIndex = 0;
+                    int index = names.Add(globalName);          // Define the name
+                    Name name = names[index];
+                    name.RefersTo = refersToFormula;            // Set the reference
+                    name.SheetIndex = 0;                        // Ensure workbook scope (0 = global)
                 }
 
-                // Optional: sort names for better organization before saving
+                // Optional: sort names for better organization
                 workbook.Worksheets.SortNames();
 
-                // Save the workbook back to the same file (overwrites)
+                // Save the workbook back to the same file (overwrites original)
                 workbook.Save(filePath);
-                Console.WriteLine($"Processed and saved: {filePath}");
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
         }
     }

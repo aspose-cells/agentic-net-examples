@@ -2,47 +2,46 @@ using System;
 using System.Globalization;
 using Aspose.Cells;
 
-class CurrencyLocalizationDemo
+namespace AsposeCellsCurrencyLocalization
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
 
-        // Set the workbook's culture to German (Euro) for demonstration
-        wb.Settings.CultureInfo = new CultureInfo("de-DE");
+            // Set the workbook culture to French (France) where the currency symbol is €
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-        // Access the first worksheet and a target cell
-        Worksheet ws = wb.Worksheets[0];
-        Cell cell = ws.Cells["A1"];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Put a numeric value into the cell
-        cell.PutValue(1234.56);
+            // Prepare a cell with a numeric value and a built‑in currency format (Number = 164)
+            Cell sourceCell = cells["A1"];
+            sourceCell.PutValue(1234.56);
+            Style style = sourceCell.GetStyle();
+            style.Number = 164; // Currency format (e.g., $1,234.56 in en-US)
+            sourceCell.SetStyle(style);
 
-        // Apply a built‑in currency number format to the cell
-        Style style = cell.GetStyle();
-        style.Number = 164; // Currency format
-        cell.SetStyle(style);
+            // Retrieve the formatted string as shown in Excel (includes the default $ symbol)
+            string formatted = sourceCell.DisplayStringValue; // e.g., "$1,234.56"
 
-        // Retrieve the formatted string as it would appear in Excel
-        string formattedString = cell.DisplayStringValue;
+            // Detect the currency symbol used in the current culture
+            string localCurrencySymbol = workbook.Settings.CultureInfo.NumberFormat.CurrencySymbol; // e.g., "€"
 
-        // Determine the currency symbol for the workbook's culture
-        string localeCurrencySymbol = ((CultureInfo)wb.Settings.CultureInfo).NumberFormat.CurrencySymbol;
+            // Replace the generic "$" (or any non‑local symbol) with the localized currency symbol
+            // Here we simply replace the first character if it is a known currency placeholder.
+            // For a more robust solution you could use regex to detect any non‑digit symbols.
+            string localized = formatted.Replace("$", localCurrencySymbol);
 
-        // Replace common currency symbols with the locale‑specific one
-        // Extend the replacement list as needed for other symbols
-        string localizedString = formattedString
-            .Replace("$", localeCurrencySymbol)
-            .Replace("USD", localeCurrencySymbol)
-            .Replace("€", localeCurrencySymbol)
-            .Replace("£", localeCurrencySymbol);
+            // Write the localized string back to another cell for demonstration
+            Cell resultCell = cells["B1"];
+            resultCell.PutValue(localized);
 
-        // Output the original and localized strings
-        Console.WriteLine("Original formatted string: " + formattedString);
-        Console.WriteLine("Localized string: " + localizedString);
-
-        // Save the workbook (optional)
-        wb.Save("CurrencyLocalizationDemo.xlsx");
+            // Save the workbook (lifecycle: save)
+            workbook.Save("CurrencyLocalized.xlsx");
+        }
     }
 }

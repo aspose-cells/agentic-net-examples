@@ -1,67 +1,43 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsChartSaveExample
 {
-    public class SaveModifiedChartDemo
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Cherry");
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Apples");
+            worksheet.Cells["A3"].PutValue("Bananas");
+            worksheet.Cells["A4"].PutValue("Cherries");
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(45);
-            sheet.Cells["B4"].PutValue(25);
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(30);
+            worksheet.Cells["B3"].PutValue(45);
+            worksheet.Cells["B4"].PutValue(25);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
 
-            // Set the chart data source
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
             // Modify chart properties (e.g., title)
             chart.Title.Text = "Fruit Sales";
 
-            // Define output file path
-            string outputPath = "ModifiedChart.xlsx";
-
-            // Save the workbook containing the modified chart as XLSX
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                SaveModifiedChartDemo.Run();
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.Error.WriteLine($"File not found: {fnfEx.FileName}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as XLSX to preserve formatting
+            workbook.Save("ModifiedChart.xlsx", SaveFormat.Xlsx);
         }
     }
 }

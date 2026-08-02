@@ -1,66 +1,80 @@
+// Title: Batch apply a tiled texture to a named shape in multiple Excel files with Aspose.Cells (C#)
+// Description: Iterates through every .xlsx file in a source folder, loads each workbook with Aspose.Cells, finds the shape called "TargetShape" on every worksheet, sets its Fill.Texture to TextureType.BlueTissuePaper (default tiled alignment), and saves the updated workbook to a separate output directory.
+// Keywords: Aspose.Cells | C# | batch process Excel workbooks | shape fill texture | tiled texture | BlueTissuePaper | multiple .xlsx files | folder automation | Excel shape styling | programmatic texture assignment
+// Common Searches: apply tiled texture to shape in many Excel files using Aspose.Cells | C# batch update shape fill for all worksheets in a folder | Aspose.Cells set texture for a specific shape across workbooks | automate shape formatting in multiple .xlsx files | how to loop through Excel files and change shape fill with Aspose
+// Developer Intent: Automatically add a tiled texture to the shape named "TargetShape" in every worksheet of each workbook located in a given folder and write the modified files to an output directory.
+// Use Cases: Standardize the appearance of a logo shape across a suite of generated reports. | Prepare template workbooks with a decorative background before distribution to clients. | Ensure a specific shape has a tiled texture for consistent printing results in bulk Excel files.
+// AI Prompts: Write C# code that uses Aspose.Cells to scan all .xlsx files in a directory, locate a shape named "TargetShape" on each sheet, set its Fill.Texture to TextureType.BlueTissuePaper, and save the workbooks to a separate folder. | Show how to modify the script to apply a tiled texture to every shape whose name starts with "Header_" in each workbook processed. | Explain how to change the texture type to TextureType.Wood while keeping the tiled alignment for the target shape in a batch operation.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class BatchTextureProcessor
+// Iterates through every .xlsx file in a source folder, loads each workbook with Aspose.Cells, finds the shape called "TargetShape" on every worksheet, sets its Fill.Texture to TextureType.BlueTissuePaper (default tiled alignment), and saves the updated workbook to a separate output directory.
+class Program
 {
     static void Main()
     {
-        // Folder containing the source workbooks
-        string inputFolder = @"C:\InputWorkbooks";
-
-        // Folder where the modified workbooks will be saved
+        // Folder containing source workbooks
+        string sourceFolder = @"C:\InputWorkbooks";
+        // Folder where modified workbooks will be saved
         string outputFolder = @"C:\OutputWorkbooks";
+
+        // Ensure output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Ensure the input folder exists
-        if (!Directory.Exists(inputFolder))
+        // Process each .xlsx file in the source folder
+        foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
         {
-            Console.WriteLine($"Input folder does not exist: {inputFolder}");
-            return;
-        }
-
-        // Process each .xlsx file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
-        {
-            // Verify the file still exists before loading
+            // Verify the source file exists before loading
             if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Source file not found: {filePath}");
                 continue;
+            }
 
             try
             {
-                // Load the workbook inside a using block for proper disposal
-                using (Workbook workbook = new Workbook(filePath))
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Access the first worksheet (adjust if needed)
-                    Worksheet worksheet = workbook.Worksheets[0];
-
-                    // Ensure the worksheet contains at least one shape
-                    if (worksheet.Shapes.Count > 0)
+                    // Find the shape named "TargetShape"
+                    Shape targetShape = null;
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        // Get the first shape
-                        Shape shape = worksheet.Shapes[0];
-
-                        // Apply a texture fill (tiling is the default behavior)
-                        shape.Fill.Texture = TextureType.BlueTissuePaper;
-                    }
-                    else
-                    {
-                        // Add a rectangle shape to demonstrate the texture
-                        Shape newShape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 150, 200);
-                        newShape.Fill.Texture = TextureType.BlueTissuePaper;
+                        if (shape.Name == "TargetShape")
+                        {
+                            targetShape = shape;
+                            break;
+                        }
                     }
 
-                    // Save the modified workbook to the output folder (overwrites if exists)
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                    workbook.Save(outputPath);
+                    // If the shape exists, apply a tiled texture
+                    if (targetShape != null)
+                    {
+                        // Apply texture (Fill property returns FillFormat)
+                        targetShape.Fill.Texture = TextureType.BlueTissuePaper;
+
+                        // Note: TextureAlignment property is not available in the current Aspose.Cells version.
+                        // The default alignment is Tile, which satisfies the requirement.
+                    }
                 }
+
+                // Build the output file path
+                string fileName = Path.GetFileName(filePath);
+                string outputPath = Path.Combine(outputFolder, fileName);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processed and saved: {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log the error and continue with the next file
-                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
 

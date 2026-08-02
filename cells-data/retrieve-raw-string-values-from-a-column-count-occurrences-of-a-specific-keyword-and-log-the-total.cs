@@ -1,44 +1,53 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsKeywordCounter
 {
-    static void Main()
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Specify the column to inspect (0 = column A) and the keyword to count
-        int columnIndex = 0;
-        string keyword = "Aspose";
-
-        int occurrenceCount = 0;
-
-        // Iterate through all rows that contain data in the worksheet
-        for (int row = 0; row <= cells.MaxDataRow; row++)
+        static void Main(string[] args)
         {
-            // Retrieve the cell at the current row and specified column
-            Cell cell = cells[row, columnIndex];
+            // Path to the source workbook
+            string inputPath = "input.xlsx";
 
-            // Get the raw string value of the cell (empty string if the cell is null)
-            string cellValue = cell?.StringValue ?? string.Empty;
+            // Load the workbook (create/load rule)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Check if the keyword appears in the cell value (case‑insensitive)
-            if (!string.IsNullOrEmpty(cellValue) &&
-                cellValue.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Define the column index to inspect (0 = column A)
+            int columnIndex = 0;
+
+            // Define the keyword to count
+            string keyword = "Apple";
+
+            // Initialize counter
+            int occurrenceCount = 0;
+
+            // Determine the range of rows that contain data
+            int firstDataRow = cells.MinDataRow;
+            int lastDataRow = cells.MaxDataRow;
+
+            // Iterate through each cell in the specified column
+            for (int row = firstDataRow; row <= lastDataRow; row++)
             {
-                occurrenceCount++;
+                // Retrieve the raw string value of the cell
+                string cellValue = cells[row, columnIndex].StringValue;
+
+                // Check if the cell contains the keyword (case‑sensitive)
+                if (!string.IsNullOrEmpty(cellValue) && cellValue.Contains(keyword))
+                {
+                    occurrenceCount++;
+                }
             }
+
+            // Log the total count
+            Console.WriteLine($"Total occurrences of \"{keyword}\" in column {CellsHelper.ColumnIndexToName(columnIndex)}: {occurrenceCount}");
+
+            // Save the workbook (save rule) – optional, can be omitted if no changes are made
+            workbook.Save("output.xlsx");
         }
-
-        // Log the total number of occurrences found
-        Console.WriteLine($"Total occurrences of \"{keyword}\" in column {CellsHelper.ColumnIndexToName(columnIndex)}: {occurrenceCount}");
-
-        // Save the workbook (optional – here we simply write it back to a new file)
-        workbook.Save("output.xlsx");
     }
 }

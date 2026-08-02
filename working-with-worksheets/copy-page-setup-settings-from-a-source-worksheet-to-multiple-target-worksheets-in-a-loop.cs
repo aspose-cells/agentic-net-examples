@@ -1,44 +1,37 @@
+// Title: Copy worksheet PageSetup to multiple sheets with Aspose.Cells for .NET
+// Description: Loads an Excel file, extracts the PageSetup from a designated source sheet, then iterates through the remaining worksheets, applying the same print layout using PageSetup.Copy and saving the result.
+// Keywords: Aspose.Cells PageSetup copy | C# copy print settings between worksheets | duplicate page layout Excel | Aspose.Cells copy options | standardize worksheet margins .NET | transfer header footer settings | Excel workbook page configuration | Aspose.Cells loop example | copy worksheet print area
+// Common Searches: Aspose.Cells copy page setup from one sheet to others | C# loop to apply same print settings to all worksheets | How to duplicate worksheet margins using Aspose | Copy orientation and scaling across Excel sheets .NET | Aspose.Cells PageSetup.Copy usage example
+// Developer Intent: Apply the PageSetup of a single worksheet to every other sheet in the same workbook.
+// Use Cases: Ensure consistent print margins, orientation, and scaling before exporting a multi‑sheet workbook to PDF. | Synchronize header/footer content across all worksheets for uniform printed reports. | Batch‑apply page layout settings when generating Excel files for regional compliance or corporate branding.
+// AI Prompts: Write C# code that copies the PageSetup from a chosen worksheet to a list of target worksheets, including null checks and customizable CopyOptions. | Show how to copy PageSetup and also set an identical print area for each destination sheet using Aspose.Cells. | Explain how to duplicate page layout without altering data validation, conditional formatting, or existing cell values in the target worksheets.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPageSetupCopyDemo
+// Loads an Excel file, extracts the PageSetup from a designated source sheet, then iterates through the remaining worksheets, applying the same print layout using PageSetup.Copy and saving the result.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook containing the source and target worksheets
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Define the source worksheet (e.g., the first worksheet)
+        int sourceIndex = 0;
+        PageSetup sourcePageSetup = workbook.Worksheets[sourceIndex].PageSetup;
+
+        // Loop through all worksheets and copy the page setup to each target worksheet
+        for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            // Create a new workbook and add several worksheets
-            Workbook workbook = new Workbook();
-            // Ensure we have at least 4 sheets (1 source + 3 targets)
-            workbook.Worksheets.Add("Target1");
-            workbook.Worksheets.Add("Target2");
-            workbook.Worksheets.Add("Target3");
+            // Skip the source worksheet itself
+            if (i == sourceIndex) continue;
 
-            // Reference to the source worksheet (first sheet)
-            Worksheet sourceSheet = workbook.Worksheets[0];
-
-            // Configure some page‑setup settings on the source sheet
-            sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
-            sourceSheet.PageSetup.Orientation = PageOrientationType.Landscape;
-            sourceSheet.PageSetup.FitToPagesWide = 1;
-            sourceSheet.PageSetup.FitToPagesTall = 0;
-            sourceSheet.PageSetup.PrintCopies = 2;
-
-            // Loop through the target worksheets (indexes 1 to Count‑1)
-            for (int i = 1; i < workbook.Worksheets.Count; i++)
-            {
-                Worksheet targetSheet = workbook.Worksheets[i];
-
-                // Copy the page‑setup settings from the source to the target
-                // Using default CopyOptions (no special behavior required)
-                targetSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
-
-                // Optional: rename the target sheet to indicate it received the settings
-                targetSheet.Name = $"CopiedFromSource_{i}";
-            }
-
-            // Save the workbook to verify the result
-            workbook.Save("PageSetupCopyResult.xlsx");
+            // Copy the page setup settings from the source worksheet to the current worksheet
+            workbook.Worksheets[i].PageSetup.Copy(sourcePageSetup, new CopyOptions());
         }
+
+        // Save the workbook with the updated page setup settings
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,55 +1,48 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPdfAttachmentDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("PDF with Embedded Image Attachment");
+
+        // Path to the image file that will be embedded
+        string imagePath = "sample.png";
+
+        // Ensure the image file exists (in a real scenario provide a valid image)
+        if (!File.Exists(imagePath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF with Embedded Image Attachment");
-
-            // Path to the image that will be embedded as an attachment
-            string imagePath = "sample.png";
-
-            // Ensure the image file exists; for demo purposes create a simple PNG if missing
-            if (!File.Exists(imagePath))
-            {
-                // Create a 1x1 pixel PNG (binary content)
-                byte[] pngBytes = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK2cAAAAASUVORK5CYII=");
-                File.WriteAllBytes(imagePath, pngBytes);
-            }
-
-            // Add the image as an OLE object (attachment) to the worksheet
-            // Parameters: row, column, width, height, byte[] of the file
-            int oleIndex = sheet.OleObjects.Add(5, 0, 200, 200, File.ReadAllBytes(imagePath));
-            // Specify the file format type of the embedded object
-            sheet.OleObjects[oleIndex].FileFormatType = FileFormatType.Png;
-            // Optionally display the attachment as an icon
-            sheet.OleObjects[oleIndex].DisplayAsIcon = true;
-
-            // Configure PDF save options to embed attachments
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                EmbedAttachments = true   // Enable embedding of OLE attachments
-            };
-
-            // Save the workbook as PDF with the embedded image attachment
-            string pdfPath = "WorkbookWithImageAttachment.pdf";
-            workbook.Save(pdfPath, pdfOptions);
-
-            // Clean up the temporary image file if it was created by this demo
-            if (File.Exists(imagePath))
-            {
-                File.Delete(imagePath);
-            }
-
-            Console.WriteLine($"PDF saved to '{pdfPath}' with the image embedded as an attachment.");
+            // Create a placeholder empty file for demonstration purposes
+            File.WriteAllBytes(imagePath, new byte[0]);
         }
+
+        // Read the image bytes
+        byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+        // Add the image as an OLE object to the worksheet
+        int oleIndex = sheet.OleObjects.Add(5, 5, 200, 200, imageBytes);
+        OleObject oleObject = sheet.OleObjects[oleIndex];
+        oleObject.FileFormatType = FileFormatType.Png;   // Specify the image format
+        oleObject.DisplayAsIcon = true;                  // Optional: display as an icon
+
+        // Configure PDF save options to embed OLE attachments
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            EmbedAttachments = true
+        };
+
+        // Save the workbook as a PDF with the embedded image attachment
+        workbook.Save("PdfWithEmbeddedImage.pdf", pdfOptions);
+
+        // Optional cleanup of the temporary image file
+        // File.Delete(imagePath);
     }
 }
+
+// Author: Example demonstrating how to embed an image as a PDF attachment using Aspose.Cells.

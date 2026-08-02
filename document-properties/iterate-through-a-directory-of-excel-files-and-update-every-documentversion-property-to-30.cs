@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
 namespace UpdateDocumentVersion
@@ -8,18 +9,32 @@ namespace UpdateDocumentVersion
     {
         static void Main(string[] args)
         {
-            // Path to the folder containing Excel files
-            string folderPath = @"C:\ExcelFiles";
+            // Path to the directory containing Excel files
+            string directoryPath = @"C:\Path\To\ExcelFiles";
 
-            // Get all Excel files in the folder (including .xls, .xlsx, .xlsm, .ods, etc.)
-            string[] excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
-            
-            foreach (string filePath in excelFiles)
+            // Verify that the directory exists
+            if (!Directory.Exists(directoryPath))
             {
-                // Filter only supported Excel extensions
-                string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm" && extension != ".xlsb" && extension != ".ods")
+                Console.WriteLine($"Directory not found: {directoryPath}");
+                return;
+            }
+
+            // Define the file extensions to process
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".ods", ".csv" };
+
+            // Get all files with the specified extensions
+            var excelFiles = Directory.GetFiles(directoryPath, "*.*", SearchOption.TopDirectoryOnly)
+                                      .Where(f => extensions.Any(ext => f.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                                      .ToList();
+
+            foreach (var filePath in excelFiles)
+            {
+                // Ensure the file still exists before processing
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found (skipped): {filePath}");
                     continue;
+                }
 
                 try
                 {
@@ -29,9 +44,9 @@ namespace UpdateDocumentVersion
                     // Update the built‑in DocumentVersion property
                     workbook.BuiltInDocumentProperties.DocumentVersion = "3.0";
 
-                    // Save the workbook back to the same file (overwrites original)
+                    // Save the workbook back to the same file
                     workbook.Save(filePath);
-                    
+
                     Console.WriteLine($"Updated DocumentVersion for: {Path.GetFileName(filePath)}");
                 }
                 catch (Exception ex)
@@ -39,6 +54,8 @@ namespace UpdateDocumentVersion
                     Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                 }
             }
+
+            Console.WriteLine("Processing completed.");
         }
     }
 }

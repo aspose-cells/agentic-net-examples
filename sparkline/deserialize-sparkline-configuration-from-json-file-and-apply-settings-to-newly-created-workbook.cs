@@ -1,34 +1,44 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Text.Json;
-using System.Drawing;
-using System.Globalization;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace SparklineFromJsonDemo
+namespace SparklineConfigDemo
 {
-    // Represents the JSON structure for a sparkline group configuration
+    // Classes that represent the JSON structure for sparkline configuration
     public class SparklineConfig
     {
-        public string? DataRange { get; set; }               // e.g. "A1:D1"
-        public string? LocationStart { get; set; }           // e.g. "E1"
-        public string? LocationEnd { get; set; }             // e.g. "E1" (same cell for single sparkline)
-        public bool IsVertical { get; set; }                 // false = by row, true = by column
-        public string? Type { get; set; }                    // "Line", "Column", "Stacked"
-        public string? SeriesColor { get; set; }             // Hex color, e.g. "#FF6600"
+        public string Type { get; set; }                     // "Line", "Column", or "Stacked"
+        public string DataRange { get; set; }                // e.g., "A1:D1"
+        public bool IsVertical { get; set; }                 // true = plot by column, false = by row
+        public CellAreaConfig LocationRange { get; set; }    // where the sparkline will be placed
+        public string SeriesColor { get; set; }              // hex color, e.g., "#FF8000"
         public bool ShowHighPoint { get; set; }
-        public string? HighPointColor { get; set; }          // Hex color
+        public string HighPointColor { get; set; }
         public bool ShowLowPoint { get; set; }
-        public string? LowPointColor { get; set; }           // Hex color
+        public string LowPointColor { get; set; }
         public bool ShowFirstPoint { get; set; }
-        public string? FirstPointColor { get; set; }         // Hex color
+        public string FirstPointColor { get; set; }
         public bool ShowLastPoint { get; set; }
-        public string? LastPointColor { get; set; }          // Hex color
+        public string LastPointColor { get; set; }
         public bool ShowMarkers { get; set; }
-        public string? MarkersColor { get; set; }            // Hex color
-        public double LineWeight { get; set; }               // Points
-        public string? PresetStyle { get; set; }             // e.g. "Style5"
+        public string MarkersColor { get; set; }
+        public bool ShowNegativePoints { get; set; }
+        public string NegativePointsColor { get; set; }
+        public bool DisplayHidden { get; set; }
+        public double LineWeight { get; set; }
+        public string PresetStyle { get; set; }              // e.g., "Style5"
+        public string PlotEmptyCellsType { get; set; }       // e.g., "Zero"
+    }
+
+    public class CellAreaConfig
+    {
+        public int StartRow { get; set; }
+        public int EndRow { get; set; }
+        public int StartColumn { get; set; }
+        public int EndColumn { get; set; }
     }
 
     class Program
@@ -37,135 +47,128 @@ namespace SparklineFromJsonDemo
         {
             try
             {
-                // Path to the JSON configuration file
-                const string jsonPath = "sparklineConfig.json";
+                // Path to the JSON file that contains sparkline configuration
+                string configPath = "sparklineConfig.json";
 
-                // Ensure the JSON file exists
-                if (!File.Exists(jsonPath))
+                // Verify that the configuration file exists
+                if (!File.Exists(configPath))
                 {
-                    Console.WriteLine($"Configuration file not found: {jsonPath}");
+                    Console.WriteLine($"Configuration file not found: {Path.GetFullPath(configPath)}");
                     return;
                 }
 
-                // Deserialize the JSON into a SparklineConfig object
-                SparklineConfig? config = JsonSerializer.Deserialize<SparklineConfig>(File.ReadAllText(jsonPath));
+                // Deserialize the JSON configuration
+                SparklineConfig config = JsonSerializer.Deserialize<SparklineConfig>(File.ReadAllText(configPath));
                 if (config == null)
                 {
                     Console.WriteLine("Failed to deserialize configuration.");
                     return;
                 }
 
-                // ---------- Create a new workbook (lifecycle rule: create) ----------
+                // ---------- Create a new workbook (create rule) ----------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate the data range referenced in the config (demo data)
-                if (!string.IsNullOrEmpty(config.DataRange))
-                {
-                    PopulateSampleData(sheet, config.DataRange);
-                }
+                // Populate some sample data that the sparkline will reference
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["B1"].PutValue(2);
+                sheet.Cells["C1"].PutValue(1);
+                sheet.Cells["D1"].PutValue(3);
+                sheet.Cells["E1"].PutValue(4);
 
-                // Convert the string type to the SparklineType enum
-                SparklineType sparklineType = config.Type switch
+                // Convert the location range from the config into a CellArea object
+                CellArea location = new CellArea
                 {
-                    "Line" => SparklineType.Line,
-                    "Column" => SparklineType.Column,
-                    "Stacked" => SparklineType.Stacked,
-                    _ => SparklineType.Line
+                    StartRow = config.LocationRange.StartRow,
+                    EndRow = config.LocationRange.EndRow,
+                    StartColumn = config.LocationRange.StartColumn,
+                    EndColumn = config.LocationRange.EndColumn
                 };
 
-                // Build the location CellArea from start/end cells
-                if (string.IsNullOrEmpty(config.LocationStart) || string.IsNullOrEmpty(config.LocationEnd))
-                {
-                    Console.WriteLine("LocationStart or LocationEnd is missing in configuration.");
-                    return;
-                }
+                // Parse the sparkline type enum from string
+                SparklineType sparklineType = (SparklineType)Enum.Parse(typeof(SparklineType), config.Type, true);
 
-                CellArea locationArea = CellArea.CreateCellArea(config.LocationStart, config.LocationEnd);
-
-                // Add the sparkline group (lifecycle rule: load – we are loading settings into the workbook)
-                int groupIdx = sheet.SparklineGroups.Add(sparklineType, config.DataRange, config.IsVertical, locationArea);
+                // Add a sparkline group using the loaded configuration (add method)
+                int groupIdx = sheet.SparklineGroups.Add(sparklineType, config.DataRange, config.IsVertical, location);
                 SparklineGroup group = sheet.SparklineGroups[groupIdx];
 
                 // Apply visual settings from the configuration
                 if (!string.IsNullOrEmpty(config.SeriesColor))
-                    group.SeriesColor = CreateCellsColor(workbook, config.SeriesColor);
+                {
+                    CellsColor seriesClr = workbook.CreateCellsColor();
+                    seriesClr.Color = ColorTranslator.FromHtml(config.SeriesColor);
+                    group.SeriesColor = seriesClr;
+                }
 
                 group.ShowHighPoint = config.ShowHighPoint;
                 if (config.ShowHighPoint && !string.IsNullOrEmpty(config.HighPointColor))
-                    group.HighPointColor = CreateCellsColor(workbook, config.HighPointColor);
+                {
+                    CellsColor highClr = workbook.CreateCellsColor();
+                    highClr.Color = ColorTranslator.FromHtml(config.HighPointColor);
+                    group.HighPointColor = highClr;
+                }
 
                 group.ShowLowPoint = config.ShowLowPoint;
                 if (config.ShowLowPoint && !string.IsNullOrEmpty(config.LowPointColor))
-                    group.LowPointColor = CreateCellsColor(workbook, config.LowPointColor);
+                {
+                    CellsColor lowClr = workbook.CreateCellsColor();
+                    lowClr.Color = ColorTranslator.FromHtml(config.LowPointColor);
+                    group.LowPointColor = lowClr;
+                }
 
                 group.ShowFirstPoint = config.ShowFirstPoint;
                 if (config.ShowFirstPoint && !string.IsNullOrEmpty(config.FirstPointColor))
-                    group.FirstPointColor = CreateCellsColor(workbook, config.FirstPointColor);
+                {
+                    CellsColor firstClr = workbook.CreateCellsColor();
+                    firstClr.Color = ColorTranslator.FromHtml(config.FirstPointColor);
+                    group.FirstPointColor = firstClr;
+                }
 
                 group.ShowLastPoint = config.ShowLastPoint;
                 if (config.ShowLastPoint && !string.IsNullOrEmpty(config.LastPointColor))
-                    group.LastPointColor = CreateCellsColor(workbook, config.LastPointColor);
+                {
+                    CellsColor lastClr = workbook.CreateCellsColor();
+                    lastClr.Color = ColorTranslator.FromHtml(config.LastPointColor);
+                    group.LastPointColor = lastClr;
+                }
 
                 group.ShowMarkers = config.ShowMarkers;
                 if (config.ShowMarkers && !string.IsNullOrEmpty(config.MarkersColor))
-                    group.MarkersColor = CreateCellsColor(workbook, config.MarkersColor);
-
-                if (config.LineWeight > 0)
-                    group.LineWeight = config.LineWeight;
-
-                if (!string.IsNullOrEmpty(config.PresetStyle) &&
-                    Enum.TryParse<SparklinePresetStyleType>(config.PresetStyle, out var preset))
                 {
-                    group.PresetStyle = preset;
+                    CellsColor markersClr = workbook.CreateCellsColor();
+                    markersClr.Color = ColorTranslator.FromHtml(config.MarkersColor);
+                    group.MarkersColor = markersClr;
                 }
 
-                // ---------- Save the workbook (lifecycle rule: save) ----------
-                const string outputPath = "SparklineFromJsonDemo.xlsx";
+                group.ShowNegativePoints = config.ShowNegativePoints;
+                if (config.ShowNegativePoints && !string.IsNullOrEmpty(config.NegativePointsColor))
+                {
+                    CellsColor negClr = workbook.CreateCellsColor();
+                    negClr.Color = ColorTranslator.FromHtml(config.NegativePointsColor);
+                    group.NegativePointsColor = negClr;
+                }
+
+                group.DisplayHidden = config.DisplayHidden;
+                group.LineWeight = config.LineWeight;
+
+                if (!string.IsNullOrEmpty(config.PresetStyle))
+                {
+                    group.PresetStyle = (SparklinePresetStyleType)Enum.Parse(typeof(SparklinePresetStyleType), config.PresetStyle, true);
+                }
+
+                if (!string.IsNullOrEmpty(config.PlotEmptyCellsType))
+                {
+                    group.PlotEmptyCellsType = (PlotEmptyCellsType)Enum.Parse(typeof(PlotEmptyCellsType), config.PlotEmptyCellsType, true);
+                }
+
+                // ---------- Save the workbook (save rule) ----------
+                string outputPath = "SparklineConfigured.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Helper to create a CellsColor from a hex string (e.g., "#FF6600")
-        private static CellsColor CreateCellsColor(Workbook wb, string hex)
-        {
-            // Remove leading '#' if present
-            if (hex.StartsWith("#"))
-                hex = hex.Substring(1);
-
-            // Parse ARGB (8 chars) or RGB (6 chars)
-            int argb = hex.Length == 8
-                ? int.Parse(hex, NumberStyles.HexNumber)
-                : (int.Parse(hex, NumberStyles.HexNumber) | unchecked((int)0xFF000000));
-
-            Color color = Color.FromArgb(argb);
-            CellsColor cellsColor = wb.CreateCellsColor();
-            cellsColor.Color = color;
-            return cellsColor;
-        }
-
-        // Simple method to fill the data range with incremental numbers for demo purposes
-        private static void PopulateSampleData(Worksheet sheet, string dataRange)
-        {
-            // Split the range string (e.g., "A1:D1") into start and end cell names
-            string[] parts = dataRange.Split(':', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length != 2)
-                throw new ArgumentException($"Invalid data range format: {dataRange}");
-
-            CellArea area = CellArea.CreateCellArea(parts[0], parts[1]);
-
-            int value = 1;
-            for (int row = area.StartRow; row <= area.EndRow; row++)
-            {
-                for (int col = area.StartColumn; col <= area.EndColumn; col++)
-                {
-                    sheet.Cells[row, col].PutValue(value++);
-                }
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

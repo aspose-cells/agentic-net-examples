@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class SetChartTickLabelDirection
+class Program
 {
     static void Main()
     {
@@ -12,13 +12,13 @@ class SetChartTickLabelDirection
         // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Iterate through all charts in the current worksheet
+            // Iterate through each chart in the current worksheet
             foreach (Chart chart in sheet.Charts)
             {
-                // Set tick label direction for the category (X) axis to Rotate90
+                // Set the tick label direction of the category (X) axis to Rotate90
                 chart.CategoryAxis.TickLabels.DirectionType = ChartTextDirectionType.Rotate90;
 
-                // Set tick label direction for the value (Y) axis to Rotate90
+                // Set the tick label direction of the value (Y) axis to Rotate90
                 chart.ValueAxis.TickLabels.DirectionType = ChartTextDirectionType.Rotate90;
             }
         }

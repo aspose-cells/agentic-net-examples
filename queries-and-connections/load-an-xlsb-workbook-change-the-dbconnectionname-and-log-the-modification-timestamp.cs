@@ -6,26 +6,27 @@ class Program
 {
     static void Main()
     {
-        // Paths to the input and output XLSB files
+        // Path to the source XLSB file
         string inputPath = "input.xlsb";
+
+        // Path for the modified workbook
         string outputPath = "output.xlsb";
 
         // Load the XLSB workbook
         Workbook workbook = new Workbook(inputPath);
 
-        // Iterate through all data connections and modify DBConnection names
-        foreach (ExternalConnection connection in workbook.DataConnections)
+        // Change the Name of each DBConnection in the workbook
+        foreach (ExternalConnection conn in workbook.DataConnections)
         {
-            if (connection is DBConnection dbConn)
+            if (conn is DBConnection dbConn)
             {
-                // Append a suffix to indicate modification
-                dbConn.Name = dbConn.Name + "_Modified";
+                // Set a new name (example uses a timestamp to ensure uniqueness)
+                dbConn.Name = "ModifiedConnection_" + DateTime.Now.Ticks;
             }
         }
 
-        // Log the modification timestamp as a custom document property
-        string propertyName = "DBConnectionModifiedTime";
-        workbook.CustomDocumentProperties.Add(propertyName, DateTime.Now);
+        // Log the modification timestamp
+        Console.WriteLine($"DBConnection name(s) modified at: {DateTime.Now:O}");
 
         // Save the modified workbook
         workbook.Save(outputPath);

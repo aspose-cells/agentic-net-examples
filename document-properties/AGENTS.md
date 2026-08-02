@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Read, add, update, remove, copy, and audit Excel workbook metadata in C#
 primary_apis: [BuiltInDocumentPropertyCollection, CustomDocumentPropertyCollection, DocumentProperty]
 related_categories: [../manage-workbook/, ../open-workbook/, ../save-workbook/]

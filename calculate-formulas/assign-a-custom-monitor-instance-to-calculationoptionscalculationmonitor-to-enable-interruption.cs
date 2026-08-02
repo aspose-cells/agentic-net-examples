@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomCalculationMonitor
+namespace AsposeCellsCalculationMonitorDemo
 {
     // Custom monitor to track formula calculation progress
     public class SampleCalculationMonitor : AbstractCalculationMonitor
@@ -20,24 +20,24 @@ namespace AsposeCellsCustomCalculationMonitor
 
         public override bool OnCircular(IEnumerator circularCellsData)
         {
+            // Handle circular references if needed; returning false continues calculation
             Console.WriteLine("Circular reference detected.");
-            // Return false to continue calculation despite circular reference
             return false;
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Set sample formulas
-            sheet.Cells["A1"].Formula = "=1+2";
-            sheet.Cells["A2"].Formula = "=A1*3";
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+            worksheet.Cells["A1"].Formula = "=1+2";
+            worksheet.Cells["A2"].Formula = "=A1*3";
+            worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
             // Create calculation options and assign the custom monitor
             CalculationOptions options = new CalculationOptions
@@ -48,10 +48,13 @@ namespace AsposeCellsCustomCalculationMonitor
             // Perform calculation with monitoring
             workbook.CalculateFormula(options);
 
-            // Output the results
-            Console.WriteLine($"A1: {sheet.Cells["A1"].Value}");
-            Console.WriteLine($"A2: {sheet.Cells["A2"].Value}");
-            Console.WriteLine($"A3: {sheet.Cells["A3"].Value}");
+            // Output calculated values
+            Console.WriteLine($"A1: {worksheet.Cells["A1"].Value}");
+            Console.WriteLine($"A2: {worksheet.Cells["A2"].Value}");
+            Console.WriteLine($"A3: {worksheet.Cells["A3"].Value}");
+
+            // Save the workbook (optional)
+            workbook.Save("CalculationMonitorResult.xlsx");
         }
     }
 }

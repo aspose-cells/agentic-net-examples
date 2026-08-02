@@ -1,8 +1,6 @@
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
 namespace AsposeCellsSmartMarkerAgeDemo
 {
@@ -10,62 +8,42 @@ namespace AsposeCellsSmartMarkerAgeDemo
     {
         static void Main()
         {
-            // -------------------------------------------------
-            // 1. Create a template workbook with smart markers
-            // -------------------------------------------------
-            Workbook templateWb = new Workbook();
-            Worksheet sheet = templateWb.Worksheets[0];
+            // ---------- Create template workbook ----------
+            Workbook template = new Workbook();
+            Worksheet sheet = template.Worksheets[0];
             Cells cells = sheet.Cells;
 
             // Header row
             cells["A1"].PutValue("BirthDate");
             cells["B1"].PutValue("Age");
 
-            // Smart marker for birthdate value
-            cells["A2"].PutValue("&=[People].BirthDate");
+            // Smart marker for the birthdate value
+            cells["A2"].PutValue("&=Employees.BirthDate");
 
-            // Smart marker with Formula to calculate age
-            // The formula uses DATEDIF to compute years between birthdate and today
-            // Note: The inner smart marker placeholder is escaped by using double quotes for the string argument
-            cells["B2"].PutValue("&=[People].BirthDate?Formula=DATEDIF(&=[People].BirthDate,TODAY(),\"Y\")");
+            // Smart marker with a formula that calculates age using DATEDIF
+            // The smart marker syntax for a formula is: &=\"=YourFormula\"
+            // Inside the formula we reference the birthdate smart marker again.
+            string ageFormulaSmartMarker = "&=\"=DATEDIF(&=Employees.BirthDate, TODAY(), \\\"Y\\\")\"";
+            cells["B2"].PutValue(ageFormulaSmartMarker);
 
-            // Save the template to a memory stream (no file I/O)
-            MemoryStream templateStream = new MemoryStream();
-            templateWb.Save(templateStream, SaveFormat.Xlsx);
-            templateStream.Position = 0; // Reset stream position for reading
+            // ---------- Prepare data source ----------
+            DataTable employees = new DataTable("Employees");
+            employees.Columns.Add("BirthDate", typeof(DateTime));
 
-            // -------------------------------------------------
-            // 2. Load the template into WorkbookDesigner
-            // -------------------------------------------------
+            // Sample birth dates
+            employees.Rows.Add(DateTime.Now.AddYears(-30));               // 30 years old
+            employees.Rows.Add(DateTime.Now.AddYears(-25).AddMonths(-3)); // 25 years old (approx)
+            employees.Rows.Add(DateTime.Now.AddYears(-45).AddDays(-10)); // 45 years old (approx)
+
+            // ---------- Process smart markers ----------
             WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = new Workbook(templateStream);
+            designer.Workbook = template;          // assign the template workbook
+            designer.SetDataSource(employees);     // bind the data source
+            designer.CalculateFormula = true;      // ensure formulas are calculated after binding
+            designer.Process();                    // populate smart markers and calculate formulas
 
-            // -------------------------------------------------
-            // 3. Prepare data source (DataTable with BirthDate column)
-            // -------------------------------------------------
-            DataTable peopleTable = new DataTable("People");
-            peopleTable.Columns.Add("BirthDate", typeof(DateTime));
-
-            // Sample data
-            peopleTable.Rows.Add(new DateTime(1990, 5, 15));
-            peopleTable.Rows.Add(new DateTime(1985, 12, 30));
-            peopleTable.Rows.Add(new DateTime(2000, 1, 1));
-
-            // Set the data source for the designer
-            designer.SetDataSource(peopleTable);
-
-            // Ensure formulas are calculated after processing
-            designer.CalculateFormula = true;
-
-            // -------------------------------------------------
-            // 4. Process smart markers
-            // -------------------------------------------------
-            designer.Process();
-
-            // -------------------------------------------------
-            // 5. Save the resulting workbook to a file
-            // -------------------------------------------------
-            designer.Workbook.Save("PeopleWithAge.xlsx");
+            // ---------- Save result ----------
+            designer.Workbook.Save("AgeSmartMarkerOutput.xlsx");
         }
     }
 }

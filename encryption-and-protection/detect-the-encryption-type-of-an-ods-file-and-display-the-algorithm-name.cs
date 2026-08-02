@@ -1,64 +1,38 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDetection
+namespace AsposeCellsEncryptionDemo
 {
     class Program
     {
         static void Main()
         {
             // Path to the ODS file to be examined
-            string odsFilePath = "sample.ods";
+            string odsPath = "sample.ods";
 
-            // Optional: password for the file if it is encrypted.
-            // If the file is not encrypted this value is ignored.
-            string password = "myPassword";
+            // Detect file format information, including encryption flag
+            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(odsPath);
 
-            // Verify that the file exists before proceeding
-            if (!File.Exists(odsFilePath))
+            // Determine if the file is encrypted
+            bool isEncrypted = formatInfo.IsEncrypted;
+
+            // ODS files use standard ODF encryption (AES). If not encrypted, report none.
+            string algorithmName = isEncrypted ? "AES (standard ODS encryption)" : "None";
+
+            Console.WriteLine($"Is the ODS file encrypted? {isEncrypted}");
+            Console.WriteLine($"Encryption algorithm: {algorithmName}");
+
+            // Optional: load the workbook to verify the Settings.IsEncrypted property
+            // (requires correct password if the file is encrypted)
+            LoadOptions loadOptions = new LoadOptions();
+            if (isEncrypted)
             {
-                Console.WriteLine($"File not found: {odsFilePath}");
-                return;
+                // Replace with the actual password if known
+                loadOptions.Password = "your_password";
             }
 
-            try
-            {
-                // ------------------------------------------------------------
-                // 1. Detect basic file format information (including encryption flag)
-                // ------------------------------------------------------------
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(odsFilePath);
-                Console.WriteLine($"File format detected: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Is encrypted (quick check): {formatInfo.IsEncrypted}");
-
-                // ------------------------------------------------------------
-                // 2. If the file is encrypted, load it with the supplied password.
-                //    Aspose.Cells does not expose the encryption algorithm for ODS files,
-                //    so we simply acknowledge that the file is encrypted.
-                // ------------------------------------------------------------
-                if (formatInfo.IsEncrypted)
-                {
-                    // LoadOptions allow us to specify the password required to open the file
-                    LoadOptions loadOptions = new LoadOptions
-                    {
-                        Password = password
-                    };
-
-                    // Load the workbook using the password
-                    Workbook workbook = new Workbook(odsFilePath, loadOptions);
-
-                    // Encryption algorithm information is not available for ODS via Aspose.Cells.
-                    Console.WriteLine("Encryption algorithm: Not exposed for ODS files.");
-                }
-                else
-                {
-                    Console.WriteLine("The ODS file is not encrypted.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Workbook workbook = new Workbook(odsPath, loadOptions);
+            Console.WriteLine($"Workbook.Settings.IsEncrypted: {workbook.Settings.IsEncrypted}");
         }
     }
 }

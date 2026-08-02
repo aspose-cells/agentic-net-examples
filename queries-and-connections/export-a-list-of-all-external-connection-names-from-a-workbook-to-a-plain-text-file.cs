@@ -3,65 +3,32 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsDemo
+class Program
 {
-    public class ExportExternalConnectionNames
+    static void Main(string[] args)
     {
-        // Exports all external connection names from the specified workbook to a plain text file.
-        public static void Run(string workbookPath, string outputTextFile)
+        // Path to the source workbook (replace with your actual file)
+        string workbookPath = "input.xlsx";
+
+        // Path to the output text file that will contain the connection names
+        string outputPath = "ExternalConnectionNames.txt";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Get the collection of external connections
+        ExternalConnectionCollection connections = workbook.DataConnections;
+
+        // Write each connection name to the text file
+        using (StreamWriter writer = new StreamWriter(outputPath))
         {
-            try
+            for (int i = 0; i < connections.Count; i++)
             {
-                // Verify workbook file exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.Error.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Retrieve external connections
-                ExternalConnectionCollection connections = workbook.DataConnections;
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputTextFile);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Write each connection name to the output file
-                using (StreamWriter writer = new StreamWriter(outputTextFile))
-                {
-                    for (int i = 0; i < connections.Count; i++)
-                    {
-                        writer.WriteLine(connections[i].Name);
-                    }
-                }
-
-                Console.WriteLine($"Exported {connections.Count} connection name(s) to {outputTextFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                // Each connection has a unique Name property
+                writer.WriteLine(connections[i].Name);
             }
         }
-    }
 
-    class Program
-    {
-        // Entry point required for compilation
-        static void Main(string[] args)
-        {
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: AsposeCellsDemo <workbookPath> <outputTextFile>");
-                return;
-            }
-
-            ExportExternalConnectionNames.Run(args[0], args[1]);
-        }
+        Console.WriteLine($"Exported {connections.Count} external connection name(s) to '{outputPath}'.");
     }
 }

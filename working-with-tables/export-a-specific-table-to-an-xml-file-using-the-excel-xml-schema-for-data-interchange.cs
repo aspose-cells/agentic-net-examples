@@ -1,97 +1,45 @@
+// Title: Export a Table Range to Excel XML with Aspose.Cells for .NET (C#)
+// Description: Shows how to build a workbook, populate a product table, configure XmlSaveOptions.ExportArea for A1:B4, optionally set the sheet name as the XML element, and save the selected range as an Excel‑compatible XML file (TableExport.xml) using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# XmlSaveOptions | Export range to XML | Excel XML schema | Export table to XML | Save worksheet as XML | CellArea ExportArea | Aspose.Cells example
+// Common Searches: Aspose.Cells export specific range to XML C# | How to use XmlSaveOptions ExportArea in .NET | Save Excel table as XML file using Aspose.Cells | C# code to export A1:B4 to Excel XML | Excel XML schema export with Aspose.Cells
+// Developer Intent: Save only the defined table (A1:B4) as an Excel XML file.
+// Use Cases: Create an XML data feed for a product catalog by exporting a subset of worksheet data. | Generate lightweight XML reports that contain only pricing information from a larger spreadsheet. | Provide an Excel‑compatible XML interchange format for downstream systems that consume specific table ranges.
+// AI Prompts: Generate code to export multiple tables from a workbook to separate XML files with Aspose.Cells. | Explain how to add custom XML namespaces when saving a worksheet using XmlSaveOptions. | Show how to read the produced TableExport.xml and validate it against the Excel XML schema.
+
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
 
-namespace AsposeCellsExportTableToXml
+// Shows how to build a workbook, populate a product table, configure XmlSaveOptions.ExportArea for A1:B4, optionally set the sheet name as the XML element, and save the selected range as an Excel‑compatible XML file (TableExport.xml) using Aspose.Cells for .NET.
+class ExportTableToXml
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate the worksheet with a sample table (header + data)
+        worksheet.Cells["A1"].PutValue("Product");
+        worksheet.Cells["B1"].PutValue("Price");
+        worksheet.Cells["A2"].PutValue("Laptop");
+        worksheet.Cells["B2"].PutValue(999.99);
+        worksheet.Cells["A3"].PutValue("Phone");
+        worksheet.Cells["B3"].PutValue(699.99);
+        worksheet.Cells["A4"].PutValue("Tablet");
+        worksheet.Cells["B4"].PutValue(450.75);
+
+        // Configure XML save options to export only the defined table area
+        XmlSaveOptions xmlOptions = new XmlSaveOptions
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Define the range A1:B4 (rows 0‑3, columns 0‑1)
+            ExportArea = new CellArea { StartRow = 0, EndRow = 3, StartColumn = 0, EndColumn = 1 },
+            // Export the sheet name as the XML element name (optional)
+            SheetNameAsElementName = true
+        };
 
-                // Populate sample data that will be part of the table
-                sheet.Cells["A1"].PutValue("Id");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["A2"].PutValue(1);
-                sheet.Cells["B2"].PutValue("Alice");
-                sheet.Cells["A3"].PutValue(2);
-                sheet.Cells["B3"].PutValue("Bob");
-                sheet.Cells["A4"].PutValue(3);
-                sheet.Cells["B4"].PutValue("Charlie");
+        // Save the workbook as an XML file using the Excel XML schema
+        workbook.Save("TableExport.xml", xmlOptions);
 
-                // Add a table (ListObject) covering the data range A1:B4
-                int firstRow = 0;      // zero‑based index for row 1
-                int firstColumn = 0;   // zero‑based index for column A
-                int totalRows = 4;
-                int totalColumns = 2;
-
-                // Add returns the index of the created ListObject
-                int tableIdx = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
-                ListObject table = sheet.ListObjects[tableIdx];
-                table.DisplayName = "PeopleTable";
-
-                // Define a simple XML schema that matches the table structure
-                string xmlSchema = @"
-                    <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                      <xs:element name='People'>
-                        <xs:complexType>
-                          <xs:sequence>
-                            <xs:element name='Person' maxOccurs='unbounded'>
-                              <xs:complexType>
-                                <xs:sequence>
-                                  <xs:element name='Id' type='xs:int'/>
-                                  <xs:element name='Name' type='xs:string'/>
-                                </xs:sequence>
-                              </xs:complexType>
-                            </xs:element>
-                          </xs:sequence>
-                        </xs:complexType>
-                      </xs:element>
-                    </xs:schema>";
-
-                // Add the XML map to the workbook using the schema
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "PeopleMap";
-
-                // Configure XML save options to export only the table range
-                XmlSaveOptions saveOptions = new XmlSaveOptions
-                {
-                    ExportArea = new CellArea
-                    {
-                        StartRow = table.DataRange.FirstRow,
-                        EndRow = table.DataRange.FirstRow + table.DataRange.RowCount - 1,
-                        StartColumn = table.DataRange.FirstColumn,
-                        EndColumn = table.DataRange.FirstColumn + table.DataRange.ColumnCount - 1
-                    },
-                    XmlMapName = xmlMap.Name,
-                    SheetNameAsElementName = true,
-                    DataAsAttribute = false
-                };
-
-                // Determine output path and ensure directory exists
-                string outputPath = "PeopleTableExport.xml";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as an XML file using the configured options
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Table exported successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        Console.WriteLine("Table exported successfully to TableExport.xml");
     }
 }

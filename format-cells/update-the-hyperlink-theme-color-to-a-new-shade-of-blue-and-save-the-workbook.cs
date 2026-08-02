@@ -1,52 +1,29 @@
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
 class UpdateHyperlinkThemeColor
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Define a new shade of blue for the hyperlink theme color (DodgerBlue)
-            Color newBlue = Color.FromArgb(30, 144, 255);
-            workbook.SetThemeColor(ThemeColorType.Hyperlink, newBlue);
+        // Define a new shade of blue for the Hyperlink theme color
+        Color newBlue = Color.FromArgb(0, 112, 192); // custom blue
 
-            // Get the first worksheet and target cell
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue("Aspose.Cells Hyperlink");
+        // Update the Hyperlink theme color
+        workbook.SetThemeColor(ThemeColorType.Hyperlink, newBlue);
 
-            // Create a style that uses the Hyperlink theme color
-            Style style = workbook.CreateStyle();
-            style.Font.ThemeColor = new ThemeColor(ThemeColorType.Hyperlink, 0);
-            style.Font.Underline = FontUnderlineType.Single;
-            cell.SetStyle(style);
+        // Demonstrate the theme color by applying it to a cell's font
+        Worksheet sheet = workbook.Worksheets[0];
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Hyperlink Example");
+        Style style = workbook.CreateStyle();
+        style.Font.ThemeColor = new ThemeColor(ThemeColorType.Hyperlink, 0);
+        cell.SetStyle(style);
 
-            // Add a hyperlink to the cell (A1)
-            // Note: Add method signature expects row/column parameters before the address in some versions
-            sheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.aspose.com");
-
-            // Save the workbook
-            string outputPath = "HyperlinkThemeColorUpdated.xlsx";
-
-            // Ensure the output directory exists (handle case when outputPath has no directory part)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook
+        workbook.Save("HyperlinkThemeUpdated.xlsx");
     }
 }

@@ -1,66 +1,36 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class ApplyCssToHeadingsDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Header 1");
-                sheet.Cells["B1"].PutValue("Header 2");
-                sheet.Cells["A2"].PutValue("Data 1");
-                sheet.Cells["B2"].PutValue("Data 2");
+        // Add some sample data
+        worksheet.Cells["A1"].PutValue("Header1");
+        worksheet.Cells["B1"].PutValue("Header2");
+        worksheet.Cells["A2"].PutValue("Data1");
+        worksheet.Cells["B2"].PutValue("Data2");
 
-                // Configure HTML save options with custom CSS for headings
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    ExportRowColumnHeadings = true,
-                    SaveAsSingleFile = true,
-                    CssStyles = @"
-.heading {
-    font-weight: bold;
-    color: #2A7AE2;
-    background-color: #E8F0FE;
-    text-align: center;
-}"
-                };
+        // Configure HTML export options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-                // Define output path
-                string outputPath = "WorkbookWithStyledHeadings.html";
+        // Export row and column headings (e.g., A, B, 1, 2)
+        htmlOptions.ExportRowColumnHeadings = true;
 
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+        // Define a CSS class that will be applied to heading cells.
+        // Aspose.Cells generates the class name "heading" for row/column headings.
+        htmlOptions.CssStyles = ".heading { font-weight: bold; color: #2A7AE2; }";
 
-                // Save workbook as HTML
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"HTML file saved to: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
+        // Optional: set a prefix for generated cell CSS classes (helps avoid name clashes)
+        htmlOptions.CellCssPrefix = "c";
 
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ApplyCssToHeadingsDemo.Run();
-        }
+        // Save the workbook as an HTML file with the custom heading style
+        workbook.Save("output_with_custom_headings.html", htmlOptions);
     }
 }
+
+// Author: Example demonstrating how to apply a custom CSS class to heading elements during HTML export.

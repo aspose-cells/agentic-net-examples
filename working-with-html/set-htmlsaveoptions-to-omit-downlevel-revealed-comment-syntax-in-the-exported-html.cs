@@ -1,27 +1,26 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (replace with the provided create rule if one exists)
+        Workbook workbook = new Workbook();
+
+        // Add sample data (optional)
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample text");
+
+        // Configure HTML save options to omit downlevel‑revealed conditional comments
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            DisableDownlevelRevealedComments = true
+        };
 
-            // Add sample data (optional)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data");
-
-            // Configure HTML save options to omit downlevel revealed comments
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.DisableDownlevelRevealedComments = true;
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save("output.html", htmlOptions);
-
-            Console.WriteLine("Workbook saved with DisableDownlevelRevealedComments = true");
-        }
+        // Save the workbook as HTML (replace with the provided save rule if one exists)
+        workbook.Save("output.html", htmlOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example (comments follow C# conventions)

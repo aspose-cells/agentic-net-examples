@@ -1,47 +1,40 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizationDemo
+class VerifyLocalizedFunction
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create customizable globalization settings
-            SettableGlobalizationSettings settings = new SettableGlobalizationSettings();
+        // Create globalization settings and map the standard "SUM" function to the French localized name "SOMME"
+        SettableGlobalizationSettings settings = new SettableGlobalizationSettings();
+        settings.SetLocalFunctionName("SUM", "SOMME", true);
 
-            // Map the standard English function name "SUM" to the French localized name "SOMME"
-            // bidirectional = true enables automatic reverse mapping (local -> standard)
-            settings.SetLocalFunctionName("SUM", "SOMME", true);
+        // Apply the settings to the workbook
+        workbook.Settings.GlobalizationSettings = settings;
 
-            // Apply the custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = settings;
+        // Verify the mapping using GetLocalFunctionName
+        string localizedName = settings.GetLocalFunctionName("SUM");
+        Console.WriteLine($"Localized name for 'SUM' is: {localizedName}");
 
-            // Verify the mapping by retrieving the localized name for "SUM"
-            string localizedName = settings.GetLocalFunctionName("SUM");
-            Console.WriteLine($"Localized name for 'SUM' is: {localizedName}");
+        // Populate some sample data
+        worksheet.Cells["B1"].PutValue(10);
+        worksheet.Cells["B2"].PutValue(20);
+        worksheet.Cells["B3"].PutValue(30);
 
-            // Populate sample data in column B (B1:B5)
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[$"B{i + 1}"].PutValue(i + 1); // Values 1,2,3,4,5
-            }
+        // Use the localized function name in a formula
+        worksheet.Cells["A1"].Formula = "=SOMME(B1:B3)";
 
-            // Use the localized function name in a formula
-            sheet.Cells["A1"].Formula = $"={localizedName}(B1:B5)";
+        // Calculate formulas
+        workbook.CalculateFormula();
 
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
+        // Output the calculation result
+        Console.WriteLine($"Result of localized formula in A1: {worksheet.Cells["A1"].Value}");
 
-            // Output the calculation result
-            Console.WriteLine($"Result of formula in A1 ({sheet.Cells["A1"].Formula}): {sheet.Cells["A1"].Value}");
-
-            // Save the workbook – when opened in Excel (with French locale) the formula will appear as =SOMME(...)
-            workbook.Save("LocalizedFunctionDemo.xlsx");
-        }
+        // Save the workbook – when opened in Excel with a matching locale, the formula will be recognized
+        workbook.Save("LocalizedFunctionDemo.xlsx");
     }
 }

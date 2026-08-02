@@ -1,70 +1,70 @@
 using System;
 using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
 namespace SmartMarkerStyleDemo
 {
-    // Callback that applies a predefined style to each cell populated by a smart marker
-    public class StyleApplyingCallback : ISmartMarkerCallBack
+    class Program
     {
-        private readonly Workbook _workbook;
-        private readonly Style _style;
-
-        public StyleApplyingCallback(Workbook workbook, Style style)
-        {
-            _workbook = workbook;
-            _style = style;
-        }
-
-        // This method is invoked for every smart‑marker cell during processing
-        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
-        {
-            // Retrieve the target cell and apply the custom style
-            Cell cell = _workbook.Worksheets[sheetIndex].Cells[rowIndex, colIndex];
-            cell.SetStyle(_style);
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
             // Load the template workbook that contains smart markers
             Workbook workbook = new Workbook("template.xlsx");
 
-            // -----------------------------------------------------------------
-            // Prepare a simple data source (replace with your actual source)
-            // -----------------------------------------------------------------
+            // Initialize WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
+
+            // ----- Prepare a sample data source -----
             DataTable dt = new DataTable("Employees");
             dt.Columns.Add("Name", typeof(string));
             dt.Columns.Add("Age", typeof(int));
-            dt.Rows.Add("John Doe", 30);
-            dt.Rows.Add("Jane Smith", 28);
+            dt.Columns.Add("Department", typeof(string));
 
-            // -----------------------------------------------------------------
-            // Create the custom style that will be applied after processing
-            // -----------------------------------------------------------------
+            dt.Rows.Add("John Doe", 30, "Sales");
+            dt.Rows.Add("Jane Smith", 28, "Marketing");
+            dt.Rows.Add("Bob Johnson", 45, "HR");
+
+            // Set the data source for the smart markers
+            designer.SetDataSource(dt);
+
+            // Process all smart markers in the workbook
+            designer.Process();
+
+            // ----- Create a custom style to be applied after processing -----
             Style customStyle = workbook.CreateStyle();
+            // Example: light yellow background with bold font
             customStyle.Pattern = BackgroundType.Solid;
             customStyle.ForegroundColor = System.Drawing.Color.LightYellow;
             customStyle.Font.IsBold = true;
-            customStyle.Font.Color = System.Drawing.Color.DarkBlue;
 
-            // -----------------------------------------------------------------
-            // Set up the WorkbookDesigner, data source, and the callback
-            // -----------------------------------------------------------------
-            WorkbookDesigner designer = new WorkbookDesigner
+            // Apply the custom style only to cells that already have a custom style
+            // (i.e., cells that were populated by smart markers and may have inherited formatting)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Workbook = workbook,
-                CallBack = new StyleApplyingCallback(workbook, customStyle)
-            };
-            designer.SetDataSource(dt);
+                Cells cells = sheet.Cells;
+                // Iterate through all used rows and columns
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-            // Process all smart markers; the callback will style each populated cell
-            designer.Process();
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        // Check if the cell currently has a custom style
+                        if (cell.HasCustomStyle)
+                        {
+                            // Apply the custom style while preserving explicitly set formatting
+                            cell.SetStyle(customStyle, true);
+                        }
+                    }
+                }
+            }
 
-            // Save the result workbook
+            // Save the resulting workbook
             workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }

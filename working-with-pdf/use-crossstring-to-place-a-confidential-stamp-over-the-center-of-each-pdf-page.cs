@@ -7,50 +7,36 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (you can also load an existing one)
-        Workbook workbook = new Workbook();
+        // Create a new workbook with a default worksheet
+        Workbook wb = new Workbook();
 
-        // Add some sample data to ensure multiple pages if needed
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        // Add sample content to demonstrate the watermark on each page
+        for (int i = 0; i < wb.Worksheets.Count; i++)
         {
-            Worksheet sheet = workbook.Worksheets[i];
-            sheet.Cells["A1"].PutValue($"Worksheet {i + 1}");
+            wb.Worksheets[i].Cells["A1"].PutValue($"Page {i + 1}");
         }
 
-        // Define a large, bold font for the stamp
-        RenderingFont font = new RenderingFont("Arial", 72)
-        {
-            Bold = true,
-            Color = Color.Red
-        };
+        // Define the font for the watermark text
+        RenderingFont font = new RenderingFont("Arial", 72);
+        font.Bold = true;
+        font.Italic = true;
+        font.Color = Color.Red;
 
-        // Create a text watermark with the desired appearance
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-        {
-            // Center the watermark on each page
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Center,
+        // Create the watermark with the desired text and font
+        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font);
+        watermark.HAlignment = TextAlignmentType.Center;   // Horizontal center
+        watermark.VAlignment = TextAlignmentType.Center;   // Vertical center
+        watermark.Rotation = 45f;                          // Diagonal (cross) orientation
+        watermark.Opacity = 0.3f;                          // Semi‑transparent
+        watermark.ScaleToPagePercent = 75;                 // Scale relative to page size
 
-            // Place it over the page content (foreground)
-            IsBackground = false,
+        // Apply the watermark via PDF save options
+        PdfSaveOptions options = new PdfSaveOptions();
+        options.Watermark = watermark;
 
-            // Optional rotation for visual effect
-            Rotation = 45,
-
-            // Make it semi‑transparent
-            Opacity = 0.3f,
-
-            // Scale relative to the page size
-            ScaleToPagePercent = 75
-        };
-
-        // Configure PDF save options to use the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as PDF; the watermark will appear on every page
-        workbook.Save("ConfidentialStamped.pdf", pdfOptions);
+        // Save the workbook as a PDF with the watermark applied to every page
+        wb.Save("ConfidentialStamped.pdf", options);
     }
 }
+
+// Author: Aspose.Cells .NET example – confidential watermark implementation.

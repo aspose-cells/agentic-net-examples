@@ -3,37 +3,36 @@ using Aspose.Cells;
 
 namespace AutoFitMergedCellsDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a long text into the top‑left cell
-            worksheet.Cells["A1"].PutValue("This is a sample text for merged cells auto‑fit demonstration. " +
-                                          "It is intentionally long to require row height adjustment when the cells are merged.");
+            // Put a long text into a cell and merge a range of cells (A1:B3)
+            sheet.Cells["A1"].PutValue("This is a sample text for merged cells auto‑fit demonstration. It should wrap and cause the row height to adjust based on the selected AutoFitMergedCellsType.");
+            sheet.Cells.Merge(0, 0, 3, 2); // Merge A1:B3
 
-            // Merge a range of cells (A1:B3)
-            worksheet.Cells.Merge(0, 0, 3, 2); // rows 0‑2, columns 0‑1
-
-            // Enable text wrapping so the content can span multiple lines
-            Style style = worksheet.Cells["A1"].GetStyle();
+            // Enable text wrapping for the merged cell
+            Style style = sheet.Cells["A1"].GetStyle();
             style.IsTextWrapped = true;
-            worksheet.Cells["A1"].SetStyle(style);
+            sheet.Cells["A1"].SetStyle(style);
 
-            // Create AutoFitterOptions and set the merged‑cells handling type
+            // Configure AutoFitterOptions to expand the height of each row in the merged range
             AutoFitterOptions options = new AutoFitterOptions
             {
-                // Expand the height of each row that participates in the merged area
                 AutoFitMergedCellsType = AutoFitMergedCellsType.EachLine,
-                // Optional: treat wrapped text as paragraphs for better height calculation
                 AutoFitWrappedTextType = AutoFitWrappedTextType.Paragraph
             };
 
             // Auto‑fit all rows in the worksheet using the specified options
-            worksheet.AutoFitRows(options);
+            sheet.AutoFitRows(options);
+
+            // (Optional) Auto‑fit columns as well, using the same merged‑cell handling
+            sheet.AutoFitColumns(options);
 
             // Save the workbook to a file
             workbook.Save("AutoFitMergedCellsDemo.xlsx");

@@ -9,7 +9,7 @@ namespace AsposeCellsLookupDemo
     {
         static void Main()
         {
-            // Create a new workbook (creation rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
@@ -17,47 +17,38 @@ namespace AsposeCellsLookupDemo
             // Populate some sample data
             cells["A1"].PutValue("John");
             cells["B1"].PutValue(28);
-            cells["A2"].PutValue(DateTime.Now);
-            cells["B2"].PutValue(3.1415);
-            cells["C3"].PutValue(true);
+            cells["C1"].PutValue(DateTime.Now);
+            cells["A2"].PutValue("Alice");
+            cells["B2"].PutValue(34);
+            cells["C2"].PutValue(123.45);
 
-            // Dictionary to hold address -> value mapping
-            Dictionary<string, object> lookup = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            // Build a lookup dictionary: key = cell address (e.g., "A1"), value = cell.Value
+            Dictionary<string, object> cellLookup = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-            // Get enumerator for all cells in the worksheet (enumeration rule)
+            // Use the Cells.GetEnumerator method to iterate through all existing cells
             IEnumerator enumerator = cells.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                // Cast the current object to Cell
                 Cell cell = (Cell)enumerator.Current;
-
-                // Only add cells that actually contain a value
+                // Store only non‑null values; you can adjust this condition as needed
                 if (cell.Value != null)
                 {
-                    // Use cell.Name (e.g., "A1") as the key and cell.Value as the value
-                    lookup[cell.Name] = cell.Value;
+                    cellLookup[cell.Name] = cell.Value;
                 }
             }
 
-            // Demonstrate fast retrieval from the dictionary
-            Console.WriteLine("Lookup results:");
-            foreach (var kvp in lookup)
-            {
-                Console.WriteLine($"{kvp.Key} => {kvp.Value}");
-            }
-
-            // Example of retrieving a specific cell value by address
+            // Example of fast retrieval using the dictionary
             string addressToFind = "B1";
-            if (lookup.TryGetValue(addressToFind, out object foundValue))
+            if (cellLookup.TryGetValue(addressToFind, out object value))
             {
-                Console.WriteLine($"\nValue at {addressToFind}: {foundValue}");
+                Console.WriteLine($"Value at {addressToFind}: {value}");
             }
             else
             {
-                Console.WriteLine($"\nAddress {addressToFind} not found in the lookup table.");
+                Console.WriteLine($"Cell {addressToFind} not found or contains null.");
             }
 
-            // Save the workbook (save rule)
+            // Save the workbook (optional, just to demonstrate lifecycle)
             workbook.Save("LookupDemo.xlsx");
         }
     }

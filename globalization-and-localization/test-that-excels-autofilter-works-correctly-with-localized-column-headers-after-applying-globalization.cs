@@ -1,50 +1,65 @@
 using System;
 using Aspose.Cells;
 
-class AutoFilterLocalizationTest
+namespace AutoFilterLocalizationTest
 {
-    static void Main()
+    // Custom globalization settings (optional, demonstrates applying globalization)
+    public class CustomGlobalizationSettings : SettableGlobalizationSettings
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Apply custom globalization settings (optional, demonstrates usage)
-        SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
-        globalization.SetListSeparator(';');               // Example: change list separator
-        workbook.Settings.GlobalizationSettings = globalization;
-
-        // Localized column headers (e.g., French)
-        cells["A1"].PutValue("Produit");   // "Product"
-        cells["B1"].PutValue("Ventes");    // "Sales"
-
-        // Sample data with localized product names
-        cells["A2"].PutValue("Pomme");     // Apple
-        cells["B2"].PutValue(120);
-        cells["A3"].PutValue("Banane");    // Banana
-        cells["B3"].PutValue(80);
-        cells["A4"].PutValue("Orange");
-        cells["B4"].PutValue(150);
-        cells["A5"].PutValue("Pomme");     // Apple again
-        cells["B5"].PutValue(200);
-
-        // Define the autofilter range that includes the header row and data rows
-        worksheet.AutoFilter.Range = "A1:B5";
-
-        // Apply a filter on the first column (Produit) for the localized value "Pomme"
-        worksheet.AutoFilter.Filter(0, "Pomme");
-        worksheet.AutoFilter.Refresh();
-
-        // Verify which rows are hidden after filtering
-        // Row indices are zero‑based; row 0 is the header.
-        for (int row = 1; row <= 5; row++) // rows 1‑5 correspond to Excel rows 2‑6
+        public CustomGlobalizationSettings()
         {
-            bool isHidden = worksheet.Cells.Rows[row].IsHidden;
-            Console.WriteLine($"Row {row + 1} hidden: {isHidden}");
+            // Example: change the list separator to semicolon
+            this.SetListSeparator(';');
         }
+    }
 
-        // Save the workbook to verify the filter result
-        workbook.Save("AutoFilterLocalizationTest.xlsx");
+    public class Program
+    {
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Apply custom globalization settings to the workbook
+            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+
+            // Populate localized column headers (e.g., French)
+            cells["A1"].PutValue("Produit");   // "Product"
+            cells["B1"].PutValue("Ventes");    // "Sales"
+
+            // Add sample data rows
+            cells["A2"].PutValue("Apple");
+            cells["B2"].PutValue(1200);
+            cells["A3"].PutValue("Banane");
+            cells["B3"].PutValue(850);
+            cells["A4"].PutValue("Cerise");
+            cells["B4"].PutValue(430);
+            cells["A5"].PutValue("Datte");
+            cells["B5"].PutValue(670);
+
+            // Set the auto‑filter range (header row + data rows)
+            // Parameters: startRow, startColumn, endRow
+            // Here we filter column A (index 0) from row 0 to row 4 (5 rows total)
+            sheet.AutoFilter.SetRange(0, 0, 4);
+
+            // Apply a filter on the first column (fieldIndex 0) for the value "Banane"
+            sheet.AutoFilter.Filter(0, "Banane");
+
+            // Refresh the filter to hide rows that do not match the criteria
+            sheet.AutoFilter.Refresh();
+
+            // Verify that only the row with "Banane" remains visible
+            // (Rows are zero‑based; row 2 contains "Banane")
+            for (int row = 0; row <= sheet.Cells.MaxDataRow; row++)
+            {
+                bool hidden = sheet.Cells.Rows[row].IsHidden;
+                Console.WriteLine($"Row {row + 1} hidden: {hidden}");
+            }
+
+            // Save the workbook to verify the result
+            workbook.Save("AutoFilterLocalizedHeaders.xlsx");
+        }
     }
 }

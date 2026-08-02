@@ -1,60 +1,59 @@
+// Title: Set an external workbook reference formula with Aspose.Cells for .NET (C#)
+// Description: This example creates (or verifies) an external Excel file, adds it as an ExternalLink to a new workbook, and uses the SetFormula method (via the Formula property) to insert a formula in cell B2 that points to cell A1 on Sheet1 of the external workbook. The workbook is then saved.
+// Keywords: Aspose.Cells SetFormula external workbook | C# Aspose.Cells external link | reference another workbook Excel .NET | ExternalLink example Aspose.Cells | link external Excel file C# | GitHub Aspose.Cells external formula sample | global Excel automation
+// Common Searches: how to reference a cell in another workbook using Aspose.Cells C# | Aspose.Cells external link and formula tutorial | set formula to external Excel file with Aspose.Cells | C# code for external workbook formula Aspose.Cells
+// Developer Intent: Insert a formula that pulls data from a specific cell in an external Excel workbook using Aspose.Cells for .NET.
+// Use Cases: Build a consolidated financial dashboard that pulls key figures from departmental workbooks. | Create a master report that references lookup tables stored in separate Excel files. | Maintain a single source of truth for pricing data and link it to multiple analysis workbooks.
+// AI Prompts: Write C# code with Aspose.Cells to add an ExternalLink to a workbook and set a formula that references cell A1 of Sheet1 in the linked file. | Explain how to retrieve the index of an added ExternalLink and construct the correct formula string for SetFormula. | Suggest robust error‑handling strategies when the external workbook is missing or the link path is invalid while using SetFormula.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExternalFormulaDemo
 {
+    // This example creates (or verifies) an external Excel file, adds it as an ExternalLink to a new workbook, and uses the SetFormula method (via the Formula property) to insert a formula in cell B2 that points to cell A1 on Sheet1 of the external workbook. The workbook is then saved.
     class Program
     {
         static void Main()
         {
             try
             {
-                // ---------- Create an external workbook ----------
-                Workbook externalWb = new Workbook();
-                Worksheet extSheet = externalWb.Worksheets[0];
-                extSheet.Name = "Sheet1";
-                // Put a value that will be referenced from the main workbook
-                extSheet.Cells["A1"].PutValue(12345);
-                // Save the external workbook to a file
-                string externalFile = "ExternalData.xlsx";
-                externalWb.Save(externalFile, SaveFormat.Xlsx);
+                // Ensure the external workbook exists; create a simple one if missing
+                string externalFileName = "ExternalWorkbook.xlsx";
+                if (!File.Exists(externalFileName))
+                {
+                    var externalWb = new Workbook();
+                    Worksheet extSheet = externalWb.Worksheets[0];
+                    extSheet.Name = "Sheet1";
+                    extSheet.Cells["A1"].PutValue("External Value");
+                    externalWb.Save(externalFileName);
+                }
 
-                // Ensure the external file exists before creating a link
-                if (!File.Exists(externalFile))
-                    throw new FileNotFoundException($"External workbook not found: {externalFile}");
+                // Create the main workbook
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // ---------- Create the main workbook ----------
-                Workbook mainWb = new Workbook();
-                Worksheet mainSheet = mainWb.Worksheets[0];
-                mainSheet.Name = "MainSheet";
+                // Add an external link to the main workbook
+                string[] externalSheets = new string[] { "Sheet1" };
+                int linkIndex = workbook.Worksheets.ExternalLinks.Add(externalFileName, externalSheets);
+                ExternalLink externalLink = workbook.Worksheets.ExternalLinks[linkIndex];
 
-                // Add an external link to the external workbook
-                int linkIndex = mainWb.Worksheets.ExternalLinks.Add(externalFile, new[] { "Sheet1" });
-                ExternalLink extLink = mainWb.Worksheets.ExternalLinks[linkIndex];
+                // Optional: set the data source path if needed
+                // externalLink.DataSource = Path.GetFullPath(externalFileName);
 
-                // ---------- Set a formula that references the external workbook ----------
-                // The second argument indicates that this is not an array formula
-                Cell targetCell = mainSheet.Cells["B2"];
-                targetCell.SetFormula($"=[{externalFile}]Sheet1!A1", false);
+                // Set a formula that references cell A1 in the external workbook
+                sheet.Cells["B2"].Formula = "='[ExternalWorkbook.xlsx]Sheet1'!A1";
 
-                // ---------- Update the external data source and calculate ----------
-                mainWb.UpdateLinkedDataSource(new[] { externalWb });
-                mainWb.CalculateFormula();
+                // Save the workbook
+                string outputFile = "OutputWithExternalFormula.xlsx";
+                workbook.Save(outputFile);
 
-                // ---------- Output the result ----------
-                Console.WriteLine("Value in B2 (referencing external workbook): " + targetCell.Value);
-
-                // ---------- Save the main workbook ----------
-                mainWb.Save("MainWorkbookWithExternalFormula.xlsx", SaveFormat.Xlsx);
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine("File error: " + fnfEx.Message);
+                Console.WriteLine($"Workbook saved successfully as '{outputFile}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

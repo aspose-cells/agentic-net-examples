@@ -1,81 +1,52 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUtilities
+class WorkbookOptimizer
 {
-    /// <summary>
-    /// Utility that adjusts memory and calculation settings based on workbook size.
-    /// </summary>
-    public static class WorkbookOptimizer
+    // Optimizes a workbook by toggling calculation mode and memory setting based on total used cells.
+    public static void Optimize(string inputPath, string outputPath, long cellThreshold)
     {
-        /// <summary>
-        /// Loads a workbook, evaluates its size, toggles calculation mode and memory setting,
-        /// then saves the workbook.
-        /// </summary>
-        /// <param name="inputPath">Path to the source workbook file.</param>
-        /// <param name="outputPath">Path where the optimized workbook will be saved.</param>
-        /// <param name="cellCountThreshold">
-        /// Threshold of total cells (rows × columns) that determines when to switch to
-        /// memory‑optimized and manual calculation mode.
-        /// </param>
-        public static void Optimize(string inputPath, string outputPath, long cellCountThreshold)
+        // Load the workbook from the specified file.
+        Workbook workbook = new Workbook(inputPath);
+
+        // Estimate total used cells across all worksheets.
+        long totalCells = 0;
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load the workbook using default LoadOptions.
-            // (If needed, a custom LoadOptions can be supplied here.)
-            Workbook workbook = new Workbook(inputPath);
-
-            // Determine the total number of cells used in the workbook.
-            // This is a simple approximation: sum of (max data row + 1) * (max data column + 1)
-            // for each worksheet.
-            long totalCells = 0;
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // MaxDataRow/MaxDataColumn are zero‑based indices of the last used cell.
-                int rows = sheet.Cells.MaxDataRow + 1;
-                int cols = sheet.Cells.MaxDataColumn + 1;
-                totalCells += (long)rows * cols;
-            }
-
-            // Toggle settings based on the calculated size.
-            if (totalCells > cellCountThreshold)
-            {
-                // Large workbook: prefer lower memory usage and manual calculation.
-                workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-                // Optionally disable automatic calculation on save/open to avoid extra work.
-                workbook.Settings.FormulaSettings.CalculateOnSave = false;
-                workbook.Settings.FormulaSettings.CalculateOnOpen = false;
-            }
-            else
-            {
-                // Small workbook: keep default (automatic) calculation and normal memory mode.
-                workbook.Settings.MemorySetting = MemorySetting.Normal;
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-                workbook.Settings.FormulaSettings.CalculateOnSave = true;
-                workbook.Settings.FormulaSettings.CalculateOnOpen = true;
-            }
-
-            // Save the workbook to the specified output path.
-            workbook.Save(outputPath);
+            Cells cells = sheet.Cells;
+            // Approximate used area: (max row index + 1) * (max column index + 1)
+            totalCells += (long)(cells.MaxDataRow + 1) * (cells.MaxDataColumn + 1);
         }
 
-        // Example usage
-        public static void Main()
+        // If the workbook exceeds the threshold, switch to manual calculation and file‑cache memory mode.
+        // Otherwise, keep automatic calculation and normal memory mode.
+        if (totalCells > cellThreshold)
         {
-            // Path to an existing workbook.
-            string inputFile = "input.xlsx";
-
-            // Path where the optimized workbook will be written.
-            string outputFile = "output_optimized.xlsx";
-
-            // Define a threshold; e.g., 5 million cells.
-            long threshold = 5_000_000;
-
-            // Run the optimizer.
-            Optimize(inputFile, outputFile, threshold);
-
-            Console.WriteLine($"Workbook optimized and saved to '{outputFile}'.");
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            workbook.Settings.MemorySetting = MemorySetting.FileCache;
         }
+        else
+        {
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+            workbook.Settings.MemorySetting = MemorySetting.Normal;
+        }
+
+        // Save the optimized workbook to the output path.
+        workbook.Save(outputPath);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Example usage:
+        string inputFile = "input.xlsx";
+        string outputFile = "output.xlsx";
+        long cellCountThreshold = 100_000; // Adjust based on your performance criteria.
+
+        WorkbookOptimizer.Optimize(inputFile, outputFile, cellCountThreshold);
+
+        Console.WriteLine("Workbook optimization completed.");
     }
 }

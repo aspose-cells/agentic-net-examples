@@ -8,32 +8,34 @@ namespace AsposeCellsUnionRangeDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook with default worksheet
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet (index 0)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Add additional worksheets for demonstration
+            workbook.Worksheets.Add("Sheet2");
+            workbook.Worksheets.Add("Sheet3");
 
-            // Fill sample data in the cells that will be part of the union range
-            worksheet.Cells["G1"].PutValue("G1");
-            worksheet.Cells["G2"].PutValue("G2");
-            worksheet.Cells["G3"].PutValue("G3");
-            worksheet.Cells["I1"].PutValue("I1");
-            worksheet.Cells["I2"].PutValue("I2");
-            worksheet.Cells["I3"].PutValue("I3");
+            // Define a style to apply to the union range
+            Style unionStyle = workbook.CreateStyle();
+            unionStyle.ForegroundColor = Color.LightGreen;
+            unionStyle.Pattern = BackgroundType.Solid;
+            unionStyle.Font.IsBold = true;
+            unionStyle.Font.Color = Color.DarkBlue;
 
-            // Create a union range that combines G1:G3 and I1:I3 on the first worksheet
-            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("G1:G3,I1:I3", 0);
+            // Apply the style to the union range on each worksheet
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                // Create a union range that consists of columns G and I rows 1 to 3
+                UnionRange unionRange = workbook.Worksheets.CreateUnionRange("G1:G3,I1:I3", i);
 
-            // Define a style to apply to the entire union range (e.g., light green fill)
-            Style style = workbook.CreateStyle();
-            style.ForegroundColor = Color.LightGreen;
-            style.Pattern = BackgroundType.Solid;
+                // Set a sample value for the entire union range
+                unionRange.Value = $"Sheet{i + 1}";
 
-            // Apply the style to all cells in the union range
-            unionRange.ApplyStyle(style, new StyleFlag { All = true });
+                // Apply the defined style to the union range
+                unionRange.ApplyStyle(unionStyle, new StyleFlag { All = true });
+            }
 
-            // Save the workbook (lifecycle save)
+            // Save the workbook
             workbook.Save("UnionRangeBatchFormatting.xlsx");
         }
     }

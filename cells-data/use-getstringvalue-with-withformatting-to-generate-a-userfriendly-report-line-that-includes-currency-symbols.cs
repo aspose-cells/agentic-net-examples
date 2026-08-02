@@ -10,31 +10,31 @@ namespace AsposeCellsReportDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate product name
-            sheet.Cells["A2"].PutValue("Laptop");
+            // Put a numeric value that represents an amount
+            Cell amountCell = cells["B2"];
+            amountCell.PutValue(1234.56);
 
-            // Populate price value
-            sheet.Cells["B2"].PutValue(999.99);
+            // Apply a built‑in currency format (Number format index 4)
+            Style currencyStyle = amountCell.GetStyle();
+            currencyStyle.Number = 4; // Currency format
+            amountCell.SetStyle(currencyStyle);
 
-            // Apply built‑in currency format (Number = 4) to the price cell
-            Style priceStyle = sheet.Cells["B2"].GetStyle();
-            priceStyle.Number = 4; // Currency format
-            sheet.Cells["B2"].SetStyle(priceStyle);
+            // Retrieve the formatted string using GetStringValue with DisplayString strategy
+            string formattedAmount = amountCell.GetStringValue(CellValueFormatStrategy.DisplayString);
 
-            // Retrieve the formatted price using GetStringValue with DisplayString strategy
-            // This includes the currency symbol as it appears in Excel
-            string formattedPrice = sheet.Cells["B2"]
-                .GetStringValue(CellValueFormatStrategy.DisplayString);
+            // Build a user‑friendly report line that includes the currency symbol
+            string reportLine = $"Total Sales: {formattedAmount}";
 
-            // Build a user‑friendly report line
-            string reportLine = $"Product: {sheet.Cells["A2"].StringValue}, Price: {formattedPrice}";
-
-            // Output the report line
+            // Output the report line to the console
             Console.WriteLine(reportLine);
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("ProductReport.xlsx");
+            // Optionally, write the report line into another cell for demonstration
+            cells["A4"].PutValue(reportLine);
+
+            // Save the workbook (the file will contain the value and the report line)
+            workbook.Save("ReportDemo.xlsx");
         }
     }
 }

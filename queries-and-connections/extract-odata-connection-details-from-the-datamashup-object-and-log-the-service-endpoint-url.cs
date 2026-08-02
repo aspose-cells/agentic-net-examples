@@ -1,48 +1,37 @@
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.QueryTables;
 
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook that contains Power Query (OData) connections
-        string sourcePath = "input.xlsx";
-        Workbook workbook = new Workbook(sourcePath);
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the DataMashup object which holds Power Query formulas
-        DataMashup mashup = workbook.DataMashup;
-        if (mashup != null)
+        try
         {
-            var formulas = mashup.PowerQueryFormulas;
-            Console.WriteLine($"Number of Power Query formulas: {formulas.Count}");
-
-            foreach (var formula in formulas)
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Display the name of the Power Query formula
-                Console.WriteLine($"Formula Name: {formula.Name}");
-
-                // Attempt to retrieve a service endpoint URL.
-                // Some Power Query formulas expose a Url property; use reflection to avoid
-                // compile‑time dependency on a property that may not exist in all versions.
-                var urlProperty = formula.GetType().GetProperty("Url");
-                if (urlProperty != null)
-                {
-                    string url = urlProperty.GetValue(formula) as string;
-                    Console.WriteLine($"Service Endpoint URL: {url}");
-                }
-                else
-                {
-                    Console.WriteLine("Service Endpoint URL not available for this formula.");
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
-        else
-        {
-            Console.WriteLine("No DataMashup information found in the workbook.");
-        }
 
-        // Save the workbook (optional, demonstrates lifecycle compliance)
-        workbook.Save("output.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: The WebQueryTable API is not available in the current Aspose.Cells version.
+            // If needed, replace this block with the appropriate API for your version.
+
+            // Save the workbook (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

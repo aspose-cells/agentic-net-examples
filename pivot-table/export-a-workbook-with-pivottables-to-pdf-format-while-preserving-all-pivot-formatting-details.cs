@@ -1,88 +1,78 @@
 using System;
-using System.IO;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Saving;   // For PdfSaveOptions
 
 namespace AsposeCellsPivotPdfExport
 {
-    public class ExportPivotToPdf
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // 1. Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Region");
-                sheet.Cells["C1"].PutValue("Sales");
+            // 2. Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Region");
+            sheet.Cells["C1"].PutValue("Sales");
 
-                sheet.Cells["A2"].PutValue("Bike");
-                sheet.Cells["B2"].PutValue("North");
-                sheet.Cells["C2"].PutValue(1200);
+            sheet.Cells["A2"].PutValue("Bike");
+            sheet.Cells["B2"].PutValue("North");
+            sheet.Cells["C2"].PutValue(1200);
 
-                sheet.Cells["A3"].PutValue("Bike");
-                sheet.Cells["B3"].PutValue("South");
-                sheet.Cells["C3"].PutValue(800);
+            sheet.Cells["A3"].PutValue("Bike");
+            sheet.Cells["B3"].PutValue("South");
+            sheet.Cells["C3"].PutValue(800);
 
-                sheet.Cells["A4"].PutValue("Car");
-                sheet.Cells["B4"].PutValue("North");
-                sheet.Cells["C4"].PutValue(1500);
+            sheet.Cells["A4"].PutValue("Car");
+            sheet.Cells["B4"].PutValue("North");
+            sheet.Cells["C4"].PutValue(1500);
 
-                sheet.Cells["A5"].PutValue("Car");
-                sheet.Cells["B5"].PutValue("South");
-                sheet.Cells["C5"].PutValue(1300);
+            sheet.Cells["A5"].PutValue("Car");
+            sheet.Cells["B5"].PutValue("South");
+            sheet.Cells["C5"].PutValue(1300);
 
-                // Add a pivot table to the worksheet
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // 3. Add a pivot table
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Configure pivot fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // 4. Configure pivot fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Preserve formatting when the pivot table is refreshed
-                pivotTable.PreserveFormatting = true;
+            // 5. Preserve formatting when the pivot is refreshed
+            pivotTable.PreserveFormatting = true;
 
-                // Apply a simple style to the data area (demonstrates formatting preservation)
-                Style dataStyle = workbook.CreateStyle();
-                dataStyle.Font.IsBold = true;
-                dataStyle.ForegroundColor = Color.LightYellow;
-                dataStyle.Pattern = BackgroundType.Solid;
-                pivotTable.Format(pivotTable.DataBodyRange, dataStyle);
+            // 6. Create a style and apply it to the data area of the pivot table
+            Style style = workbook.CreateStyle();
+            style.Font.Name = "Calibri";
+            style.Font.Size = 11;
+            style.Font.IsBold = true;
+            style.ForegroundColor = System.Drawing.Color.LightYellow;
+            style.Pattern = BackgroundType.Solid;
 
-                // Refresh all pivot tables in the workbook to ensure data is up‑to‑date
-                workbook.Worksheets.RefreshPivotTables();
+            // Apply the style to the data area using PivotFormats
+            pivotTable.PivotFormats.FormatArea(
+                PivotFieldType.Data,          // Target area
+                0,                            // Subtotal index (0 = no subtotal)
+                PivotFieldSubtotalType.None, // No subtotal
+                PivotTableSelectionType.DataAndLabel,
+                false,                        // Apply to row/column headers
+                false,                        // Apply to grand totals
+                style);
 
-                // Set PDF save options to retain document structure (helps keep pivot formatting)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    ExportDocumentStructure = true
-                };
+            // 7. Refresh all pivot tables to ensure data and formatting are up‑to‑date
+            workbook.Worksheets.RefreshPivotTables();
 
-                // Define output file path
-                string outputPath = "PivotTableExport.pdf";
+            // 8. Set PDF save options to retain document structure (helps keep pivot formatting)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            pdfOptions.ExportDocumentStructure = true;
 
-                // Save the workbook as PDF
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
+            // 9. Save the workbook as PDF
+            workbook.Save("PivotTableExport.pdf", pdfOptions);
         }
     }
 }

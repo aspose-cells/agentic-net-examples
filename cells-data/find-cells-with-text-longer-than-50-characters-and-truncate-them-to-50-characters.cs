@@ -1,47 +1,43 @@
 using System;
 using Aspose.Cells;
 
-class TruncateLongText
+namespace TruncateLongCellText
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            Cells cells = sheet.Cells;
+            // Path to the source Excel file
+            string inputPath = "input.xlsx";
 
-            // Determine the used range limits
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Load the workbook (default LoadOptions)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Loop through each cell in the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
+                Cells cells = sheet.Cells;
 
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in cells)
+                {
                     // Process only cells that contain string values
                     if (cell.Type == CellValueType.IsString)
                     {
                         string text = cell.StringValue;
                         if (!string.IsNullOrEmpty(text) && text.Length > 50)
                         {
-                            // Truncate the text to 50 characters
+                            // Truncate to the first 50 characters
                             string truncated = text.Substring(0, 50);
                             cell.PutValue(truncated);
                         }
                     }
                 }
             }
-        }
 
-        // Save the modified workbook
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+        }
     }
 }

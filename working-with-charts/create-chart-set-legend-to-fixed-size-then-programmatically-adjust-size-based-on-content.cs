@@ -1,9 +1,18 @@
+// Title: Aspose.Cells C# – Create a Column Chart and Dynamically Resize Its Legend
+// Description: This example shows how to build a workbook, add a column chart, turn off automatic legend sizing, calculate the chart to obtain legend labels, compute the required pixel width and height based on label length and count, and then apply those dimensions before saving the file.
+// Keywords: Aspose.Cells chart legend resize | C# dynamic legend size | GetLegendLabels Aspose.Cells | chart legend WidthPixel HeightPixel | disable automatic legend sizing | column chart Aspose.Cells .NET
+// Common Searches: Aspose.Cells resize chart legend programmatically | C# calculate legend width from label length | How to get legend labels in Aspose.Cells | Set fixed legend size then adjust in .NET | Dynamic legend dimensions for Excel chart
+// Developer Intent: Adjust a chart legend so its width and height automatically fit the longest label and total entries.
+// Use Cases: Generate Excel reports where the bottom legend expands to accommodate long series names without truncation. | Create dashboards that automatically increase legend height to prevent overlap when many series are displayed. | Build reusable chart components that start with a placeholder legend size and resize after data is known.
+// AI Prompts: Write C# code using Aspose.Cells to create a column chart and set the legend size based on the maximum label length returned by GetLegendLabels. | Provide a helper method that accepts a Chart object, calculates required WidthPixel and HeightPixel for the legend, and applies the values. | Explain the steps to disable automatic legend sizing, retrieve legend labels, and compute pixel dimensions for dynamic resizing in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsLegendResizeDemo
+namespace AsposeCellsLegendDynamicSize
 {
+    // This example shows how to build a workbook, add a column chart, turn off automatic legend sizing, calculate the chart to obtain legend labels, compute the required pixel width and height based on label length and count, and then apply those dimensions before saving the file.
     class Program
     {
         static void Main()
@@ -23,56 +32,42 @@ namespace AsposeCellsLegendResizeDemo
             sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the chart
             chart.SetChartDataRange("A1:B4", true);
 
-            // -----------------------------------------------------------------
-            // Step 1: Set legend to a fixed size (disable automatic sizing)
-            // -----------------------------------------------------------------
-            Legend legend = chart.Legend;
-            legend.IsAutomaticSize = false;          // Fixed size mode
-            legend.WidthPixel = 200;                  // Fixed width in pixels
-            legend.HeightPixel = 60;                  // Fixed height in pixels
-            legend.Position = LegendPositionType.Bottom;
-            legend.Font.Size = 12;
-            legend.Font.IsBold = true;
+            // Set legend to a fixed size initially
+            chart.Legend.IsAutomaticSize = false;               // disable automatic sizing
+            chart.Legend.Position = LegendPositionType.Bottom;  // place legend at bottom
+            chart.Legend.WidthPixel = 200;                      // provisional width
+            chart.Legend.HeightPixel = 50;                      // provisional height
 
-            // -----------------------------------------------------------------
-            // Step 2: Simulate a change that would affect legend content
-            // (e.g., add a longer series name)
-            // -----------------------------------------------------------------
-            // Add a second series with a long name to force legend to need more space
-            sheet.Cells["C1"].PutValue("Long Series Name Example");
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
-            chart.NSeries.Add("C2:C4", true);
-            chart.NSeries[1].Name = "Long Series Name Example";
+            // Calculate the chart so that legend labels are generated
+            chart.Calculate();
 
-            // -----------------------------------------------------------------
-            // Step 3: Adjust legend size based on the new content
-            // -----------------------------------------------------------------
-            // Enable automatic sizing, recalculate the chart, then capture the
-            // automatically determined size and apply it back as a fixed size.
-            legend.IsAutomaticSize = true;            // Let Excel compute needed size
-            chart.Calculate();                       // Force layout recalculation
+            // Retrieve legend labels after calculation
+            string[] legendLabels = chart.Legend.GetLegendLabels();
 
-            // Retrieve the automatically calculated size (in pixels)
-            int autoWidth = legend.WidthPixel;
-            int autoHeight = legend.HeightPixel;
+            // Determine the maximum label length
+            int maxLabelLength = 0;
+            foreach (string label in legendLabels)
+            {
+                if (label != null && label.Length > maxLabelLength)
+                    maxLabelLength = label.Length;
+            }
 
-            // Apply the calculated size as a fixed size again
-            legend.IsAutomaticSize = false;
-            legend.WidthPixel = autoWidth;
-            legend.HeightPixel = autoHeight;
+            // Approximate required width (7 pixels per character + padding)
+            int requiredWidth = maxLabelLength * 7 + 20;
 
-            // -----------------------------------------------------------------
+            // Approximate required height (15 pixels per entry + padding)
+            int requiredHeight = legendLabels.Length * 15 + 10;
+
+            // Adjust legend size based on content
+            chart.Legend.WidthPixel = requiredWidth;
+            chart.Legend.HeightPixel = requiredHeight;
+
             // Save the workbook
-            // -----------------------------------------------------------------
-            workbook.Save("ChartLegendAutoResizeDemo.xlsx");
+            workbook.Save("ChartLegendDynamicSize.xlsx");
         }
     }
 }

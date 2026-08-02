@@ -5,12 +5,12 @@ namespace AsposeCellsPasswordDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Path to the password‑protected Excel file
             string filePath = "protected.xlsx";
 
-            // The password to try opening the file with
+            // The password to use for opening the file (intentionally incorrect to trigger the exception)
             string password = "wrongPassword";
 
             // Configure load options with the supplied password
@@ -21,25 +21,31 @@ namespace AsposeCellsPasswordDemo
             {
                 // Attempt to load the workbook using the load options
                 Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // If loading succeeds, read a sample cell to verify access
-                object cellValue = workbook.Worksheets[0].Cells["A1"].Value;
-                Console.WriteLine($"Cell A1 value: {cellValue}");
+                Console.WriteLine("Workbook loaded successfully.");
+                // Additional processing can be placed here
             }
-            // Catch authentication failures specifically
             catch (CellsException ex) when (ex.Code == ExceptionType.IncorrectPassword)
             {
+                // Specific handling for authentication failures
                 Console.WriteLine("Authentication failed: Incorrect password.");
-                Console.WriteLine($"Exception Code: {ex.Code}");
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                Console.WriteLine($"Exception Code   : {ex.Code}");
+                Console.WriteLine($"Exception Message: {ex.Message}");
+                Console.WriteLine($"Stack Trace       : {ex.StackTrace}");
             }
-            // Catch any other unexpected exceptions
+            catch (CellsException ex)
+            {
+                // General Aspose.Cells related exceptions
+                Console.WriteLine("A CellsException was caught.");
+                Console.WriteLine($"Exception Code   : {ex.Code}");
+                Console.WriteLine($"Exception Message: {ex.Message}");
+                Console.WriteLine($"Stack Trace       : {ex.StackTrace}");
+            }
             catch (Exception ex)
             {
-                Console.WriteLine("An unexpected error occurred while loading the workbook.");
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                // Any other unexpected exceptions
+                Console.WriteLine("An unexpected exception occurred.");
+                Console.WriteLine($"Message   : {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             }
         }
     }

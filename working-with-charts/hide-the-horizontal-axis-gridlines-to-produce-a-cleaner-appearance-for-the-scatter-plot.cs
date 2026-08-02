@@ -1,7 +1,7 @@
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class HideScatterGridlines
+class HideScatterAxisGridlines
 {
     static void Main()
     {
@@ -9,7 +9,7 @@ class HideScatterGridlines
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the scatter plot (X and Y values)
+        // Populate sample data: column A = X values, column B = Y values
         sheet.Cells["A1"].PutValue("X");
         sheet.Cells["B1"].PutValue("Y");
         sheet.Cells["A2"].PutValue(1);
@@ -23,7 +23,7 @@ class HideScatterGridlines
         int chartIndex = sheet.Charts.Add(ChartType.Scatter, 5, 0, 20, 10);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Set the Y values for the series and bind the X values
+        // Define the series: Y values from column B, X values from column A
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries[0].XValues = "A2:A4";
 
@@ -31,7 +31,7 @@ class HideScatterGridlines
         chart.CategoryAxis.MajorGridLines.IsVisible = false;
         chart.CategoryAxis.MinorGridLines.IsVisible = false;
 
-        // Save the workbook with the modified chart
-        workbook.Save("ScatterNoGridlines.xlsx");
+        // Save the workbook
+        workbook.Save("Scatter_No_Horizontal_Gridlines.xlsx");
     }
 }

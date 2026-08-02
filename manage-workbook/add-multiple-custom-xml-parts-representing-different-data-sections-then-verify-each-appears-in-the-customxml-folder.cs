@@ -5,59 +5,51 @@ using System.IO.Compression;
 using Aspose.Cells;
 using Aspose.Cells.Markup;
 
-namespace AsposeCellsCustomXmlDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the CustomXmlPartCollection
+        CustomXmlPartCollection customXmlParts = workbook.CustomXmlParts;
+
+        // Define XML data for different sections
+        string xmlSection1 = "<Section1><Item>Value1</Item></Section1>";
+        string xmlSection2 = "<Section2><Item>Value2</Item></Section2>";
+        string xmlSection3 = "<Section3><Item>Value3</Item></Section3>";
+
+        // Convert XML strings to byte arrays
+        byte[] data1 = Encoding.UTF8.GetBytes(xmlSection1);
+        byte[] data2 = Encoding.UTF8.GetBytes(xmlSection2);
+        byte[] data3 = Encoding.UTF8.GetBytes(xmlSection3);
+
+        // Add custom XML parts (no schema data)
+        int index1 = customXmlParts.Add(data1, null);
+        int index2 = customXmlParts.Add(data2, null);
+        int index3 = customXmlParts.Add(data3, null);
+
+        // Assign unique IDs (optional, helps identification)
+        customXmlParts[index1].ID = Guid.NewGuid().ToString();
+        customXmlParts[index2].ID = Guid.NewGuid().ToString();
+        customXmlParts[index3].ID = Guid.NewGuid().ToString();
+
+        // Save the workbook to a file
+        string outputPath = "MultipleCustomXmlParts.xlsx";
+        workbook.Save(outputPath);
+
+        // Verify that each custom XML part appears in the customXml folder of the package
+        using (FileStream fs = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
+        using (ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Read))
         {
-            // Create a new workbook (creation rule)
-            Workbook workbook = new Workbook();
-
-            // Access the CustomXmlPartCollection
-            CustomXmlPartCollection customXmlParts = workbook.CustomXmlParts;
-
-            // Define multiple XML data sections
-            string[] xmlDatas = new string[]
+            Console.WriteLine("Custom XML parts found in the package:");
+            foreach (ZipArchiveEntry entry in archive.Entries)
             {
-                "<Section1><Item>Value1</Item></Section1>",
-                "<Section2><Item>Value2</Item></Section2>",
-                "<Section3><Item>Value3</Item></Section3>"
-            };
-
-            // Optional: define schemas (null in this example)
-            byte[] schemaBytes = null;
-
-            // Add each XML part to the workbook
-            foreach (string xml in xmlDatas)
-            {
-                byte[] xmlBytes = Encoding.UTF8.GetBytes(xml);
-                // Add method with byte[] data and optional schema (add rule)
-                customXmlParts.Add(xmlBytes, schemaBytes);
-            }
-
-            // Save the workbook (save rule)
-            string outputPath = "MultipleCustomXmlParts.xlsx";
-            workbook.Save(outputPath);
-
-            // Verify the number of custom XML parts via the workbook API
-            Workbook reloadedWorkbook = new Workbook(outputPath); // load rule
-            Console.WriteLine("CustomXmlParts count (API): " + reloadedWorkbook.CustomXmlParts.Count);
-
-            // Verify each part appears in the customXml folder inside the package
-            using (ZipArchive archive = ZipFile.OpenRead(outputPath))
-            {
-                int customXmlEntryCount = 0;
-                Console.WriteLine("Entries in customXml folder:");
-                foreach (ZipArchiveEntry entry in archive.Entries)
+                if (entry.FullName.StartsWith("customXml/", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (entry.FullName.StartsWith("customXml/", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Console.WriteLine("- " + entry.FullName);
-                        customXmlEntryCount++;
-                    }
+                    Console.WriteLine(entry.FullName);
                 }
-                Console.WriteLine("CustomXml folder entry count: " + customXmlEntryCount);
             }
         }
     }

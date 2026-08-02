@@ -1,75 +1,45 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-namespace AsposeCellsBatchProcessing
+class AddSharedContentTypeProperty
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Directory containing the Excel files
+        string folderPath = @"C:\ExcelFiles";
+
+        // Define the shared content type property name, value and optional type
+        const string propertyName = "SharedProperty";
+        const string propertyValue = "SharedValue";
+        const string propertyType = "string";
+
+        // Iterate over all .xlsx files in the directory
+        foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsx"))
         {
-            try
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(filePath);
+
+            // Add the shared content type property (if it does not already exist)
+            bool exists = false;
+            foreach (ContentTypeProperty prop in workbook.ContentTypeProperties)
             {
-                // Directory containing the Excel workbooks
-                string folderPath = @"C:\Workbooks";
-
-                // Verify the directory exists
-                if (!Directory.Exists(folderPath))
+                if (prop.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine($"Folder not found: {folderPath}");
-                    return;
+                    exists = true;
+                    break;
                 }
-
-                // Define the shared content type property name and value
-                const string propertyName = "SharedProperty";
-                const string propertyValue = "SharedValue";
-
-                // Get all Excel files in the directory
-                string[] files = Directory.GetFiles(folderPath, "*.xlsx");
-
-                foreach (string filePath in files)
-                {
-                    // Ensure the file still exists before processing
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found: {filePath}");
-                        continue;
-                    }
-
-                    try
-                    {
-                        // Load the workbook (will throw if the file is password‑protected)
-                        Workbook workbook = new Workbook(filePath);
-
-                        // Add the shared content type property
-                        workbook.ContentTypeProperties.Add(propertyName, propertyValue);
-
-                        // Overwrite the original file
-                        workbook.Save(filePath);
-
-                        Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
-                    }
-                    catch (Exception ex)
-                    {
-                        // Detect password‑protected files by message content
-                        if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            Console.WriteLine($"Skipped password‑protected file: {Path.GetFileName(filePath)}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
-                        }
-                    }
-                }
-
-                Console.WriteLine("Content type property added to all applicable workbooks.");
             }
-            catch (Exception ex)
+
+            if (!exists)
             {
-                // Catch any unexpected errors in the overall process
-                Console.WriteLine($"Fatal error: {ex.Message}");
+                // Use the overload that specifies the property type
+                workbook.ContentTypeProperties.Add(propertyName, propertyValue, propertyType);
             }
+
+            // Save the workbook, overwriting the original file
+            workbook.Save(filePath);
         }
     }
 }

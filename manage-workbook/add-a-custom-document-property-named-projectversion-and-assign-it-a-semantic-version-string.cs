@@ -15,7 +15,7 @@ class AddCustomDocumentProperty
         // Display the added property value (optional)
         Console.WriteLine("ProjectVersion: " + workbook.CustomDocumentProperties["ProjectVersion"].Value);
 
-        // Save the workbook
+        // Save the workbook to a file
         workbook.Save("ProjectVersionDemo.xlsx", SaveFormat.Xlsx);
     }
 }

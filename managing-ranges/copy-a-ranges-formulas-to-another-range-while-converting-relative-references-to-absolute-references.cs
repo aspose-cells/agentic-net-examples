@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaCopy
@@ -9,85 +7,59 @@ namespace AsposeCellsFormulaCopy
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
 
-                // Populate source range A1:C3 with sample data and formulas
-                // A1 = 1, B1 = 2, C1 = 3
-                // A2 = =A1+1 (relative), B2 = =B1+1, C2 = =C1+1
-                // A3 = =A2+1, etc.
-                for (int row = 0; row < 3; row++)
+            // ---------- Populate source range with sample data and formulas ----------
+            // Source range: A1:C3
+            // A1 = 10, B1 = 20, C1 = 30
+            // A2 = =A1*2   (relative reference)
+            // B2 = =B1+5   (relative reference)
+            // C2 = =C1-3   (relative reference)
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["B1"].PutValue(20);
+            sheet.Cells["C1"].PutValue(30);
+            sheet.Cells["A2"].Formula = "=A1*2";
+            sheet.Cells["B2"].Formula = "=B1+5";
+            sheet.Cells["C2"].Formula = "=C1-3";
+
+            // Destination range starts at E1 (same size as source)
+            int destFirstRow = 0;   // row index for E1
+            int destFirstColumn = 4; // column index for E (0‑based)
+
+            // ---------- Copy formulas with conversion to absolute references ----------
+            // Iterate through each cell in the source range
+            for (int row = 0; row < 2; row++)          // only rows with formulas (A2:C2)
+            {
+                for (int col = 0; col < 3; col++)      // columns A‑C
                 {
-                    for (int col = 0; col < 3; col++)
+                    Cell srcCell = sheet.Cells[row, col];
+                    if (!string.IsNullOrEmpty(srcCell.Formula))
                     {
-                        if (row == 0)
-                        {
-                            // First row: put numeric values
-                            cells[row, col].PutValue(row * 3 + col + 1);
-                        }
-                        else
-                        {
-                            // Subsequent rows: set a simple relative formula referencing the cell above
-                            string colLetter = CellsHelper.ColumnIndexToName(col);
-                            string formula = $"={colLetter}{row}+1"; // e.g., =A1+1
-                            cells[row, col].Formula = formula;
-                        }
+                        // Convert the formula to absolute A1 style.
+                        // First convert to R1C1 using the source cell as base,
+                        // then convert back to A1 using the destination cell as base.
+                        // This yields absolute references relative to the destination.
+                        string r1c1 = sheet.ConvertFormulaReferenceStyle(srcCell.Formula, true,
+                                                                         srcCell.Row, srcCell.Column);
+                        string absoluteA1 = sheet.ConvertFormulaReferenceStyle(r1c1, false,
+                                                                                destFirstRow + row,
+                                                                                destFirstColumn + col);
+
+                        // Set the absolute formula into the destination cell
+                        Cell destCell = sheet.Cells[destFirstRow + row, destFirstColumn + col];
+                        destCell.SetFormula(absoluteA1, new FormulaParseOptions());
+
+                        // Optional: copy the calculated value immediately
+                        // (useful if you want values without recalculating later)
+                        destCell.Value = srcCell.Value;
                     }
                 }
-
-                // Define source and destination ranges (use fully qualified Aspose.Cells.Range to avoid ambiguity)
-                Aspose.Cells.Range sourceRange = cells.CreateRange("A1:C3");
-                Aspose.Cells.Range destRange = cells.CreateRange("E1:G3");
-
-                // Iterate through each cell in the source range,
-                // convert its formula to absolute references, and set it in the destination range.
-                for (int i = 0; i < sourceRange.RowCount; i++)
-                {
-                    for (int j = 0; j < sourceRange.ColumnCount; j++)
-                    {
-                        Cell srcCell = sourceRange[i, j];
-                        Cell dstCell = destRange[i, j];
-
-                        if (srcCell.IsFormula)
-                        {
-                            // Get the original formula (A1 style)
-                            string originalFormula = srcCell.Formula;
-
-                            // Convert relative references (e.g., A1) to absolute references (e.g., $A$1)
-                            // Regex adds $ before column letters and row numbers.
-                            string absoluteFormula = Regex.Replace(
-                                originalFormula,
-                                @"([A-Z]+)(\d+)",
-                                @"$$$1$$$2");
-
-                            // Set the absolute formula in the destination cell.
-                            dstCell.SetFormula(absoluteFormula, new FormulaParseOptions());
-                        }
-                        else
-                        {
-                            // If the source cell does not contain a formula, copy its value.
-                            dstCell.PutValue(srcCell.Value);
-                        }
-                    }
-                }
-
-                // Recalculate formulas to reflect the new values.
-                workbook.CalculateFormula();
-
-                // Save the workbook (ensure the directory exists)
-                string outputPath = "FormulaCopyAbsolute.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // ---------- Save the workbook ----------
+            wb.Save("FormulaCopyAbsolute.xlsx");
         }
     }
 }

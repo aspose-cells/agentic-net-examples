@@ -7,36 +7,35 @@ namespace AsposeCellsTrendlineExample
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the line chart
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(20);
-            worksheet.Cells["A3"].PutValue(30);
-            worksheet.Cells["A4"].PutValue(40);
-            worksheet.Cells["B1"].PutValue(15);
-            worksheet.Cells["B2"].PutValue(25);
-            worksheet.Cells["B3"].PutValue(35);
-            worksheet.Cells["B4"].PutValue(45);
+            worksheet.Cells["A1"].PutValue(1);
+            worksheet.Cells["A2"].PutValue(2);
+            worksheet.Cells["A3"].PutValue(3);
+            worksheet.Cells["A4"].PutValue(4);
+            worksheet.Cells["B1"].PutValue(2);
+            worksheet.Cells["B2"].PutValue(4);
+            worksheet.Cells["B3"].PutValue(6);
+            worksheet.Cells["B4"].PutValue(8);
 
             // Add a line chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 8);
+            int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
             Chart chart = worksheet.Charts[chartIndex];
 
-            // Add the data series to the chart (Y values)
+            // Set the data source for the series (Y values) and categories (X values)
             chart.NSeries.Add("B1:B4", true);
-            // Set category (X) data
             chart.NSeries.CategoryData = "A1:A4";
 
             // Add a linear trendline to the first series
             int trendlineIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.Linear);
             Trendline trendline = chart.NSeries[0].TrendLines[trendlineIdx];
 
-            // Configure the trendline to display equation and R‑squared value
+            // Configure the trendline to display the equation and R‑squared value
             trendline.DisplayEquation = true;
             trendline.DisplayRSquared = true;
 

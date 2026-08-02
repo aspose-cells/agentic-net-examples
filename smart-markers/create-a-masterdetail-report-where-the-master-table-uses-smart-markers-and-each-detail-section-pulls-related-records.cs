@@ -1,91 +1,69 @@
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-namespace MasterDetailReportApp
+namespace MasterDetailSmartMarkers
 {
-    class MasterDetailReport
+    class Program
     {
         static void Main()
         {
-            try
-            {
-                // -------------------------------------------------
-                // 1. Create a template workbook and place smart markers
-                // -------------------------------------------------
-                Workbook template = new Workbook();
-                Worksheet ws = template.Worksheets[0];
+            // ----- Create a template workbook in memory -----
+            Workbook template = new Workbook();
+            Worksheet sheet = template.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                ws.Cells["A1"].PutValue("Order ID");
-                ws.Cells["B1"].PutValue("Order Date");
-                ws.Cells["C1"].PutValue("Product");
-                ws.Cells["D1"].PutValue("Quantity");
+            // Master table header (smart marker for master records)
+            // &="Orders" tells Aspose.Cells to repeat this row for each master row
+            cells["A1"].PutValue("&=\"Orders\"");
+            cells["A2"].PutValue("Order ID");
+            cells["B2"].PutValue("Order Date");
+            // Master data row
+            cells["A3"].PutValue("&=Orders.OrderID");
+            cells["B3"].PutValue("&=Orders.OrderDate");
 
-                ws.Cells["A2"].PutValue("&=Orders.OrderID");
-                ws.Cells["B2"].PutValue("&=Orders.OrderDate");
+            // Detail table header (smart marker for child records)
+            // &="Orders.Details" repeats this block for each master row's child rows
+            cells["A5"].PutValue("&=\"Orders.Details\"");
+            cells["A6"].PutValue("Product");
+            cells["B6"].PutValue("Quantity");
+            // Detail data rows
+            cells["A7"].PutValue("&=Orders.Details.ProductName");
+            cells["B7"].PutValue("&=Orders.Details.Quantity");
 
-                ws.Cells["C3"].PutValue("&=OrderDetails.ProductName");
-                ws.Cells["D3"].PutValue("&=OrderDetails.Quantity");
+            // ----- Prepare master‑detail data in a DataSet -----
+            DataSet ds = new DataSet();
 
-                // Define the range that contains all smart markers.
-                // The range must be named "_CellsSmartMarkers" for range smart markers.
-                Aspose.Cells.Range smartRange = ws.Cells.CreateRange("A2:D3");
-                smartRange.Name = "_CellsSmartMarkers";
+            // Master table
+            DataTable orders = new DataTable("Orders");
+            orders.Columns.Add("OrderID", typeof(int));
+            orders.Columns.Add("OrderDate", typeof(DateTime));
+            orders.Rows.Add(1, DateTime.Today.AddDays(-2));
+            orders.Rows.Add(2, DateTime.Today.AddDays(-1));
+            ds.Tables.Add(orders);
 
-                // -------------------------------------------------
-                // 2. Prepare master‑detail data in a DataSet
-                // -------------------------------------------------
-                DataSet ds = new DataSet();
+            // Detail table
+            DataTable details = new DataTable("Details");
+            details.Columns.Add("OrderID", typeof(int)); // foreign key
+            details.Columns.Add("ProductName", typeof(string));
+            details.Columns.Add("Quantity", typeof(int));
+            details.Rows.Add(1, "Apple", 10);
+            details.Rows.Add(1, "Banana", 5);
+            details.Rows.Add(2, "Orange", 8);
+            details.Rows.Add(2, "Grape", 12);
+            ds.Tables.Add(details);
 
-                // Master table: Orders
-                DataTable orders = new DataTable("Orders");
-                orders.Columns.Add("OrderID", typeof(int));
-                orders.Columns.Add("OrderDate", typeof(DateTime));
-                orders.Rows.Add(1, DateTime.Today);
-                orders.Rows.Add(2, DateTime.Today.AddDays(1));
-                ds.Tables.Add(orders);
+            // Define relation between master and detail
+            ds.Relations.Add("Orders_Details", orders.Columns["OrderID"], details.Columns["OrderID"]);
 
-                // Detail table: OrderDetails
-                DataTable orderDetails = new DataTable("OrderDetails");
-                orderDetails.Columns.Add("OrderID", typeof(int));          // Foreign key to Orders
-                orderDetails.Columns.Add("ProductName", typeof(string));
-                orderDetails.Columns.Add("Quantity", typeof(int));
-                orderDetails.Rows.Add(1, "Apple", 10);
-                orderDetails.Rows.Add(1, "Banana", 5);
-                orderDetails.Rows.Add(2, "Orange", 7);
-                ds.Tables.Add(orderDetails);
+            // ----- Process the template with smart markers -----
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = template;
+            designer.SetDataSource(ds);
+            designer.Process();
 
-                // Define relation between master and detail tables
-                ds.Relations.Add("Order_OrderDetails",
-                    orders.Columns["OrderID"]!,
-                    orderDetails.Columns["OrderID"]!);
-
-                // -------------------------------------------------
-                // 3. Bind the DataSet to the designer and process
-                // -------------------------------------------------
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = template // Assign the template workbook
-                };
-                designer.SetDataSource(ds); // Set the DataSet as the data source
-                designer.Process();         // Populate the smart markers
-
-                // -------------------------------------------------
-                // 4. Save the generated report
-                // -------------------------------------------------
-                string outputPath = "MasterDetailReport.xlsx";
-                designer.Workbook.Save(outputPath);
-                Console.WriteLine($"Report saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.Error.WriteLine($"File not found: {ex.FileName}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // ----- Save the result -----
+            designer.Workbook.Save("MasterDetailReport.xlsx");
         }
     }
 }

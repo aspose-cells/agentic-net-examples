@@ -1,86 +1,93 @@
+// Title: Combine Excel Workbooks with Aspose.Cells and Email the Merged File via System.Net.Mail (C#)
+// Description: C# sample that verifies two source Excel files, creates them if missing, merges the second workbook into the first using Aspose.Cells Workbook.Combine, saves the result, and sends it as an email attachment through System.Net.Mail with an SMTP client. Includes basic error handling for file I/O and SMTP transmission.
+// Keywords: Aspose.Cells combine workbooks | C# merge Excel files | Workbook.Combine Aspose | System.Net.Mail attachment | send Excel via SMTP | C# email attachment example | automated Excel reporting | merge and email Excel | Aspose.Cells .NET | SMTP client C#
+// Common Searches: how to merge two Excel files with Aspose.Cells C# | attach generated workbook to email using System.Net.Mail | send merged Excel workbook via SMTP in .NET | Aspose.Cells Workbook.Combine example | C# code to email an Excel file attachment
+// Developer Intent: The developer needs to combine multiple Excel workbooks using Aspose.Cells and automatically deliver the merged file as an email attachment through System.Net.Mail.
+// Use Cases: Daily consolidation of departmental spreadsheets and automatic distribution to management. | Batch processing of client‑uploaded Excel files, merging them into a single report, then emailing the result. | Workflow automation where a merged workbook triggers a notification email to stakeholders after successful processing.
+// AI Prompts: Generate C# code that merges an arbitrary number of Excel workbooks with Aspose.Cells and attaches the result to an email with configurable SMTP settings. | Add robust error handling and retry logic to the email‑sending block, including detailed logging and proper disposal of resources. | Show how to stream the merged workbook directly into a MailMessage attachment without writing a temporary file to disk.
+
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
 using Aspose.Cells;
 
-class MergeAndEmail
+namespace AsposeCellsEmailDemo
 {
-    static void Main()
+    // C# sample that verifies two source Excel files, creates them if missing, merges the second workbook into the first using Aspose.Cells Workbook.Combine, saves the result, and sends it as an email attachment through System.Net.Mail with an SMTP client. Includes basic error handling for file I/O and SMTP transmission.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Paths of the workbooks to be merged
-            string sourcePath1 = "Source1.xlsx";
-            string sourcePath2 = "Source2.xlsx";
-
-            // Verify source files exist
-            if (!File.Exists(sourcePath1))
-                throw new FileNotFoundException($"Source file not found: {sourcePath1}");
-            if (!File.Exists(sourcePath2))
-                throw new FileNotFoundException($"Source file not found: {sourcePath2}");
+            // Paths to the workbooks that need to be merged
+            string firstWorkbookPath = "FirstWorkbook.xlsx";
+            string secondWorkbookPath = "SecondWorkbook.xlsx";
 
             // Path for the merged workbook
-            string mergedPath = "MergedWorkbook.xlsx";
+            string mergedWorkbookPath = "MergedWorkbook.xlsx";
 
-            // Load the source workbooks
-            using (Workbook sourceWorkbook1 = new Workbook(sourcePath1))
-            using (Workbook sourceWorkbook2 = new Workbook(sourcePath2))
-            // Create an empty destination workbook
-            using (Workbook destWorkbook = new Workbook())
+            try
             {
-                // Combine the source workbooks into the destination workbook
-                destWorkbook.Combine(sourceWorkbook1);
-                destWorkbook.Combine(sourceWorkbook2);
-
-                // Save the merged workbook
-                destWorkbook.Save(mergedPath, SaveFormat.Xlsx);
-            }
-
-            // Email configuration (replace with valid values)
-            string smtpHost = "smtp.example.com";
-            int smtpPort = 587;
-            string smtpUser = "user@example.com";
-            string smtpPass = "password";
-
-            string fromAddress = "user@example.com";
-            string toAddress = "recipient@example.com";
-            string subject = "Merged Workbook";
-            string body = "Please find the merged workbook attached.";
-
-            // Create the email message
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(fromAddress);
-                mail.To.Add(toAddress);
-                mail.Subject = subject;
-                mail.Body = body;
-
-                // Attach the merged workbook file
-                if (!File.Exists(mergedPath))
-                    throw new FileNotFoundException($"Merged file not found: {mergedPath}");
-                mail.Attachments.Add(new Attachment(mergedPath));
-
-                // Send the email
-                using (SmtpClient client = new SmtpClient(smtpHost, smtpPort))
+                // Ensure source workbooks exist; create empty ones if missing
+                if (!File.Exists(firstWorkbookPath))
                 {
-                    client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(smtpUser, smtpPass);
-                    client.Send(mail);
+                    new Workbook().Save(firstWorkbookPath, SaveFormat.Xlsx);
+                }
+
+                if (!File.Exists(secondWorkbookPath))
+                {
+                    new Workbook().Save(secondWorkbookPath, SaveFormat.Xlsx);
+                }
+
+                // Load the first workbook (destination)
+                Workbook destWorkbook = new Workbook(firstWorkbookPath);
+
+                // Load the second workbook (source)
+                Workbook sourceWorkbook = new Workbook(secondWorkbookPath);
+
+                // Combine the source workbook into the destination workbook
+                destWorkbook.Combine(sourceWorkbook);
+
+                // Save the merged workbook to disk
+                destWorkbook.Save(mergedWorkbookPath, SaveFormat.Xlsx);
+
+                // Prepare the email message
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress("sender@example.com");
+                    mail.To.Add("recipient@example.com");
+                    mail.Subject = "Merged Workbook Attachment";
+                    mail.Body = "Please find the merged workbook attached.";
+
+                    // Attach the merged workbook file
+                    using (Attachment attachment = new Attachment(mergedWorkbookPath))
+                    {
+                        mail.Attachments.Add(attachment);
+
+                        // Configure the SMTP client (replace with actual SMTP server details)
+                        using (SmtpClient smtp = new SmtpClient("smtp.example.com", 587))
+                        {
+                            smtp.Credentials = new NetworkCredential("smtp_user", "smtp_password");
+                            smtp.EnableSsl = true;
+
+                            try
+                            {
+                                // Send the email
+                                smtp.Send(mail);
+                                Console.WriteLine("Email sent with merged workbook attached.");
+                            }
+                            catch (SmtpException smtpEx)
+                            {
+                                Console.WriteLine($"Failed to send email: {smtpEx.Message}");
+                            }
+                        }
+                    }
                 }
             }
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.Error.WriteLine($"File error: {fnfEx.Message}");
-        }
-        catch (SmtpException smtpEx)
-        {
-            Console.Error.WriteLine($"SMTP error: {smtpEx.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

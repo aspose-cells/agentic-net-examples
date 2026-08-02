@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotHideFieldDemo
+namespace AsposeCellsPivotFieldHideDemo
 {
     public class Program
     {
@@ -15,35 +15,40 @@ namespace AsposeCellsPivotHideFieldDemo
 
             // Populate sample data for the pivot table
             cells["A1"].Value = "Product";
-            cells["A2"].Value = "Apple";
-            cells["A3"].Value = "Banana";
-            cells["A4"].Value = "Apple";
-            cells["A5"].Value = "Orange";
+            cells["B1"].Value = "Region";
+            cells["C1"].Value = "Sales";
 
-            cells["B1"].Value = "Sales";
-            cells["B2"].Value = 1200;
-            cells["B3"].Value = 800;
-            cells["B4"].Value = 1500;
-            cells["B5"].Value = 2000;
+            cells["A2"].Value = "Apple";
+            cells["B2"].Value = "North";
+            cells["C2"].Value = 1200;
+
+            cells["A3"].Value = "Apple";
+            cells["B3"].Value = "South";
+            cells["C3"].Value = 800;
+
+            cells["A4"].Value = "Banana";
+            cells["B4"].Value = "North";
+            cells["C4"].Value = 1500;
+
+            cells["A5"].Value = "Banana";
+            cells["B5"].Value = "South";
+            cells["C5"].Value = 700;
 
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add the "Product" field to the row area and "Sales" to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");   // Row field we will hide later
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Region"); // Column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");    // Data field
 
-            // Retrieve the row field we want to hide
-            PivotField productField = pivotTable.RowFields[0];
+            // Hide the "Product" field from the report area.
+            // This is achieved by removing the field from its current area (Row).
+            // The RemoveField method matches the available rule.
+            pivotTable.RemoveField(PivotFieldType.Row, "Product");
 
-            // Hide all items of the field, effectively making the field invisible in the report area
-            for (int i = 0; i < productField.ItemCount; i++)
-            {
-                productField.HideItem(i, true);
-            }
-
-            // Refresh and calculate the pivot table after modifications
+            // Refresh and calculate the pivot table after modification
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 

@@ -1,71 +1,92 @@
+// Title: Aspose.Cells for .NET – Add Multiple Series to a Column Chart and Freeze Source Rows
+// Description: Shows how to build a workbook, fill rows 1‑6 with category labels and three numeric series, create a column chart with three vertical series, assign series names from the header row, freeze the first six rows using FreezePanes, and save the result as MultipleSeriesWithFreeze.xlsx.
+// Keywords: Aspose.Cells | .NET | C# | column chart | multiple series | NSeries.Add | set series names | FreezePanes | freeze rows | Excel automation | chart data source
+// Common Searches: Aspose.Cells add multiple series to chart | FreezePanes rows Aspose.Cells .NET | set chart series names from header Aspose.Cells | create column chart with categories Aspose.Cells | freeze top rows in Excel using Aspose.Cells
+// Developer Intent: Create a column chart with several data series and keep the source rows visible by freezing them.
+// Use Cases: Generate a month‑by‑month column chart for three products while the category and value rows stay fixed during scrolling. | Automatically pull series names from the header row so the chart legend updates when the header changes. | Freeze the first six rows of a worksheet to provide constant reference to source data in large spreadsheets.
+// AI Prompts: Write C# code with Aspose.Cells to create a line chart that pulls four series from columns B‑E and freezes rows 1‑5. | Explain each parameter of the FreezePanes method and how it determines the frozen area in Aspose.Cells for .NET. | Show how to iterate over all data columns in a worksheet and add each as a separate series to a chart using Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsMultipleSeriesWithFreeze
 {
-    static void Main()
+    // Shows how to build a workbook, fill rows 1‑6 with category labels and three numeric series, create a column chart with three vertical series, assign series names from the header row, freeze the first six rows using FreezePanes, and save the result as MultipleSeriesWithFreeze.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // ----- Fill worksheet with sample data -----
-            // Category labels
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["A5"].PutValue("D");
+                // -------------------------------------------------
+                // Populate sample data
+                // -------------------------------------------------
+                // Header row
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Series 1");
+                sheet.Cells["C1"].PutValue("Series 2");
+                sheet.Cells["D1"].PutValue("Series 3");
 
-            // First series values (column B)
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["B5"].PutValue(40);
+                // Data rows (rows 2 to 6)
+                string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+                int[,] values = {
+                    { 10, 15, 20 },
+                    { 20, 25, 30 },
+                    { 30, 35, 40 },
+                    { 40, 45, 50 },
+                    { 50, 55, 60 }
+                };
 
-            // Second series values (column C)
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
-            sheet.Cells["C5"].PutValue(45);
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    int row = i + 2; // Data starts at row 2
+                    sheet.Cells[$"A{row}"].PutValue(categories[i]);
+                    sheet.Cells[$"B{row}"].PutValue(values[i, 0]);
+                    sheet.Cells[$"C{row}"].PutValue(values[i, 1]);
+                    sheet.Cells[$"D{row}"].PutValue(values[i, 2]);
+                }
 
-            // ----- Add a column chart -----
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
+                // -------------------------------------------------
+                // Add a chart
+                // -------------------------------------------------
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 22, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Add multiple series
-            chart.NSeries.Add("=Sheet1!$B$2:$B$5", true); // Series 1
-            chart.NSeries.Add("=Sheet1!$C$2:$C$5", true); // Series 2
+                // Set the category (X‑axis) data for all series
+                chart.NSeries.CategoryData = "A2:A6";
 
-            // Set the category (X‑axis) data for the chart
-            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$5";
+                // Add multiple series (B, C, D columns) using the SeriesCollection.Add method
+                // Each call adds one series; the range is vertical (isVertical = true)
+                chart.NSeries.Add("B2:B6", true); // Series 1
+                chart.NSeries.Add("C2:C6", true); // Series 2
+                chart.NSeries.Add("D2:D6", true); // Series 3
 
-            // ----- Freeze rows that contain the series data -----
-            // Freeze rows 1‑5 (row index is 0‑based, so split at row 5)
-            // Provide total rows/columns to define the frozen area
-            int totalRows = sheet.Cells.MaxDataRow + 1;
-            int totalCols = sheet.Cells.MaxDataColumn + 1;
-            sheet.FreezePanes(5, 0, totalRows, totalCols);
+                // Optionally set series names from the header row
+                chart.NSeries.SetSeriesNames(0, "B1:D1", true);
 
-            // Ensure output directory exists
-            string outputPath = "MultipleSeriesWithFreeze.xlsx";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+                // -------------------------------------------------
+                // Freeze the rows that contain the series data (rows 1‑6)
+                // FreezePanes freezes rows above the specified row index.
+                // Use the 4‑parameter overload for compatibility with all Aspose.Cells versions.
+                // Parameters: row, column, totalRows, totalColumns.
+                // Setting totalRows and totalColumns to 0 keeps the default scrolling area.
+                // -------------------------------------------------
+                sheet.FreezePanes(7, 0, 0, 0);
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // -------------------------------------------------
+                // Save the workbook
+                // -------------------------------------------------
+                workbook.Save("MultipleSeriesWithFreeze.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

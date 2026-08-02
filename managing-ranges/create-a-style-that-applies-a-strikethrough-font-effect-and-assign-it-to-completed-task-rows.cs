@@ -1,57 +1,45 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+class ApplyStrikethroughToCompletedRows
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Sample data: column A contains task status
+        cells["A1"].PutValue("Task");
+        cells["B1"].PutValue("Status");
+        cells["A2"].PutValue("Task 1");
+        cells["B2"].PutValue("Completed");
+        cells["A3"].PutValue("Task 2");
+        cells["B3"].PutValue("In Progress");
+        cells["A4"].PutValue("Task 3");
+        cells["B4"].PutValue("Completed");
+
+        // Create a style with strikethrough font effect
+        Style strikeStyle = workbook.CreateStyle();
+        strikeStyle.Font.IsStrikeout = true; // enable strikeout
+
+        // Create a style flag indicating that the FontStrike property should be applied
+        StyleFlag flag = new StyleFlag();
+        flag.FontStrike = true;
+
+        // Apply the style to rows where the status is "Completed"
+        int lastRow = cells.MaxDataRow;
+        for (int row = 1; row <= lastRow; row++) // start from 1 to skip header
         {
-            try
+            if (cells[row, 1].StringValue.Equals("Completed", StringComparison.OrdinalIgnoreCase))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Sample data: tasks with a "Status" column (0 = pending, 1 = completed)
-                cells["A1"].PutValue("Task");
-                cells["B1"].PutValue("Status");
-                cells["A2"].PutValue("Design UI");
-                cells["B2"].PutValue(1); // completed
-                cells["A3"].PutValue("Write Code");
-                cells["B3"].PutValue(0); // pending
-                cells["A4"].PutValue("Test Application");
-                cells["B4"].PutValue(1); // completed
-
-                // Create a style that applies a single strikethrough
-                Style strikeStyle = workbook.CreateStyle();
-                strikeStyle.Font.IsStrikeout = true; // enable strikeout on the font
-
-                // StyleFlag indicating that only the FontStrike property should be applied
-                StyleFlag strikeFlag = new StyleFlag();
-                strikeFlag.FontStrike = true;
-
-                // Apply the strikethrough style to rows where the status column equals 1 (completed)
-                int maxRow = worksheet.Cells.MaxDataRow;
-                for (int row = 1; row <= maxRow; row++)
-                {
-                    if (cells[row, 1].IntValue == 1)
-                    {
-                        cells.ApplyRowStyle(row, strikeStyle, strikeFlag);
-                    }
-                }
-
-                // Save the workbook
-                string outputPath = "CompletedTasksStrikethrough.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                // Apply the style to the entire row
+                cells.ApplyRowStyle(row, strikeStyle, flag);
             }
         }
+
+        // Save the workbook
+        workbook.Save("CompletedTasks.xlsx");
     }
 }

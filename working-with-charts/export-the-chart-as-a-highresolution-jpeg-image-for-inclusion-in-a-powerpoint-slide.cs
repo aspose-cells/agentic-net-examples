@@ -4,7 +4,7 @@ using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-class ExportChartHighResJpeg
+class ExportChartHighResolution
 {
     static void Main()
     {
@@ -28,17 +28,20 @@ class ExportChartHighResJpeg
         chart.NSeries.Add("B2:B4", true);          // Values
         chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-        // Configure high‑resolution JPEG export options
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Jpeg;        // JPEG format
-        options.HorizontalResolution = 300;        // 300 DPI horizontal
-        options.VerticalResolution = 300;          // 300 DPI vertical
-        options.Quality = 90;                      // JPEG quality (0‑100)
+        // Configure high‑resolution JPEG options
+        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+        imgOptions.ImageType = ImageType.Jpeg;    // JPEG format
+        imgOptions.HorizontalResolution = 300;   // 300 DPI horizontal
+        imgOptions.VerticalResolution = 300;     // 300 DPI vertical
+        imgOptions.Quality = 90;                 // JPEG quality (0‑100)
 
         // Export the chart as a high‑resolution JPEG image
-        chart.ToImage("HighResChart.jpg", options);
+        string jpegPath = "HighResolutionChart.jpg";
+        chart.ToImage(jpegPath, imgOptions);
 
         // (Optional) Save the workbook for reference
         workbook.Save("ChartWorkbook.xlsx");
+
+        Console.WriteLine($"Chart exported to high‑resolution JPEG: {jpegPath}");
     }
 }

@@ -1,20 +1,27 @@
 using System;
 using Aspose.Cells;
 
-class LimitPdfPages
+namespace AsposeCellsPdfLimitDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – limit PDF output to ten pages
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Initialize PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Initialize PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Limit the PDF output to a maximum of 10 pages
-        pdfOptions.PageCount = 10;
+            // Limit the output to a maximum of 10 pages.
+            // The documented property for controlling page count is PageCount.
+            pdfOptions.PageCount = 10;
 
-        // Save the workbook as a PDF using the configured options
-        workbook.Save("output_limited.pdf", pdfOptions);
+            // Save the workbook as PDF with the specified options
+            workbook.Save("output.pdf", pdfOptions);
+
+            Console.WriteLine("PDF saved with a maximum of 10 pages.");
+        }
     }
 }

@@ -1,63 +1,51 @@
+// Title: Export Workbook to HTML with Original Sheet Order – Aspose.Cells C# Example (no custom IFilePathProvider)
+// Description: Demonstrates how to save an Aspose.Cells workbook as HTML while keeping the original worksheet sequence. The sample creates three sheets, uses HtmlSaveOptions with ExportActiveWorksheetOnly = false and ExportHiddenWorksheet = true, and relies on the default IFilePathProvider so the generated HTML files follow the workbook's sheet order.
+// Keywords: Aspose.Cells | HTML export | worksheet order | C# | HtmlSaveOptions | ExportActiveWorksheetOnly | ExportHiddenWorksheet | default IFilePathProvider | multi‑sheet HTML | save workbook as HTML
+// Common Searches: Aspose.Cells export workbook to HTML keep sheet order | HTML export all worksheets Aspose.Cells C# | How to avoid custom IFilePathProvider in Aspose.Cells HTML export | Preserve worksheet sequence when saving as HTML Aspose | Export hidden sheets to HTML with Aspose.Cells
+// Developer Intent: Save the full workbook as HTML while preserving the native sheet order using the default file‑path mapping.
+// Use Cases: Generate separate HTML pages for each worksheet in a multi‑sheet workbook for web preview, maintaining the original order. | Create static HTML documentation that includes hidden worksheets without modifying file‑path settings. | Provide a quick, order‑preserving HTML export for client‑side rendering of Excel reports.
+// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML, preserving sheet order and using the default IFilePathProvider. | Explain why a custom IFilePathProvider can alter worksheet order in HTML export and how to keep the default behavior. | Show how to configure HtmlSaveOptions to include hidden worksheets and export all sheets while retaining the workbook's sheet sequence.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
-    // Custom file path provider that returns a simple file name based on the worksheet name.
-    // This preserves the original worksheet order because the provider does not modify the mapping.
-    public class PreserveOrderFilePathProvider : IFilePathProvider
-    {
-        public string GetFullName(string sheetName)
-        {
-            // Return a file name that keeps the sheet name unchanged.
-            // Example: "Sheet1.html", "Sheet2.html", etc.
-            return $"{sheetName}.html";
-        }
-    }
-
+    // Demonstrates exporting a workbook to HTML while keeping the original worksheet order.
+    // No custom IFilePathProvider is set, so the default mapping is used and the order is preserved.
+    // Demonstrates how to save an Aspose.Cells workbook as HTML while keeping the original worksheet sequence. The sample creates three sheets, uses HtmlSaveOptions with ExportActiveWorksheetOnly = false and ExportHiddenWorksheet = true, and relies on the default IFilePathProvider so the generated HTML files follow the workbook's sheet order.
     public class ExportWorkbookToHtml
     {
-        public static void Run()
+        public static void Main()
         {
-            // Create a new workbook and add sample data.
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // First worksheet (default)
+            // Add sample worksheets and data.
             Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            sheet1.Cells["A1"].PutValue("Data in Sheet1");
+            sheet1.Name = "FirstSheet";
+            sheet1.Cells["A1"].PutValue("Data in first sheet");
 
-            // Add a second worksheet.
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            sheet2.Cells["A1"].PutValue("Data in Sheet2");
+            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
+            sheet2.Cells["A1"].PutValue("Data in second sheet");
 
-            // Add a third worksheet.
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-            sheet3.Cells["A1"].PutValue("Data in Sheet3");
+            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
+            sheet3.Cells["A1"].PutValue("Data in third sheet");
 
             // Configure HTML save options.
             HtmlSaveOptions saveOptions = new HtmlSaveOptions
             {
-                // Use the custom provider to keep the original worksheet order.
-                FilePathProvider = new PreserveOrderFilePathProvider(),
-
-                // Ensure the whole workbook is exported (not only the active sheet).
-                ExportActiveWorksheetOnly = false
+                // Keep default settings; do NOT assign a custom FilePathProvider.
+                // This ensures the original worksheet order is retained.
+                ExportActiveWorksheetOnly = false, // Export the whole workbook.
+                ExportHiddenWorksheet = true        // Export hidden sheets if any.
             };
 
-            // Save the workbook to HTML. Each worksheet will be saved as a separate HTML file
-            // with names matching the worksheet names, preserving the original order.
-            workbook.Save("WorkbookOutput.html", saveOptions);
-        }
-    }
+            // Save the workbook as HTML. The output will contain separate HTML files for each sheet,
+            // and the order of the sheets will match the original workbook order.
+            workbook.Save("WorkbookExport.html", saveOptions);
 
-    // Entry point for demonstration.
-    class Program
-    {
-        static void Main()
-        {
-            ExportWorkbookToHtml.Run();
-            Console.WriteLine("Workbook exported to HTML while preserving worksheet order.");
+            Console.WriteLine("Workbook successfully exported to HTML with original sheet order preserved.");
         }
     }
 }

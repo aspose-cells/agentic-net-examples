@@ -7,37 +7,44 @@ namespace AsposeCellsConditionalColumnHide
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle create)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data
-            // Row 0: Headers
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Quantity");
-            cells["C1"].PutValue("Price");
+            // Sample data headers (row 0)
+            cells["A1"].PutValue("ID");
+            cells["B1"].PutValue("Name");
+            cells["C1"].PutValue("Amount");
+            cells["D1"].PutValue("Date");
 
-            // Row 1: Sample data
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(50);
-            cells["C2"].PutValue(1.2);
+            // Sample data rows (starting at row 2)
+            cells["A2"].PutValue(1);
+            cells["B2"].PutValue("Alice");
+            cells["C2"].PutValue(100);
+            cells["D2"].PutValue(DateTime.Today);
 
-            // Row 2: Flag fields indicating whether the column should be visible (true = show, false = hide)
-            // In a real scenario this row could come from an external data source.
-            cells["A3"].PutValue(true);   // Show Product column
-            cells["B3"].PutValue(false);  // Hide Quantity column
-            cells["C3"].PutValue(true);   // Show Price column
+            cells["A3"].PutValue(2);
+            cells["B3"].PutValue("Bob");
+            cells["C3"].PutValue(200);
+            cells["D3"].PutValue(DateTime.Today.AddDays(1));
 
-            // Determine the number of columns to evaluate (based on the header row)
-            int totalColumns = cells.MaxColumn + 1; // MaxColumn is zero‑based
+            // Flag row (row 1, index 0-based = row 2 in Excel) indicating visibility of each column
+            // True = show, False = hide
+            cells["A2"].PutValue(true);   // ID column visible
+            cells["B2"].PutValue(false);  // Name column hidden
+            cells["C2"].PutValue(true);   // Amount column visible
+            cells["D2"].PutValue(false);  // Date column hidden
 
-            // Loop through each column and hide it if the corresponding flag is false
+            // Determine the range of columns to evaluate (based on header row)
+            int totalColumns = sheet.Cells.MaxColumn + 1; // includes all used columns
+
+            // Iterate through each column and hide it if the flag is false
             for (int col = 0; col < totalColumns; col++)
             {
-                // Read the flag value from the flag row (row index 2)
-                object flagObj = cells[2, col].Value; // Row 2 (zero‑based) holds the flags
-                bool isVisible = true; // Default to visible
+                // Read the flag value from the flag row (row index 1)
+                object flagObj = cells[1, col].Value; // row 1 (second row), column 'col'
+                bool isVisible = true; // default to visible
 
                 if (flagObj != null && flagObj is bool)
                 {
@@ -51,13 +58,18 @@ namespace AsposeCellsConditionalColumnHide
                 // Hide the column when the flag is false
                 if (!isVisible)
                 {
-                    // Using Cells.HideColumn method to hide the column
+                    // Option 1: use HideColumn method
                     cells.HideColumn(col);
+                    // Optionally, also set IsHidden property for clarity
+                    // sheet.Cells.Columns[col].IsHidden = true;
                 }
             }
 
-            // Save the workbook to an Excel file
-            workbook.Save("ConditionalColumnHideDemo.xlsx");
+            // Optionally, remove the flag row from the final output
+            // sheet.Cells.DeleteRow(1); // deletes the flag row (row index 1)
+
+            // Save the workbook (lifecycle save)
+            workbook.Save("ConditionalColumnHide.xlsx");
         }
     }
 }

@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsExamples
 {
-    public class WorkbookLoadSaveDemo
+    public class WorkbookLoadSaveWithUsingDemo
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
@@ -14,7 +14,7 @@ namespace AsposeCellsDemo
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
 
@@ -23,25 +23,34 @@ namespace AsposeCellsDemo
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Prevent FileNotFoundException
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook inside a using block for deterministic disposal
-            using (Workbook workbook = new Workbook(inputPath))
+            try
             {
-                // Modify cell A1
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Modified");
+                // Load an existing workbook inside a using block.
+                // The using statement ensures Dispose() is called automatically.
+                using (Workbook workbook = new Workbook(inputPath))
+                {
+                    // Example modification: write a value to cell A1 of the first worksheet.
+                    Worksheet sheet = workbook.Worksheets[0];
+                    sheet.Cells["A1"].PutValue("Processed");
 
-                // Save the workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+                    // Save the workbook to a new file.
+                    // The Save(string, SaveFormat) overload is used as per the provided rule.
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+                } // workbook.Dispose() is invoked here.
+
+                Console.WriteLine($"Workbook processed and saved to {outputPath}");
             }
-
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
         }
     }
 }

@@ -1,73 +1,83 @@
 using System;
 using System.IO;
-using System.Net.Mime;                     // For ContentDisposition
-using Aspose.Cells;                        // Core workbook classes
+using Aspose.Cells;
 
-public static class WorkbookExportHelper
+namespace AsposeCellsDemo
 {
-    /// <summary>
-    /// Creates a simple workbook and streams the XLSX file to the supplied output stream.
-    /// The caller can write the stream to an HTTP response, file, etc.
-    /// </summary>
-    /// <param name="outputStream">The stream to which the workbook will be saved.</param>
-    public static void ExportWorkbook(Stream outputStream)
+    public class WorkbookExporter
     {
-        if (outputStream == null)
-            throw new ArgumentNullException(nameof(outputStream));
-
-        try
+        // Exports a workbook to the provided stream (e.g., HttpResponse.Body) with inline disposition.
+        public void Export(Stream outputStream, string fileName = "sample.xlsx")
         {
-            // 1. Instantiate a new workbook (default format is XLSX)
-            var workbook = new Workbook();
+            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
 
-            // 2. Add sample data (optional, just to demonstrate content)
-            var sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
-
-            // 3. Prepare the ContentDisposition – set Inline = true so the browser opens the file
-            var disposition = new ContentDisposition
+            try
             {
-                Inline = true,               // Open in browser rather than force download
-                FileName = "SampleWorkbook.xlsx"
-            };
+                // 1. Create a new workbook and add sample data.
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello");
+                sheet.Cells["B1"].PutValue("World");
 
-            // 4. The caller can use disposition.ToString() to set HTTP headers if needed.
-
-            // 5. Save workbook directly to the provided stream in XLSX format
-            workbook.Save(outputStream, SaveFormat.Xlsx);
+                // 2. Save the workbook directly to the stream in Xlsx format.
+                workbook.Save(outputStream, SaveFormat.Xlsx);
+                // Note: Setting the Content‑Disposition header (inline; filename=…) is the caller's responsibility.
+            }
+            catch (Exception ex)
+            {
+                // Wrap and rethrow for caller handling.
+                throw new InvalidOperationException("Failed to export workbook.", ex);
+            }
         }
-        catch (Exception)
+
+        // Optional helper to export directly to a file, ensuring the path exists.
+        public void ExportToFile(string filePath)
         {
-            // Rethrow after optional logging
-            throw;
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("File path must be provided.", nameof(filePath));
+
+            try
+            {
+                var directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // 1. Create workbook with sample data.
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello");
+                sheet.Cells["B1"].PutValue("World");
+
+                // 2. Save to file in Xlsx format.
+                workbook.Save(filePath, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to export workbook to '{filePath}'.", ex);
+            }
         }
     }
-}
 
-public class Program
-{
-    public static void Main()
+    // Simple console entry point for demonstration/testing.
+    internal class Program
     {
-        try
+        private static void Main(string[] args)
         {
-            // Create a file stream to write the workbook to disk (adjust path as needed)
-            string outputPath = "SampleWorkbook.xlsx";
-
-            // Ensure the directory exists
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-
-            using (var fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            try
             {
-                WorkbookExportHelper.ExportWorkbook(fileStream);
-            }
+                var exporter = new WorkbookExporter();
 
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+                // Example: export to a file.
+                string outputPath = Path.Combine(Environment.CurrentDirectory, "output", "sample.xlsx");
+                exporter.ExportToFile(outputPath);
+                Console.WriteLine($"Workbook exported successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

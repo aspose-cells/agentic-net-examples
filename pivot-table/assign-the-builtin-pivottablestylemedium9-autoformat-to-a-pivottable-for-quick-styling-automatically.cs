@@ -8,7 +8,7 @@ namespace AsposeCellsPivotStyleDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -21,20 +21,16 @@ namespace AsposeCellsPivotStyleDemo
             sheet.Cells["B2"].Value = "North";
             sheet.Cells["C2"].Value = 5000;
 
-            sheet.Cells["A3"].Value = "Bike";
+            sheet.Cells["A3"].Value = "Car";
             sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 3000;
+            sheet.Cells["C3"].Value = 12000;
 
-            sheet.Cells["A4"].Value = "Car";
-            sheet.Cells["B4"].Value = "North";
+            sheet.Cells["A4"].Value = "Truck";
+            sheet.Cells["B4"].Value = "East";
             sheet.Cells["C4"].Value = 8000;
 
-            sheet.Cells["A5"].Value = "Car";
-            sheet.Cells["B5"].Value = "South";
-            sheet.Cells["C5"].Value = 12000;
-
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+            int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
             // Configure the pivot table fields
@@ -48,7 +44,7 @@ namespace AsposeCellsPivotStyleDemo
             // Assign the built‑in style PivotTableStyleMedium9
             pivotTable.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
 
-            // Save the workbook (lifecycle save)
+            // Save the workbook
             workbook.Save("PivotTableWithMedium9Style.xlsx");
         }
     }

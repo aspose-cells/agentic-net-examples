@@ -15,45 +15,39 @@ namespace AsposeCellsExamples
         {
             const string inputPath = "InputWorkbook.xlsx";
 
-            // Verify that the input workbook exists
+            // Verify the input workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
             try
             {
-                // Load the existing workbook
-                Workbook wb = new Workbook(inputPath);
+                // Load the workbook containing XML maps
+                Workbook workbook = new Workbook(inputPath);
 
-                // Get the collection of XML maps in the workbook
-                XmlMapCollection xmlMaps = wb.Worksheets.XmlMaps;
-
-                // Check if there are any XML maps
-                if (xmlMaps.Count == 0)
+                // Ensure there are XML maps to export
+                if (workbook.Worksheets.XmlMaps.Count == 0)
                 {
-                    Console.WriteLine("No XmlMap found in the workbook.");
+                    Console.WriteLine("No XML maps found in the workbook.");
                     return;
                 }
 
-                // Loop through each XML map and export its XML data
-                for (int i = 0; i < xmlMaps.Count; i++)
+                // Export each XML map to a separate file
+                for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
                 {
-                    XmlMap map = xmlMaps[i];
+                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[i];
+                    string outputPath = $"{xmlMap.Name}_Export.xml";
 
-                    // Define the output file name for the exported XML
-                    string outputPath = $"{map.Name}.xml";
+                    // Export the XML data linked to the current map
+                    workbook.ExportXml(xmlMap.Name, outputPath);
 
-                    // Export the XML data linked by the current map
-                    wb.ExportXml(map.Name, outputPath);
-
-                    Console.WriteLine($"Exported XML map '{map.Name}' to '{outputPath}'.");
+                    Console.WriteLine($"Exported XML map '{xmlMap.Name}' to '{outputPath}'.");
                 }
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

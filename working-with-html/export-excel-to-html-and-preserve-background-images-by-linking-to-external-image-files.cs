@@ -1,37 +1,38 @@
+// Title: Export Excel to HTML with external background images using Aspose.Cells for .NET (C#)
+// Description: Loads an .xlsx workbook, configures HtmlSaveOptions to turn off Base64 image embedding, defines an attached files folder and URL prefix, enables automatic folder creation, and saves the workbook as HTML so worksheet background images are linked as separate files.
+// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | ExportImagesAsBase64 false | HtmlSaveOptions | external image files | background image export | attached files directory | HTML conversion with linked images
+// Common Searches: Aspose.Cells export Excel to HTML external images | How to save Excel background images as separate files with Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 false C# example | Set attached files directory for HTML export in Aspose.Cells | C# convert workbook to HTML with linked background graphics | Aspose.Cells HTML export folder creation option
+// Developer Intent: Generate an HTML version of an Excel workbook where all background and embedded images are written to disk as separate files and referenced via relative URLs.
+// Use Cases: Publish Excel‑based reports on the web while keeping background graphics cacheable as independent image files. | Integrate Excel‑to‑HTML conversion into a web API that serves HTML pages with images stored in a dedicated assets folder. | Batch‑process multiple workbooks, preserving their visual assets in a structured output directory for downstream publishing pipelines. | Create lightweight HTML snapshots of spreadsheets for documentation portals where image size and load time matter.
+// AI Prompts: Show how to customize the naming pattern of exported image files when using HtmlSaveOptions in Aspose.Cells. | Provide a code snippet that sets a custom URL prefix for attached images and disables automatic directory creation. | Explain strategies for handling existing image files in the output folder when re‑exporting the same workbook to HTML.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-class ExportExcelToHtmlWithExternalImages
+// Loads an .xlsx workbook, configures HtmlSaveOptions to turn off Base64 image embedding, defines an attached files folder and URL prefix, enables automatic folder creation, and saves the workbook as HTML so worksheet background images are linked as separate files.
+class ExportExcelToHtml
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string excelPath = "input.xlsx";
+        // Load the Excel workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(excelPath);
+        // Create HTML save options
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-        // Configure HTML save options to export images as external files
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Export images as separate files (not Base64)
+        saveOptions.ExportImagesAsBase64 = false;
 
-        // Do not embed images as Base64; create separate image files instead
-        htmlOptions.ExportImagesAsBase64 = false;
+        // Folder where the image files will be written
+        saveOptions.AttachedFilesDirectory = "output_files";
 
-        // Directory where the exported image files will be saved
-        htmlOptions.AttachedFilesDirectory = "output_images";
+        // URL prefix used in the generated HTML to reference the images
+        saveOptions.AttachedFilesUrlPrefix = "output_files/";
 
-        // URL prefix used in the generated HTML to reference the image files
-        htmlOptions.AttachedFilesUrlPrefix = "output_images/";
+        // Automatically create the folder if it does not exist
+        saveOptions.CreateDirectory = true;
 
-        // Ensure the image directory exists before saving
-        Directory.CreateDirectory(htmlOptions.AttachedFilesDirectory);
-
-        // Save the workbook as HTML using the configured options
-        string htmlPath = "output.html";
-        workbook.Save(htmlPath, htmlOptions);
-
-        Console.WriteLine($"HTML file saved to '{htmlPath}'.");
-        Console.WriteLine($"Background and other images are stored in '{htmlOptions.AttachedFilesDirectory}'.");
+        // Save the workbook as HTML; background images will be linked to external files
+        workbook.Save("output.html", saveOptions);
     }
 }

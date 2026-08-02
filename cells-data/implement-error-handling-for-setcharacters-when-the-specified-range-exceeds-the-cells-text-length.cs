@@ -2,78 +2,76 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class SetCharactersErrorHandlingDemo
 {
-    public class SetCharactersWithRangeCheck
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cell cell = worksheet.Cells["A1"];
+
+        // Set initial text in the cell
+        cell.PutValue("Hello World");
+
+        // Define formatting ranges (some may exceed the cell text length)
+        var ranges = new (int start, int length, Color color)[]
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cell cell = worksheet.Cells["A1"];
+            (0, 5, Color.Red),      // Valid range: "Hello"
+            (6, 10, Color.Blue)     // Exceeds length: start 6, length 10 (cell length is 11)
+        };
 
-                // Set the cell value that will be formatted
-                cell.Value = "Hello Aspose.Cells!";
+        // Retrieve the cell text length for validation
+        string cellText = cell.StringValue ?? string.Empty;
+        int textLength = cellText.Length;
 
-                // Prepare font settings for different parts of the text
-                FontSetting[] fontSettings = new FontSetting[2];
+        // Prepare an array to hold FontSetting objects
+        FontSetting[] fontSettings = new FontSetting[ranges.Length];
+        int validCount = 0;
 
-                // First part: characters 0-4 ("Hello")
-                fontSettings[0] = cell.Characters(0, 5);
-                fontSettings[0].Font.IsBold = true;
-                fontSettings[0].Font.Color = Color.Red;
-
-                // Second part: characters 6-15 ("Aspose.Cel")
-                // Intentionally use a length that may exceed the text length to demonstrate error handling
-                int startIndex = 6;
-                int length = 20; // This exceeds the actual remaining characters
-                fontSettings[1] = cell.Characters(startIndex, length);
-                fontSettings[1].Font.IsItalic = true;
-                fontSettings[1].Font.Color = Color.Blue;
-
-                // Validate each FontSetting range against the actual cell text length
-                string cellText = cell.StringValue ?? string.Empty;
-                int textLength = cellText.Length;
-
-                foreach (var fs in fontSettings)
-                {
-                    int endIndex = fs.StartIndex + fs.Length;
-                    if (endIndex > textLength)
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            $"The character range (StartIndex={fs.StartIndex}, Length={fs.Length}) exceeds the cell text length ({textLength}).");
-                    }
-                }
-
-                // Apply the rich text formatting
-                cell.SetCharacters(fontSettings);
-                Console.WriteLine("SetCharacters executed successfully.");
-
-                // Save the workbook
-                workbook.Save("SetCharactersWithRangeCheck.xlsx");
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                // Handle range errors specifically
-                Console.WriteLine($"Range error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected errors
-                Console.WriteLine($"Error executing SetCharacters: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Iterate over each range, validate, and create FontSetting objects
+        for (int i = 0; i < ranges.Length; i++)
         {
-            SetCharactersWithRangeCheck.Run();
+            int start = ranges[i].start;
+            int length = ranges[i].length;
+
+            // Validate start index
+            if (start < 0 || start > textLength)
+            {
+                Console.WriteLine($"Start index {start} is out of bounds for text length {textLength}. Skipping this range.");
+                continue;
+            }
+
+            // Adjust length if it exceeds the remaining characters
+            if (start + length > textLength)
+            {
+                Console.WriteLine($"Requested range ({start}, {length}) exceeds text length {textLength}. Adjusting length to fit.");
+                length = textLength - start;
+            }
+
+            // Create the Characters object and apply the desired color
+            FontSetting setting = cell.Characters(start, length);
+            setting.Font.Color = ranges[i].color;
+
+            // Store the valid setting
+            fontSettings[validCount++] = setting;
         }
+
+        // Trim the array to contain only the valid settings
+        Array.Resize(ref fontSettings, validCount);
+
+        // Apply the rich text formatting with error handling
+        try
+        {
+            cell.SetCharacters(fontSettings);
+            Console.WriteLine("SetCharacters executed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error executing SetCharacters: {ex.Message}");
+        }
+
+        // Save the workbook
+        workbook.Save("SetCharactersErrorHandlingDemo.xlsx");
     }
 }

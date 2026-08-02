@@ -13,23 +13,25 @@ namespace AsposeCellsStyleSizeDemo
 
             // Access the first worksheet
             Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Add sample data with different styles
-            for (int i = 0; i < 10; i++)
+            // Add sample data with different styles to generate unused styles later
+            for (int i = 0; i < 20; i++)
             {
-                Cell cell = sheet.Cells[i, 0];
-                cell.PutValue("Item " + (i + 1));
+                Cell cell = cells[i, 0];
+                cell.PutValue($"Item {i + 1}");
 
                 // Create a unique style for each cell
                 Style style = wb.CreateStyle();
                 style.Font.Name = "Arial";
-                style.Font.Size = 10 + i;
-                style.Font.IsBold = i % 2 == 0;
+                style.Font.Size = 10 + i;               // Vary font size
+                style.Font.IsBold = i % 2 == 0;         // Alternate bold
+                style.Font.Color = i % 3 == 0 ? System.Drawing.Color.Red : System.Drawing.Color.Blue;
                 cell.SetStyle(style);
             }
 
-            // Delete some rows to create unused styles
-            sheet.Cells.DeleteRows(5, 5);
+            // Delete a range of rows to leave some styles unused
+            sheet.Cells.DeleteRows(10, 5); // Rows 10-14 removed, their styles become unused
 
             // Save workbook before removing unused styles
             string beforePath = "BeforeRemoveUnusedStyles.xlsx";
@@ -37,6 +39,7 @@ namespace AsposeCellsStyleSizeDemo
 
             // Measure file size before removal
             long sizeBefore = new FileInfo(beforePath).Length;
+            Console.WriteLine($"File size before removing unused styles: {sizeBefore} bytes");
 
             // Remove all unused styles
             wb.RemoveUnusedStyles();
@@ -47,11 +50,12 @@ namespace AsposeCellsStyleSizeDemo
 
             // Measure file size after removal
             long sizeAfter = new FileInfo(afterPath).Length;
+            Console.WriteLine($"File size after removing unused styles: {sizeAfter} bytes");
 
-            // Output the results
-            Console.WriteLine($"File size before removing unused styles: {sizeBefore} bytes");
-            Console.WriteLine($"File size after removing unused styles:  {sizeAfter} bytes");
-            Console.WriteLine($"Size reduction: {sizeBefore - sizeAfter} bytes");
+            // Display reduction information
+            long reduction = sizeBefore - sizeAfter;
+            double percent = sizeBefore > 0 ? (double)reduction / sizeBefore * 100 : 0;
+            Console.WriteLine($"Size reduction: {reduction} bytes ({percent:F2}%)");
         }
     }
 }

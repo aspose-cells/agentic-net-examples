@@ -1,58 +1,54 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsGroupLabelDemo
+class Program
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (header + 6 rows)
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("Item A1");
-            cells["B2"].PutValue(100);
-            cells["A3"].PutValue("Item A2");
-            cells["B3"].PutValue(150);
-            cells["A4"].PutValue("Item A3");
-            cells["B4"].PutValue(200);
-            cells["A5"].PutValue("Item B1");
-            cells["B5"].PutValue(120);
-            cells["A6"].PutValue("Item B2");
-            cells["B6"].PutValue(180);
-            cells["A7"].PutValue("Item B3");
-            cells["B7"].PutValue(220);
+        // Populate sample data with two logical groups
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Amount");
 
-            // Group rows 2-4 (Item A) and rows 5-7 (Item B)
-            cells.GroupRows(1, 3); // rows are zero‑based, so 1 = row 2
-            cells.GroupRows(4, 6); // rows 5‑7
+        // First group header and its items
+        worksheet.Cells["A2"].PutValue("Group 1");
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["A3"].PutValue("Item 1.1");
+        worksheet.Cells["B3"].PutValue(40);
+        worksheet.Cells["A4"].PutValue("Item 1.2");
+        worksheet.Cells["B4"].PutValue(60);
 
-            // Place summary rows above the detail rows for each group
-            sheet.Outline.SummaryRowBelow = false;
+        // Second group header and its items
+        worksheet.Cells["A5"].PutValue("Group 2");
+        worksheet.Cells["B5"].PutValue(200);
+        worksheet.Cells["A6"].PutValue("Item 2.1");
+        worksheet.Cells["B6"].PutValue(200);
 
-            // Add a label shape before the first group (above row 2)
-            // Parameters: upper left row, upper left column, top offset, left offset, width, height
-            Label groupALabel = sheet.Shapes.AddLabel(0, 0, 5, 5, 150, 20);
-            groupALabel.Text = "Group A Items";
-            groupALabel.Placement = PlacementType.FreeFloating;
-            groupALabel.Font.Size = 12;
-            groupALabel.Font.IsBold = true;
+        // Group rows for each logical section (0‑based indices)
+        // Group rows 2‑4 (Group 1 header + its items)
+        worksheet.Cells.GroupRows(1, 3);
+        // Group rows 5‑6 (Group 2 header + its items)
+        worksheet.Cells.GroupRows(4, 5);
 
-            // Add a label shape before the second group (above row 5)
-            Label groupBLabel = sheet.Shapes.AddLabel(3, 0, 5, 5, 150, 20);
-            groupBLabel.Text = "Group B Items";
-            groupBLabel.Placement = PlacementType.FreeFloating;
-            groupBLabel.Font.Size = 12;
-            groupBLabel.Font.IsBold = true;
+        // Place the summary (totals) row *above* the detail rows
+        // This makes the label appear before the data rows
+        worksheet.Outline.SummaryRowBelow = false; // Outline.SummaryRowBelow property
 
-            // Save the workbook
-            workbook.Save("GroupLabelsDemo.xlsx");
-        }
+        // Convert the range into a table so we can use a totals row as the group label
+        int tableIndex = worksheet.ListObjects.Add(0, 0, 6, 1, true);
+        ListObject table = worksheet.ListObjects[tableIndex];
+        table.ShowTotals = true; // Enable totals row
+
+        // Set the label that will appear in the totals row for the Amount column
+        // This acts as the group label displayed before the grouped rows
+        ListColumn amountColumn = table.ListColumns[1];
+        amountColumn.TotalsRowLabel = "Group Total"; // ListColumn.TotalsRowLabel property
+
+        // Save the workbook
+        workbook.Save("GroupLabelsBeforeData.xlsx");
     }
 }

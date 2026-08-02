@@ -2,44 +2,60 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace SmartMarkerMissingFieldHandling
+namespace AsposeCellsSmartMarkerErrorHandling
 {
-    class Program
+    // Callback to log each smart marker being processed.
+    // This is optional but helps to identify which marker caused the issue.
+    public class SmartMarkerLogger : ISmartMarkerCallBack
     {
-        static void Main()
+        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
-            // Create a new workbook (template)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Processing marker - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+        }
+    }
 
-            // Add smart markers that reference fields "Name" and "Age"
-            // "Age" does NOT exist in the data source to simulate missing field
-            sheet.Cells["A1"].PutValue("&=$Person.Name");
-            sheet.Cells["A2"].PutValue("&=$Person.Age"); // missing field
+    public class Program
+    {
+        public static void Main()
+        {
+            // Load the template workbook that contains smart markers.
+            // The template should have a marker like "&=$Employees.Name" and "&=$Employees.Salary".
+            Workbook template = new Workbook("SmartMarkerTemplate.xlsx");
 
-            // Prepare data source with only the "Name" column
-            DataTable dt = new DataTable("Person");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Rows.Add("John Doe");
+            // Prepare a data source that intentionally lacks the "Salary" column.
+            DataTable employees = new DataTable("Employees");
+            employees.Columns.Add("Name", typeof(string));
+            // Note: "Salary" column is missing to simulate the error condition.
+            employees.Rows.Add("John Doe");
+            employees.Rows.Add("Jane Smith");
 
-            // Set up the WorkbookDesigner
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(dt);
+            // Set up the WorkbookDesigner.
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = template,
+                CallBack = new SmartMarkerLogger() // optional logging
+            };
 
-            // Process smart markers with error handling for missing fields
+            // Bind the incomplete data source.
+            designer.SetDataSource(employees);
+
+            // Process the smart markers with error handling.
             try
             {
-                designer.Process();
+                // The boolean parameter indicates whether unrecognized smart markers are preserved.
+                // Setting it to false will cause an exception if a marker cannot be resolved.
+                designer.Process(false);
                 Console.WriteLine("Smart markers processed successfully.");
             }
             catch (Exception ex)
             {
-                // Handle the case where a smart marker references a missing field
-                Console.WriteLine($"Error processing smart markers: {ex.Message}");
+                // Catch exceptions caused by missing fields in the data source.
+                Console.WriteLine("Error processing smart markers: " + ex.Message);
+                // Additional handling such as logging or fallback logic can be placed here.
             }
 
-            // Save the result (even if processing failed, the workbook can still be saved)
-            workbook.Save("SmartMarkerResult.xlsx");
+            // Save the resulting workbook.
+            designer.Workbook.Save("SmartMarkerResult.xlsx");
         }
     }
 }

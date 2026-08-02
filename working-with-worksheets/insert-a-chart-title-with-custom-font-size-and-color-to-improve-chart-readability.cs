@@ -1,17 +1,27 @@
-using Aspose.Cells;
-using Aspose.Cells.Charts;
+// Title: Apply 18‑pt Dark Blue Title to an Aspose.Cells Column Chart (C#)
+// Description: Creates a new workbook, inserts month‑sales data, adds a column chart, makes the title visible, sets its text to “Quarterly Sales Report”, and formats the title with an 18‑point dark‑blue font before saving as ChartWithCustomTitle.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | column chart | chart title | font size | font color | 18pt | dark blue | Excel automation | custom chart title
+// Common Searches: Aspose.Cells set chart title font size C# | change chart title color Aspose.Cells .NET | add visible chart title column chart Aspose.Cells | customize chart title appearance Aspose.Cells | format chart title in Excel using Aspose.Cells
+// Developer Intent: Add a styled title to a chart in an Excel workbook.
+// Use Cases: Standardized sales reports with branded chart titles | Automated generation of presentation‑ready Excel charts | Dashboards that require consistent title styling across multiple workbooks | Compliance with corporate visual guidelines for exported Excel files
+// AI Prompts: Generate C# code with Aspose.Cells to create a line chart and set the title to 20pt red font. | Show how to change the chart title font family and alignment in Aspose.Cells .NET. | Explain how to toggle chart title visibility based on data conditions using Aspose.Cells.
+
 using System;
 using System.Drawing;
-using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-class InsertChartTitle
+namespace AsposeCellsChartTitleDemo
 {
-    static void Main()
+    // Creates a new workbook, inserts month‑sales data, adds a column chart, makes the title visible, sets its text to “Quarterly Sales Report”, and formats the title with an 18‑point dark‑blue font before saving as ChartWithCustomTitle.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
@@ -32,22 +42,14 @@ class InsertChartTitle
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the chart title text and make it visible
-            chart.Title.Text = "Quarterly Sales";
-            chart.Title.IsVisible = true;
+            // Configure the chart title with custom font size and color
+            chart.Title.Text = "Quarterly Sales Report";
+            chart.Title.IsVisible = true;                     // Ensure the title is displayed
+            chart.Title.Font.Size = 18;                       // Custom font size
+            chart.Title.Font.Color = Color.DarkBlue;          // Custom font color
 
-            // Apply custom font size and color to the title
-            chart.Title.Font.Size = 16;
-            chart.Title.Font.Color = Color.DarkGreen;
-
-            // Save the workbook with the chart
-            string outputPath = "ChartWithCustomTitle.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("ChartWithCustomTitle.xlsx");
         }
     }
 }

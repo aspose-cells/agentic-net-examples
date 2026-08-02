@@ -15,7 +15,7 @@ namespace AsposeCellsSlicerDynamicRowHeight
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Sample data in column A (the linked column for the slicer)
+            // Sample data: Column A contains categories (the slicer will be linked to this column)
             cells["A1"].Value = "Category";
             cells["A2"].Value = "Fruit";
             cells["A3"].Value = "Fruit";
@@ -24,37 +24,43 @@ namespace AsposeCellsSlicerDynamicRowHeight
             cells["A6"].Value = "Fruit";
             cells["A7"].Value = "Grain";
 
-            // Create a pivot table based on the data
+            // Add a pivot table based on the data
             int pivotIdx = sheet.PivotTables.Add("A1:A7", "C3", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0); // use column A as row field
+            // Use the Category column as a row field
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);
+            // Refresh to populate the pivot
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-            // Add a slicer linked to the pivot table for the "Category" field
+            // Add a slicer linked to the pivot table for the Category field
             int slicerIdx = sheet.Slicers.Add(pivot, "E3", "Category");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // ----- Dynamic RowHeight calculation -----
-            // Determine the number of unique items in the linked column (A)
+            // ------------------------------
+            // Dynamically set slicer row height
+            // ------------------------------
+
+            // Determine the number of unique items in the source column (Category)
             HashSet<string> uniqueItems = new HashSet<string>();
-            for (int row = 1; row <= cells.MaxDataRow; row++) // start from row 2 (index 1) to skip header
+            // Skip header row (row 0)
+            for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
             {
                 object val = cells[row, 0].Value;
                 if (val != null)
+                {
                     uniqueItems.Add(val.ToString());
+                }
             }
             int uniqueCount = uniqueItems.Count;
 
-            // Example logic: smaller row height for many items, larger for few items
-            // Adjust the per‑row height (in points)
-            if (uniqueCount > 10)
-                slicer.RowHeight = 12;   // compact rows
-            else if (uniqueCount > 5)
-                slicer.RowHeight = 16;
-            else
-                slicer.RowHeight = 20;   // spacious rows
+            // Example logic: base height 15 points + 1 point per unique item
+            // Adjust as needed for your UI requirements
+            double baseHeight = 15.0;
+            slicer.RowHeight = baseHeight + uniqueCount; // height per row in points
 
-            // Optionally adjust the overall slicer height so all items are visible
-            slicer.Height = slicer.RowHeight * uniqueCount;
+            // Optionally, adjust the total slicer height to fit all rows
+            slicer.Height = slicer.RowHeight * uniqueCount; // total height in points
 
             // Save the workbook
             workbook.Save("SlicerDynamicRowHeight.xlsx");

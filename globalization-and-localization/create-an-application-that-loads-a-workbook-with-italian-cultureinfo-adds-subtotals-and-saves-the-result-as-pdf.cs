@@ -1,50 +1,47 @@
 using System;
 using System.Globalization;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-class SubtotalPdfDemo
+class SubtotalItalianPdf
 {
     static void Main()
     {
-        try
-        {
-            // Path to the existing Excel file
-            string inputPath = "input.xlsx";
+        // Path to the source Excel file
+        string inputPath = "input.xlsx";
 
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+        // Path for the resulting PDF file
+        string outputPath = "output.pdf";
 
-            // Load the workbook with Italian culture settings
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-            {
-                CultureInfo = new CultureInfo("it-IT")
-            };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+        // Load the workbook with Italian culture settings
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        loadOptions.CultureInfo = new CultureInfo("it-IT"); // Italian CultureInfo
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-            // Define the data range (A1:C6)
-            CellArea dataArea = CellArea.CreateCellArea(0, 0, 5, 2); // rows 0-5, columns 0-2
+        // Define the range that contains the data (e.g., A1:C6)
+        // Adjust the range as needed for your actual data
+        CellArea dataArea = CellArea.CreateCellArea(0, 0, 5, 2); // rows 0-5, columns 0-2
 
-            // Add subtotal: group by first column, sum third column
-            cells.Subtotal(dataArea, 0, ConsolidationFunction.Sum, new int[] { 2 });
+        // Add subtotals:
+        // - Group by the first column (index 0)
+        // - Use SUM function
+        // - Apply subtotal to the third column (index 2)
+        // - Replace existing subtotals, add page breaks, place summary below data
+        cells.Subtotal(
+            dataArea,
+            0,
+            ConsolidationFunction.Sum,
+            new int[] { 2 },
+            replace: true,
+            pageBreaks: true,
+            summaryBelowData: true);
 
-            // Save the result as PDF
-            string outputPdf = "output.pdf";
-            workbook.Save(outputPdf, SaveFormat.Pdf);
-
-            Console.WriteLine("Workbook loaded with Italian culture, subtotal added, and saved as PDF.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as PDF
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        workbook.Save(outputPath, pdfOptions);
     }
 }

@@ -3,96 +3,106 @@ using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsXmlMapClear
 {
-    public class XmlMapHelper
+    class Program
     {
-        /// <summary>
-        /// Clears the values of all cells that are linked to the specified XML map.
-        /// The XML map itself remains in the workbook.
-        /// </summary>
-        /// <param name="workbook">The workbook containing the XML map.</param>
-        /// <param name="mapName">The name of the XML map whose linked cells should be cleared.</param>
-        public static void ClearLinkedCells(Workbook workbook, string mapName)
+        static void Main(string[] args)
         {
             try
             {
-                // Find the XmlMap by name.
-                XmlMap targetMap = null;
-                foreach (XmlMap map in workbook.Worksheets.XmlMaps)
+                XmlMapHelper.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled error: {ex.Message}");
+            }
+        }
+    }
+
+    public class XmlMapHelper
+    {
+        /// <summary>
+        /// Clears the contents of all cells linked to the specified XML map and path.
+        /// The XML map itself remains intact.
+        /// </summary>
+        public static void ClearLinkedCells(Workbook workbook, string mapName, string xmlPath)
+        {
+            // Locate the XmlMap by name
+            XmlMap targetMap = null;
+            foreach (XmlMap map in workbook.Worksheets.XmlMaps)
+            {
+                if (map.Name == mapName)
                 {
-                    if (map.Name == mapName)
-                    {
-                        targetMap = map;
-                        break;
-                    }
+                    targetMap = map;
+                    break;
                 }
+            }
 
-                if (targetMap == null)
+            if (targetMap == null)
+            {
+                Console.WriteLine($"XmlMap with name '{mapName}' not found.");
+                return;
+            }
+
+            // Iterate through each worksheet and clear linked cell areas
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // XmlMapQuery returns an ArrayList of CellArea objects
+                ArrayList linkedAreas = sheet.XmlMapQuery(xmlPath, targetMap);
+                foreach (CellArea area in linkedAreas)
                 {
-                    Console.WriteLine($"XmlMap \"{mapName}\" not found.");
-                    return;
+                    // Clear only the contents; formatting and the link remain
+                    sheet.Cells.ClearContents(area);
                 }
+            }
+        }
 
-                // Build a path that points to the root element of the map.
-                string rootPath = "/" + targetMap.RootElementName;
+        // Example usage
+        public static void Run()
+        {
+            string inputPath = "InputWithXmlMap.xlsx";
+            string outputPath = "OutputCleared.xlsx";
 
-                // Iterate through each worksheet and clear the linked cell areas.
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    ArrayList linkedAreas = sheet.XmlMapQuery(rootPath, targetMap);
-                    foreach (CellArea area in linkedAreas)
-                    {
-                        sheet.Cells.ClearContents(area);
-                    }
-                }
+            // Prevent FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-                Console.WriteLine($"All cells linked to XmlMap \"{mapName}\" have been cleared.");
+            Workbook wb;
+            try
+            {
+                wb = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            string mapName = "Transmittals_Map";
+            string xmlPath = "/Transmittals/Issued_Document";
+
+            try
+            {
+                ClearLinkedCells(wb, mapName, xmlPath);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error clearing linked cells: {ex.Message}");
             }
-        }
-
-        // Example usage
-        public static void RunExample()
-        {
-            const string inputPath = "InputWithXmlMap.xlsx";
-            const string outputPath = "OutputCleared.xlsx";
-            const string mapName = "MyXmlMap";
-
-            // Prevent FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
 
             try
             {
-                // Load an existing workbook that contains an XML map.
-                Workbook wb = new Workbook(inputPath);
-
-                // Clear linked cells.
-                ClearLinkedCells(wb, mapName);
-
-                // Save the workbook (the XML map remains intact).
                 wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            XmlMapHelper.RunExample();
         }
     }
 }

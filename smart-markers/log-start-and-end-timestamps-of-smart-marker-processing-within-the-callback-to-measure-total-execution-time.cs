@@ -1,77 +1,67 @@
 using System;
+using System.Data;
 using Aspose.Cells;
 
 namespace SmartMarkerTimingDemo
 {
-    // Callback implementation that logs start and end timestamps of smart marker processing
-    public class SmartMarkerTimerCallback : ISmartMarkerCallBack
+    // Callback implementation that records the first and last processing timestamps
+    public class TimingSmartMarkerCallback : ISmartMarkerCallBack
     {
-        private readonly int _totalMarkers;          // Total number of smart markers to be processed
-        private int _processedCount;                 // Counter for processed markers
-        private DateTime _startTime;                 // Timestamp when processing starts
-        private DateTime _endTime;                   // Timestamp when processing ends
+        private DateTime? _startTime;
+        private DateTime? _endTime;
 
-        public SmartMarkerTimerCallback(int totalMarkers)
-        {
-            _totalMarkers = totalMarkers;
-            _processedCount = 0;
-        }
-
-        // This method is invoked for each smart marker during processing
+        // This method is called for each smart marker during processing
         public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
             // Record start time on the first invocation
-            if (_processedCount == 0)
-            {
+            if (_startTime == null)
                 _startTime = DateTime.Now;
-                Console.WriteLine($"Smart marker processing started at {_startTime:O}");
-            }
 
-            _processedCount++;
+            // Update end time on every invocation (will hold the time of the last call)
+            _endTime = DateTime.Now;
 
-            // Optional: log each individual marker processing details
-            Console.WriteLine($"Processing marker {_processedCount}/{_totalMarkers} - Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+            // Optional: log each smart marker processing event
+            Console.WriteLine($"SmartMarker processed - Sheet:{sheetIndex}, Row:{rowIndex}, Col:{colIndex}, Table:{tableName}, Column:{columnName}");
+        }
 
-            // When the last marker is processed, record end time and output total duration
-            if (_processedCount == _totalMarkers)
-            {
-                _endTime = DateTime.Now;
-                Console.WriteLine($"Smart marker processing ended at {_endTime:O}");
-                Console.WriteLine($"Total execution time: {_endTime - _startTime}");
-            }
+        // Expose the measured duration
+        public TimeSpan? GetProcessingDuration()
+        {
+            if (_startTime.HasValue && _endTime.HasValue)
+                return _endTime - _startTime;
+            return null;
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Load the template workbook that contains smart markers
-            Workbook templateWorkbook = new Workbook("SmartMarkerTemplate.xlsx");
+            // Initialize the workbook designer with a template that contains smart markers
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = new Workbook("SmartMarkerTemplate.xlsx"); // replace with your template path
 
-            // Initialize WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = templateWorkbook
-            };
+            // Set the custom callback to capture timing information
+            TimingSmartMarkerCallback callback = new TimingSmartMarkerCallback();
+            designer.CallBack = callback;
 
-            // Example data source (replace with actual data as needed)
-            System.Data.DataTable dataTable = new System.Data.DataTable("Employees");
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Age", typeof(int));
-            dataTable.Rows.Add("John Doe", 30);
-            dataTable.Rows.Add("Jane Smith", 28);
-            designer.SetDataSource(dataTable);
-
-            // Determine total number of smart markers to be processed
-            string[] smartMarkers = designer.GetSmartMarkers();
-            int totalMarkers = smartMarkers.Length;
-
-            // Assign the custom callback that measures processing time
-            designer.CallBack = new SmartMarkerTimerCallback(totalMarkers);
+            // Prepare a simple data source (replace with your actual data)
+            DataTable dt = new DataTable("Employees");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Age", typeof(int));
+            dt.Rows.Add("John Doe", 30);
+            dt.Rows.Add("Jane Smith", 28);
+            designer.SetDataSource(dt);
 
             // Process all smart markers
             designer.Process();
+
+            // After processing, retrieve and display the total execution time
+            TimeSpan? duration = callback.GetProcessingDuration();
+            if (duration.HasValue)
+                Console.WriteLine($"Total smart marker processing time: {duration.Value.TotalMilliseconds} ms");
+            else
+                Console.WriteLine("Processing duration could not be determined.");
 
             // Save the resulting workbook
             designer.Workbook.Save("SmartMarkerOutput.xlsx");

@@ -1,78 +1,95 @@
+// Title: Filter and Remove Underscore‑Prefixed Defined Names When Loading a Workbook – Aspose.Cells for .NET
+// Description: This example creates a workbook with visible and '_'‑prefixed defined names, saves it, then reloads the file using a LoadFilter configured for LoadDataFilterOptions.DefinedNames. It programmatically removes all names that start with '_' via NameCollection.Remove, verifies their absence, and saves the cleaned workbook.
+// Keywords: Aspose.Cells | LoadFilter | DefinedNames | C# | remove defined names | underscore prefix | named ranges | LoadDataFilterOptions | Workbook loading | verify removal
+// Common Searches: Aspose.Cells load only defined names | remove underscore named ranges Aspose.Cells | filter defined names during workbook load .NET | check for hidden defined names after deletion | LoadOptions LoadFilter example
+// Developer Intent: Load a workbook, delete every defined name that begins with '_' and confirm that none remain.
+// Use Cases: Create a workbook containing both visible and '_'‑prefixed defined names and persist it. | Reload the workbook with LoadOptions.LoadFilter set to DefinedNames to limit the data read. | Identify and delete all defined names whose Text starts with '_' using NameCollection.Remove. | Validate that no underscore‑prefixed names exist before saving the cleaned file. | Reuse the cleaned workbook for further processing or distribution.
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells using LoadFilter to load only defined names, then removes any names beginning with '_' and confirms their removal. | Explain the purpose of LoadDataFilterOptions.DefinedNames in Aspose.Cells and how it improves performance when only the name collection is needed. | Provide alternative approaches to exclude underscore‑prefixed defined names without loading the entire name collection, such as custom LoadFilter logic or post‑load filtering. | Generate a PowerShell script that uses Aspose.Cells for .NET to batch‑process multiple workbooks, removing underscore‑prefixed defined names.
+
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 
 namespace AsposeCellsDefinedNameFilter
 {
+    // This example creates a workbook with visible and '_'‑prefixed defined names, saves it, then reloads the file using a LoadFilter configured for LoadDataFilterOptions.DefinedNames. It programmatically removes all names that start with '_' via NameCollection.Remove, verifies their absence, and saves the cleaned workbook.
     class Program
     {
         static void Main()
         {
-            // Step 1: Create a workbook and add defined names, some start with '_' 
-            Workbook wbCreate = new Workbook();
-            Worksheet ws = wbCreate.Worksheets[0];
+            // -----------------------------------------------------------------
+            // 1. Create a workbook and add defined names (some start with "_")
+            // -----------------------------------------------------------------
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Add normal names
-            int idx1 = wbCreate.Worksheets.Names.Add("NormalRange1");
-            wbCreate.Worksheets.Names[idx1].RefersTo = "=Sheet1!$A$1:$A$5";
+            // Add visible name
+            int idxVisible = wb.Worksheets.Names.Add("VisibleRange");
+            Name visibleName = wb.Worksheets.Names[idxVisible];
+            visibleName.RefersTo = "=Sheet1!$A$1";
 
-            int idx2 = wbCreate.Worksheets.Names.Add("NormalRange2");
-            wbCreate.Worksheets.Names[idx2].RefersTo = "=Sheet1!$B$1:$B$5";
+            // Add hidden names (start with "_")
+            int idxHidden1 = wb.Worksheets.Names.Add("_HiddenRange1");
+            Name hiddenName1 = wb.Worksheets.Names[idxHidden1];
+            hiddenName1.RefersTo = "=Sheet1!$B$1";
 
-            // Add names that start with '_' (to be filtered out)
-            int idxHidden1 = wbCreate.Worksheets.Names.Add("_HiddenRange1");
-            wbCreate.Worksheets.Names[idxHidden1].RefersTo = "=Sheet1!$C$1:$C$5";
-
-            int idxHidden2 = wbCreate.Worksheets.Names.Add("_HiddenRange2");
-            wbCreate.Worksheets.Names[idxHidden2].RefersTo = "=Sheet1!$D$1:$D$5";
+            int idxHidden2 = wb.Worksheets.Names.Add("_HiddenRange2");
+            Name hiddenName2 = wb.Worksheets.Names[idxHidden2];
+            hiddenName2.RefersTo = "=Sheet1!$C$1";
 
             // Save the workbook to a temporary file
-            string filePath = "NamesFilterDemo.xlsx";
-            wbCreate.Save(filePath);
-            wbCreate.Dispose();
+            string filePath = "DefinedNamesDemo.xlsx";
+            wb.Save(filePath);
+            wb.Dispose();
 
-            // Step 2: Load the workbook with a LoadFilter (using the provided constructor)
-            LoadFilter loadFilter = new LoadFilter();                     // uses LoadFilter() rule
-            LoadOptions loadOptions = new LoadOptions();                 // default options
-            loadOptions.LoadFilter = loadFilter;                         // assign the filter (rule)
+            // ---------------------------------------------------------------
+            // 2. Load the workbook with a LoadFilter that loads defined names
+            // ---------------------------------------------------------------
+            // Create a LoadFilter that enables loading of defined names only
+            LoadFilter loadFilter = new LoadFilter(LoadDataFilterOptions.DefinedNames);
 
-            Workbook wbLoad = new Workbook(filePath, loadOptions);       // load with options (rule)
+            // Assign the filter to LoadOptions
+            LoadOptions loadOptions = new LoadOptions();
+            loadOptions.LoadFilter = loadFilter;
 
-            // Step 3: Identify defined names that start with '_' and remove them
-            NameCollection names = wbLoad.Worksheets.Names;
-            List<string> namesToRemove = new List<string>();
+            // Load the workbook using the options
+            Workbook loadedWb = new Workbook(filePath, loadOptions);
 
-            foreach (Name name in names)
+            // ---------------------------------------------------------------
+            // 3. Remove all defined names that start with "_"
+            // ---------------------------------------------------------------
+            NameCollection names = loadedWb.Worksheets.Names;
+
+            // Find names beginning with '_' and collect their texts
+            string[] namesToRemove = names
+                .Cast<Name>()
+                .Where(n => n.Text.StartsWith("_"))
+                .Select(n => n.Text)
+                .ToArray();
+
+            // Use the provided Remove(string[]) method to delete them
+            if (namesToRemove.Length > 0)
             {
-                if (name.Text.StartsWith("_"))
-                {
-                    namesToRemove.Add(name.Text);
-                }
+                names.Remove(namesToRemove);
             }
 
-            // Remove the collected names using the provided Remove(string[]) method
-            if (namesToRemove.Count > 0)
+            // ---------------------------------------------------------------
+            // 4. Verify that no names starting with '_' remain
+            // ---------------------------------------------------------------
+            bool anyUnderscoreNames = names
+                .Cast<Name>()
+                .Any(n => n.Text.StartsWith("_"));
+
+            Console.WriteLine("Names starting with '_' present after removal: " + anyUnderscoreNames);
+            Console.WriteLine("Remaining defined names:");
+            foreach (Name n in names)
             {
-                names.Remove(namesToRemove.ToArray());                  // uses Remove(string[]) rule
+                Console.WriteLine("- " + n.Text);
             }
 
-            // Step 4: Verify that no defined name starts with '_' after removal
-            bool anyUnderscoreNames = false;
-            foreach (Name name in names)
-            {
-                if (name.Text.StartsWith("_"))
-                {
-                    anyUnderscoreNames = true;
-                    break;
-                }
-            }
-
-            Console.WriteLine("Underscore-prefixed names present after filtering: " + anyUnderscoreNames);
-            // Expected output: false
-
-            // Optional: Save the cleaned workbook
-            wbLoad.Save("NamesFilterDemo_Cleaned.xlsx");
-            wbLoad.Dispose();
+            // Optionally save the cleaned workbook
+            loadedWb.Save("DefinedNamesDemo_Cleaned.xlsx");
+            loadedWb.Dispose();
         }
     }
 }

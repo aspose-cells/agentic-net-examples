@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
@@ -8,73 +7,70 @@ namespace AsposeCellsTests
 {
     public class CustomPropertyPersistenceTests
     {
-        public void Run()
-        {
-            // Arrange: create a workbook and add a custom property
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            const string propertyName = "TestProp";
-            const string propertyValue = "TestValue";
-            sheet.CustomProperties.Add(propertyName, propertyValue);
+        private const string PropertyName = "TestProperty";
+        private const string PropertyValue = "HelloWorld";
 
-            // Temporary file for saving the workbook
-            string tempFile = Path.Combine(Path.GetTempPath(), $"CustomProp_{Guid.NewGuid()}.xlsx");
-
-            try
-            {
-                // Act: save the workbook
-                workbook.Save(tempFile);
-
-                // Ensure the file exists before loading
-                if (!File.Exists(tempFile))
-                    throw new FileNotFoundException("Saved workbook not found.", tempFile);
-
-                // Load the workbook back
-                Workbook loadedWorkbook = new Workbook(tempFile);
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-                // Retrieve the custom property
-                CustomProperty loadedProperty = loadedSheet.CustomProperties
-                    .FirstOrDefault(p => p.Name == propertyName);
-
-                // Assert: property exists and value matches
-                if (loadedProperty == null)
-                    throw new InvalidOperationException("Custom property was not found after loading the workbook.");
-
-                if (!propertyValue.Equals(loadedProperty.Value?.ToString()))
-                    throw new InvalidOperationException("Custom property value did not persist correctly.");
-
-                Console.WriteLine("Custom property persisted successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Runtime safety: log and rethrow
-                Console.WriteLine($"Error: {ex.Message}");
-                throw;
-            }
-            finally
-            {
-                // Cleanup: delete temporary file if it exists
-                if (File.Exists(tempFile))
-                {
-                    try { File.Delete(tempFile); } catch { /* ignore cleanup errors */ }
-                }
-            }
-        }
-    }
-
-    class Program
-    {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                var test = new CustomPropertyPersistenceTests();
-                test.Run();
+                new CustomPropertyPersistenceTests().RunTest();
+                Console.WriteLine("Test passed.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Test failed: {ex.Message}");
+            }
+        }
+
+        public void RunTest()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a custom property to the worksheet
+            CustomPropertyCollection customProps = sheet.CustomProperties;
+            customProps.Add(PropertyName, PropertyValue);
+
+            // Save the workbook to a temporary file
+            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
+            workbook.Save(tempFile, SaveFormat.Xlsx);
+
+            // Ensure the file exists before loading
+            if (!File.Exists(tempFile))
+                throw new FileNotFoundException("Saved workbook file not found.", tempFile);
+
+            // Load the workbook from the saved file
+            Workbook loadedWorkbook = new Workbook(tempFile);
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+            CustomPropertyCollection loadedCustomProps = loadedSheet.CustomProperties;
+
+            // Retrieve the property and verify its value
+            bool found = false;
+            foreach (CustomProperty prop in loadedCustomProps)
+            {
+                if (prop.Name == PropertyName)
+                {
+                    found = true;
+                    if (prop.Value?.ToString() != PropertyValue)
+                        throw new InvalidOperationException("Custom property value mismatch after reload.");
+                    break;
+                }
+            }
+
+            if (!found)
+                throw new InvalidOperationException($"Custom property '{PropertyName}' was not found after reload.");
+
+            // Clean up the temporary file
+            try
+            {
+                if (File.Exists(tempFile))
+                    File.Delete(tempFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to delete temporary file. {ex.Message}");
             }
         }
     }

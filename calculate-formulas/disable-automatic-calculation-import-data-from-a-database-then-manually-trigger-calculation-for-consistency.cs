@@ -2,62 +2,74 @@ using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace AsposeCellsCalcModeExample
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Simulate data import from a database using a DataTable
-            DataTable dbTable = new DataTable("SalesData");
-            dbTable.Columns.Add("Product", typeof(string));
-            dbTable.Columns.Add("Quantity", typeof(int));
-            dbTable.Columns.Add("UnitPrice", typeof(double));
+            // ------------------------------------------------------------
+            // Simulate database data using a DataTable
+            // ------------------------------------------------------------
+            DataTable dbTable = new DataTable("Employees");
+            dbTable.Columns.Add("ID", typeof(int));
+            dbTable.Columns.Add("Name", typeof(string));
+            dbTable.Columns.Add("Salary", typeof(double));
 
-            dbTable.Rows.Add("Apple", 10, 0.5);
-            dbTable.Rows.Add("Banana", 20, 0.3);
-            dbTable.Rows.Add("Cherry", 15, 0.8);
+            dbTable.Rows.Add(1, "John Doe", 50000);
+            dbTable.Rows.Add(2, "Jane Smith", 62000);
+            dbTable.Rows.Add(3, "Mike Johnson", 58000);
 
-            // Set import options (show column headers)
-            ImportTableOptions importOptions = new ImportTableOptions
+            // Create a data reader from the DataTable (acts like a DB IDataReader)
+            using (IDataReader dataReader = dbTable.CreateDataReader())
             {
-                IsFieldNameShown = true
-            };
+                // Define import options (show column names, insert rows, etc.)
+                ImportTableOptions importOptions = new ImportTableOptions
+                {
+                    IsFieldNameShown = true,   // include column headers
+                    InsertRows = true,         // insert rows if needed
+                    ConvertNumericData = true, // convert numeric types automatically
+                    DateFormat = "yyyy-MM-dd"
+                };
 
-            // Import the data starting at cell A1 (lifecycle rule: import data)
-            cells.ImportData(dbTable, 0, 0, importOptions);
-
-            // Add a formula that calculates total sales per row
-            // Assuming data starts at row 2 (index 1) after headers
-            for (int row = 1; row <= dbTable.Rows.Count; row++)
-            {
-                // Column D will hold Quantity * UnitPrice
-                cells[row, 3].Formula = $"=B{row + 1}*C{row + 1}";
+                // Import data starting at cell A1 (row 0, column 0)
+                cells.ImportData(dataReader, 0, 0, importOptions);
             }
 
-            // Add a summary formula to sum total sales
-            int summaryRow = dbTable.Rows.Count + 2; // one extra row after data
-            cells[summaryRow, 2].PutValue("Total Sales:");
-            cells[summaryRow, 3].Formula = $"=SUM(D2:D{summaryRow})";
+            // ------------------------------------------------------------
+            // Add some formulas that depend on the imported data
+            // ------------------------------------------------------------
+            // Example: total salary in column D (after the imported table)
+            // Assuming headers occupy row 0, data starts at row 1, and Salary column is C (index 2)
+            // Place formula in D2 (row 1, column 3) to sum the Salary column
+            cells[1, 3].Formula = "=SUM(C2:C4)";
 
-            // Disable automatic calculation
-            FormulaSettings formulaSettings = workbook.Settings.FormulaSettings;
-            formulaSettings.CalculationMode = CalcModeType.Manual;
-            formulaSettings.CalculateOnOpen = false;
-            formulaSettings.CalculateOnSave = false;
+            // ------------------------------------------------------------
+            // Disable automatic calculation and set manual mode
+            // ------------------------------------------------------------
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // Optional: ensure formulas are not calculated on open/save
+            workbook.Settings.FormulaSettings.CalculateOnOpen = false;
+            workbook.Settings.FormulaSettings.CalculateOnSave = false;
 
-            // Manually trigger calculation to ensure consistency
+            // ------------------------------------------------------------
+            // Manually trigger calculation for consistency
+            // ------------------------------------------------------------
             workbook.CalculateFormula();
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ImportedDataWithManualCalc.xlsx");
+            // ------------------------------------------------------------
+            // Save the workbook (lifecycle rule)
+            // ------------------------------------------------------------
+            workbook.Save("ManualCalculationExample.xlsx", SaveFormat.Xlsx);
+
+            Console.WriteLine("Workbook created, data imported, and formulas calculated manually.");
         }
     }
 }

@@ -1,88 +1,89 @@
+// Title: Case‑insensitive search for "invoice" in all workbook‑scoped named ranges (Aspose.Cells for .NET)
+// Description: Loads an Excel workbook, filters to workbook‑level named ranges, iterates each range, and uses FindOptions (case‑insensitive, contains) to locate cells that contain the word "invoice". Matching range name, cell address, and worksheet are written to the console, and the workbook is saved unchanged.
+// Keywords: Aspose.Cells | C# | .NET | named ranges | workbook‑scoped names | global named ranges | case insensitive search | FindOptions | search text in Excel | invoice lookup | Excel automation example | GitHub code sample
+// Common Searches: search text in all global named ranges Aspose.Cells | case insensitive find in workbook scoped names C# | Aspose.Cells find "invoice" in named ranges | C# code to locate cells containing a word in Excel named ranges | how to filter workbook‑level names with Aspose.Cells
+// Developer Intent: Identify every cell that contains the word "invoice" within workbook‑scoped named ranges.
+// Use Cases: Create an audit list of invoice references across multiple sheets for data validation. | Generate a report that logs worksheet, named range, and cell address for each occurrence of "invoice". | Trigger custom actions—such as applying formatting or raising alerts—when the term appears in any global named range.
+// AI Prompts: Give a minimal Aspose.Cells C# snippet that searches case‑insensitively for a string in all workbook‑scoped named ranges and returns matching cell addresses. | Show how to modify the example to replace every found "invoice" with "receipt" across the named ranges. | Explain how to export the found cell details (worksheet, range name, address) to a CSV file instead of printing to the console.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-class Program
+namespace AsposeCellsInvoiceSearch
 {
-    static void Main()
+    // Loads an Excel workbook, filters to workbook‑level named ranges, iterates each range, and uses FindOptions (case‑insensitive, contains) to locate cells that contain the word "invoice". Matching range name, cell address, and worksheet are written to the console, and the workbook is saved unchanged.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
-
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Invoice #123");
-            sheet.Cells["A2"].PutValue("No invoice here");
-            sheet.Cells["B1"].PutValue("Other");
-            sheet.Cells["B2"].PutValue("invoice details");
-            sheet.Cells["A3"].PutValue("Invoice summary");
-            sheet.Cells["A4"].PutValue("Summary");
-
-            // Create global (workbook‑scoped) named range "GlobalRange1" covering A1:B2
-            int idx1 = workbook.Worksheets.Names.Add("GlobalRange1");
-            Name globalName1 = workbook.Worksheets.Names[idx1];
-            globalName1.RefersTo = "=Sheet1!$A$1:$B$2";
-            globalName1.SheetIndex = 0; // 0 = workbook scope
-
-            // Create another global named range "GlobalRange2" covering A3:A4
-            int idx2 = workbook.Worksheets.Names.Add("GlobalRange2");
-            Name globalName2 = workbook.Worksheets.Names[idx2];
-            globalName2.RefersTo = "=Sheet1!$A$3:$A$4";
-            globalName2.SheetIndex = 0;
-
-            // Iterate over all defined names and process only workbook‑scoped ones
-            foreach (Name name in workbook.Worksheets.Names)
+            try
             {
-                if (name.SheetIndex != 0) // skip non‑global names
-                    continue;
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Retrieve the range that the name refers to
-                AsposeRange range = name.GetRange();
-                if (range == null)
-                    continue;
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-                // Configure FindOptions for a case‑insensitive, contains search
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure find options: case‑insensitive, search in values, match if cell contains the word
                 FindOptions findOptions = new FindOptions
                 {
+                    CaseSensitive = false,
                     LookInType = LookInType.Values,
-                    LookAtType = LookAtType.Contains,
-                    CaseSensitive = false
+                    LookAtType = LookAtType.Contains
                 };
 
-                // Restrict the search to the current named range
-                CellArea searchArea = new CellArea
-                {
-                    StartRow = range.FirstRow,
-                    StartColumn = range.FirstColumn,
-                    EndRow = range.FirstRow + range.RowCount - 1,
-                    EndColumn = range.FirstColumn + range.ColumnCount - 1
-                };
-                findOptions.SetRange(searchArea);
+                // Retrieve only workbook‑scoped (global) named ranges
+                Name[] workbookNames = workbook.Worksheets.Names.Filter(NameScopeType.Workbook, -1);
 
-                // Perform the search for the word "invoice"
-                Cell foundCell = sheet.Cells.Find("invoice", null, findOptions);
-                while (foundCell != null)
+                foreach (Name name in workbookNames)
                 {
-                    Console.WriteLine($"Found in named range '{name.Text}' at cell {foundCell.Name}");
-                    // Continue searching after the current cell
-                    foundCell = sheet.Cells.Find("invoice", foundCell, findOptions);
+                    // Get the ranges referenced by the name
+                    AsposeRange[] ranges = name.GetRanges();
+
+                    if (ranges == null) continue; // skip if the name does not refer to a range
+
+                    foreach (AsposeRange range in ranges)
+                    {
+                        // Define the search area based on the range dimensions
+                        CellArea area = new CellArea
+                        {
+                            StartRow = range.FirstRow,
+                            StartColumn = range.FirstColumn,
+                            EndRow = range.FirstRow + range.RowCount - 1,
+                            EndColumn = range.FirstColumn + range.ColumnCount - 1
+                        };
+                        findOptions.SetRange(area);
+
+                        // Perform the search within the defined area
+                        Worksheet ws = range.Worksheet;
+                        Cell foundCell = ws.Cells.Find("invoice", null, findOptions);
+
+                        if (foundCell != null)
+                        {
+                            Console.WriteLine(
+                                $"Found \"invoice\" in named range \"{name.Text}\" at cell {foundCell.Name} (Worksheet: {ws.Name})");
+                        }
+                    }
                 }
-            }
 
-            // Save the workbook (lifecycle: save)
-            string outputPath = "InvoiceSearchResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+                // Save the workbook (optional – here we just save without modifications)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Log unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

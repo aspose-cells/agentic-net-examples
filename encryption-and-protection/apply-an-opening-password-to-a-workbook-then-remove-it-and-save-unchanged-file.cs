@@ -1,38 +1,40 @@
+// Title: Set and Remove an Opening Password on an Excel Workbook with Aspose.Cells for .NET
+// Description: Demonstrates how to assign an opening password to a workbook via Workbook.Settings.Password, save the protected file, reload it using LoadOptions.Password, clear the password, and save an unprotected copy while keeping all worksheet data intact.
+// Keywords: Aspose.Cells C# | set workbook opening password | remove Excel password programmatically | load password‑protected workbook .NET | Workbook.Settings.Password | LoadOptions.Password | Excel encryption Aspose | unprotect Excel file C# | protect Excel workbook with Aspose.Cells | Aspose.Cells encryption and decryption
+// Common Searches: How to add an opening password to an Excel file using Aspose.Cells | Remove opening password from a workbook with Aspose.Cells C# | Load a password‑protected Excel workbook in .NET | Save an unprotected copy of a protected Excel file using Aspose.Cells | Aspose.Cells example for workbook encryption and decryption
+// Developer Intent: Apply an opening password to a workbook, then remove it and save the file without protection.
+// Use Cases: Generate a report, protect it with a temporary password for secure transmission, and later store an unprotected version for archiving. | Open a password‑protected template, programmatically modify its content, and save a clean workbook for downstream processing. | Automate a batch workflow where files are initially encrypted for compliance and subsequently released as plain Excel files.
+// AI Prompts: Show C# code using Aspose.Cells to set an opening password, load the workbook with LoadOptions, clear the password, and save an unprotected file. | Explain how Workbook.Settings.Password differs from WorkbookProtection and how to remove an opening password in Aspose.Cells. | Provide a step‑by‑step guide for encrypting an Excel workbook, opening it with a password, and then removing the password while preserving all data.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordDemo
+// Demonstrates how to assign an opening password to a workbook via Workbook.Settings.Password, save the protected file, reload it using LoadOptions.Password, clear the password, and save an unprotected copy while keeping all worksheet data intact.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // 1. Create a new workbook and add sample data
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data");
+        // ---------- Create a new workbook and add sample data ----------
+        Workbook workbook = new Workbook();
+        workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
 
-            // 2. Apply an opening password to the workbook
-            wb.Settings.Password = "OpenSecret";
+        // ---------- Apply an opening password ----------
+        workbook.Settings.Password = "OpenPassword123";
 
-            // 3. Save the password‑protected workbook
-            string protectedPath = "protected_workbook.xlsx";
-            wb.Save(protectedPath);
-            Console.WriteLine($"Workbook saved with opening password: {protectedPath}");
+        // Save the password‑protected workbook
+        string protectedFile = "protected.xlsx";
+        workbook.Save(protectedFile);
 
-            // 4. Load the protected workbook using the password
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.Password = "OpenSecret";
-            Workbook protectedWb = new Workbook(protectedPath, loadOptions);
-            Console.WriteLine("Protected workbook opened successfully.");
+        // ---------- Load the protected workbook using the password ----------
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.Password = "OpenPassword123";
+        Workbook loadedWorkbook = new Workbook(protectedFile, loadOptions);
 
-            // 5. Remove the opening password
-            protectedWb.Settings.Password = null; // or string.Empty
+        // ---------- Remove the opening password ----------
+        loadedWorkbook.Settings.Password = null; // clearing the password removes protection
 
-            // 6. Save the workbook without a password (unchanged content)
-            string unprotectedPath = "unprotected_workbook.xlsx";
-            protectedWb.Save(unprotectedPath);
-            Console.WriteLine($"Workbook saved without opening password: {unprotectedPath}");
-        }
+        // Save the workbook without a password (unchanged content)
+        string unprotectedFile = "unprotected.xlsx";
+        loadedWorkbook.Save(unprotectedFile);
     }
 }

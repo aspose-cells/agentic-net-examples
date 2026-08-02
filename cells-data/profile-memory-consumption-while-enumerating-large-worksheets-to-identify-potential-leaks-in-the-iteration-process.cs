@@ -1,97 +1,64 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryProfiling
+class MemoryProfilingExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load a large workbook (replace with actual file path)
+        string inputPath = "LargeWorkbook.xlsx";
+        Workbook workbook = new Workbook(inputPath);
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Use FileCache mode to keep memory usage low during iteration
+        cells.MemorySetting = MemorySetting.FileCache;
+
+        // Force a full garbage collection before starting measurements
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        long initialMemory = GC.GetTotalMemory(true);
+        Console.WriteLine($"Initial memory: {initialMemory / 1024 / 1024} MB");
+
+        // Enumerate rows sequentially (recommended for FileCache mode)
+        IEnumerator rowEnumerator = cells.Rows.GetEnumerator();
+        int processedRows = 0;
+        Stopwatch sw = Stopwatch.StartNew();
+
+        while (rowEnumerator.MoveNext())
         {
-            const string inputPath = "LargeFile.xlsx";
-            const string outputPath = "ProcessedLargeFile.xlsx";
+            Row row = (Row)rowEnumerator.Current;
 
-            Workbook workbook = null;
-
-            try
+            // Enumerate cells within the current row (optional, just to access data)
+            IEnumerator cellEnumerator = row.GetEnumerator();
+            while (cellEnumerator.MoveNext())
             {
-                // Load existing workbook or create a new one if the file is missing
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                    workbook = new Workbook(); // creates a default workbook with one worksheet
-                }
-
-                // Reduce in‑memory footprint for large data
-                workbook.Worksheets[0].Cells.MemorySetting = MemorySetting.FileCache;
-
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Warm up GC and capture baseline memory usage
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                long memoryBefore = GC.GetTotalMemory(true);
-                Console.WriteLine($"Memory before enumeration: {memoryBefore / 1024 / 1024} MB");
-
-                // Start timing
-                Stopwatch sw = Stopwatch.StartNew();
-
-                // Enumerate rows sequentially (recommended for FileCache mode)
-                IEnumerator rowEnum = cells.Rows.GetEnumerator();
-                while (rowEnum.MoveNext())
-                {
-                    Row row = (Row)rowEnum.Current;
-
-                    // Enumerate cells within the current row
-                    IEnumerator cellEnum = row.GetEnumerator();
-                    while (cellEnum.MoveNext())
-                    {
-                        Cell cell = (Cell)cellEnum.Current;
-                        var value = cell.Value; // Dummy read to simulate processing
-                    }
-                }
-
-                sw.Stop();
-
-                // Measure memory after enumeration
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                long memoryAfter = GC.GetTotalMemory(true);
-                Console.WriteLine($"Memory after enumeration: {memoryAfter / 1024 / 1024} MB");
-                Console.WriteLine($"Memory delta: {(memoryAfter - memoryBefore) / 1024 / 1024} MB");
-                Console.WriteLine($"Enumeration time: {sw.ElapsedMilliseconds} ms");
-
-                // Save the workbook
-                workbook.Save(outputPath);
+                Cell cell = (Cell)cellEnumerator.Current;
+                // Access the cell value to ensure the cell is actually read
+                var _ = cell.Value;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Ensure resources are released
-                if (workbook != null)
-                {
-                    workbook.Dispose();
-                }
 
-                // Final memory check after disposal
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                long memoryFinal = GC.GetTotalMemory(true);
-                Console.WriteLine($"Memory after disposal: {memoryFinal / 1024 / 1024} MB");
+            processedRows++;
+
+            // Report memory usage every 1000 rows
+            if (processedRows % 1000 == 0)
+            {
+                long currentMemory = GC.GetTotalMemory(false);
+                Console.WriteLine($"Rows processed: {processedRows}, Elapsed: {sw.Elapsed.TotalSeconds:F1}s, Memory: {currentMemory / 1024 / 1024} MB");
             }
         }
+
+        sw.Stop();
+        long finalMemory = GC.GetTotalMemory(true);
+        Console.WriteLine($"Finished processing. Total rows: {processedRows}, Time: {sw.Elapsed.TotalSeconds:F1}s");
+        Console.WriteLine($"Final memory: {finalMemory / 1024 / 1024} MB");
+        Console.WriteLine($"Memory change: {(finalMemory - initialMemory) / 1024 / 1024} MB");
+
+        // Save the workbook (demonstrates the required save rule)
+        workbook.Save("ProcessedWorkbook.xlsx");
     }
 }

@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class SetChartDataRangeExample
+class SetChartDataRangeDemo
 {
     static void Main()
     {
@@ -10,26 +10,28 @@ class SetChartDataRangeExample
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate cells with sample data
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Series1");
-        worksheet.Cells["A2"].PutValue("Cat1");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("Cat2");
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["A4"].PutValue("Cat3");
-        worksheet.Cells["B4"].PutValue(30);
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Series1");
+        sheet.Cells["A2"].PutValue("Cat1");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["A3"].PutValue("Cat2");
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["A4"].PutValue("Cat3");
+        sheet.Cells["B4"].PutValue(30);
 
-        // Add a chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        Chart chart = sheet.Charts[chartIndex];
 
-        // Set the chart's data source range (vertical series)
+        // Set the chart's data source range.
+        // "A1:B4" includes both category labels and series values.
+        // The second argument (true) indicates that data series are plotted by column.
         chart.SetChartDataRange("A1:B4", true);
 
-        // Save the workbook
-        workbook.Save("ChartWithDataRange.xlsx");
+        // Save the workbook with the chart
+        workbook.Save("ChartDataRangeDemo.xlsx");
     }
 }

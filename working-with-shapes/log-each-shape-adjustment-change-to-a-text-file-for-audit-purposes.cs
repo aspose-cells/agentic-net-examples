@@ -1,73 +1,94 @@
+// Title: Log Shape Adjustment Guide Changes in Aspose.Cells for .NET
+// Description: Creates a workbook, adds a RightArrowCallout auto shape, initializes its ShapeGuideCollection, writes the original guide values to a text file, updates each guide, records every old‑to‑new change with timestamps, and saves both the workbook and the audit log.
+// Keywords: Aspose.Cells | C# shape adjustment logging | audit shape guide changes | auto shape geometry tracking | Excel workbook audit log | ShapeGuideCollection write to file
+// Common Searches: Aspose.Cells log shape guide changes | audit shape adjustments .NET | write shape geometry changes to text file | track auto shape modifications in Excel | record shape adjustment values Aspose.Cells
+// Developer Intent: Capture every modification to a shape’s adjustment guides and store the details in a persistent text log for compliance or debugging.
+// Use Cases: Generate an initial snapshot of all adjustment guides after shape creation. | Log each guide update during runtime, showing previous and new values. | Maintain a searchable audit trail that can be reviewed after the workbook is saved.
+// AI Prompts: Create C# code that logs shape guide changes to a CSV file with columns for timestamp, shape ID, guide name, old value, and new value. | Provide a reusable method that accepts any Aspose.Cells shape, records its adjustment modifications, and appends entries to a log file. | Explain how to aggregate guide change logs from multiple worksheets into a single summary report.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeAdjustLogging
+namespace AsposeCellsShapeAdjustmentAudit
 {
+    // Creates a workbook, adds a RightArrowCallout auto shape, initializes its ShapeGuideCollection, writes the original guide values to a text file, updates each guide, records every old‑to‑new change with timestamps, and saves both the workbook and the audit log.
     class Program
     {
         static void Main()
         {
-            const string logPath = "ShapeAdjustmentsAudit.log";
-
             try
             {
-                // Clear previous log content
+                // Path for the audit log file
+                string logPath = "ShapeAdjustmentsLog.txt";
+
+                // Ensure the log file is empty at start
                 File.WriteAllText(logPath, string.Empty);
 
-                // Create a new workbook and obtain the first worksheet
-                var workbook = new Workbook();
-                var worksheet = workbook.Worksheets[0];
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add an auto shape that supports adjustment guides
-                var shape = worksheet.Shapes.AddAutoShape(
-                    AutoShapeType.RightArrowCallout, 2, 0, 2, 0, 200, 150);
+                // Add an auto shape that supports adjustment guides (e.g., RightArrowCallout)
+                Shape shape = worksheet.Shapes.AddAutoShape(
+                    AutoShapeType.RightArrowCallout, // shape type
+                    2, 0,   // upper left row, column
+                    2, 0,   // upper left row offset, column offset
+                    200, 150); // width, height
 
-                // Access the shape's geometry (contains adjustment guides)
-                var geometry = shape.Geometry;
+                // Access the geometry adjustment collection
+                ShapeGuideCollection guides = shape.Geometry.ShapeAdjustValues;
 
-                // Ensure there are some adjustment guides to work with
-                if (geometry.ShapeAdjustValues.Count == 0)
+                // Add some initial adjustment guides
+                guides.Add("adj1", 20.0);
+                guides.Add("adj2", 30.0);
+                guides.Add("adj3", 40.0);
+
+                // Log initial adjustment values
+                using (StreamWriter logWriter = new StreamWriter(logPath, true))
                 {
-                    geometry.ShapeAdjustValues.Add("adj1", 10.0);
-                    geometry.ShapeAdjustValues.Add("adj2", 20.0);
-                }
-
-                // Log each adjustment change
-                using (var logWriter = new StreamWriter(logPath, true))
-                {
-                    for (int i = 0; i < geometry.ShapeAdjustValues.Count; i++)
+                    logWriter.WriteLine($"Timestamp: {DateTime.Now}");
+                    logWriter.WriteLine($"Shape ID: {shape.Name}");
+                    logWriter.WriteLine("Initial adjustment values:");
+                    for (int i = 0; i < guides.Count; i++)
                     {
-                        double originalValue = geometry.ShapeAdjustValues[i].Value;
-                        double newValue = originalValue + 5.0;
-
-                        // Apply the new adjustment value
-                        geometry.ShapeAdjustValues[i].Value = newValue;
-
-                        // ShapeGuide does not expose a Name property; use a fallback name
-                        string guideName = $"adj{i + 1}";
-
-                        logWriter.WriteLine(
-                            $"{DateTime.Now:u} - Shape '{shape.Name}' guide '{guideName}' changed from {originalValue} to {newValue}");
+                        ShapeGuide guide = guides[i];
+                        logWriter.WriteLine($"  Guide{i + 1} = {guide.Value}");
                     }
+                    logWriter.WriteLine();
                 }
 
-                // Save the workbook
-                const string outputFile = "ShapeAdjustmentsDemo.xlsx";
-                try
+                // Example modification: change each guide value and log the change
+                using (StreamWriter logWriter = new StreamWriter(logPath, true))
                 {
-                    workbook.Save(outputFile);
+                    logWriter.WriteLine($"Timestamp: {DateTime.Now}");
+                    logWriter.WriteLine($"Shape ID: {shape.Name}");
+                    logWriter.WriteLine("Modification of adjustment values:");
+
+                    for (int i = 0; i < guides.Count; i++)
+                    {
+                        ShapeGuide guide = guides[i];
+                        double oldValue = guide.Value;
+                        double newValue = oldValue + 5.0; // arbitrary change
+
+                        // Apply the new value
+                        guide.Value = newValue;
+
+                        // Log the change
+                        logWriter.WriteLine($"  Guide{i + 1}: {oldValue} -> {newValue}");
+                    }
+                    logWriter.WriteLine();
                 }
-                catch (Exception saveEx)
-                {
-                    Console.Error.WriteLine($"Error saving workbook: {saveEx.Message}");
-                }
+
+                // Save the workbook with the modified shape
+                string outputPath = "ShapeAdjustmentAuditDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'. Audit log written to '{logPath}'.");
             }
             catch (Exception ex)
             {
-                // Log unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

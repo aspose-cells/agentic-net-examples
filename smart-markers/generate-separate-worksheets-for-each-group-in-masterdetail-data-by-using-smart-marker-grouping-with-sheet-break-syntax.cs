@@ -4,7 +4,7 @@ using Aspose.Cells;
 
 namespace SmartMarkerSheetBreakDemo
 {
-    // Sample master‑detail classes
+    // Simple master‑detail classes
     public class Department
     {
         public string Name { get; set; }
@@ -14,78 +14,85 @@ namespace SmartMarkerSheetBreakDemo
     public class Employee
     {
         public string Name { get; set; }
-        public int Age { get; set; }
+        public string Title { get; set; }
     }
 
     public class Program
     {
         public static void Main()
         {
-            try
+            // ---------- Create a workbook (lifecycle rule: create) ----------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Template";
+
+            // ---------- Build the template with smart markers ----------
+            // Header row
+            sheet.Cells["A1"].PutValue("Department");
+            sheet.Cells["B1"].PutValue("Employee");
+            sheet.Cells["C1"].PutValue("Title");
+
+            // Smart marker group start with sheet‑break syntax.
+            // The marker "&=Departments.Start" tells Aspose.Cells to start a new sheet
+            // for each distinct Department record.
+            sheet.Cells["A2"].PutValue("&=Departments.Start");
+
+            // Department name (master data)
+            sheet.Cells["A3"].PutValue("&=Departments.Name");
+
+            // Detail rows for Employees belonging to the current Department.
+            // The group markers "&=Employees.Start" / "&=Employees.End" repeat the rows
+            // for each employee in the master record.
+            sheet.Cells["B3"].PutValue("&=Employees.Start");
+            sheet.Cells["B3"].PutValue("&=Employees.Name");
+            sheet.Cells["C3"].PutValue("&=Employees.Title");
+            sheet.Cells["D3"].PutValue("&=Employees.End");
+
+            // End of the master group
+            sheet.Cells["A4"].PutValue("&=Departments.End");
+
+            // ---------- Prepare master‑detail data ----------
+            var departments = new List<Department>
             {
-                // 1. Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // 2. Get the first worksheet to design the template
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // 3. Build the template using smart markers and sheet‑break syntax
-                // Row 1 – headers for master data (Department)
-                sheet.Cells["A1"].PutValue("Department");
-                // Row 2 – sheet break marker for each Department group
-                // Correct syntax: &=[DataSourceName] creates a new sheet per group
-                sheet.Cells["A2"].PutValue("&=[Departments]");
-                // Row 3 – master field (Department name)
-                sheet.Cells["A3"].PutValue("&=Name");
-
-                // Row 5 – headers for detail data (Employees)
-                sheet.Cells["A5"].PutValue("Employee Name");
-                sheet.Cells["B5"].PutValue("Age");
-                // Row 6 – detail fields; hierarchical path to the child collection
-                sheet.Cells["A6"].PutValue("&=Employees.Name");
-                sheet.Cells["B6"].PutValue("&=Employees.Age");
-
-                // 4. Prepare sample master‑detail data
-                List<Department> departments = new List<Department>
+                new Department
                 {
-                    new Department
+                    Name = "Sales",
+                    Employees = new List<Employee>
                     {
-                        Name = "Sales",
-                        Employees = new List<Employee>
-                        {
-                            new Employee { Name = "John", Age = 30 },
-                            new Employee { Name = "Emma", Age = 28 }
-                        }
-                    },
-                    new Department
-                    {
-                        Name = "HR",
-                        Employees = new List<Employee>
-                        {
-                            new Employee { Name = "Mike", Age = 35 },
-                            new Employee { Name = "Sara", Age = 32 }
-                        }
+                        new Employee { Name = "John Doe", Title = "Sales Manager" },
+                        new Employee { Name = "Jane Smith", Title = "Sales Executive" }
                     }
-                };
-
-                // 5. Set the data source for the smart markers
-                WorkbookDesigner designer = new WorkbookDesigner
+                },
+                new Department
                 {
-                    Workbook = workbook
-                };
-                // Bind the list to the name used in the sheet‑break marker
-                designer.SetDataSource("Departments", departments);
+                    Name = "HR",
+                    Employees = new List<Employee>
+                    {
+                        new Employee { Name = "Alice Brown", Title = "HR Manager" },
+                        new Employee { Name = "Bob White", Title = "Recruiter" }
+                    }
+                }
+            };
 
-                // 6. Process the smart markers (lifecycle rule: process)
-                designer.Process();
-
-                // 7. Save the result (lifecycle rule: save)
-                workbook.Save("DepartmentsBySheet.xlsx");
-            }
-            catch (Exception ex)
+            // ---------- Set up the designer and bind data sources ----------
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                Workbook = workbook,
+                // LineByLine must be false because we are using a named range for smart markers.
+                LineByLine = false
+            };
+
+            // Bind master and detail data sources.
+            designer.SetDataSource("Departments", departments);
+            // The detail source is automatically resolved from the master collection,
+            // but we also bind it explicitly for clarity.
+            designer.SetDataSource("Employees", departments);
+
+            // ---------- Process the smart markers ----------
+            designer.Process();
+
+            // ---------- Save the result (lifecycle rule: save) ----------
+            workbook.Save("DepartmentsBySheet.xlsx");
         }
     }
 }

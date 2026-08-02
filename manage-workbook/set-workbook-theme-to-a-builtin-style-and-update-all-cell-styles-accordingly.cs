@@ -1,69 +1,73 @@
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
+using CellsRange = Aspose.Cells.Range;   // Alias to avoid conflict with System.Range
 
 namespace AsposeCellsThemeDemo
 {
-    public class SetBuiltinThemeAndApplyToAllCells
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
 
-                // Add sample data to demonstrate the effect
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue("Header");
-                ws.Cells["A2"].PutValue(123);
-                ws.Cells["B1"].PutValue(DateTime.Now);
-                ws.Cells["B2"].PutValue("Sample Text");
+                // -----------------------------------------------------------------
+                // 1. Set a built‑in theme color (e.g., change Accent1 to a custom blue)
+                // -----------------------------------------------------------------
+                workbook.SetThemeColor(ThemeColorType.Accent1, Color.Blue);
 
-                // Create a built‑in style (e.g., Good) and set it as the workbook's default style
-                Style builtinStyle = workbook.CreateBuiltinStyle(BuiltinStyleType.Good);
-                workbook.DefaultStyle = builtinStyle;
+                // -----------------------------------------------------------------
+                // 2. Update the default style to use the new theme color.
+                //    This makes the theme affect all cells that use the default style.
+                // -----------------------------------------------------------------
+                Style defaultStyle = workbook.DefaultStyle;
+                defaultStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+                defaultStyle.Font.Name = "Calibri";
+                defaultStyle.Font.Size = 11;
+                workbook.DefaultStyle = defaultStyle; // assign back (lifecycle rule)
 
-                // Apply the default style to every used cell in all worksheets
+                // -----------------------------------------------------------------
+                // 3. Apply the updated default style to existing cells.
+                //    Iterate through each worksheet and its used range.
+                // -----------------------------------------------------------------
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Cells cells = sheet.Cells;
-                    int maxRow = cells.MaxDataRow;
-                    int maxCol = cells.MaxDataColumn;
+                    // Get the used range of the worksheet.
+                    CellsRange usedRange = sheet.Cells.MaxDisplayRange;
+                    if (usedRange == null) continue;
 
-                    for (int row = 0; row <= maxRow; row++)
+                    int firstRow = usedRange.FirstRow;
+                    int lastRow = firstRow + usedRange.RowCount - 1;
+                    int firstCol = usedRange.FirstColumn;
+                    int lastCol = firstCol + usedRange.ColumnCount - 1;
+
+                    for (int row = firstRow; row <= lastRow; row++)
                     {
-                        for (int col = 0; col <= maxCol; col++)
+                        for (int col = firstCol; col <= lastCol; col++)
                         {
-                            // Apply only to cells that contain data or have a style
-                            if (cells[row, col].GetStyle() != null)
-                            {
-                                cells[row, col].SetStyle(workbook.DefaultStyle);
-                            }
+                            Cell cell = sheet.Cells[row, col];
+                            Style cellStyle = cell.GetStyle();
+                            // Apply the theme color from the default style.
+                            cellStyle.Font.ThemeColor = defaultStyle.Font.ThemeColor;
+                            cell.SetStyle(cellStyle);
                         }
                     }
                 }
 
-                // Define output file path
-                string outputPath = "WorkbookWithBuiltinTheme.xlsx";
-
-                // Save the workbook
+                // -----------------------------------------------------------------
+                // 4. Save the workbook (lifecycle rule: save)
+                // -----------------------------------------------------------------
+                string outputPath = "WorkbookWithBuiltInTheme.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetBuiltinThemeAndApplyToAllCells.Run();
         }
     }
 }

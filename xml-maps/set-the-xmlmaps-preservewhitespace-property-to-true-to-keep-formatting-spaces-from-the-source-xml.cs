@@ -2,58 +2,68 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapPreserveWhitespaceDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class XmlMapPreserveWhitespaceDemo
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                const string sourcePath = "source.xml";
-                const string outputPath = "output.xml";
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Verify that the source XML file exists before attempting to load it.
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
+                // Fill sample data
+                worksheet.Cells["A1"].PutValue("ID");
+                worksheet.Cells["A2"].PutValue(1);
+                worksheet.Cells["B1"].PutValue("Name");
+                worksheet.Cells["B2"].PutValue("John Doe");
 
-                // Enable XML mapping during load.
-                var loadOptions = new XmlLoadOptions
+                // Define a simple XML schema for the map
+                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+                                        <xs:element name='Employee'>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name='ID' type='xs:int'/>
+                                                    <xs:element name='Name' type='xs:string'/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                     </xs:schema>";
+
+                // Add the XML map to the workbook
+                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
+                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
+
+                // NOTE: PreserveWhitespace property is not available in this version of Aspose.Cells.
+                // If needed, use the appropriate API for the version you are targeting.
+
+                // Prepare save options for XML export
+                XmlSaveOptions saveOptions = new XmlSaveOptions
                 {
-                    IsXmlMap = true
+                    XmlMapName = xmlMap.Name,
+                    SheetNameAsElementName = true
                 };
 
-                // Load the XML file into a workbook.
-                var workbook = new Workbook(sourcePath, loadOptions);
-
-                // Ensure at least one XML map is present.
-                if (workbook.Worksheets.XmlMaps.Count == 0)
-                {
-                    Console.WriteLine("No XML maps were found in the loaded workbook.");
-                    return;
-                }
-
-                // Use the first XML map for export.
-                var xmlMap = workbook.Worksheets.XmlMaps[0];
-
-                // Configure save options.
-                var saveOptions = new XmlSaveOptions
-                {
-                    XmlMapName = xmlMap.Name
-                };
-
-                // Save the workbook as an XML file.
+                // Save the workbook as an XML file
+                string outputPath = "EmployeeData.xml";
                 workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine("XML exported with whitespace preserved.");
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            XmlMapPreserveWhitespaceDemo.Run();
         }
     }
 }

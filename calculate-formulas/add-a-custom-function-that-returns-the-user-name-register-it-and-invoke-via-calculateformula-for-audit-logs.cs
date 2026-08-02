@@ -3,61 +3,59 @@ using Aspose.Cells;
 
 namespace AsposeCellsCustomFunctionDemo
 {
-    // Custom calculation engine that implements a function returning the current user name
+    // Custom calculation engine that implements the GETUSERNAME() function
     public class UserNameEngine : AbstractCalculationEngine
     {
-        // Called for each custom function encountered during calculation
+        // Called for each custom function during calculation
         public override void Calculate(CalculationData data)
         {
-            // Check if the function name matches our custom function (case‑insensitive)
+            // Check if the function being evaluated is our custom function
             if (data.FunctionName.Equals("GETUSERNAME", StringComparison.OrdinalIgnoreCase))
             {
-                // Return the Windows user name as the calculated value
+                // Return the current Windows user name as the function result
                 data.CalculatedValue = Environment.UserName;
             }
         }
 
-        // Ensure the function is recalculated each time (useful for audit logs)
+        // Ensure the function is recalculated each time (useful for volatile data like user name)
         public override bool ForceRecalculate(string functionName)
         {
             return functionName.Equals("GETUSERNAME", StringComparison.OrdinalIgnoreCase);
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
             // Place the custom function in cell A1
-            cells["A1"].Formula = "=GETUSERNAME()";
+            // The formula name must match the name used in the custom engine
+            sheet.Cells["A1"].Formula = "=GETUSERNAME()";
 
-            // Set up calculation options to use our custom engine
+            // Configure calculation options to use the custom engine
             CalculationOptions options = new CalculationOptions
             {
                 CustomEngine = new UserNameEngine()
             };
 
-            // Perform calculation
+            // Perform calculation (invokes the custom function)
             workbook.CalculateFormula(options);
 
-            // Retrieve the result (the user name)
-            string userName = cells["A1"].StringValue;
+            // Retrieve and display the result
+            string userName = sheet.Cells["A1"].StringValue;
+            Console.WriteLine("Custom function result (User Name): " + userName);
 
-            // Write the audit log entry to cell B1
-            cells["B1"].PutValue($"Audit: Formula evaluated by user '{userName}' at {DateTime.Now}");
+            // Audit log example – write to console (could be written to a file or DB)
+            Console.WriteLine($"[Audit] GETUSERNAME() evaluated at {DateTime.UtcNow:u} – Result: {userName}");
 
-            // Optional: demonstrate detection of custom functions
-            Console.WriteLine($"Cell A1 has custom function: {cells["A1"].HasCustomFunction}");
-            Console.WriteLine($"Workbook has custom function: {workbook.HasCustomFunction}");
-            Console.WriteLine($"Calculated user name: {userName}");
-
-            // Save the workbook (using the standard save rule)
-            workbook.Save("UserNameCustomFunction.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (lifecycle: save)
+            workbook.Save("UserNameFunctionDemo.xlsx");
         }
     }
 }

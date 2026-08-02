@@ -1,93 +1,71 @@
+// Title: Batch encrypt Excel workbooks in a SharePoint library with a single password using Aspose.Cells for .NET
+// Description: A C# console utility that scans a folder mapped to a SharePoint document library, loads each .xlsx file with Aspose.Cells, assigns a common password via Workbook.Settings.Password, and overwrites the file. Includes progress messages and robust error handling for large‑scale encryption.
+// Keywords: Aspose.Cells | C# Excel encryption | SharePoint document library | batch workbook password | Workbook.Settings.Password | automated Excel protection | encrypt multiple .xlsx files | console app | file system traversal | compliance security
+// Common Searches: encrypt all Excel files in SharePoint using Aspose.Cells | C# batch password protection for .xlsx | apply same password to multiple workbooks .NET | automate Excel encryption in SharePoint library | Aspose.Cells bulk workbook encryption example
+// Developer Intent: Apply a uniform password to every Excel workbook stored in a SharePoint library.
+// Use Cases: Protect confidential financial statements stored centrally before external sharing. | Run nightly job that secures newly uploaded Excel reports to meet regulatory standards. | Distribute corporate templates with a predefined password to enforce consistent access control.
+// AI Prompts: Write a C# script that iterates through a SharePoint‑mapped directory and encrypts each .xlsx file with a given password using Aspose.Cells. | Show how to detect already‑protected workbooks and skip them during bulk encryption. | Add logging to the process that records successes, failures, and timestamps for audit purposes.
+
 using System;
 using System.IO;
-using System.Security;
 using Aspose.Cells;
 
 namespace SharePointWorkbookEncryption
 {
+    // A C# console utility that scans a folder mapped to a SharePoint document library, loads each .xlsx file with Aspose.Cells, assigns a common password via Workbook.Settings.Password, and overwrites the file. Includes progress messages and robust error handling for large‑scale encryption.
     class Program
     {
-        // Central password used to encrypt every workbook
-        private const string CentralPassword = "YourCentralPassword";
-
         static void Main(string[] args)
         {
+            // Folder containing the workbooks to encrypt
+            string folderPath = @"C:\Workbooks";               // change to your folder
+            // Central password to apply to all workbooks
+            string centralPassword = "YourCentralPassword";
+
             try
             {
-                // Path to the folder containing Excel files to encrypt
-                string folderPath = args.Length > 0 ? args[0] : @"C:\ExcelFiles";
-
                 if (!Directory.Exists(folderPath))
                 {
                     Console.WriteLine($"Folder not found: {folderPath}");
                     return;
                 }
 
-                ProcessFolder(folderPath, CentralPassword);
-                Console.WriteLine("Processing completed.");
+                // Get all Excel files in the folder (including subfolders if needed)
+                string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories);
+
+                foreach (string filePath in files)
+                {
+                    try
+                    {
+                        if (!File.Exists(filePath))
+                        {
+                            Console.WriteLine($"File not found, skipping: {filePath}");
+                            continue;
+                        }
+
+                        // Load workbook from file
+                        Workbook workbook = new Workbook(filePath);
+
+                        // Apply password protection (encryption)
+                        workbook.Settings.Password = centralPassword;
+
+                        // Overwrite the original file with the encrypted version
+                        workbook.Save(filePath, SaveFormat.Xlsx);
+
+                        Console.WriteLine($"Encrypted: {filePath}");
+                    }
+                    catch (Exception exFile)
+                    {
+                        Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
+                    }
+                }
+
+                Console.WriteLine("Encryption of all workbooks completed.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// Encrypts all Excel workbooks in the specified folder using Aspose.Cells.
-        /// </summary>
-        private static void ProcessFolder(string folderPath, string password)
-        {
-            foreach (string filePath in Directory.GetFiles(folderPath))
-            {
-                string fileName = Path.GetFileName(filePath);
-
-                // Process only Excel workbook files
-                if (!IsExcelFile(fileName))
-                    continue;
-
-                try
-                {
-                    // Load workbook from file
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Apply password protection (encryption)
-                    workbook.Settings.Password = password;
-
-                    // Determine the appropriate SaveFormat based on original extension
-                    SaveFormat format = GetSaveFormat(fileName);
-
-                    // Save the encrypted workbook back to the same file (overwrite)
-                    workbook.Save(filePath, format);
-
-                    Console.WriteLine($"Encrypted: {fileName}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to process {fileName}: {ex.Message}");
-                }
-            }
-        }
-
-        // Helper to check if a file is an Excel workbook
-        private static bool IsExcelFile(string fileName)
-        {
-            string ext = Path.GetExtension(fileName).ToLowerInvariant();
-            return ext == ".xlsx" || ext == ".xls" || ext == ".xlsm" || ext == ".xlsb" || ext == ".ods";
-        }
-
-        // Helper to map file extension to Aspose.Cells SaveFormat
-        private static SaveFormat GetSaveFormat(string fileName)
-        {
-            string ext = Path.GetExtension(fileName).ToLowerInvariant();
-            return ext switch
-            {
-                ".xlsx" => SaveFormat.Xlsx,
-                ".xls" => SaveFormat.Excel97To2003,
-                ".xlsm" => SaveFormat.Xlsm,
-                ".xlsb" => SaveFormat.Xlsb,
-                ".ods" => SaveFormat.ODS,
-                _ => SaveFormat.Xlsx,
-            };
         }
     }
 }

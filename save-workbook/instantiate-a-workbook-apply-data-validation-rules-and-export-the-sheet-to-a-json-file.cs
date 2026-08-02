@@ -1,57 +1,70 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-class Program
+namespace AsposeCellsDataValidationToJson
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample data (header + rows)
-        worksheet.Cells["A1"].PutValue("Quantity");
-        worksheet.Cells["B1"].PutValue("Item");
-        worksheet.Cells["A2"].PutValue(10);
-        worksheet.Cells["B2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue(55);
-        worksheet.Cells["B3"].PutValue("Banana");
-
-        // Add a data validation rule: whole numbers between 1 and 100 for the Quantity column
-        Validation validation = worksheet.Validations[worksheet.Validations.Add()];
-        validation.Type = ValidationType.WholeNumber;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "1";
-        validation.Formula2 = "100";
-        validation.InputMessage = "Enter a quantity between 1 and 100.";
-        validation.ErrorMessage = "Invalid quantity.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
-
-        // Apply the validation to cells A2:A10
-        CellArea area = new CellArea
+        static void Main(string[] args)
         {
-            StartRow = 1,   // Row index 1 = A2
-            StartColumn = 0,
-            EndRow = 9,     // Row index 9 = A10
-            EndColumn = 0
-        };
-        validation.AddArea(area);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Configure JSON save options
-        JsonSaveOptions saveOptions = new JsonSaveOptions
-        {
-            ExportNestedStructure = false, // flat structure
-            HasHeaderRow = true,           // first row contains headers
-            SkipEmptyRows = true,          // omit empty rows
-            ExportEmptyCells = false       // do not include null for empty cells
-        };
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the workbook as a JSON file using the configured options
-        string outputPath = "output.json";
-        workbook.Save(outputPath, saveOptions);
+            // Populate some sample data (optional, helps visualize the JSON output)
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["A2"].PutValue("Item1");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["A3"].PutValue("Item2");
+            worksheet.Cells["B3"].PutValue(20);
 
-        Console.WriteLine($"Workbook exported to JSON file: {outputPath}");
+            // -------------------------------------------------
+            // Add a data validation rule to cell A2 (list type)
+            // -------------------------------------------------
+            // Get the validations collection of the worksheet
+            ValidationCollection validations = worksheet.Validations;
+
+            // Add a new validation and obtain its index
+            int validationIndex = validations.Add();
+
+            // Retrieve the validation object
+            Validation validation = validations[validationIndex];
+
+            // Set validation type to List and define the allowed values
+            validation.Type = ValidationType.List;
+            validation.Formula1 = "Option1,Option2,Option3";
+
+            // Apply the validation to cell A2 (row 1, column 0)
+            CellArea area = new CellArea
+            {
+                StartRow = 1,    // zero‑based index, row 2 in Excel
+                StartColumn = 0, // column A
+                EndRow = 1,
+                EndColumn = 0
+            };
+            validation.AddArea(area);
+
+            // -------------------------------------------------
+            // Configure JSON save options
+            // -------------------------------------------------
+            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            {
+                // Export as a nested (parent‑child) JSON structure
+                ExportNestedStructure = true,
+                // Skip rows that contain no data
+                SkipEmptyRows = true,
+                // Include header row in the JSON output
+                HasHeaderRow = true
+            };
+
+            // Save the workbook as a JSON file using the configured options
+            string outputPath = "ValidatedData.json";
+            workbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Workbook saved to JSON file: {outputPath}");
+        }
     }
 }

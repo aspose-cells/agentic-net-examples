@@ -4,25 +4,26 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace LeaderLinesModificationDemo
+namespace AsposeCellsLeaderLineDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet (assumes the chart is on this sheet)
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the first chart in the worksheet
+            // Ensure the worksheet contains at least one chart
             if (worksheet.Charts.Count == 0)
             {
                 Console.WriteLine("No charts found in the worksheet.");
                 return;
             }
 
+            // Retrieve the first chart in the worksheet
             Chart chart = worksheet.Charts[0];
 
             // Ensure the chart has at least one series
@@ -38,14 +39,16 @@ namespace LeaderLinesModificationDemo
             // Enable leader lines for the series
             series.HasLeaderLines = true;
 
-            // Configure leader line properties
+            // Configure leader line appearance
             series.LeaderLines.IsAuto = false;                     // Disable automatic formatting
             series.LeaderLines.Style = LineType.Dot;               // Set line style to dotted
             series.LeaderLines.WeightPt = 1.5;                     // Set line weight (points)
-            series.LeaderLines.Color = Color.Blue;                // Set line color
+            series.LeaderLines.Color = Color.Blue;                 // Set line color
 
             // Save the modified workbook (replace with desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+            workbook.Save("output.xlsx");
+
+            Console.WriteLine("Leader line settings updated and workbook saved.");
         }
     }
 }

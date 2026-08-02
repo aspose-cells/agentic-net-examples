@@ -3,50 +3,53 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Metadata;
 
-namespace AsposeCellsMemoryMetadataDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // 1. Create a workbook entirely in memory and add some data.
+        Workbook wb = new Workbook();
+        wb.Worksheets[0].Cells["A1"].PutValue("Hello");
+        wb.Worksheets[0].Cells["B1"].PutValue(DateTime.Now);
+
+        // 2. Save the workbook to a memory stream (XLSX format).
+        using (MemoryStream wbStream = new MemoryStream())
         {
-            // 1. Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["B1"].PutValue(123);
+            wb.Save(wbStream, SaveFormat.Xlsx);
+            wbStream.Position = 0; // Reset for reading.
 
-            // 2. Save the workbook to a memory stream (XLSX format)
-            using (MemoryStream workbookStream = new MemoryStream())
+            // 3. Prepare metadata options to work with document properties.
+            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+
+            // 4. Load the workbook metadata from the memory stream.
+            WorkbookMetadata metadata = new WorkbookMetadata(wbStream, metaOptions);
+
+            // 5. Add custom document properties.
+            metadata.CustomDocumentProperties.Add("ProcessedBy", "AsposeDemo");
+            metadata.CustomDocumentProperties.Add("ProcessedOn", DateTime.UtcNow);
+
+            // 6. Save the modified metadata back to a new memory stream.
+            using (MemoryStream metaOutStream = new MemoryStream())
             {
-                workbook.Save(workbookStream, SaveFormat.Xlsx);
-                workbookStream.Position = 0; // Reset for reading
+                metadata.Save(metaOutStream);
+                metaOutStream.Position = 0; // Reset for reading.
 
-                // 3. Prepare metadata options for document properties
-                MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+                // 7. Load the workbook again from the metadata‑updated stream.
+                Workbook finalWb = new Workbook(metaOutStream);
 
-                // 4. Load metadata from the workbook stream
-                WorkbookMetadata metadata = new WorkbookMetadata(workbookStream, metaOptions);
+                // 8. Verify that the custom properties are present.
+                Console.WriteLine("Custom Property 'ProcessedBy': " +
+                    finalWb.CustomDocumentProperties["ProcessedBy"].Value);
+                Console.WriteLine("Custom Property 'ProcessedOn': " +
+                    finalWb.CustomDocumentProperties["ProcessedOn"].Value);
 
-                // 5. Add a custom document property
-                metadata.CustomDocumentProperties.Add("MyCustomProperty", "CustomValue");
-
-                // 6. Save the modified metadata to a new memory stream
-                using (MemoryStream updatedStream = new MemoryStream())
+                // 9. Save the final workbook to another memory stream (no file system access).
+                using (MemoryStream finalStream = new MemoryStream())
                 {
-                    metadata.Save(updatedStream);
-                    updatedStream.Position = 0; // Reset for reading
-
-                    // 7. Load a workbook from the updated stream to verify the metadata
-                    Workbook resultWorkbook = new Workbook(updatedStream);
-
-                    // 8. Output the custom property value to the console
-                    var prop = resultWorkbook.CustomDocumentProperties["MyCustomProperty"];
-                    Console.WriteLine($"Custom Property 'MyCustomProperty' = {prop?.Value}");
+                    finalWb.Save(finalStream, SaveFormat.Xlsx);
+                    Console.WriteLine("Final workbook saved to memory stream, length: " + finalStream.Length);
                 }
             }
-
-            // Clean up
-            workbook.Dispose();
         }
     }
 }

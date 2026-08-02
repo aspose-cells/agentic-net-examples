@@ -1,3 +1,11 @@
+// Title: C# – Remove Invalid Named Ranges That Reference Deleted Worksheets Using Aspose.Cells
+// Description: Loads a workbook (or creates a new one), optionally deletes a worksheet, scans the NameCollection for defined names whose RefersTo formula points to a missing sheet, removes those broken named ranges, and saves the cleaned file. Prevents #REF! errors after worksheet removal.
+// Keywords: Aspose.Cells remove broken named ranges | C# delete named range missing sheet | invalid defined names Aspose.Cells | clean workbook after sheet deletion | Aspose.Cells NameCollection cleanup
+// Common Searches: how to delete named ranges that point to deleted worksheets in Aspose.Cells | remove invalid defined names after removing a sheet .NET | Aspose.Cells detect named ranges with missing sheet references | C# clean up named ranges after worksheet removal
+// Developer Intent: Find and delete any named ranges that reference worksheets that have been removed, ensuring the workbook remains error‑free.
+// Use Cases: Sanitize a workbook after programmatically deleting worksheets to avoid #REF! errors caused by stale named ranges. | Validate and cleanse imported workbooks from external sources before further processing. | Prepare workbooks for export or publishing by guaranteeing all defined names point to existing sheets.
+// AI Prompts: Generate C# code with Aspose.Cells that scans a workbook and removes named ranges referencing non‑existent worksheets. | Create a method that returns a list of invalid named ranges and deletes them safely in Aspose.Cells. | Explain how to extend the example to log each removed named range to a text file.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,71 +13,58 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
+    // Loads a workbook (or creates a new one), optionally deletes a worksheet, scans the NameCollection for defined names whose RefersTo formula points to a missing sheet, removes those broken named ranges, and saves the cleaned file. Prevents #REF! errors after worksheet removal.
     public class RemoveInvalidNamedRanges
     {
         public static void Run()
         {
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                // Load workbook if input file exists; otherwise create a new workbook
+                string inputPath = "input.xlsx";
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-                // Ensure the input file exists; create a simple workbook if it does not.
-                Workbook workbook;
-                if (File.Exists(inputPath))
+                // Example: delete a worksheet to simulate missing references
+                if (workbook.Worksheets.Count > 0)
                 {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                    workbook.Worksheets[0].Name = "Sheet1";
-                    workbook.Save(inputPath);
+                    workbook.Worksheets.RemoveAt(0);
                 }
 
-                // Example: delete a worksheet to create an invalid reference scenario
-                if (workbook.Worksheets.Count > 1)
-                {
-                    workbook.Worksheets.RemoveAt(1); // delete second worksheet (index 1)
-                }
-
-                // Build a hash set of current worksheet names for fast lookup
-                var existingSheets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    existingSheets.Add(ws.Name);
-                }
-
-                // Collect names that reference non‑existent worksheets
-                var namesToRemove = new List<string>();
+                // Get the collection of defined names (named ranges)
                 NameCollection names = workbook.Worksheets.Names;
 
+                // List to hold names that reference non‑existent worksheets
+                List<string> namesToRemove = new List<string>();
+
+                // Iterate through all defined names
                 foreach (Name name in names)
                 {
-                    // Skip if the name does not refer to a range/formula
                     if (string.IsNullOrEmpty(name.RefersTo))
                         continue;
 
-                    // RefersTo string starts with '='; remove it for parsing
-                    string refers = name.RefersTo.TrimStart('=');
+                    // RefersTo format is usually like "=SheetName!$A$1:$B$2"
+                    string refersTo = name.RefersTo.TrimStart('=');
+                    int exclPos = refersTo.IndexOf('!');
+                    if (exclPos <= 0)
+                        continue; // Not a standard sheet reference
 
-                    // Split multiple references separated by commas
-                    string[] parts = refers.Split(',');
+                    string sheetName = refersTo.Substring(0, exclPos);
 
-                    foreach (string part in parts)
+                    // Check if the worksheet exists in the workbook
+                    bool sheetExists = false;
+                    foreach (Worksheet ws in workbook.Worksheets)
                     {
-                        // Find the sheet name before the first '!' character
-                        int exclPos = part.IndexOf('!');
-                        if (exclPos > 0)
+                        if (ws.Name.Equals(sheetName, StringComparison.OrdinalIgnoreCase))
                         {
-                            string sheetName = part.Substring(0, exclPos).Trim('\''); // remove possible surrounding quotes
-                            // If the sheet name is not in the current workbook, mark the name for removal
-                            if (!existingSheets.Contains(sheetName))
-                            {
-                                namesToRemove.Add(name.Text);
-                                break; // no need to check other parts for this name
-                            }
+                            sheetExists = true;
+                            break;
                         }
+                    }
+
+                    // If the sheet does not exist, mark this name for removal
+                    if (!sheetExists)
+                    {
+                        namesToRemove.Add(name.Text);
                     }
                 }
 
@@ -77,18 +72,10 @@ namespace AsposeCellsExamples
                 if (namesToRemove.Count > 0)
                 {
                     names.Remove(namesToRemove.ToArray());
-                    Console.WriteLine("Removed invalid named ranges:");
-                    foreach (string n in namesToRemove)
-                    {
-                        Console.WriteLine($"- {n}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No invalid named ranges found.");
                 }
 
-                // Save the modified workbook
+                // Save the workbook
+                string outputPath = "output.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
@@ -97,11 +84,14 @@ namespace AsposeCellsExamples
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        // Entry point required for console application
+    // Entry point for the console application
+    public class Program
+    {
         public static void Main(string[] args)
         {
-            Run();
+            RemoveInvalidNamedRanges.Run();
         }
     }
 }

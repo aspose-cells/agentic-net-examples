@@ -1,63 +1,82 @@
+// Title: Batch add identical signature lines to Excel workbooks with Aspose.Cells (C#)
+// Description: Scans a folder for .xlsx, .xls, .xlsm, .xlsb files, loads each workbook with Aspose.Cells, inserts the same SignatureLine into cell A1 of the first worksheet, and saves the signed copy to an output directory while handling missing files and runtime errors.
+// Keywords: Aspose.Cells | C# signature line | batch add signature to Excel | process multiple workbooks | add signature line programmatically | Excel folder processing | digital signature Excel C# | signature line Aspose.Cells | automate Excel signing
+// Common Searches: add signature line to all Excel files in a folder C# | batch insert signature line Aspose.Cells | how to automate signing of multiple workbooks | C# script to add identical signature line to Excel workbooks | Aspose.Cells example for batch signature
+// Developer Intent: Insert the same signature line into each workbook in a directory and save the signed copies.
+// Use Cases: Sign a set of monthly financial statements before distribution | Apply a compliance approval stamp to a batch of invoices | Embed an approval line in all template files for data collection | Prepare legally signed reports for audit by adding a signature line to each file
+// AI Prompts: Write C# code using Aspose.Cells to add a configurable signature line to every worksheet in every workbook within a specified folder. | Recommend robust logging and exception handling strategies for a batch Excel signing utility. | Show how to customize the signer name, title, or email based on each file’s name while adding signature lines. | Explain how to add a visible signature image together with a signature line in a batch process.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace BatchSignature
+// Scans a folder for .xlsx, .xls, .xlsm, .xlsb files, loads each workbook with Aspose.Cells, inserts the same SignatureLine into cell A1 of the first worksheet, and saves the signed copy to an output directory while handling missing files and runtime errors.
+class BatchSignatureAdder
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Source directory containing Excel files
-            string sourceDir = @"C:\ExcelFiles\Input";
-            // Destination directory for signed files
-            string destDir = @"C:\ExcelFiles\Signed";
+            // Input and output directories
+            string inputDir = @"C:\InputExcelFiles";
+            string outputDir = @"C:\SignedExcelFiles";
 
-            try
+            // Verify input directory exists
+            if (!Directory.Exists(inputDir))
             {
-                // Verify source directory exists
-                if (!Directory.Exists(sourceDir))
+                Console.WriteLine($"Input directory not found: {inputDir}");
+                return;
+            }
+
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Supported Excel extensions
+            string[] extensions = new[] { "*.xlsx", "*.xls", "*.xlsm", "*.xlsb" };
+
+            // Process each file matching the extensions
+            foreach (string ext in extensions)
+            {
+                foreach (string filePath in Directory.GetFiles(inputDir, ext))
                 {
-                    Console.WriteLine($"Source directory does not exist: {sourceDir}");
-                    return;
-                }
-
-                // Ensure destination directory exists
-                Directory.CreateDirectory(destDir);
-
-                // Get all .xlsx, .xls, .xlsm files in the source directory
-                string[] excelFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.TopDirectoryOnly);
-                foreach (string filePath in excelFiles)
-                {
-                    // Process only supported Excel formats
-                    string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                    if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm")
-                        continue;
-
-                    // Verify the file still exists before loading
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"File not found (skipped): {filePath}");
-                        continue;
-                    }
-
                     try
                     {
-                        // Load the workbook
-                        using (Workbook workbook = new Workbook(filePath))
+                        // Verify the file exists before loading
+                        if (!File.Exists(filePath))
                         {
-                            // Add the signature line to the first worksheet (customize as needed)
-                            AddSignatureLine(workbook.Worksheets[0]);
-
-                            // Build output file path (overwrite original name in destination folder)
-                            string outputPath = Path.Combine(destDir, Path.GetFileName(filePath));
-
-                            // Save the signed workbook
-                            workbook.Save(outputPath);
+                            Console.WriteLine($"File not found: {filePath}");
+                            continue;
                         }
 
-                        Console.WriteLine($"Signed file saved: {Path.GetFileName(filePath)}");
+                        // Load the workbook
+                        Workbook workbook = new Workbook(filePath);
+
+                        // Use the first worksheet; adjust if needed
+                        Worksheet worksheet = workbook.Worksheets[0];
+
+                        // Configure a signature line (identical for all workbooks)
+                        SignatureLine signatureLine = new SignatureLine
+                        {
+                            Signer = "John Doe",
+                            Title = "Approved",
+                            Email = "john.doe@example.com",
+                            Instructions = "Please sign to confirm the content.",
+                            AllowComments = true,
+                            ShowSignedDate = true,
+                            IsLine = true
+                        };
+
+                        // Add the signature line at cell A1 (row 0, column 0)
+                        worksheet.Shapes.AddSignatureLine(0, 0, signatureLine);
+
+                        // Save the modified workbook to the output directory
+                        string outputPath = Path.Combine(outputDir, Path.GetFileName(filePath));
+                        workbook.Save(outputPath);
+                        Console.WriteLine($"Signed file saved: {outputPath}");
                     }
                     catch (Exception ex)
                     {
@@ -65,33 +84,10 @@ namespace BatchSignature
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
         }
-
-        // Adds an identical signature line to the specified worksheet
-        private static void AddSignatureLine(Worksheet worksheet)
+        catch (Exception ex)
         {
-            // Create a SignatureLine object and set its properties
-            SignatureLine signatureLine = new SignatureLine
-            {
-                Signer = "John Doe",
-                Title = "Approver",
-                Email = "john.doe@example.com",
-                Instructions = "Please sign to confirm the content.",
-                AllowComments = true,
-                ShowSignedDate = true,
-                IsLine = true
-            };
-
-            // Define the position (top row and left column) where the signature line will be placed
-            int topRow = 20;      // Row index (0‑based)
-            int leftColumn = 2;   // Column index (0‑based)
-
-            // Add the signature line to the worksheet's shape collection
-            worksheet.Shapes.AddSignatureLine(topRow, leftColumn, signatureLine);
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

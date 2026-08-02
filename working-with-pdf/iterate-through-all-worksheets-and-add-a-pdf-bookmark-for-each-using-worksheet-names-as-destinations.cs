@@ -5,44 +5,41 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsPdfBookmarks
 {
+    // Author: Aspose.Cells .NET example – adds a PDF bookmark for each worksheet using its name.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
+            // Create a new workbook and add sample worksheets (replace with loading if needed)
             Workbook workbook = new Workbook();
-
-            // Add sample worksheets for demonstration
             workbook.Worksheets.Add("Finance");
             workbook.Worksheets.Add("HR");
-            workbook.Worksheets.Add("IT");
+            workbook.Worksheets.Add("Engineering");
 
-            // Ensure each worksheet has a cell to serve as a bookmark destination
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Populate a cell in each sheet to serve as the bookmark destination
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                sheet.Cells["A1"].PutValue($"{sheet.Name} Content");
+                ws.Cells["A1"].PutValue($"{ws.Name} Content");
             }
 
-            // Create a root bookmark entry with no text.
-            // When Text is null, its children are placed at the top level.
+            // Root bookmark – empty text so its children appear at the top level
             PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
             {
                 Text = null,
                 SubEntry = new ArrayList()
             };
 
-            // Iterate through all worksheets and create a bookmark for each.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Create a bookmark entry for each worksheet
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                PdfBookmarkEntry entry = new PdfBookmarkEntry
+                PdfBookmarkEntry sheetBookmark = new PdfBookmarkEntry
                 {
-                    Text = sheet.Name,                 // Use worksheet name as bookmark title
-                    Destination = sheet.Cells["A1"],   // Destination cell for the bookmark
-                    IsOpen = true                      // Expand the bookmark by default
+                    Text = ws.Name,               // Bookmark title
+                    Destination = ws.Cells["A1"] // Destination cell
                 };
 
-                // Add the entry to the root's sub‑entries collection
-                rootBookmark.SubEntry.Add(entry);
+                // Add to root's sub‑entries
+                rootBookmark.SubEntry.Add(sheetBookmark);
             }
 
             // Configure PDF save options with the constructed bookmark hierarchy
@@ -51,8 +48,8 @@ namespace AsposeCellsPdfBookmarks
                 Bookmark = rootBookmark
             };
 
-            // Save the workbook as a PDF with the bookmarks
-            workbook.Save("WorkbookWithBookmarks.pdf", pdfOptions);
+            // Save the workbook as PDF with bookmarks
+            workbook.Save("WorksheetsWithBookmarks.pdf", pdfOptions);
         }
     }
 }

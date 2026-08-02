@@ -2,58 +2,77 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-class ProcessHiddenSmartMarkers
+namespace AsposeCellsHiddenSmartMarkersDemo
 {
-    static void Main()
-    {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-
-        // Add a hidden worksheet that will contain the smart markers
-        Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenData");
-        hiddenSheet.IsVisible = false; // hide the worksheet
-
-        // Insert smart markers into the hidden sheet
-        hiddenSheet.Cells["A1"].PutValue("&=Employees.Name");
-        hiddenSheet.Cells["B1"].PutValue("&=Employees.Age");
-
-        // Optional: add a visible sheet to display the populated data
-        Worksheet visibleSheet = workbook.Worksheets[0];
-        visibleSheet.Name = "Report";
-        visibleSheet.Cells["A1"].PutValue("Name");
-        visibleSheet.Cells["B1"].PutValue("Age");
-        // Use the same smart markers on the visible sheet (they will be filled from the same data source)
-        visibleSheet.Cells["A2"].PutValue("&=Employees.Name");
-        visibleSheet.Cells["B2"].PutValue("&=Employees.Age");
-
-        // Prepare a data source that matches the smart marker table name "Employees"
-        List<Employee> employees = new List<Employee>
-        {
-            new Employee { Name = "John Doe", Age = 30 },
-            new Employee { Name = "Jane Smith", Age = 28 }
-        };
-
-        // Set up WorkbookDesigner (lifecycle: create)
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = workbook;
-
-        // Ensure that any formulas referencing the hidden sheet are updated after processing
-        designer.UpdateReference = true;
-
-        // Bind the data source to the smart marker name
-        designer.SetDataSource("Employees", employees);
-
-        // Process all smart markers in the workbook, including those in hidden worksheets
-        designer.Process();
-
-        // Save the processed workbook (lifecycle: save)
-        workbook.Save("ProcessedHiddenSmartMarkers.xlsx");
-    }
-
-    // Simple POCO class representing the data structure for the smart markers
+    // Sample data class used as a data source
     public class Employee
     {
         public string Name { get; set; }
         public int Age { get; set; }
+        public string Department { get; set; }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            // -------------------------------------------------
+            // 1. Create a new workbook (template) and add sheets
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();                     // create workbook
+            Worksheet visibleSheet = workbook.Worksheets[0];        // first sheet (visible by default)
+            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenData"); // add a second sheet
+
+            // Hide the second worksheet
+            hiddenSheet.IsVisible = false; // keep it hidden after processing
+
+            // -------------------------------------------------
+            // 2. Insert smart markers into both worksheets
+            // -------------------------------------------------
+            // Visible sheet smart markers (line‑by‑line processing disabled)
+            visibleSheet.Cells["A1"].PutValue("&=Employees.Name");
+            visibleSheet.Cells["B1"].PutValue("&=Employees.Age");
+            visibleSheet.Cells["C1"].PutValue("&=Employees.Department");
+            // Mark the range that contains smart markers (required when LineByLine = false)
+            visibleSheet.Cells.CreateRange("A1:C1").Name = "_CellsSmartMarkers";
+
+            // Hidden sheet smart markers
+            hiddenSheet.Cells["A1"].PutValue("&=Employees.Name");
+            hiddenSheet.Cells["B1"].PutValue("&=Employees.Age");
+            hiddenSheet.Cells["C1"].PutValue("&=Employees.Department");
+            hiddenSheet.Cells.CreateRange("A1:C1").Name = "_CellsSmartMarkers";
+
+            // -------------------------------------------------
+            // 3. Prepare data source
+            // -------------------------------------------------
+            List<Employee> employees = new List<Employee>
+            {
+                new Employee { Name = "John Doe", Age = 30, Department = "Sales" },
+                new Employee { Name = "Jane Smith", Age = 28, Department = "HR" }
+            };
+
+            // -------------------------------------------------
+            // 4. Set up WorkbookDesigner
+            // -------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook,
+                LineByLine = false,          // use range smart markers
+                UpdateReference = true       // ensure formulas referencing hidden sheets are updated
+            };
+
+            // Bind the data source to the name used in smart markers
+            designer.SetDataSource("Employees", employees);
+
+            // -------------------------------------------------
+            // 5. Process all smart markers (including hidden sheet)
+            // -------------------------------------------------
+            designer.Process(); // processes every worksheet, hidden ones included
+
+            // -------------------------------------------------
+            // 6. Save the result
+            // -------------------------------------------------
+            workbook.Save("ProcessedWithHiddenSheet.xlsx");
+        }
     }
 }

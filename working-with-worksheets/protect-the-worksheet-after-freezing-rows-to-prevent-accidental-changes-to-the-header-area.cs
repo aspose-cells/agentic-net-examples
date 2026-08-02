@@ -1,53 +1,48 @@
+// Title: Freeze Header Row and Protect Worksheet with Password using Aspose.Cells for .NET
+// Description: Demonstrates how to create a new workbook, freeze the first row as a header, apply full worksheet protection with a password, and save the file as ProtectedHeader.xlsx using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells freeze row | protect worksheet password | freeze panes .NET | worksheet protection Aspose.Cells | C# Excel header freeze | Aspose.Cells example | Excel security Aspose
+// Common Searches: Aspose.Cells freeze first row and protect | how to protect worksheet after freezing panes in C# | set password on Excel sheet with Aspose.Cells | freeze header and lock cells Aspose.Cells .NET | protect Excel workbook programmatically Aspose
+// Developer Intent: Freeze the top row and secure the entire worksheet with a password.
+// Use Cases: Create a read‑only report where the header stays visible while scrolling. | Distribute a template that locks all cells after freezing the header to avoid accidental edits. | Generate an export file for external partners with the header area frozen and password‑protected.
+// AI Prompts: Provide C# code that freezes the first row and applies full worksheet protection with a password using Aspose.Cells. | Show how to freeze multiple header rows and protect only specific ranges in an Aspose.Cells workbook. | Explain how to programmatically unprotect a worksheet that was frozen and secured with a password in Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates how to create a new workbook, freeze the first row as a header, apply full worksheet protection with a password, and save the file as ProtectedHeader.xlsx using Aspose.Cells for .NET.
+public class ProtectHeaderDemo
 {
-    public class FreezeAndProtectHeader
+    public static void Run()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Freeze the first row (header) so it stays visible while scrolling.
-                // "A2" means the freeze line is just below row 1; freeze 1 row, 0 columns.
-                sheet.FreezePanes("A2", 1, 0);
+            // Freeze the first row (header) – freeze panes at the second row (index 1)
+            // Parameters: row index, column index, number of frozen rows, number of frozen columns
+            sheet.FreezePanes(1, 0, 1, 0);
 
-                // Protect the worksheet with a password.
-                // The third argument (oldPassword) is required in newer API versions; pass null when not changing it.
-                sheet.Protect(ProtectionType.All, "HeaderPassword123", null);
+            // Protect the worksheet with all protection options and a password
+            sheet.Protect(ProtectionType.All, "HeaderPass", null);
 
-                // Define output path and ensure the directory exists
-                string outputPath = "FreezeAndProtectedHeader.xlsx";
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ProtectedHeader.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
+}
 
-    public class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            FreezeAndProtectHeader.Run();
-        }
+        ProtectHeaderDemo.Run();
     }
 }

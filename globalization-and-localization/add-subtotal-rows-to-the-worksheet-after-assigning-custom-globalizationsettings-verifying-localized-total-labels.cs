@@ -4,14 +4,14 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsSubtotalDemo
 {
-    // Custom globalization settings that overrides the total name for the SUM function
+    // Custom globalization settings that changes the total label for the Sum function
     public class CustomGlobalizationSettings : SettableGlobalizationSettings
     {
+        // Override the total name for the Sum function
         public override string GetTotalName(ConsolidationFunction functionType)
         {
-            // Return a custom label for SUM totals; other functions use the base implementation
             if (functionType == ConsolidationFunction.Sum)
-                return "Custom Sum Total";
+                return "Custom Sum Total"; // localized label
             return base.GetTotalName(functionType);
         }
     }
@@ -20,60 +20,58 @@ namespace AsposeCellsSubtotalDemo
     {
         public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // ---------- Create a new workbook ----------
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data (Category | Value)
+            // ---------- Populate sample data ----------
+            // Header
             cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Value");
-            cells["A2"].PutValue("A");
-            cells["B2"].PutValue(10);
-            cells["A3"].PutValue("A");
-            cells["B3"].PutValue(20);
-            cells["A4"].PutValue("B");
-            cells["B4"].PutValue(30);
-            cells["A5"].PutValue("B");
-            cells["B5"].PutValue(40);
-            cells["A6"].PutValue("C");
-            cells["B6"].PutValue(50);
+            cells["B1"].PutValue("Amount");
 
-            // Assign the custom globalization settings to the workbook
+            // Data rows
+            string[] categories = { "Food", "Food", "Transport", "Transport", "Utilities" };
+            double[] amounts = { 120.5, 80.0, 50.75, 60.25, 100.0 };
+
+            for (int i = 0; i < categories.Length; i++)
+            {
+                cells[i + 1, 0].PutValue(categories[i]);   // Column A
+                cells[i + 1, 1].PutValue(amounts[i]);     // Column B
+            }
+
+            // ---------- Assign custom globalization settings ----------
             workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
 
+            // ---------- Add subtotal rows ----------
             // Define the range that contains the data (including header)
-            CellArea dataArea = CellArea.CreateCellArea(0, 0, 5, 1); // rows 0-5, columns 0-1
+            CellArea dataArea = CellArea.CreateCellArea(0, 0, categories.Length, 1);
+            // Group by the first column (Category), sum the second column (Amount)
+            // Replace existing subtotals = true, add page breaks = false, summary below data = true
+            cells.Subtotal(dataArea, 0, ConsolidationFunction.Sum, new int[] { 1 }, true, false, true);
 
-            // Add subtotal rows:
-            // - Group by column 0 (Category)
-            // - Use SUM function
-            // - Apply subtotal to column 1 (Value)
-            // - Replace existing subtotals, no page breaks, place summary below data
-            cells.Subtotal(
-                dataArea,
-                groupBy: 0,
-                function: ConsolidationFunction.Sum,
-                totalList: new int[] { 1 },
-                replace: true,
-                pageBreaks: false,
-                summaryBelowData: true);
-
-            // Verify that the subtotal label uses the custom total name
-            // Search for the custom label in the worksheet
-            string customLabel = "Custom Sum Total";
-            Cell foundCell = cells.Find(customLabel, null, new FindOptions() { LookInType = LookInType.Values });
-
-            if (foundCell != null)
+            // ---------- Verify the localized total label ----------
+            // After Subtotal, a total row is inserted after each group.
+            // Find the first total row (it will be after the first group of "Food").
+            // The total label appears in the first column of the total row.
+            // Scan rows to locate a cell that contains the custom label.
+            string expectedLabel = "Custom Sum Total";
+            bool labelFound = false;
+            for (int row = 0; row <= sheet.Cells.MaxDataRow; row++)
             {
-                Console.WriteLine($"Verified custom total label found at {foundCell.Name}: \"{foundCell.StringValue}\"");
-            }
-            else
-            {
-                Console.WriteLine("Custom total label not found. Verification failed.");
+                string cellValue = sheet.Cells[row, 0].StringValue;
+                if (cellValue == expectedLabel)
+                {
+                    Console.WriteLine($"Localized total label found at row {row + 1}: {cellValue}");
+                    labelFound = true;
+                    break;
+                }
             }
 
-            // Save the workbook
+            if (!labelFound)
+                Console.WriteLine("Localized total label was not found.");
+
+            // ---------- Save the workbook ----------
             workbook.Save("SubtotalWithCustomGlobalization.xlsx");
         }
     }

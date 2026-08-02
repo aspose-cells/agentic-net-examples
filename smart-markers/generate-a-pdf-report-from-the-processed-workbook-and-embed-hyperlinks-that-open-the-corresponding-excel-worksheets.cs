@@ -1,72 +1,73 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class PdfReportWithHyperlinks
+namespace AsposeCellsPdfReport
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook (uses Workbook() constructor rule)
-            using (Workbook workbook = new Workbook())
-            {
-                // Rename the default sheet to "Summary"
-                workbook.Worksheets[0].Name = "Summary";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a few sample worksheets with some data
-                int numberOfSheets = 3;
-                for (int i = 1; i <= numberOfSheets; i++)
-                {
-                    // Add a new worksheet with a specific name; Add(string) returns Worksheet
-                    Worksheet ws = workbook.Worksheets.Add($"Sheet{i}");
-                    ws.Cells["A1"].PutValue($"Content of {ws.Name}");
-                }
+            // -------------------------------------------------
+            // 1. Prepare worksheets with sample data
+            // -------------------------------------------------
+            // Summary sheet (first sheet)
+            Worksheet summarySheet = workbook.Worksheets[0];
+            summarySheet.Name = "Summary";
 
-                // Insert hyperlinks in the Summary sheet that point to each worksheet
-                Worksheet summarySheet = workbook.Worksheets["Summary"];
-                for (int i = 1; i <= numberOfSheets; i++)
-                {
-                    Worksheet targetSheet = workbook.Worksheets[i];
-                    int row = i; // start from row 1 (0‑based index)
+            // Add two data worksheets
+            int sheetIndex1 = workbook.Worksheets.Add();
+            Worksheet dataSheet1 = workbook.Worksheets[sheetIndex1];
+            dataSheet1.Name = "Sales_Q1";
+            dataSheet1.Cells["A1"].PutValue("Product");
+            dataSheet1.Cells["B1"].PutValue("Revenue");
+            dataSheet1.Cells["A2"].PutValue("Widget");
+            dataSheet1.Cells["B2"].PutValue(12000);
 
-                    // Display text in the cell
-                    summarySheet.Cells[row, 0].PutValue($"Go to {targetSheet.Name}");
+            int sheetIndex2 = workbook.Worksheets.Add();
+            Worksheet dataSheet2 = workbook.Worksheets[sheetIndex2];
+            dataSheet2.Name = "Sales_Q2";
+            dataSheet2.Cells["A1"].PutValue("Product");
+            dataSheet2.Cells["B1"].PutValue("Revenue");
+            dataSheet2.Cells["A2"].PutValue("Gadget");
+            dataSheet2.Cells["B2"].PutValue(15000);
 
-                    // Create an internal hyperlink to the target sheet's cell A1
-                    // Address format: "#SheetName!A1"
-                    string hyperlinkAddress = $"#{targetSheet.Name}!A1";
-                    summarySheet.Hyperlinks.Add(row, 0, 1, 1, hyperlinkAddress);
-                }
+            // -------------------------------------------------
+            // 2. Add hyperlinks on the summary sheet that
+            //    open the corresponding worksheets when clicked
+            // -------------------------------------------------
+            // Header
+            summarySheet.Cells["A1"].PutValue("Worksheet");
+            summarySheet.Cells["B1"].PutValue("Link");
 
-                // Configure PDF save options (uses PdfSaveOptions property rules)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    EmbedAttachments = false,               // optional, demonstrates property usage
-                    ExportDocumentStructure = true          // retain document structure for accessibility
-                };
+            // Hyperlink to Sales_Q1
+            summarySheet.Cells["A2"].PutValue(dataSheet1.Name);
+            // Internal link format: 'SheetName'!CellAddress
+            string linkToSheet1 = $"'{dataSheet1.Name}'!A1";
+            summarySheet.Hyperlinks.Add(1, 1, 1, 1, linkToSheet1); // B2 cell
 
-                // Determine output path and ensure the directory exists
-                string outputPath = "Report.pdf";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+            // Hyperlink to Sales_Q2
+            summarySheet.Cells["A3"].PutValue(dataSheet2.Name);
+            string linkToSheet2 = $"'{dataSheet2.Name}'!A1";
+            summarySheet.Hyperlinks.Add(2, 1, 1, 1, linkToSheet2); // B3 cell
 
-                // Save the workbook as a PDF with the embedded hyperlinks
-                // (uses Workbook.Save(string, SaveOptions) rule)
-                workbook.Save(outputPath, pdfOptions);
-            }
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.Error.WriteLine($"File not found: {fnfEx.FileName}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            // -------------------------------------------------
+            // 3. Save the workbook as PDF preserving hyperlinks
+            // -------------------------------------------------
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Export document structure helps retain navigation links
+            pdfOptions.ExportDocumentStructure = true;
+
+            // Save to PDF file
+            workbook.Save("WorkbookReport.pdf", pdfOptions);
+
+            // Clean up
+            workbook.Dispose();
+
+            Console.WriteLine("PDF report generated with embedded worksheet hyperlinks.");
         }
     }
 }

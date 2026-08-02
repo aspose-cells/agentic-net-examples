@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
@@ -5,43 +6,26 @@ class BackgroundColorSortExample
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Create a DataSorter instance
         DataSorter sorter = workbook.DataSorter;
-        sorter.HasHeaders = true; // Assume the first row contains headers
 
-        // Column U index (A=0, B=1, ..., U=20)
-        int columnU = 20;
+        // Assume the first row contains headers
+        sorter.HasHeaders = true;
 
-        // Define the color priority (highest priority first)
-        Color[] priorityColors = new Color[]
-        {
-            Color.Red,
-            Color.Orange,
-            Color.Yellow,
-            Color.Green,
-            Color.Blue,
-            Color.Purple
-        };
+        // Column U is the 21st column (zero‑based index 20)
+        int columnUIndex = 20;
 
-        // Add a color key for each priority color
-        foreach (Color clr in priorityColors)
-        {
-            sorter.AddColorKey(columnU, SortOnType.CellColor, SortOrder.Ascending, clr);
-        }
+        // Add a sort key that sorts by cell background color in ascending order.
+        // Empty cells (no fill) will be treated as the lowest priority.
+        sorter.AddKey(columnUIndex, SortOnType.CellColor, SortOrder.Ascending, null);
 
-        // Determine the range to sort (from the first row to the last used row in column U)
+        // Define the range to sort: from the first row to the last used row in column U
         int lastRow = worksheet.Cells.MaxDataRow;
-        CellArea sortArea = new CellArea
-        {
-            StartRow = 0,
-            StartColumn = columnU,
-            EndRow = lastRow,
-            EndColumn = columnU
-        };
+        CellArea sortArea = CellArea.CreateCellArea($"U1", $"U{lastRow + 1}");
 
         // Perform the sort
         sorter.Sort(worksheet.Cells, sortArea);

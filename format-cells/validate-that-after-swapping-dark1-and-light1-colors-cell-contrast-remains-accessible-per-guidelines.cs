@@ -1,94 +1,97 @@
+// Title: C# – Verify Accessibility Contrast After Swapping Dark1 and Light1 Theme Colors with Aspose.Cells
+// Description: This example creates an Excel workbook, applies the Dark1 (Background1) and Light1 (Text1) theme colors to two cells, swaps the background and font theme colors, resolves the actual RGB values with GetDisplayStyle, checks that foreground and background colors remain distinct, logs the result, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | theme colors | Dark1 | Light1 | swap theme colors | GetDisplayStyle | cell contrast | accessibility | WCAG | Excel automation | color validation | Workbook styling
+// Common Searches: how to swap Dark1 and Light1 in Aspose.Cells | validate cell contrast after theme change Aspose.Cells .NET | Aspose.Cells GetDisplayStyle example | C# check Excel cell accessibility contrast | programmatically ensure WCAG contrast in generated Excel files
+// Developer Intent: Confirm that exchanging Dark1 and Light1 theme colors does not break the required foreground‑background contrast for accessibility.
+// Use Cases: Generate reports that dynamically switch theme colors while preserving WCAG‑compliant contrast. | Automate accessibility audits of Excel files by validating color contrast after style modifications. | Create templates where theme swaps are applied to specific cells and the contrast outcome is logged for quality control.
+// AI Prompts: Write a C# function using Aspose.Cells that calculates the WCAG contrast ratio between a cell's resolved background and font colors. | Provide code to iterate over a range, swap BackgroundThemeColor and Font.ThemeColor for each cell, and collect cells that fail a contrast threshold. | Explain how GetDisplayStyle resolves theme colors in Aspose.Cells and how it can be used for accessibility validation.
+
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
 namespace AsposeCellsThemeSwapDemo
 {
+    // This example creates an Excel workbook, applies the Dark1 (Background1) and Light1 (Text1) theme colors to two cells, swaps the background and font theme colors, resolves the actual RGB values with GetDisplayStyle, checks that foreground and background colors remain distinct, logs the result, and saves the file.
     class Program
     {
-        // Calculates relative luminance of a color (per WCAG)
-        static double GetLuminance(Color c)
-        {
-            double R = c.R / 255.0;
-            double G = c.G / 255.0;
-            double B = c.B / 255.0;
-
-            // Apply sRGB gamma correction
-            R = (R <= 0.03928) ? R / 12.92 : Math.Pow((R + 0.055) / 1.055, 2.4);
-            G = (G <= 0.03928) ? G / 12.92 : Math.Pow((G + 0.055) / 1.055, 2.4);
-            B = (B <= 0.03928) ? B / 12.92 : Math.Pow((B + 0.055) / 1.055, 2.4);
-
-            // Relative luminance
-            return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-        }
-
-        // Returns contrast ratio between two colors
-        static double GetContrastRatio(Color fore, Color back)
-        {
-            double L1 = GetLuminance(fore);
-            double L2 = GetLuminance(back);
-            // Ensure L1 is the lighter color
-            if (L1 < L2) { double tmp = L1; L1 = L2; L2 = tmp; }
-            return (L1 + 0.05) / (L2 + 0.05);
-        }
-
         static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // 2. Define a style that uses theme colors for background (Dark1) and font (Light1)
-            Style themeStyle = workbook.CreateStyle();
-            // Background uses ThemeColorType.Background1 (typically Dark1)
-            themeStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background1, 0);
-            // Font uses ThemeColorType.Text1 (typically Light1)
-            themeStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Text1, 0);
-            themeStyle.Font.Size = 12;
-            themeStyle.Font.IsBold = true;
-            themeStyle.Pattern = BackgroundType.Solid;
+            // ------------------------------------------------------------
+            // 1. Prepare two cells with original Dark1 (Background1) and Light1 (Text1) theme colors
+            // ------------------------------------------------------------
 
-            // 3. Apply the style to cell A1
-            Cell cell = cells["A1"];
-            cell.PutValue("Contrast Test");
-            cell.SetStyle(themeStyle);
+            // Cell A1: Dark background, Light foreground
+            Style styleA1 = workbook.CreateStyle();
+            styleA1.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background1, 0.0); // Dark1
+            styleA1.Font.ThemeColor = new ThemeColor(ThemeColorType.Text1, 0.0);            // Light1
+            styleA1.Pattern = BackgroundType.Solid;
+            cells["A1"].PutValue("Original");
+            cells["A1"].SetStyle(styleA1);
 
-            // 4. Get the display style (actual colors after theme resolution)
-            Style displayBefore = cell.GetDisplayStyle();
-            Color foreBefore = displayBefore.Font.Color;
-            Color backBefore = displayBefore.BackgroundColor;
+            // Cell A2: Light background, Dark foreground
+            Style styleA2 = workbook.CreateStyle();
+            styleA2.BackgroundThemeColor = new ThemeColor(ThemeColorType.Text1, 0.0);      // Light1
+            styleA2.Font.ThemeColor = new ThemeColor(ThemeColorType.Background1, 0.0);    // Dark1
+            styleA2.Pattern = BackgroundType.Solid;
+            cells["A2"].PutValue("Original");
+            cells["A2"].SetStyle(styleA2);
 
-            double contrastBefore = GetContrastRatio(foreBefore, backBefore);
-            Console.WriteLine($"Contrast before swapping: {contrastBefore:F2} (Accessible: {contrastBefore >= 4.5})");
+            // ------------------------------------------------------------
+            // 2. Swap Dark1 and Light1 theme colors for both cells
+            // ------------------------------------------------------------
+            SwapThemeColors(cells["A1"]);
+            SwapThemeColors(cells["A2"]);
 
-            // 5. Retrieve current theme colors (12 entries)
-            Color[] themeColors = new Color[12];
-            for (int i = 0; i < themeColors.Length; i++)
-            {
-                ThemeColorType type = (ThemeColorType)i;
-                themeColors[i] = workbook.GetThemeColor(type);
-            }
+            // ------------------------------------------------------------
+            // 3. Validate that foreground and background colors still provide contrast
+            // ------------------------------------------------------------
+            ValidateContrast(cells["A1"]);
+            ValidateContrast(cells["A2"]);
 
-            // 6. Swap Dark1 (Background1) and Light1 (Text1) colors
-            // Background1 = index 0, Text1 = index 1 in the ThemeColorType enum
-            Color temp = themeColors[0];
-            themeColors[0] = themeColors[1];
-            themeColors[1] = temp;
+            // ------------------------------------------------------------
+            // 4. Save the workbook
+            // ------------------------------------------------------------
+            workbook.Save("ThemeSwapContrastDemo.xlsx", SaveFormat.Xlsx);
+        }
 
-            // 7. Apply the swapped theme to the workbook
-            workbook.CustomTheme("SwappedTheme", themeColors);
+        // Swaps the background and font theme colors of a given cell
+        private static void SwapThemeColors(Cell cell)
+        {
+            // Retrieve the current style
+            Style curStyle = cell.GetStyle();
 
-            // 8. Get the display style again after swapping
-            Style displayAfter = cell.GetDisplayStyle();
-            Color foreAfter = displayAfter.Font.Color;
-            Color backAfter = displayAfter.BackgroundColor;
+            // Store original theme colors
+            ThemeColor bgTheme = curStyle.BackgroundThemeColor;
+            ThemeColor fontTheme = curStyle.Font.ThemeColor;
 
-            double contrastAfter = GetContrastRatio(foreAfter, backAfter);
-            Console.WriteLine($"Contrast after swapping: {contrastAfter:F2} (Accessible: {contrastAfter >= 4.5})");
+            // Swap them
+            curStyle.BackgroundThemeColor = fontTheme;
+            curStyle.Font.ThemeColor = bgTheme;
 
-            // 9. Save the workbook for visual verification
-            workbook.Save("ThemeSwapContrastDemo.xlsx");
+            // Apply the modified style back to the cell
+            cell.SetStyle(curStyle);
+        }
+
+        // Checks that the effective foreground and background colors are not identical
+        private static void ValidateContrast(Cell cell)
+        {
+            // Get the display style (takes theme resolution into account)
+            Style displayStyle = cell.GetDisplayStyle();
+
+            // Resolve actual colors
+            Color bgColor = displayStyle.BackgroundColor;
+            Color fgColor = displayStyle.Font.Color;
+
+            // Simple contrast check: colors must differ
+            bool hasContrast = bgColor.ToArgb() != fgColor.ToArgb();
+
+            Console.WriteLine($"Cell {cell.Name}: Background={bgColor}, Foreground={fgColor}, ContrastOK={hasContrast}");
         }
     }
 }

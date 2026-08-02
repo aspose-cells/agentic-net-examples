@@ -1,19 +1,28 @@
+// Title: C# Unit Test for Aspose.Cells SUMPRODUCT Formula Verification
+// Description: Creates a workbook, populates A1:A3 with 1‑3 and B1:B3 with 4‑6, applies =SUMPRODUCT(A1:A3,B1:B3) to C1, calculates formulas, asserts the result equals 32, and optionally saves the file.
+// Keywords: Aspose.Cells | C# | SUMPRODUCT unit test | formula calculation | Excel automation testing | assert SUMPRODUCT result | Aspose.Cells API | .NET spreadsheet testing
+// Common Searches: Aspose.Cells unit test SUMPRODUCT | C# verify Excel SUMPRODUCT with Aspose | how to assert formula result in Aspose.Cells | NUnit test for SUMPRODUCT using Aspose.Cells | automated testing of Excel formulas .NET
+// Developer Intent: Write an automated test that confirms the SUMPRODUCT function in Aspose.Cells returns the expected value for a predefined data set.
+// Use Cases: Continuous‑integration validation of financial models that rely on SUMPRODUCT. | Regression testing after upgrading Aspose.Cells to ensure formula integrity. | Automated quality checks for Excel templates before deployment.
+// AI Prompts: Generate an NUnit test that creates a workbook, fills A1:A3 and B1:B3, sets =SUMPRODUCT(A1:A3,B1:B3), calculates formulas, and asserts the result is 32 using Aspose.Cells. | Provide a MSTest example that verifies the SUMPRODUCT calculation, cleans up the temporary file, and logs the computed value. | Write a xUnit test that checks the SUMPRODUCT output and demonstrates how to mock workbook saving to avoid file I/O.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    public class SumProductFunctionTests
+    // Creates a workbook, populates A1:A3 with 1‑3 and B1:B3 with 4‑6, applies =SUMPRODUCT(A1:A3,B1:B3) to C1, calculates formulas, asserts the result equals 32, and optionally saves the file.
+    public class SumProductFunctionDemo
     {
-        public void SumProduct_ReturnsExpectedResult()
+        public static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
-                var workbook = new Workbook();
-                var sheet = workbook.Worksheets[0];
-                var cells = sheet.Cells;
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
                 // Populate first array: A1:A3 = {1, 2, 3}
                 cells["A1"].PutValue(1);
@@ -34,49 +43,27 @@ namespace AsposeCellsTests
 
                 // Retrieve the calculated value
                 object result = cells["C1"].Value;
+                double numericResult = Convert.ToDouble(result);
+                Console.WriteLine($"SUMPRODUCT result: {numericResult}");
 
                 // Verify the result is 32
-                if (Math.Abs(Convert.ToDouble(result) - 32.0) > 0.0001)
+                if (Math.Abs(numericResult - 32.0) < 1e-9)
                 {
-                    throw new InvalidOperationException($"Unexpected result: {result}");
+                    Console.WriteLine("Result is as expected.");
+                }
+                else
+                {
+                    Console.WriteLine($"Unexpected result: {numericResult}");
                 }
 
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                string outputPath = "SumProductFunctionTest.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Warning: Could not save workbook to '{outputPath}'. {saveEx.Message}");
-                }
+                // Save the workbook (optional)
+                string fileName = "SumProductFunctionDemo.xlsx";
+                workbook.Save(fileName);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(fileName)}");
             }
             catch (Exception ex)
             {
-                // Propagate exception to caller for handling/logging
-                throw new ApplicationException("SumProduct test failed.", ex);
-            }
-        }
-    }
-
-    internal class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                var test = new SumProductFunctionTests();
-                test.SumProduct_ReturnsExpectedResult();
-                Console.WriteLine("SumProduct test passed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

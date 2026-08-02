@@ -3,7 +3,7 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace ChartRenderExample
+namespace ChartRenderDemo
 {
     class Program
     {
@@ -33,15 +33,11 @@ namespace ChartRenderExample
             // Set the data range for the chart
             chart.SetChartDataRange("A1:B4", true);
 
-            // Render the chart to a PNG image file using the Chart API
-            string outputImagePath = "ChartOutput.png";
-            chart.ToImage(outputImagePath, ImageType.Png);
+            // Render the chart to a PNG image using the Chart.ToImage overload
+            string outputPath = "ChartImage.png";
+            chart.ToImage(outputPath, ImageType.Png);
 
-            // Optionally, save the workbook for reference
-            workbook.Save("ChartWorkbook.xlsx");
-
-            Console.WriteLine($"Chart rendered and saved to '{outputImagePath}'.");
-            Console.WriteLine("Workbook saved as 'ChartWorkbook.xlsx'.");
+            Console.WriteLine($"Chart rendered and saved to '{outputPath}'.");
         }
     }
 }

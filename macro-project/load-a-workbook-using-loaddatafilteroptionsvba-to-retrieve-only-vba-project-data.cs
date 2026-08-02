@@ -2,34 +2,32 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-class LoadVbaOnly
+class LoadVbaOnlyDemo
 {
     static void Main()
     {
-        // Path to the source workbook (must be a macro‑enabled file to contain VBA)
-        string sourcePath = "input.xlsm";
+        // Path to the macro‑enabled workbook
+        string filePath = "sample.xlsm";
 
-        // Create LoadOptions and assign a LoadFilter that loads only VBA projects
+        // Create LoadOptions instance
         LoadOptions loadOptions = new LoadOptions();
+
+        // Configure the LoadFilter to load only VBA project data
         loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.VBA);
 
         // Load the workbook with the specified options
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
+        Workbook workbook = new Workbook(filePath, loadOptions);
 
-        // Access the VBA project (may be null if the workbook has no VBA)
+        // Access the VBA project (may be null if none exists)
         VbaProject vbaProject = workbook.VbaProject;
 
+        // Indicate whether the VBA project was loaded
+        Console.WriteLine("VBA Project loaded: " + (vbaProject != null));
+
+        // If a VBA project exists, display the number of modules it contains
         if (vbaProject != null)
         {
-            // Example: output the number of VBA modules present
-            Console.WriteLine("VBA Modules count: " + vbaProject.Modules.Count);
+            Console.WriteLine("Number of VBA modules: " + vbaProject.Modules.Count);
         }
-        else
-        {
-            Console.WriteLine("No VBA project found in the workbook.");
-        }
-
-        // Save the workbook (preserving the VBA project) to verify loading succeeded
-        workbook.Save("output.xlsm", SaveFormat.Xlsm);
     }
 }

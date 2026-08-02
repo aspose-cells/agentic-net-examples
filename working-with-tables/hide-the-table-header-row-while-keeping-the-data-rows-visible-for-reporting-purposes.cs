@@ -2,11 +2,11 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace HideTableHeaderDemo
+namespace AsposeCellsTableHeaderHideDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -22,8 +22,9 @@ namespace HideTableHeaderDemo
             worksheet.Cells["A4"].PutValue("Cherry");
             worksheet.Cells["B4"].PutValue(30);
 
-            // Add a ListObject (table) covering the data range (including header)
-            int tableIndex = worksheet.ListObjects.Add(0, 0, 3, 1, true);
+            // Add a ListObject (table) that includes the header row
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+            int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 2, true);
             ListObject table = worksheet.ListObjects[tableIndex];
 
             // Apply a style (optional)
@@ -33,7 +34,7 @@ namespace HideTableHeaderDemo
             table.ShowHeaderRow = false;
 
             // Save the workbook to a file
-            workbook.Save("HideTableHeaderDemo.xlsx");
+            workbook.Save("TableHeaderHidden.xlsx");
         }
     }
 }

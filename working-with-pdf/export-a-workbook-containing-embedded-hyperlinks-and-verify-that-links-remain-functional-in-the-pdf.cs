@@ -1,35 +1,47 @@
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-class HyperlinkPdfDemo
+namespace HyperlinkPdfExportDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (create rule)
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Put display text into cell A1
-        sheet.Cells["A1"].PutValue("Visit Aspose");
+            // Add a hyperlink to cell A1
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+            sheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.aspose.com");
 
-        // Add a hyperlink to cell A1 (row 0, column 0, 1 row, 1 column)
-        sheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.aspose.com");
+            // Optionally set display text and screen tip
+            Hyperlink link = sheet.Hyperlinks[0];
+            link.TextToDisplay = "Aspose Home";
+            link.ScreenTip = "Open Aspose website";
 
-        // Define the output PDF file path
-        string pdfPath = "HyperlinkDemo.pdf";
+            // Save the workbook as Excel (save rule)
+            string excelPath = "HyperlinkDemo.xlsx";
+            workbook.Save(excelPath);
 
-        // Save the workbook as PDF
-        workbook.Save(pdfPath, SaveFormat.Pdf);
+            // Save the workbook as PDF (save rule)
+            string pdfPath = "HyperlinkDemo.pdf";
+            workbook.Save(pdfPath);
 
-        // Simple verification: read the PDF file as text and check for the URL
-        // (PDF stores URLs as plain text, so this works for basic validation)
-        string pdfContent = File.ReadAllText(pdfPath, Encoding.Default);
-        bool linkExists = pdfContent.Contains("https://www.aspose.com");
+            // Verify that the PDF contains the hyperlink address
+            // Simple verification by searching the raw PDF content for the URL string
+            bool hyperlinkFound = false;
+            if (File.Exists(pdfPath))
+            {
+                string pdfContent = File.ReadAllText(pdfPath);
+                hyperlinkFound = pdfContent.Contains("https://www.aspose.com");
+            }
 
-        Console.WriteLine("Hyperlink present in PDF: " + linkExists);
+            Console.WriteLine($"Hyperlink present in PDF: {hyperlinkFound}");
+        }
     }
 }

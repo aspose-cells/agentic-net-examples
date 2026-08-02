@@ -1,17 +1,25 @@
+// Title: C# – Fill an Attendance Matrix with Aspose.Cells Smart Markers Using Array Index Syntax
+// Description: Demonstrates how to create an Excel workbook, define a header row, insert smart markers that reference an employee name and indexed Attendance array elements, name the range "_CellsSmartMarkers" to repeat the template row for each employee, bind a List<Employee> as the data source, process the markers with WorkbookDesigner, and save the file.
+// Keywords: Aspose.Cells | smart markers | array index syntax | C# | .NET | WorkbookDesigner | repeat rows | attendance matrix | Excel export | template row | data source binding
+// Common Searches: Aspose.Cells smart markers array index example | C# repeat rows with _CellsSmartMarkers | How to fill Excel table using smart markers and arrays | Create attendance sheet with Aspose.Cells | Smart marker template for matrix data in .NET
+// Developer Intent: Generate an Excel sheet where each employee’s daily attendance values are populated automatically via smart markers with index notation.
+// Use Cases: Produce a daily attendance report that expands automatically for any number of employees. | Build a timesheet matrix where each column represents a day and rows are generated from a collection with an array property. | Create a scalable summary sheet that adapts to varying numbers of days or employees without manual column adjustments.
+// AI Prompts: Show how to modify the smart‑marker template to support a dynamic number of day columns instead of hard‑coded indexes. | Explain how to bind a DataTable containing attendance columns to the smart markers using array‑index syntax. | Provide code that adds conditional formatting (e.g., highlight values < 8) to the attendance cells after processing the smart markers.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace SmartMarkerAttendanceDemo
+namespace AsposeCellsSmartMarkerMatrixDemo
 {
-    // Data model representing an employee and his/her attendance for a week
+    // Simple data class representing an employee and his/her attendance per day
+    // Demonstrates how to create an Excel workbook, define a header row, insert smart markers that reference an employee name and indexed Attendance array elements, name the range "_CellsSmartMarkers" to repeat the template row for each employee, bind a List<Employee> as the data source, process the markers with WorkbookDesigner, and save the file.
     public class Employee
     {
-        // Initialize to avoid non‑nullable warnings
-        public string Name { get; set; } = string.Empty;
-        public bool[] Days { get; set; } = Array.Empty<bool>();
+        public string Name { get; set; } = null!;
+        // Attendance array where each element corresponds to a day
+        public int[] Attendance { get; set; } = null!;
     }
 
     public class Program
@@ -20,67 +28,68 @@ namespace SmartMarkerAttendanceDemo
         {
             try
             {
-                // ---------- Create a new workbook (create rule) ----------
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-                var cells = ws.Cells;
+                // 1. Create a new workbook
+                Workbook wb = new Workbook();
 
-                // ---------- Set up the template with smart markers ----------
-                // Header row
+                // 2. Access the first worksheet and its cells collection
+                Worksheet ws = wb.Worksheets[0];
+                Cells cells = ws.Cells;
+
+                // 3. Set header row (Day names)
                 cells["A1"].PutValue("Employee");
-                cells["B1"].PutValue("Day1");
-                cells["C1"].PutValue("Day2");
-                cells["D1"].PutValue("Day3");
-                cells["E1"].PutValue("Day4");
-                cells["F1"].PutValue("Day5");
+                cells["B1"].PutValue("Day 1");
+                cells["C1"].PutValue("Day 2");
+                cells["D1"].PutValue("Day 3");
 
-                // Data rows start at A2. Use smart markers with index syntax to fill the matrix.
-                cells["A2"].PutValue("&=Attendance.Name");
-                cells["B2"].PutValue("&=Attendance.Days[0]");
-                cells["C2"].PutValue("&=Attendance.Days[1]");
-                cells["D2"].PutValue("&=Attendance.Days[2]");
-                cells["E2"].PutValue("&=Attendance.Days[3]");
-                cells["F2"].PutValue("&=Attendance.Days[4]");
+                // 4. Insert smart markers in the template row (row 2)
+                // Simple smart marker for employee name
+                cells["A2"].PutValue("&=Employees.Name");
+                // Index syntax to refer to array elements of Attendance
+                cells["B2"].PutValue("&=Employees.Attendance[0]");
+                cells["C2"].PutValue("&=Employees.Attendance[1]");
+                cells["D2"].PutValue("&=Employees.Attendance[2]");
 
-                // Define the range that contains the smart markers and name it "_CellsSmartMarkers"
-                // This enables range‑based processing (required when LineByLine = false)
-                AsposeRange smartRange = cells.CreateRange("A2:F2");
-                smartRange.Name = "_CellsSmartMarkers";
+                // 5. Define the range that contains the smart markers and name it "_CellsSmartMarkers"
+                // This enables the designer to repeat the row for each employee in the data source.
+                Aspose.Cells.Range smRange = cells.CreateRange("A2:D2");
+                smRange.Name = "_CellsSmartMarkers";
 
-                // ---------- Prepare sample attendance data ----------
-                var employees = new List<Employee>
+                // 6. Prepare sample data
+                List<Employee> employees = new List<Employee>
                 {
-                    new Employee { Name = "Alice", Days = new[] { true,  false, true,  true,  false } },
-                    new Employee { Name = "Bob",   Days = new[] { false, true,  true,  false, true  } },
-                    new Employee { Name = "Carol", Days = new[] { true,  true,  true,  true,  true  } }
+                    new Employee { Name = "Alice", Attendance = new int[] { 8, 9, 7 } },
+                    new Employee { Name = "Bob",   Attendance = new int[] { 6, 8, 8 } },
+                    new Employee { Name = "Carol", Attendance = new int[] { 9, 9, 10 } }
                 };
 
-                // ---------- Set up WorkbookDesigner and assign the data source ----------
-                var designer = new WorkbookDesigner
+                // 7. Set up the workbook designer
+                WorkbookDesigner designer = new WorkbookDesigner
                 {
                     Workbook = wb
+                    // LineByLine is obsolete; range smart markers are used by default
                 };
-                designer.SetDataSource("Attendance", employees);
+                designer.SetDataSource("Employees", employees);
 
-                // ---------- Process the smart markers (process rule) ----------
+                // 8. Process the smart markers
                 designer.Process();
 
-                // ---------- Save the populated workbook (save rule) ----------
-                const string outputPath = "AttendanceMatrix.xlsx";
+                // 9. Save the result
+                string outputPath = "SmartMarkerMatrixDemo.xlsx";
+                string fullPath = Path.GetFullPath(outputPath);
+                string? outputDir = Path.GetDirectoryName(fullPath);
 
-                // Ensure the directory exists (prevents FileNotFoundException on save)
-                var outputDir = Path.GetDirectoryName(outputPath);
+                // Ensure the output directory exists (handle possible null)
                 if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                wb.Save(fullPath);
+                Console.WriteLine($"Workbook saved to: {fullPath}");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

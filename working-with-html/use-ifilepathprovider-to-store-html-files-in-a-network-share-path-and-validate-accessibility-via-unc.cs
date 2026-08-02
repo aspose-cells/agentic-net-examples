@@ -1,83 +1,82 @@
+// Title: Save Excel Worksheets as Individual HTML Files to a UNC Share Using Aspose.Cells IFilePathProvider (C#)
+// Description: Demonstrates how to implement a custom IFilePathProvider that generates UNC file names for each worksheet, validates the network share’s accessibility, configures HtmlSaveOptions with full‑path links, saves the workbook to the share, and verifies the creation of per‑worksheet HTML files.
+// Keywords: Aspose.Cells | IFilePathProvider | UNC path | C# HTML export | HtmlSaveOptions | network share | per worksheet HTML | full path links | validate UNC access | GitHub example | .NET | Aspose.Cells for .NET
+// Common Searches: Aspose.Cells IFilePathProvider UNC example | Save Excel as HTML to network share C# | Validate UNC folder before exporting Aspose.Cells | Export each worksheet to separate HTML files | Full path links HtmlSaveOptions Aspose | GitHub Aspose.Cells HTML export UNC
+// Developer Intent: Export each worksheet to its own HTML file on a UNC network share while confirming the share is reachable before saving.
+// Use Cases: Generate per‑worksheet HTML reports on a central file server for intranet or web consumption. | Automate nightly workbook exports to a shared UNC folder, creating one HTML file per sheet. | Prevent runtime errors by checking UNC accessibility and permissions prior to HTML export.
+// AI Prompts: Provide a C# sample that extends IFilePathProvider to create timestamped UNC file names for Aspose.Cells HTML export. | Explain how to catch and handle permission or connectivity errors when using HtmlSaveOptions with a custom UNC FilePathProvider. | Show how to modify the code to also export worksheet images to the same UNC folder and reference them with full‑path links.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsNetworkShareDemo
+namespace AsposeCellsNetworkHtmlExport
 {
-    // Custom implementation of IFilePathProvider that returns UNC paths for each worksheet.
-    public class NetworkShareFilePathProvider : IFilePathProvider
+    // Custom implementation of IFilePathProvider that generates UNC paths for each worksheet.
+    // Demonstrates how to implement a custom IFilePathProvider that generates UNC file names for each worksheet, validates the network share’s accessibility, configures HtmlSaveOptions with full‑path links, saves the workbook to the share, and verifies the creation of per‑worksheet HTML files.
+    public class UncFilePathProvider : IFilePathProvider
     {
-        private readonly string _uncBasePath; // e.g. \\Server\Share\Folder\
+        private readonly string _baseUncPath;
 
-        public NetworkShareFilePathProvider(string uncBasePath)
+        public UncFilePathProvider(string baseUncPath)
         {
-            // Ensure the base path ends with a backslash for proper Path.Combine behavior.
-            if (!uncBasePath.EndsWith("\\"))
-                uncBasePath += "\\";
-
-            _uncBasePath = uncBasePath;
+            // Ensure the base path does not end with a directory separator.
+            _baseUncPath = baseUncPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
 
         // Returns the full UNC file name for a given worksheet.
         public string GetFullName(string sheetName)
         {
-            // Combine base UNC path with sheet name and .html extension.
-            return Path.Combine(_uncBasePath, $"{sheetName}.html");
-        }
-
-        // Helper method to verify that the UNC directory is reachable.
-        public bool IsUncPathAccessible()
-        {
-            // Directory.Exists works with UNC paths.
-            return Directory.Exists(_uncBasePath);
+            // Example: \\server\share\folder\Sheet1.html
+            return Path.Combine(_baseUncPath, $"{sheetName}.html");
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Define the UNC network share where HTML files will be stored.
-            string uncPath = @"\\MyServer\SharedFolder\ExcelHtmlExport";
+            // UNC network share where HTML files will be stored.
+            string networkUncPath = @"\\myserver\share\excel_html";
 
-            // Validate that the UNC share is reachable before proceeding.
-            if (!Directory.Exists(uncPath))
+            // Validate that the UNC path is accessible.
+            if (!Directory.Exists(networkUncPath))
             {
-                Console.WriteLine($"UNC path not accessible: {uncPath}");
+                Console.WriteLine($"Error: The network path '{networkUncPath}' is not accessible.");
                 return;
             }
 
-            // Create a workbook and add sample data.
+            // Create a new workbook and add sample data.
             Workbook workbook = new Workbook();
-            Worksheet ws = workbook.Worksheets[0];
-            ws.Name = "Report";
-            ws.Cells["A1"].PutValue("Hello");
-            ws.Cells["A2"].PutValue("World");
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Summary";
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["A2"].PutValue("World");
+
+            // Add a second worksheet to demonstrate separate HTML files.
+            Worksheet sheet2 = workbook.Worksheets.Add("Details");
+            sheet2.Cells["A1"].PutValue("Detail data");
 
             // Configure HTML save options.
             HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            // Use full path links so that the main HTML references the UNC files directly.
+            // Use full path links so that the generated HTML references the UNC files correctly.
             saveOptions.IsFullPathLink = true;
+            // Assign the custom UNC file path provider.
+            saveOptions.FilePathProvider = new UncFilePathProvider(networkUncPath);
 
-            // Assign the custom file path provider.
-            var provider = new NetworkShareFilePathProvider(uncPath);
-            saveOptions.FilePathProvider = provider;
+            // Save the workbook. The main HTML file can be placed in the same UNC folder.
+            string mainHtmlPath = Path.Combine(networkUncPath, "WorkbookIndex.html");
+            workbook.Save(mainHtmlPath, saveOptions);
 
-            // Save the workbook; the main HTML file can be saved locally.
-            string localMainHtml = Path.Combine(Path.GetTempPath(), "WorkbookMain.html");
-            workbook.Save(localMainHtml, saveOptions);
-            Console.WriteLine($"Main HTML saved to: {localMainHtml}");
-
-            // Verify that the worksheet HTML file was created on the UNC share.
-            string expectedWorksheetFile = provider.GetFullName(ws.Name);
-            if (File.Exists(expectedWorksheetFile))
+            // Verify that each worksheet HTML file was created.
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                Console.WriteLine($"Worksheet HTML successfully created at UNC location: {expectedWorksheetFile}");
+                string expectedPath = Path.Combine(networkUncPath, $"{ws.Name}.html");
+                bool exists = File.Exists(expectedPath);
+                Console.WriteLine($"Worksheet '{ws.Name}' HTML file exists: {exists}");
             }
-            else
-            {
-                Console.WriteLine($"Failed to create worksheet HTML at UNC location: {expectedWorksheetFile}");
-            }
+
+            Console.WriteLine("Export completed.");
         }
     }
 }

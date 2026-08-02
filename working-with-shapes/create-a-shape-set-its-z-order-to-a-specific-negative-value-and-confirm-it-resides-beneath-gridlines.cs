@@ -1,44 +1,43 @@
+// Title: Aspose.Cells .NET: Add Rectangle Shape, Send Behind Gridlines via Negative Z‑Order, Verify Placement
+// Description: Demonstrates how to create a workbook, insert a rectangle shape, shift it one step back in the Z‑order using ToFrontOrBack(-1) so it sits beneath the worksheet gridlines, output its ZOrderPosition, and save the file.
+// Keywords: Aspose.Cells shape Z-order | ToFrontOrBack negative value | shape behind gridlines | ZOrderPosition verification | Aspose.Cells C# shape layering
+// Common Searches: Aspose.Cells send shape behind gridlines | How to use ToFrontOrBack in Aspose.Cells | Retrieve ZOrderPosition of a shape .NET | Move shape backward in worksheet Aspose.Cells
+// Developer Intent: Place a rectangle shape under the worksheet gridlines by adjusting its Z‑order and confirm the ordering programmatically.
+// Use Cases: Add background graphics that do not obscure cell data. | Create watermarks that appear beneath gridlines for reports. | Control visual hierarchy when multiple shapes overlap on a sheet.
+// AI Prompts: Write C# code with Aspose.Cells that adds a shape, moves it two positions back in the Z‑order, and prints the new ZOrderPosition. | Explain the behavior of ToFrontOrBack for worksheet shapes and how ZOrderPosition reflects their stacking order. | Show an alternative method to send a shape to the back of all objects in an Aspose.Cells worksheet.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// Demonstrates how to create a workbook, insert a rectangle shape, shift it one step back in the Z‑order using ToFrontOrBack(-1) so it sits beneath the worksheet gridlines, output its ZOrderPosition, and save the file.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape (row, column, upper‑left pixel row, upper‑left pixel column, height, width)
-                Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 100);
+            // Add a rectangle shape to the worksheet
+            // Parameters: upper left row, upper left column, width, height, upper left pixel offset X, upper left pixel offset Y
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 100, 0, 0);
 
-                // Move the shape to the back (lowest Z‑order) safely.
-                // The shape is newly added, its ZOrderPosition is 0, so no movement is needed.
-                // If the shape had a higher Z‑order, we would move it back by the required steps.
-                int stepsToBack = -shape.ZOrderPosition;
-                if (stepsToBack != 0)
-                {
-                    shape.ToFrontOrBack(stepsToBack);
-                }
+            // Move the shape one position backward in the Z-order (negative value)
+            // Use -1 to avoid exceeding collection bounds
+            shape.ToFrontOrBack(-1);
 
-                // Output the current Z‑order position
-                Console.WriteLine("Shape ZOrderPosition: " + shape.ZOrderPosition);
+            // Output the Z-order position to confirm its current order
+            Console.WriteLine("Shape ZOrderPosition: " + shape.ZOrderPosition);
 
-                // Save the workbook
-                string outputPath = "ShapeZOrder.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine("Error: " + ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("ShapeBehindGridlines.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

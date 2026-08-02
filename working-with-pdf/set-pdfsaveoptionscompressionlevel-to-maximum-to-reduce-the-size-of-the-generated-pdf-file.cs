@@ -6,24 +6,21 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and add sample data
         Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Demo PDF with maximum compression");
 
-        // Add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Compression Level Demo");
-        sheet.Cells["A2"].PutValue("This PDF uses maximum compression.");
-
-        // Create PDF save options with maximum compression settings
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Use Flate compression for the core PDF content (best compression)
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
-
-        // Optimize the PDF for minimum file size
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+        // Configure PDF save options for maximum compression
+        PdfSaveOptions saveOptions = new PdfSaveOptions();
+        // Flate compression provides the highest compression for PDF content
+        saveOptions.PdfCompression = PdfCompressionCore.Flate;
+        // Further reduce size by optimizing for minimum file size
+        saveOptions.OptimizationType = PdfOptimizationType.MinimumSize;
 
         // Save the workbook as a PDF using the configured options
-        workbook.Save("CompressedOutput.pdf", pdfOptions);
+        workbook.Save("output_max_compression.pdf", saveOptions);
     }
 }
+
+// Author: Example demonstrating maximum PDF compression using Aspose.Cells.

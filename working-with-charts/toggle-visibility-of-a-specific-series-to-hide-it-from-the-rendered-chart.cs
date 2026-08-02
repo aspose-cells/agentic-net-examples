@@ -37,7 +37,8 @@ namespace AsposeCellsSeriesVisibilityDemo
             chart.NSeries.Add("C2:C4", true); // Series2
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Hide the second series (index 1) by setting IsFiltered to true
+            // Hide the second series (index 1) using IsFiltered property
+            // When IsFiltered is true, the series will not be displayed in the chart.
             chart.NSeries[1].IsFiltered = true;
 
             // Save the workbook

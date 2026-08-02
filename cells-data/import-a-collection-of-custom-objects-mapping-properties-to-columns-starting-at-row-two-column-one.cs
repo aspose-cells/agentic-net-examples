@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsImportCustomObjectsDemo
+namespace AsposeCellsImportDemo
 {
-    // Define a custom data class whose properties will be mapped to worksheet columns
-    public class Product
+    // Sample custom object
+    public class Employee
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public decimal Salary { get; set; }
+        public DateTime HireDate { get; set; }
     }
 
     public class Program
@@ -20,45 +20,46 @@ namespace AsposeCellsImportCustomObjectsDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Prepare a collection of custom objects to import
-            List<Product> products = new List<Product>
+            // Prepare a collection of custom objects
+            List<Employee> employees = new List<Employee>
             {
-                new Product { Name = "Apple", Price = 2.99m, Stock = 150, ReleaseDate = new DateTime(2023, 12, 31) },
-                new Product { Name = "Orange", Price = 1.99m, Stock = 200, ReleaseDate = new DateTime(2024, 1, 15) },
-                new Product { Name = "Banana", Price = 0.99m, Stock = 300, ReleaseDate = new DateTime(2024, 2, 10) }
+                new Employee { Id = 1, Name = "Alice", Salary = 75000m, HireDate = new DateTime(2020, 5, 10) },
+                new Employee { Id = 2, Name = "Bob",   Salary = 62000m, HireDate = new DateTime(2019, 3, 22) },
+                new Employee { Id = 3, Name = "Carol", Salary = 88000m, HireDate = new DateTime(2021, 11, 1) }
             };
 
-            // Specify the property names to map to columns (order matters)
-            string[] propertyNames = { "Name", "Price", "Stock", "ReleaseDate" };
+            // Define the property names to map to columns (order matters)
+            string[] propertyNames = { "Id", "Name", "Salary", "HireDate" };
 
-            // Import the custom objects starting at row 2 (index 1) and column 1 (index 0)
+            // Import the collection starting at row 2 (index 1) and column 1 (index 0)
             // Parameters:
-            //   products                - collection to import
-            //   propertyNames           - columns mapping
-            //   true                    - include property names as header row
-            //   1                       - firstRow (row index 1 => second row)
-            //   0                       - firstColumn (column index 0 => first column)
-            //   products.Count          - number of rows to import
-            //   true                    - insert rows if needed
-            //   "yyyy-MM-dd"            - date format for DateTime values
-            //   true                    - try to convert strings to numbers where possible
-            int importedRows = worksheet.Cells.ImportCustomObjects(
-                products,
+            //   list                : employees
+            //   propertyNames       : propertyNames
+            //   isPropertyNameShown : true (adds header row)
+            //   firstRow            : 1  (second row in the sheet)
+            //   firstColumn         : 0  (first column)
+            //   rowNumber           : employees.Count
+            //   insertRows          : true (adds rows if needed)
+            //   dateFormatString    : "yyyy-MM-dd"
+            //   convertStringToNumber: true
+            int importedRows = cells.ImportCustomObjects(
+                employees,
                 propertyNames,
                 true,
                 1,
                 0,
-                products.Count,
+                employees.Count,
                 true,
                 "yyyy-MM-dd",
                 true
             );
 
-            Console.WriteLine($"Imported {importedRows} rows starting at cell A2.");
+            Console.WriteLine($"Imported {importedRows} rows starting at B2.");
 
-            // Save the workbook to an XLSX file
-            workbook.Save("ImportedProducts.xlsx");
+            // Save the workbook
+            workbook.Save("EmployeesImport.xlsx");
         }
     }
 }

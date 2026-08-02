@@ -12,22 +12,23 @@ namespace AsposeCellsSubtotalExample
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Populate sample data (Header + some rows)
-            cells["A1"].PutValue("Category");   // Column A
-            cells["B1"].PutValue("Item");       // Column B
-            cells["C1"].PutValue("Amount");     // Column C (the column we will subtotal)
+            // Populate sample data (columns A, B, C)
+            // Header row
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Item");
+            cells["C1"].PutValue("Value");
 
+            // Data rows
             object[,] data = new object[,]
             {
-                { "North", "Widget", 5000 },
-                { "North", "Gadget", 3000 },
-                { "South", "Widget", 6000 },
-                { "South", "Gadget", 4000 },
-                { "West",  "Widget", 4500 },
-                { "West",  "Gadget", 3500 }
+                { "Group1", "ItemA", 120 },
+                { "Group1", "ItemB", 150 },
+                { "Group1", "ItemC", 130 },
+                { "Group2", "ItemA", 200 },
+                { "Group2", "ItemB", 180 },
+                { "Group2", "ItemC", 210 }
             };
 
-            // Fill the worksheet with the data starting from row 2 (zero‑based index 1)
             for (int r = 0; r < data.GetLength(0); r++)
             {
                 for (int c = 0; c < data.GetLength(1); c++)
@@ -37,33 +38,32 @@ namespace AsposeCellsSubtotalExample
             }
 
             // Define the range that contains the data (including header)
-            // A1:C7  => rows 0‑6, columns 0‑2
+            // A1:C7 -> rows 0-6, columns 0-2
             CellArea area = new CellArea
             {
                 StartRow = 0,
                 StartColumn = 0,
-                EndRow = data.GetLength(0),   // header row + data rows - 1
+                EndRow = data.GetLength(0),   // last data row index + header
                 EndColumn = 2
             };
 
             // Add subtotals:
-            // - Group by the first column (Category) => index 0
-            // - Use Max function on column C (Amount) => index 2
-            // - Replace existing subtotals: true
-            // - No page breaks between groups: false
-            // - Place summary rows below each group: true
+            // - Group by the first column (Category) -> groupBy = 0
+            // - Use Max function on column C (zero‑based index 2)
+            // - Replace existing subtotals = true
+            // - No page breaks between groups = false
+            // - Summary rows placed below the detail rows = true
             cells.Subtotal(
                 area,
-                0,                                 // groupBy column (Category)
-                ConsolidationFunction.Max,         // Max function
-                new int[] { 2 },                   // subtotal on column C (Amount)
-                true,                              // replace existing subtotals
-                false,                             // no page breaks
-                true                               // summary rows below data
-            );
+                0,
+                ConsolidationFunction.Max,
+                new int[] { 2 },
+                true,
+                false,
+                true);
 
             // Save the workbook
-            workbook.Save("Subtotal_Max_ColumnC.xlsx");
+            workbook.Save("Subtotal_Max_ColumnC_AfterEachGroup.xlsx");
         }
     }
 }

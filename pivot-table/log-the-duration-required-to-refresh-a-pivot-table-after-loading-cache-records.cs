@@ -3,54 +3,69 @@ using System.Diagnostics;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshDuration
+namespace AsposeCellsPivotRefreshTiming
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // -------------------------------------------------
+            // 1. Create a workbook with sample data and a pivot table
+            // -------------------------------------------------
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["A4"].PutValue("Orange");
-            sheet.Cells["B4"].PutValue(180);
-            sheet.Cells["A5"].PutValue("Apple");
-            sheet.Cells["B5"].PutValue(130);
+            // Sample data
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "Amount";
+            cells["A2"].Value = "Food";
+            cells["B2"].Value = 120;
+            cells["A3"].Value = "Food";
+            cells["B3"].Value = 80;
+            cells["A4"].Value = "Drink";
+            cells["B4"].Value = 150;
+            cells["A5"].Value = "Drink";
+            cells["B5"].Value = 70;
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Add a pivot table
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Amount
 
-            // Configure the pivot table fields
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
+            // Initial refresh to build the cache
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-            // Initial refresh to ensure the pivot cache is built
-            pivot.RefreshData();
-            pivot.CalculateData();
+            // Save the workbook (cache is stored)
+            string filePath = "PivotRefreshTiming.xlsx";
+            wb.Save(filePath);
 
-            // Modify source data to simulate a change that requires refresh
-            sheet.Cells["B2"].PutValue(200); // Change Apple sales
+            // -------------------------------------------------
+            // 2. Load the workbook and measure refresh duration
+            // -------------------------------------------------
+            Workbook loadedWb = new Workbook(filePath);
+            Worksheet loadedSheet = loadedWb.Worksheets[0];
+            PivotTable loadedPivot = loadedSheet.PivotTables[0];
 
-            // Measure the time taken to refresh the pivot table after the data change
+            // Start timing
             Stopwatch sw = Stopwatch.StartNew();
-            pivot.RefreshData();      // Refresh cache from the data source
-            pivot.CalculateData();    // Recalculate the pivot table values
+
+            // Refresh the pivot table (this will rebuild the cache from source data)
+            loadedPivot.RefreshData();
+
+            // Stop timing
             sw.Stop();
 
-            // Log the duration
+            // Output the duration
             Console.WriteLine($"Pivot table refresh duration: {sw.ElapsedMilliseconds} ms");
 
-            // Save the workbook (using the standard Aspose.Cells save method)
-            workbook.Save("PivotRefreshDuration.xlsx");
+            // Optional: calculate data so the refreshed values appear in the sheet
+            loadedPivot.CalculateData();
+
+            // Save the workbook after refresh (if needed)
+            loadedWb.Save("PivotRefreshTiming_Refreshed.xlsx");
         }
     }
 }

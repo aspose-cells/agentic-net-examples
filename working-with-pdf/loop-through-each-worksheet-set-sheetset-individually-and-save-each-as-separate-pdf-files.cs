@@ -2,34 +2,32 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – loop worksheets, save each as separate PDF
+    class SheetSetLoopPdfExport
     {
-        // Create a new workbook and add sample worksheets
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Name = "Sheet1";
-        workbook.Worksheets[0].Cells["A1"].PutValue("Data in Sheet1");
-
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-        sheet2.Cells["A1"].PutValue("Data in Sheet2");
-
-        Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-        sheet3.Cells["A1"].PutValue("Data in Sheet3");
-
-        // Loop through each worksheet, set SheetSet to the current sheet,
-        // and save it as an individual PDF file.
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        static void Main()
         {
-            // Configure PDF save options for a single sheet
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.SheetSet = new SheetSet(new int[] { i }); // select only the i‑th sheet
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Generate a file name like "Sheet_1.pdf", "Sheet_2.pdf", etc.
-            string outputFile = $"Sheet_{i + 1}.pdf";
+            // Iterate through all worksheets in the workbook
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                // Create PDF save options for the current sheet
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook (only the selected sheet) to PDF
-            workbook.Save(outputFile, pdfOptions);
+                // Set SheetSet to include only the current worksheet (0‑based index)
+                pdfOptions.SheetSet = new SheetSet(new int[] { i });
+
+                // Build output file name using the worksheet name
+                string sheetName = workbook.Worksheets[i].Name;
+                string outputPath = $"Pdf_{sheetName}.pdf";
+
+                // Save the workbook as PDF with the specified SheetSet
+                workbook.Save(outputPath, pdfOptions);
+            }
         }
     }
 }

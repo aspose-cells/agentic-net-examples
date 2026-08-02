@@ -1,60 +1,83 @@
+// Title: Get Excel File Encryption Algorithm with Aspose.Cells (.NET)
+// Description: C# helper that validates a file path, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine if the workbook is encrypted, and returns the algorithm name without loading the workbook. Returns "SHA‑AES" for OOXML files (.xlsx, .xlsb, .xlsm), a generic legacy description for .xls, "None" for unencrypted files, and throws clear exceptions for invalid input.
+// Keywords: Aspose.Cells encryption detection | C# Excel encryption algorithm | FileFormatUtil DetectFileFormat | Excel file encryption type .NET | Get encryption algorithm name | Excel security Aspose | OOXML SHA‑AES | legacy XLS encryption | detect encrypted workbook
+// Common Searches: asp.net get encryption algorithm of an xlsx file | detect if Excel workbook is encrypted using Aspose.Cells | c# retrieve encryption type of .xls file | how to know which algorithm protects an Excel file | asp.net check encryption algorithm without opening workbook
+// Developer Intent: Retrieve the encryption algorithm applied to a specific Excel file.
+// Use Cases: Validate that uploaded workbooks use only approved encryption methods before processing. | Log encryption algorithms across a batch of files for compliance audits. | Display the encryption algorithm in a UI when a protected workbook is opened.
+// AI Prompts: Write a C# method with Aspose.Cells that returns the encryption algorithm name for a given Excel file path, handling missing files and errors. | Create unit tests for GetEncryptionAlgorithmName covering encrypted .xlsx, encrypted .xls, unencrypted files, and invalid paths. | Explain how FileFormatUtil.DetectFileFormat identifies encryption status and why the algorithm name is inferred from the file extension.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionInfo
+namespace ExcelEncryptionDemo
 {
-    public static class EncryptionHelper
+    // C# helper that validates a file path, uses Aspose.Cells FileFormatUtil.DetectFileFormat to determine if the workbook is encrypted, and returns the algorithm name without loading the workbook. Returns "SHA‑AES" for OOXML files (.xlsx, .xlsb, .xlsm), a generic legacy description for .xls, "None" for unencrypted files, and throws clear exceptions for invalid input.
+    public static class ExcelEncryptionHelper
     {
-        /// <summary>
-        /// Returns the name of the encryption algorithm used for the specified Excel file.
-        /// For modern OOXML files (xlsx, xlsm, xlsb) Aspose.Cells uses AES encryption (StrongCryptographicProvider).
-        /// For legacy binary files (xls) the exact algorithm cannot be determined via the public API,
-        /// therefore the method returns a generic description.
-        /// If the file is not encrypted, "None" is returned.
-        /// </summary>
         /// <param name="filePath">Full path to the Excel file.</param>
-        /// <param name="password">
-        /// Optional password required to open the file.
-        /// If the file is encrypted and a password is not supplied, the method will still detect encryption
-        /// using the overload that does not require a password.
-        /// </param>
         /// <returns>Encryption algorithm name or "None".</returns>
-        public static string GetEncryptionAlgorithmName(string filePath, string password = null)
+        public static string GetEncryptionAlgorithmName(string filePath)
         {
-            // Detect file format and encryption status.
-            FileFormatInfo formatInfo;
-            if (string.IsNullOrEmpty(password))
-                formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-            else
-                formatInfo = FileFormatUtil.DetectFileFormat(filePath, password);
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentException("File path must be provided.", nameof(filePath));
 
-            // If the file is not encrypted, return "None".
-            if (!formatInfo.IsEncrypted)
-                return "None";
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("File not found.", filePath);
 
-            // Determine algorithm based on file extension (OOXML vs legacy).
-            string extension = System.IO.Path.GetExtension(filePath).ToLowerInvariant();
+            try
+            {
+                // Detect file format and encryption status without loading the workbook.
+                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
 
-            // OOXML formats (xlsx, xlsm, xlsb) use AES encryption (StrongCryptographicProvider).
-            if (extension == ".xlsx" || extension == ".xlsm" || extension == ".xlsb")
-                return "AES (StrongCryptographicProvider)";
+                // If the file is not encrypted, simply return "None".
+                if (!formatInfo.IsEncrypted)
+                    return "None";
 
-            // Legacy binary format (xls) uses one of the older algorithms.
-            // The exact type cannot be retrieved via the public API, so we return a generic description.
-            return "Legacy encryption (XOR/Compatible/EnhancedCryptographicProviderV1)";
+                // Determine the algorithm based on the file extension / format type.
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+
+                switch (extension)
+                {
+                    case ".xlsx":
+                    case ".xlsb":
+                    case ".xlsm":
+                        return "SHA‑AES (default for OOXML formats)";
+
+                    case ".xls":
+                        // Legacy format – could be XOR, Compatible, EnhancedCryptographicProviderV1,
+                        // or StrongCryptographicProvider. The specific type is not exposed.
+                        return "Legacy encryption (XOR/Compatible/EnhancedCryptographicProviderV1/StrongCryptographicProvider)";
+
+                    default:
+                        // Unknown extension but encrypted – return a generic message.
+                        return "Encrypted (algorithm unknown)";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Wrap any exception with additional context.
+                throw new InvalidOperationException($"Failed to determine encryption algorithm for file '{filePath}'.", ex);
+            }
         }
     }
 
-    // Example usage
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            string filePath = "encrypted.xlsx";
-            string password = "myPassword";
+            // Use first argument as file path or fallback to a default name.
+            string filePath = args.Length > 0 ? args[0] : "encrypted.xlsx";
 
-            string algorithm = EncryptionHelper.GetEncryptionAlgorithmName(filePath, password);
-            Console.WriteLine($"Encryption algorithm for '{filePath}': {algorithm}");
+            try
+            {
+                string algorithm = ExcelEncryptionHelper.GetEncryptionAlgorithmName(filePath);
+                Console.WriteLine($"Encryption algorithm: {algorithm}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

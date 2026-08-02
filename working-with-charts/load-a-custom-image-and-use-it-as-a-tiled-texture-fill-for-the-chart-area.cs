@@ -14,7 +14,7 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample data for the chart
+            // Add sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
@@ -30,35 +30,45 @@ class Program
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Set chart area fill to texture
+            // Set the chart area fill type to texture
             chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
 
-            // Load custom texture if the file exists
-            string imagePath = "customTexture.png";
-            if (File.Exists(imagePath))
+            // Load custom image bytes if the file exists
+            string texturePath = "customTexture.png";
+            if (File.Exists(texturePath))
             {
-                byte[] imageData = File.ReadAllBytes(imagePath);
-                chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
-                chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
-
-                // Configure tile scaling (percentage of original size)
-                TilePicOption tileOption = new TilePicOption
+                try
                 {
-                    ScaleX = 50, // 50% horizontal scale
-                    ScaleY = 50  // 50% vertical scale
-                };
-                chart.ChartArea.Area.FillFormat.TextureFill.TilePicOption = tileOption;
+                    byte[] imageData = File.ReadAllBytes(texturePath);
+                    chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
+                    chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
+
+                    // Configure tile scaling and offset
+                    chart.ChartArea.Area.FillFormat.TextureFill.TilePicOption = new TilePicOption
+                    {
+                        ScaleX = 50, // 50% horizontal scaling
+                        ScaleY = 50, // 50% vertical scaling
+                        OffsetX = 0,
+                        OffsetY = 0
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load texture: {ex.Message}");
+                    // Fallback to solid fill if texture loading fails
+                    chart.ChartArea.Area.FillFormat.FillType = FillType.Solid;
+                }
             }
             else
             {
-                // Fallback: use a solid fill if texture not found
+                // If texture file not found, use solid fill
                 chart.ChartArea.Area.FillFormat.FillType = FillType.Solid;
-                chart.ChartArea.Area.FillFormat.SolidFill.Color = System.Drawing.Color.LightGray;
             }
 
             // Save the workbook
-            string outputPath = "ChartWithTiledTexture.xlsx";
+            string outputPath = "ChartWithTexture.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

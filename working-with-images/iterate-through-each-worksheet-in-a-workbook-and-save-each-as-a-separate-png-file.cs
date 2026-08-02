@@ -2,47 +2,48 @@ using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsWorksheetToPng
 {
-    static void Main()
+    public class Program
     {
-        // Path to the source workbook
-        string inputPath = "input.xlsx";
-
-        // Directory where PNG files will be saved
-        string outputDir = "output";
-        Directory.CreateDirectory(outputDir);
-
-        // Load the workbook
-        Workbook workbook = new Workbook(inputPath);
-
-        // Configure rendering options for PNG output
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        public static void Main()
         {
-            ImageType = Aspose.Cells.Drawing.ImageType.Png,
-            OnePagePerSheet = true // Ensure each sheet renders to a single page
-        };
+            // Load the workbook (replace with your actual file path)
+            string workbookPath = "input.xlsx";
+            Workbook workbook = new Workbook(workbookPath);
 
-        // Iterate through each worksheet and save as a separate PNG file
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
-        {
-            Worksheet sheet = workbook.Worksheets[i];
+            // Ensure the output directory exists
+            string outputDir = "output";
+            Directory.CreateDirectory(outputDir);
 
-            // Create a SheetRender for the current worksheet
-            SheetRender sheetRender = new SheetRender(sheet, options);
+            // Iterate through each worksheet and save it as a separate PNG file
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
+            {
+                Worksheet worksheet = workbook.Worksheets[sheetIndex];
 
-            // Build a safe file name using the worksheet name
-            string safeName = string.Concat(sheet.Name.Split(Path.GetInvalidFileNameChars()));
-            string outputPath = Path.Combine(outputDir, $"{safeName}.png");
+                // Configure image rendering options
+                ImageOrPrintOptions options = new ImageOrPrintOptions
+                {
+                    ImageType = ImageType.Png,
+                    OnePagePerSheet = true // render the whole sheet on a single page
+                };
 
-            // Render the first (and only) page of the sheet to a PNG file
-            sheetRender.ToImage(0, outputPath);
+                // Create a SheetRender for the current worksheet
+                SheetRender sheetRender = new SheetRender(worksheet, options);
 
-            // Release resources used by SheetRender
-            sheetRender.Dispose();
+                // Build the output file name (e.g., Sheet_1.png, Sheet_2.png, ...)
+                string outputPath = Path.Combine(outputDir, $"Sheet_{sheetIndex + 1}.png");
+
+                // Render the first (and only) page of the sheet to a PNG file
+                sheetRender.ToImage(0, outputPath);
+
+                // Release resources used by SheetRender
+                sheetRender.Dispose();
+
+                Console.WriteLine($"Worksheet '{worksheet.Name}' saved as PNG to: {outputPath}");
+            }
         }
-
-        Console.WriteLine("All worksheets have been saved as separate PNG files.");
     }
 }

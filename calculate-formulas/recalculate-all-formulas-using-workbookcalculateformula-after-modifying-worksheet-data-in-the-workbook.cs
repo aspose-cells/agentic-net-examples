@@ -1,34 +1,37 @@
 using System;
 using Aspose.Cells;
 
-namespace RecalculateFormulasExample
+namespace RecalculateFormulasDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // creates a blank workbook
 
-            // Access the first worksheet and its cells
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Modify some worksheet data
-            cells["A1"].PutValue(10);          // Original value
-            cells["B1"].Formula = "=A1*2";     // Formula dependent on A1
-            cells["C1"].Formula = "=B1+5";     // Formula dependent on B1
+            // Set initial values and formulas
+            cells["A1"].PutValue(5);                 // plain value
+            cells["B1"].Formula = "=A1*2";           // formula dependent on A1
+            cells["C1"].Formula = "=B1+10";          // formula dependent on B1
 
-            // Recalculate all formulas after data modification (feature rule)
+            // Modify data that affects formulas
+            cells["A1"].PutValue(8); // change A1 from 5 to 8
+
+            // Recalculate all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Display the calculated results
-            Console.WriteLine("A1 = " + cells["A1"].Value);
-            Console.WriteLine("B1 (A1*2) = " + cells["B1"].Value);
-            Console.WriteLine("C1 (B1+5) = " + cells["C1"].Value);
+            // Display the updated results
+            Console.WriteLine("A1 value: " + cells["A1"].IntValue); // 8
+            Console.WriteLine("B1 formula result: " + cells["B1"].IntValue); // 16
+            Console.WriteLine("C1 formula result: " + cells["C1"].IntValue); // 26
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("RecalculatedFormulas.xlsx");
+            // Save the workbook if needed
+            workbook.Save("RecalculatedWorkbook.xlsx");
         }
     }
 }

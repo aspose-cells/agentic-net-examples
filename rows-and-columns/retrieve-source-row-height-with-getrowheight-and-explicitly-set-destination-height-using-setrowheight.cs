@@ -1,51 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowHeightExample
+// Author: Aspose.Cells .NET example – copy row height from source to destination
+class Program
 {
-    public class RowHeightTransfer
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (use the provided create rule)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        public static void Run()
-        {
-            // Create a new workbook (source) and set a custom row height
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            Cells sourceCells = sourceSheet.Cells;
+        // Example: set a specific height for the source row (row 0)
+        int sourceRowIndex = 0;
+        cells.SetRowHeight(sourceRowIndex, 30.0); // height in points
 
-            // Set height for row index 2 (third row)
-            sourceCells.SetRowHeight(2, 35.0);
-            double sourceRowHeight = sourceCells.GetRowHeight(2);
-            Console.WriteLine($"Source row (2) height: {sourceRowHeight}");
+        // Retrieve the source row height using GetRowHeight
+        double sourceHeight = cells.GetRowHeight(sourceRowIndex);
+        // If GetRowHeight is obsolete in your version, you can use:
+        // double sourceHeight = cells.GetViewRowHeight(sourceRowIndex);
 
-            // Create a new workbook (destination) and apply the source row height
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-            Cells destinationCells = destinationSheet.Cells;
+        // Explicitly set the destination row height (row 1) to match the source
+        int destinationRowIndex = 1;
+        cells.SetRowHeight(destinationRowIndex, sourceHeight);
 
-            destinationCells.SetRowHeight(5, sourceRowHeight);
-            Console.WriteLine($"Destination row (5) height set to: {destinationCells.GetRowHeight(5)}");
-
-            // Save workbooks – ensure the directory is writable
-            string sourcePath = "SourceWorkbook.xlsx";
-            string destPath = "DestinationWorkbook.xlsx";
-
-            sourceWorkbook.Save(sourcePath);
-            destinationWorkbook.Save(destPath);
-
-            Console.WriteLine($"Workbooks saved: {Path.GetFullPath(sourcePath)}, {Path.GetFullPath(destPath)}");
-        }
+        // Save the workbook (use the provided save rule)
+        workbook.Save("RowHeightCopy.xlsx");
     }
 }

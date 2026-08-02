@@ -17,7 +17,7 @@ namespace SlicerMultiColumnDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate sample data for a pivot table
+                // Populate sample data for the pivot table
                 cells["A1"].Value = "Category";
                 cells["B1"].Value = "Product";
                 cells["A2"].Value = "Fruits";
@@ -35,8 +35,8 @@ namespace SlicerMultiColumnDemo
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // Add a slicer linked to the pivot table field "Category"
-                // Correct argument order: destination cell name first, then field name
+                // Add a slicer linked to the pivot table for the "Category" field
+                // Correct parameter order: destination cell first, then the field name
                 int slicerIndex = sheet.Slicers.Add(pivotTable, "E1", "Category");
                 Slicer slicer = sheet.Slicers[slicerIndex];
 
@@ -50,16 +50,13 @@ namespace SlicerMultiColumnDemo
                 // Arrange slicer items in multiple columns (e.g., 3 columns)
                 slicer.NumberOfColumns = 3;
 
-                // Define output file path
+                // Save the workbook to a file
                 string outputPath = "SlicerMultiColumnDemo.xlsx";
-
-                // Save the workbook
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }

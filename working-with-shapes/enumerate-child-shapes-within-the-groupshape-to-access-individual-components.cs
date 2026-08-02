@@ -1,24 +1,20 @@
+// Title: Enumerate Child Shapes in a GroupShape using Aspose.Cells for .NET
+// Description: Shows how to create a workbook, add rectangle and oval shapes, group them into a GroupShape, enumerate the grouped shapes with GetGroupedShapes() and the GroupShape indexer, display each shape’s type, alternative text, name, and text, and save the result as EnumerateGroupShapes.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | GroupShape | GetGroupedShapes | enumerate shapes | shape grouping | Excel shape iteration | shape indexer | workbook saving
+// Common Searches: list shapes inside a GroupShape Aspose.Cells | how to enumerate child shapes of a GroupShape in C# | Aspose.Cells GetGroupedShapes example | iterate over grouped shapes in Excel using .NET | access individual shapes after grouping with Aspose.Cells
+// Developer Intent: The developer wants to retrieve and work with each individual shape that belongs to a GroupShape.
+// Use Cases: Display properties (type, alt text, name) of all shapes within a grouped object for debugging. | Apply formatting or data to specific child shapes after they have been grouped. | Generate a report of grouped shape composition before exporting the workbook.
+// AI Prompts: Write C# code that adds three shapes, groups them, and changes the fill color of the second child shape using the GroupShape indexer. | Provide an example that ungroups a GroupShape and accesses the original shapes with Aspose.Cells. | Explain how to safely enumerate child shapes when a GroupShape may contain zero elements.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExamples
 {
+    // Shows how to create a workbook, add rectangle and oval shapes, group them into a GroupShape, enumerate the grouped shapes with GetGroupedShapes() and the GroupShape indexer, display each shape’s type, alternative text, name, and text, and save the result as EnumerateGroupShapes.xlsx.
     class EnumerateGroupShapes
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             try
@@ -45,22 +41,27 @@ namespace AsposeCellsExamples
                     Console.WriteLine($"Type: {child.Type}, AltText: {child.AlternativeText}");
                 }
 
-                // Access individual shapes via the indexer
+                // Access child shapes via the indexer
                 for (int i = 0; i < childShapes.Length; i++)
                 {
-                    Shape shape = group[i];
-                    Console.WriteLine($"Indexer {i}: Name = {shape.Name}, Text = {shape.Text}");
+                    Shape s = group[i];
+                    Console.WriteLine($"Indexer [{i}] Name: {s.Name}, Text: {s.Text}");
                 }
 
                 // Save the workbook
-                string outputPath = "EnumeratedGroupShapes.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                workbook.Save("EnumerateGroupShapes.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine("Workbook saved as EnumerateGroupShapes.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during processing: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Entry point required for the application
+        static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

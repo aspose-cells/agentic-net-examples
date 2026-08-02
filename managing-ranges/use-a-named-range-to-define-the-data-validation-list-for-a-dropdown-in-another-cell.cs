@@ -1,52 +1,48 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsNamedRangeValidationDemo
 {
-    public class NamedRangeDropDownDemo
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate the source list in column A (A1:A4)
-                worksheet.Cells["A1"].PutValue("Apple");
-                worksheet.Cells["A2"].PutValue("Banana");
-                worksheet.Cells["A3"].PutValue("Cherry");
-                worksheet.Cells["A4"].PutValue("Date");
-
-                // Create a named range called "FruitList" that refers to A1:A4
-                int nameIndex = workbook.Worksheets.Names.Add("FruitList");
-                workbook.Worksheets.Names[nameIndex].RefersTo = $"={worksheet.Name}!$A$1:$A$4";
-
-                // Add data validation to cell B1 and use the named range as the list source
-                Validation validation = worksheet.Cells["B1"].GetValidation();
-                validation.Type = ValidationType.List;      // List type validation
-                validation.Formula1 = "FruitList";          // Reference the named range (no leading '=')
-                validation.InCellDropDown = true;           // Show the drop‑down arrow in the cell
-
-                // Save the workbook
-                string outputPath = "NamedRangeDropDown.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            NamedRangeDropDownDemo.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate cells A1:A5 with the list items
+            string[] items = { "Apple", "Banana", "Cherry", "Date", "Elderberry" };
+            for (int i = 0; i < items.Length; i++)
+            {
+                worksheet.Cells[i, 0].PutValue(items[i]); // Column A (index 0)
+            }
+
+            // Define a named range "FruitList" that refers to A1:A5
+            int nameIndex = workbook.Worksheets.Names.Add("FruitList");
+            // The RefersTo string must start with '=' and use absolute references
+            workbook.Worksheets.Names[nameIndex].RefersTo = "=Sheet1!$A$1:$A$5";
+
+            // Create a validation for cell B1 (row 0, column 1)
+            CellArea validationArea = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 1,
+                EndRow = 0,
+                EndColumn = 1
+            };
+            int validationIndex = worksheet.Validations.Add(validationArea);
+            Validation validation = worksheet.Validations[validationIndex];
+
+            // Set validation type to List and point to the named range
+            validation.Type = ValidationType.List;
+            // When using a named range, specify the name without the leading '='
+            validation.Formula1 = "FruitList";
+            // Enable the in‑cell drop‑down arrow
+            validation.InCellDropDown = true;
+
+            // Save the workbook
+            workbook.Save("NamedRangeDropDownDemo.xlsx");
         }
     }
 }

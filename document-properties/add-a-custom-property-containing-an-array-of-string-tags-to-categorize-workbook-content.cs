@@ -2,23 +2,28 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class Program
+namespace AsposeCellsTagPropertyExample
 {
-    static void Main()
+    public class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Main()
+        {
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
 
-        // Define an array of tags to categorize the workbook content
-        string[] tags = new string[] { "Finance", "Quarterly", "Confidential" };
+            // Define an array of tags
+            string[] tags = new[] { "Finance", "Quarterly", "Report" };
 
-        // Convert the string array to a single string (comma‑separated) for storage
-        string tagsValue = string.Join(",", tags);
+            // Convert the array to a JSON‑like string representation
+            // (Custom document properties accept only scalar values, so we store the array as a string)
+            string tagsValue = "[" + string.Join(",", Array.ConvertAll(tags, t => $"\"{t}\"")) + "]";
 
-        // Add a custom document property named "Tags" with the serialized array value
-        workbook.CustomDocumentProperties.Add("Tags", tagsValue);
+            // Add the custom document property named "Tags" with the stringified array
+            // (uses the Add(string, string) overload from CustomDocumentPropertyCollection)
+            workbook.CustomDocumentProperties.Add("Tags", tagsValue);
 
-        // Save the workbook to a file
-        workbook.Save("WorkbookWithTags.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("WorkbookWithTags.xlsx");
+        }
     }
 }

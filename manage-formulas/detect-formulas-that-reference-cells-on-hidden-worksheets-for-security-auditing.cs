@@ -1,86 +1,89 @@
+// Title: C# – Detect Formulas Referencing Hidden Worksheets with Aspose.Cells
+// Description: Loads an Excel file, gathers hidden sheet names, scans every formula cell using GetPrecedents, and reports any formula that points to a hidden worksheet. Ideal for security audits and compliance checks.
+// Keywords: Aspose.Cells hidden sheet detection | C# formula audit Excel | GetPrecedents hidden worksheet | Excel security audit Aspose | cross‑sheet reference scan
+// Common Searches: Aspose.Cells find formulas that reference hidden sheets | C# code to audit Excel formulas for hidden worksheets | detect hidden‑sheet references in a workbook | GetPrecedents usage for security checks
+// Developer Intent: Locate and list all formulas that depend on cells located in hidden worksheets for security or compliance auditing.
+// Use Cases: Generate a compliance report of cells that rely on hidden data before publishing a workbook. | Integrate the check into an automated CI pipeline that blocks releases containing hidden‑sheet references. | Run batch scans across multiple files to log potential data‑leakage points.
+// AI Prompts: Create C# code with Aspose.Cells that enumerates hidden worksheets and flags any formula referencing them, returning cell addresses and formulas. | Show how to use GetPrecedents to extract cross‑sheet references and filter out external links while reporting hidden‑sheet usage. | Explain how to adapt the sample to process a folder of workbooks and write offending formulas to a CSV log.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace AsposeCellsSecurityAudit
 {
-    class HiddenSheetFormulaDetector
+    // Loads an Excel file, gathers hidden sheet names, scans every formula cell using GetPrecedents, and reports any formula that points to a hidden worksheet. Ideal for security audits and compliance checks.
+    class Program
     {
         static void Main()
         {
-            // Load an existing workbook (replace with actual path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("Input.xlsx");
 
-            // Enable calculation chain to ensure formulas are evaluated
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+            // Ensure formulas are calculated (optional, not required for GetPrecedents)
             workbook.CalculateFormula();
 
-            // Prepare a list to hold audit findings
-            List<string> findings = new List<string>();
+            // Collect hidden worksheet names
+            var hiddenSheets = new HashSet<string>();
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                if (ws.IsVisible == false) // Hidden worksheet
+                {
+                    hiddenSheets.Add(ws.Name);
+                }
+            }
 
-            // Iterate through all worksheets in the workbook
+            // No hidden sheets -> nothing to audit
+            if (hiddenSheets.Count == 0)
+            {
+                Console.WriteLine("No hidden worksheets found.");
+                return;
+            }
+
+            // Scan all cells with formulas and check if they reference hidden sheets
+            var offendingCells = new List<string>();
+
             foreach (Worksheet ws in workbook.Worksheets)
             {
                 Cells cells = ws.Cells;
-
-                // Determine the used range to limit iteration
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
+                // Iterate through all used cells to reduce scanning overhead
+                foreach (Cell cell in cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    if (!cell.IsFormula) continue; // Skip non‑formula cells
+
+                    // Get all precedents (references) appearing in the formula
+                    ReferredAreaCollection precedents = cell.GetPrecedents();
+                    if (precedents == null) continue;
+
+                    foreach (ReferredArea area in precedents)
                     {
-                        Cell cell = cells[row, col];
-
-                        // Process only formula cells
-                        if (cell.IsFormula)
+                        // For cross‑sheet references, SheetName holds the referenced sheet
+                        // For external links, IsExternalLink will be true – ignore those
+                        if (!area.IsExternalLink && hiddenSheets.Contains(area.SheetName))
                         {
-                            // Get all precedent areas referenced by this formula
-                            ReferredAreaCollection precedents = cell.GetPrecedents();
-
-                            if (precedents != null)
-                            {
-                                foreach (ReferredArea area in precedents)
-                                {
-                                    // Skip external links; we care only about internal worksheets
-                                    if (area.IsExternalLink) continue;
-
-                                    // The sheet name referenced by the precedent
-                                    string referencedSheetName = area.SheetName;
-
-                                    // Find the worksheet object by name
-                                    Worksheet referencedSheet = workbook.Worksheets[referencedSheetName];
-
-                                    // If the referenced worksheet is hidden, record the finding
-                                    if (referencedSheet != null && !referencedSheet.IsVisible)
-                                    {
-                                        string message = $"Formula cell {ws.Name}!{cell.Name} references hidden sheet '{referencedSheetName}'. Formula: {cell.Formula}";
-                                        findings.Add(message);
-                                    }
-                                }
-                            }
+                            offendingCells.Add($"{ws.Name}!{cell.Name} -> {cell.Formula}");
+                            break; // No need to check other areas for this cell
                         }
                     }
                 }
             }
 
-            // Output audit results
-            Console.WriteLine("=== Hidden Sheet Formula Audit ===");
-            if (findings.Count == 0)
+            // Output results
+            if (offendingCells.Count == 0)
             {
                 Console.WriteLine("No formulas reference hidden worksheets.");
             }
             else
             {
-                foreach (string line in findings)
+                Console.WriteLine("Formulas referencing hidden worksheets:");
+                foreach (string info in offendingCells)
                 {
-                    Console.WriteLine(line);
+                    Console.WriteLine(info);
                 }
             }
 
-            // Optionally, save the workbook after audit (no modifications made)
-            workbook.Save("output.xlsx");
+            // Save the workbook if any modifications were made (none in this audit)
+            workbook.Save("AuditResult.xlsx");
         }
     }
 }

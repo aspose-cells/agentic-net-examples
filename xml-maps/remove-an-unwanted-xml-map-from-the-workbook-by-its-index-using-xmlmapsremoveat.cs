@@ -1,36 +1,38 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapRemoval
+class RemoveXmlMapDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Ensure there is at least one XML map before attempting removal
+        if (workbook.Worksheets.XmlMaps.Count > 0)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Index of the XML map to remove (adjust as needed)
+            int indexToRemove = 0;
 
-            // Access the collection of XML maps in the workbook
-            XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-
-            // Ensure there is at least one XML map to remove
-            if (xmlMaps.Count > 0)
+            // Validate the index to avoid ArgumentOutOfRangeException
+            if (indexToRemove >= 0 && indexToRemove < workbook.Worksheets.XmlMaps.Count)
             {
-                // Specify the index of the XML map to remove (e.g., the first map)
-                int indexToRemove = 0;
-
                 // Remove the XML map at the specified index
-                xmlMaps.RemoveAt(indexToRemove);
-
-                Console.WriteLine($"Removed XML map at index {indexToRemove}. Remaining maps: {xmlMaps.Count}");
+                workbook.Worksheets.XmlMaps.RemoveAt(indexToRemove);
+                Console.WriteLine($"Removed XML map at index {indexToRemove}.");
             }
             else
             {
-                Console.WriteLine("No XML maps found in the workbook.");
+                Console.WriteLine("Specified index is out of range.");
             }
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
         }
+        else
+        {
+            Console.WriteLine("No XML maps found in the workbook.");
+        }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
+        Console.WriteLine("Workbook saved successfully.");
     }
 }

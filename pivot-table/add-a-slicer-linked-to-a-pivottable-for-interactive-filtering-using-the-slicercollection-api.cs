@@ -1,27 +1,13 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerDemo
+namespace SlicerWithPivotExample
 {
-    public class SlicerLinkedToPivotDemo
+    class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -38,26 +24,35 @@ namespace SlicerDemo
             cells["A4"].Value = "Banana";
             cells["B4"].Value = 8;
 
-            // Add a pivot table using the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "FruitPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Add a pivot table based on the data range A1:B4, place it at C3
+            int pivotIdx = sheet.PivotTables.Add("A1:B4", "C3", "FruitPivot");
+            PivotTable pivot = sheet.PivotTables[pivotIdx];
 
-            // Configure the pivot table fields
+            // Configure the pivot: Fruit as row field, Quantity as data field
             pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
             pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-            // Add a slicer linked to the pivot table for the "Fruit" field
-            SlicerCollection slicers = sheet.Slicers;
-            int slicerIndex = slicers.Add(pivot, "F1", "Fruit");
-            Slicer slicer = slicers[slicerIndex];
+            // Add a slicer linked to the pivot table.
+            // The slicer will be placed with its upper‑left corner at cell E2
+            // and will filter by the "Fruit" field.
+            int slicerIdx = sheet.Slicers.Add(pivot, "E2", "Fruit");
+            Slicer slicer = sheet.Slicers[slicerIdx];
 
             // Optional: customize slicer appearance
             slicer.Caption = "Fruit Filter";
             slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+            slicer.NumberOfColumns = 1;
+            slicer.WidthPixel = 150;
+            slicer.HeightPixel = 120;
 
-            // Save the workbook with the slicer attached
-            string outputPath = "SlicerLinkedToPivot.xlsx";
-            workbook.Save(outputPath);
+            // Refresh the slicer to ensure it reflects the current pivot data
+            slicer.Refresh();
+
+            // Save the workbook
+            workbook.Save("SlicerLinkedToPivot.xlsx");
         }
     }
 }

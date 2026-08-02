@@ -1,58 +1,55 @@
+// Title: Apply a Custom Currency Number Format to a Named Range with Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, defines a named range "CurrencyValues", builds a style with the custom format "$#,##0.00", applies only the number format to the range using StyleFlag, and saves the file as CurrencyValuesFormatted.xlsx.
+// Keywords: Aspose.Cells | C# | custom number format | currency format | named range | StyleFlag | ApplyStyle | Excel workbook | .NET
+// Common Searches: Aspose.Cells apply custom number format to named range | C# set currency format for a range in Excel | How to use StyleFlag to change only number format in Aspose.Cells | Apply style to named range Aspose.Cells .NET | Format cells with $#,##0.00 using Aspose.Cells
+// Developer Intent: Apply a custom currency number format to every cell inside the named range "CurrencyValues".
+// Use Cases: Standardize monetary values in financial reports by formatting a predefined range. | Generate invoices where total and tax columns share a consistent currency style. | Export data to Excel and ensure a specific column displays values with a dollar sign and two decimals.
+// AI Prompts: Show how to change the custom format to "€#,##0.00" for the same named range. | Demonstrate applying font and border styles together with the currency format to a named range. | Explain how to modify the number format of an existing named range without recreating the style object.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace ApplyCustomNumberFormat
+namespace ApplyCustomNumberFormatToNamedRange
 {
+    // Creates a workbook, defines a named range "CurrencyValues", builds a style with the custom format "$#,##0.00", applies only the number format to the range using StyleFlag, and saves the file as CurrencyValuesFormatted.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                // ---------- Create a new workbook ----------
+                Workbook workbook = new Workbook();                     // create
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+                // Populate some sample numeric data
+                sheet.Cells["B2"].PutValue(1234.56);
+                sheet.Cells["B3"].PutValue(7890.12);
+                sheet.Cells["B4"].PutValue(345.67);
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Define a named range "CurrencyValues" that covers the sample cells
+                // RefersTo string must be in A1 style and include the sheet name
+                int nameIndex = workbook.Worksheets.Names.Add("CurrencyValues");
+                Name currencyName = workbook.Worksheets.Names[nameIndex];
+                currencyName.RefersTo = "=Sheet1!$B$2:$B$4";
 
-                // Retrieve the named range "CurrencyValues"
-                Name namedRange = workbook.Worksheets.Names["CurrencyValues"];
-                if (namedRange == null)
-                {
-                    Console.WriteLine("Named range 'CurrencyValues' not found.");
-                    return;
-                }
+                // ---------- Create a style with a custom number format ----------
+                Style style = workbook.CreateStyle();
+                style.Custom = "$#,##0.00";                            // custom format
 
-                // Get the A1‑style reference of the named range (e.g., "Sheet1!$B$2:$B$10")
-                string rangeRef = namedRange.GetRefersTo(false, false);
+                // Specify that only the number format should be applied
+                StyleFlag flag = new StyleFlag();
+                flag.NumberFormat = true;                              // apply only number format
 
-                // Create a Range object based on the reference
-                // Use fully qualified name to avoid ambiguity with System.Range
-                Aspose.Cells.Range range = workbook.Worksheets[0].Cells.CreateRange(rangeRef);
+                // Retrieve the range by its name and apply the style
+                Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName("CurrencyValues");
+                namedRange.ApplyStyle(style, flag);                    // apply style to all cells in the named range
 
-                // Define a custom number format (Euro currency with red negative values)
-                Style customStyle = workbook.CreateStyle();
-                customStyle.Custom = "_-€ #,##0.00;[Red]_-€ -#,##0.00";
-
-                // Apply only the number format
-                StyleFlag flag = new StyleFlag { NumberFormat = true };
-                range.ApplyStyle(customStyle, flag);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // ---------- Save the workbook ----------
+                workbook.Save("CurrencyValuesFormatted.xlsx");          // save
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

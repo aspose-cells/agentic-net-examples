@@ -1,90 +1,71 @@
+// Title: Expose a Computed Property for Aspose.Cells Smart Markers – Person.ExtraInfo Example
+// Description: Demonstrates how to add a virtual property (ExtraInfo) to a C# data class and bind a List<Person> to smart markers using WorkbookDesigner, allowing the markers &=$People.Name and &=$People.ExtraInfo to render combined name‑age values in an Excel workbook.
+// Keywords: Aspose.Cells smart markers | C# computed property | ExtraInfo virtual field | WorkbookDesigner data binding | ICustomTypeProvider alternative | .NET Excel export | dynamic smart marker property | Excel automation C# | Aspose.Cells example GitHub
+// Common Searches: how to show a calculated field in Aspose.Cells smart markers | bind a list of objects with extra properties to smart markers in C# | use computed property with Aspose.Cells WorkbookDesigner | smart marker reference virtual property Aspose.Cells | C# example for adding ExtraInfo to smart marker data source
+// Developer Intent: Add virtual or computed members to data objects so they can be accessed directly from Aspose.Cells smart markers.
+// Use Cases: Display combined name and age information in a single cell without modifying the original data model. | Provide read‑only, on‑the‑fly values for reporting templates that use smart markers. | Simplify Excel‑based reports by exposing derived fields through a custom type provider or computed property.
+// AI Prompts: Generate a C# class that implements ICustomTypeProvider to expose a virtual property ExtraInfo for Person objects used in Aspose.Cells smart markers. | Show how to register a custom type provider with WorkbookDesigner and bind a List<Person> to the "People" smart marker collection. | Provide sample code that processes smart markers referencing both real and computed properties and saves the resulting Excel file.
+
 using System;
-using System.Dynamic;
-using System.Reflection;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-// Custom type that will be exposed to smart markers
-public class MyDataCustom
+namespace AsposeCellsSmartMarkerCustomType
 {
-    // Additional properties that can be referenced in smart markers
-    public string ExtraInfo { get; set; }
-    public int Quantity { get; set; }
-}
-
-// Class implementing ICustomTypeProvider to map MyData to MyDataCustom
-public class MyData : ICustomTypeProvider
-{
-    // Regular property
-    public string Name { get; set; }
-
-    // Backing instance of the custom type
-    private readonly MyDataCustom _custom = new MyDataCustom
+    // Data class used as the data source for smart markers.
+    // Includes a computed property ExtraInfo that will be accessed by the smart markers.
+    // Demonstrates how to add a virtual property (ExtraInfo) to a C# data class and bind a List<Person> to smart markers using WorkbookDesigner, allowing the markers &=$People.Name and &=$People.ExtraInfo to render combined name‑age values in an Excel workbook.
+    public class Person
     {
-        ExtraInfo = "Sample extra information",
-        Quantity = 42
-    };
+        public string Name { get; set; }
+        public int Age { get; set; }
 
-    // ICustomTypeProvider implementation – returns the custom type that contains extra properties
-    public Type GetCustomType()
-    {
-        // The returned type is used by Aspose.Cells smart marker engine to resolve additional members
-        return typeof(MyDataCustom);
+        // Computed property exposed to smart markers as $People.ExtraInfo.
+        public string ExtraInfo => $"Name: {Name}, Age: {Age}";
     }
 
-    // The smart marker engine will query the custom type for members; we need to provide the instance
-    // via reflection when it accesses the properties. This is achieved by exposing the custom object
-    // through a property with the same name as the custom type (optional but helpful for debugging).
-    public MyDataCustom Custom => _custom;
-}
-
-// Demonstration of using the custom type provider with Aspose.Cells smart markers
-public class SmartMarkerCustomTypeDemo
-{
-    public static void Run()
+    public class Program
     {
-        // Create a new workbook (Aspose.Cells lifecycle rule)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Insert smart markers that reference both regular and custom properties
-        // &=$MyData.Name      -> regular property
-        // &=$MyData.ExtraInfo -> custom property provided via ICustomTypeProvider
-        // &=$MyData.Quantity  -> another custom property
-        sheet.Cells["A1"].PutValue("&=$MyData.Name");
-        sheet.Cells["A2"].PutValue("&=$MyData.ExtraInfo");
-        sheet.Cells["A3"].PutValue("&=$MyData.Quantity");
-
-        // Prepare the data source
-        MyData data = new MyData
+        public static void Main()
         {
-            Name = "Demo Item"
-            // ExtraInfo and Quantity are already set inside MyDataCustom constructor
-        };
+            try
+            {
+                // Create a new workbook and obtain the first worksheet.
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Use WorkbookDesigner to process smart markers
-        WorkbookDesigner designer = new WorkbookDesigner
-        {
-            Workbook = workbook
-        };
+                // Define smart markers that reference the regular and the computed property.
+                sheet.Cells["A1"].PutValue("&=$People.Name");
+                sheet.Cells["A2"].PutValue("&=$People.ExtraInfo");
 
-        // Register the data source; the key "MyData" matches the smart marker prefix
-        designer.SetDataSource("MyData", data);
+                // Prepare the data source – a list of Person objects.
+                List<Person> people = new List<Person>
+                {
+                    new Person { Name = "Alice", Age = 30 },
+                    new Person { Name = "Bob",   Age = 25 }
+                };
 
-        // Process the smart markers (the second argument indicates whether to preserve empty cells)
-        designer.Process(false);
+                // Use WorkbookDesigner to process smart markers.
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
 
-        // Save the workbook (Aspose.Cells lifecycle rule)
-        workbook.Save("SmartMarkerCustomTypeDemo.xlsx");
-    }
-}
+                // Bind the list to the name "People" used in the smart markers.
+                designer.SetDataSource("People", people);
 
-// Entry point
-class Program
-{
-    static void Main()
-    {
-        SmartMarkerCustomTypeDemo.Run();
-        Console.WriteLine("Workbook created with custom smart marker bindings.");
+                // Process the smart markers (false = do not preserve smart markers after processing).
+                designer.Process(false);
+
+                // Save the result.
+                string outputPath = "SmartMarkerCustomTypeDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

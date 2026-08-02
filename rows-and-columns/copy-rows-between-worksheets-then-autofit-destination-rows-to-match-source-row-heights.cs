@@ -1,38 +1,53 @@
 using System;
 using Aspose.Cells;
 
-class CopyRowsAndAutoFitDemo
+class Program
 {
     static void Main()
     {
-        // Create source workbook and populate it with sample data
-        Workbook sourceWorkbook = new Workbook();
-        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        // Create source workbook and populate it with sample data.
+        Workbook srcWb = new Workbook();
+        Worksheet srcSheet = srcWb.Worksheets[0];
+        srcSheet.Name = "Source";
 
-        // Sample data that will affect row height
-        sourceSheet.Cells["A1"].PutValue("This is a long text that should increase the row height significantly.");
-        sourceSheet.Cells["A2"].PutValue("Short");
-        sourceSheet.Cells["A3"].PutValue("Multi-line\ntext\nexample");
+        srcSheet.Cells["A1"].PutValue("Header");
+        srcSheet.Cells["A2"].PutValue("Row 1");
+        srcSheet.Cells["A3"].PutValue("Row 2");
+        srcSheet.Cells["A4"].PutValue("Row 3");
 
-        // Set explicit row heights to illustrate that they will be copied
-        sourceSheet.Cells.Rows[0].Height = 30; // Row 0
-        sourceSheet.Cells.Rows[1].Height = 15; // Row 1
-        sourceSheet.Cells.Rows[2].Height = 40; // Row 2
+        // Set custom heights for the rows to be copied.
+        srcSheet.Cells.Rows[1].Height = 30; // Row 2
+        srcSheet.Cells.Rows[2].Height = 40; // Row 3
+        srcSheet.Cells.Rows[3].Height = 50; // Row 4
 
-        // Create destination workbook
-        Workbook destinationWorkbook = new Workbook();
-        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+        // Create destination workbook.
+        Workbook destWb = new Workbook();
+        Worksheet destSheet = destWb.Worksheets[0];
+        destSheet.Name = "Destination";
 
-        // Determine how many rows to copy (rows that contain data)
-        int rowsToCopy = sourceSheet.Cells.MaxDisplayRange.RowCount;
+        // Define the range of rows to copy.
+        int sourceStartRow = 1; // zero‑based index (Row 2)
+        int rowCount = 3;       // rows 2,3,4
+        int destStartRow = 0;   // paste starting at Row 1 in destination
 
-        // Copy rows from source to destination (starting at row 0 in both sheets)
-        destinationSheet.Cells.CopyRows(sourceSheet.Cells, 0, 0, rowsToCopy);
+        // Copy rows (data, formats, hyperlinks, etc.).
+        destSheet.Cells.CopyRows(srcSheet.Cells, sourceStartRow, destStartRow, rowCount);
 
-        // Auto‑fit the copied rows in the destination sheet so their heights match the content
-        destinationSheet.AutoFitRows(0, rowsToCopy - 1);
+        // Preserve exact row heights and other settings.
+        for (int i = 0; i < rowCount; i++)
+        {
+            Row srcRow = srcSheet.Cells.Rows[sourceStartRow + i];
+            Row destRow = destSheet.Cells.Rows[destStartRow + i];
+            destRow.CopySettings(srcRow, false);
+        }
 
-        // Save the resulting workbook
-        destinationWorkbook.Save("CopiedAndAutoFitRows.xlsx");
+        // Auto‑fit rows that do not have custom heights.
+        destSheet.AutoFitRows(true);
+
+        // Save both workbooks.
+        srcWb.Save("Source.xlsx");
+        destWb.Save("Destination.xlsx");
     }
 }
+
+// Author: Example demonstrating row copy with height preservation using Aspose.Cells for .NET.

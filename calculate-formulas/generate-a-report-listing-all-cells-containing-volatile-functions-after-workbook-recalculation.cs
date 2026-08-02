@@ -1,83 +1,72 @@
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
 
 class VolatileFunctionsReport
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Ensure the calculation chain is enabled for accurate dependency tracking
+        // Add sample formulas, some of which are volatile
+        cells["A1"].Formula = "=NOW()";
+        cells["A2"].Formula = "=RAND()";
+        cells["A3"].Formula = "=B1+5";
+        cells["B1"].Formula = "=INDIRECT(\"A1\")";
+
+        // Enable calculation chain (required for some dependency methods)
         workbook.Settings.FormulaSettings.EnableCalculationChain = true;
 
-        // Create calculation options and attach a custom monitor
-        CalculationOptions options = new CalculationOptions();
-        var monitor = new VolatileCalculationMonitor(workbook);
-        options.CalculationMonitor = monitor;
-
         // Recalculate all formulas in the workbook
-        workbook.CalculateFormula(options);
+        workbook.CalculateFormula();
 
-        // Retrieve the list of cells that contain volatile functions
-        List<string> volatileCells = monitor.VolatileCells;
-
-        // Output the report
-        Console.WriteLine("Cells containing volatile functions after recalculation:");
-        foreach (string cellName in volatileCells)
+        // Known volatile functions (lower‑cased for case‑insensitive comparison)
+        string[] volatileFunctions = new string[]
         {
-            Console.WriteLine(cellName);
-        }
-
-        // Save the workbook if any changes need to be persisted
-        workbook.Save("output.xlsx");
-    }
-
-    // Custom calculation monitor that records cells with volatile functions
-    private class VolatileCalculationMonitor : AbstractCalculationMonitor
-    {
-        private readonly Workbook _workbook;
-
-        // Public list to expose the detected volatile cells
-        public List<string> VolatileCells { get; } = new List<string>();
-
-        // Known volatile function names (case‑insensitive)
-        private static readonly string[] VolatileFunctions = new[]
-        {
-            "NOW", "TODAY", "RAND", "RANDBETWEEN", "OFFSET", "INDIRECT", "INFO", "CELL"
+            "now()", "today()", "rand()", "randbetween()", "offset()", "indirect()", "cell()", "info()"
         };
 
-        public VolatileCalculationMonitor(Workbook workbook)
-        {
-            _workbook = workbook;
-        }
+        // Collect addresses of cells that contain volatile functions
+        List<string> volatileCellAddresses = new List<string>();
 
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
+        foreach (Cell cell in cells)
         {
-            // Get the cell that has just been calculated
-            Worksheet sheet = _workbook.Worksheets[sheetIndex];
-            Cell cell = sheet.Cells[rowIndex, colIndex];
+            if (!cell.IsFormula) continue; // Skip non‑formula cells
 
-            // Only examine cells that actually contain a formula
-            if (!string.IsNullOrEmpty(cell.Formula))
+            string formula = cell.Formula?.ToLowerInvariant() ?? string.Empty;
+
+            foreach (string vf in volatileFunctions)
             {
-                string formulaUpper = cell.Formula.ToUpperInvariant();
-
-                // Check if the formula contains any known volatile function
-                foreach (string func in VolatileFunctions)
+                if (formula.Contains(vf))
                 {
-                    if (formulaUpper.Contains(func))
-                    {
-                        // Record the cell name (avoid duplicates)
-                        if (!VolatileCells.Contains(cell.Name))
-                        {
-                            VolatileCells.Add(cell.Name);
-                        }
-                        break;
-                    }
+                    volatileCellAddresses.Add(cell.Name);
+                    break;
                 }
             }
         }
+
+        // Create a new worksheet to hold the report
+        Worksheet reportSheet = workbook.Worksheets.Add("VolatileReport");
+        Cells reportCells = reportSheet.Cells;
+
+        // Header
+        reportCells["A1"].PutValue("Cell");
+        reportCells["B1"].PutValue("Formula");
+
+        // Populate report rows
+        for (int i = 0; i < volatileCellAddresses.Count; i++)
+        {
+            string address = volatileCellAddresses[i];
+            Cell sourceCell = cells[address];
+
+            reportCells[i + 1, 0].PutValue(address);
+            reportCells[i + 1, 1].PutValue(sourceCell.Formula);
+        }
+
+        // Save the workbook with the report
+        workbook.Save("VolatileFunctionsReport.xlsx");
     }
 }

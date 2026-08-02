@@ -2,25 +2,13 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCells3DPerspectiveDemo
 {
-    public class ChartPerspectiveDemo
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
@@ -46,14 +34,15 @@ namespace AsposeCellsExamples
             // Enable perspective projection
             chart.RightAngleAxes = false;
 
-            // Apply 3‑D perspective and other visual settings
-            chart.Perspective = 30;      // Perspective (0‑100)
-            chart.DepthPercent = 150;    // Depth as % of chart width (20‑2000)
-            chart.RotationAngle = 45;    // Rotation around Z‑axis (0‑360)
-            chart.Elevation = 20;        // Elevation angle (-90‑90)
+            // Apply 3‑D perspective and rotation settings
+            chart.Perspective = 30;      // Perspective angle (0‑100)
+            chart.RotationAngle = 45;    // Rotation around the Z‑axis (0‑360)
+            chart.DepthPercent = 150;    // Depth of the chart as a percentage of width (20‑2000)
 
-            // Save the workbook
-            workbook.Save("ChartPerspectiveDemo.xlsx");
+            // Save the workbook (lifecycle: save)
+            workbook.Save("Column3DPerspective.xlsx");
+
+            Console.WriteLine("3‑D column chart with perspective applied successfully.");
         }
     }
 }

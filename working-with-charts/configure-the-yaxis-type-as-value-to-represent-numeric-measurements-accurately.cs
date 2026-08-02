@@ -15,7 +15,7 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data (numeric values) for the chart
+                // Populate sample data for the chart
                 worksheet.Cells["A1"].PutValue("Category");
                 worksheet.Cells["A2"].PutValue("A");
                 worksheet.Cells["A3"].PutValue("B");
@@ -30,14 +30,16 @@ namespace AsposeCellsExamples
                 int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
                 Chart chart = worksheet.Charts[chartIndex];
 
-                // Set the data range for the series and categories
+                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Configure the Y‑axis (ValueAxis) to represent numeric measurements accurately
+                // Configure the Y‑axis (value axis) to use a linear (numeric) scale
                 chart.ValueAxis.IsLogarithmic = false;               // Linear scale
-                chart.ValueAxis.DisplayUnit = DisplayUnitType.None; // No scaling/division
-                chart.ValueAxis.Title.Text = "Numeric Value";        // Optional descriptive title
+                chart.ValueAxis.DisplayUnit = DisplayUnitType.None; // No unit division
+
+                // Optionally set a title for clarity
+                chart.ValueAxis.Title.Text = "Numeric Measurements";
 
                 // Save the workbook to a file
                 string outputPath = "ConfigureYAxisAsValue.xlsx";
@@ -51,7 +53,7 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Application entry point
+    // Entry point for the console application
     public class Program
     {
         public static void Main(string[] args)

@@ -4,11 +4,12 @@ using Aspose.Cells;
 
 namespace SmartMarkerCallbackDemo
 {
-    // Custom callback that modifies each cell after a smart marker is processed
+    // Custom callback that modifies cell values after each smart marker is processed
     public class MySmartMarkerCallback : ISmartMarkerCallBack
     {
         private readonly Workbook _workbook;
 
+        // Receive the workbook instance so we can access its cells
         public MySmartMarkerCallback(Workbook workbook)
         {
             _workbook = workbook;
@@ -17,19 +18,22 @@ namespace SmartMarkerCallbackDemo
         // This method is called for every smart marker cell during processing
         public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
-            // Get the cell that has just been populated by the smart marker
+            // Get the cell that was just populated by the smart marker
             Cell cell = _workbook.Worksheets[sheetIndex].Cells[rowIndex, colIndex];
 
             // Example modification logic:
-            // - If the cell contains a numeric value, add 10.
-            // - If the cell contains a string, append "_Modified".
-            if (cell.Type == CellValueType.IsNumeric)
+            // - If the cell contains a string, prepend "Modified-"
+            // - If the cell contains a numeric value, multiply it by 10
+            // - Otherwise leave it unchanged
+            if (cell.Type == CellValueType.IsString)
             {
-                cell.PutValue(cell.DoubleValue + 10);
+                string original = cell.StringValue;
+                cell.PutValue("Modified-" + original);
             }
-            else if (cell.Type == CellValueType.IsString)
+            else if (cell.Type == CellValueType.IsNumeric)
             {
-                cell.PutValue(cell.StringValue + "_Modified");
+                double original = cell.DoubleValue;
+                cell.PutValue(original * 10);
             }
         }
     }
@@ -38,29 +42,33 @@ namespace SmartMarkerCallbackDemo
     {
         public static void Main()
         {
-            // 1. Create a new workbook (template) and add a smart marker
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            // Smart marker that will be replaced by data from Table1.Column1
-            sheet.Cells["A1"].PutValue("&=Table1.Column1");
+            // Load a workbook that contains smart markers (e.g., "&=Employees.Name")
+            Workbook workbook = new Workbook("SmartMarkerTemplate.xlsx");
 
-            // 2. Prepare a simple data source
-            DataTable dt = new DataTable("Table1");
-            dt.Columns.Add("Column1", typeof(string));
-            dt.Rows.Add("Value1");
-            dt.Rows.Add("Value2");
-
-            // 3. Set up the WorkbookDesigner, assign the callback, and process smart markers
+            // Create a WorkbookDesigner and assign the loaded workbook
             WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook = workbook,
-                CallBack = new MySmartMarkerCallback(workbook) // attach custom callback
+                Workbook = workbook
             };
-            designer.SetDataSource(dt);
-            designer.Process(true); // process all smart markers
 
-            // 4. Save the resulting workbook
-            workbook.Save("SmartMarkerCallbackResult.xlsx");
+            // Prepare sample data source
+            DataTable dt = new DataTable("Employees");
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Salary", typeof(double));
+            dt.Rows.Add("John Doe", 1200.5);
+            dt.Rows.Add("Jane Smith", 1500.0);
+
+            // Set the data source for the designer
+            designer.SetDataSource(dt);
+
+            // Assign the custom callback to modify cells after smart marker processing
+            designer.CallBack = new MySmartMarkerCallback(workbook);
+
+            // Process the smart markers (true = preserve unrecognized markers)
+            designer.Process(true);
+
+            // Save the workbook after the callback has modified the cells
+            workbook.Save("SmartMarkerProcessed.xlsx");
         }
     }
 }

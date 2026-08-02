@@ -1,56 +1,69 @@
+// Title: Copy Worksheet and Verify Paper Size, Margins, and Orientation with Aspose.Cells for .NET
+// Description: Demonstrates how to copy a worksheet, duplicate its page‑setup (A3 paper, landscape orientation, custom margins) using Aspose.Cells, and programmatically compare each property to confirm an exact match before saving the workbook.
+// Keywords: Aspose.Cells | C# worksheet copy | PageSetup.Copy | compare page setup | paper size A3 | landscape orientation | margin comparison | Excel print settings | validate worksheet copy | Aspose.Cells .NET
+// Common Searches: Aspose.Cells copy worksheet page setup | compare worksheet margins C# | verify paper size after Worksheet.Copy | check orientation after copying sheet Aspose.Cells | how to validate print settings in copied Excel sheet
+// Developer Intent: Confirm that the page‑setup configuration of a copied worksheet (paper size, orientation, margins) is identical to the source.
+// Use Cases: Automated report generation where a template’s print layout must be preserved | Batch duplication of worksheets across workbooks while maintaining exact print settings | Quality‑assurance script that flags mismatched page setup before distribution | Migration of legacy Excel templates to new workbooks with guaranteed layout fidelity
+// AI Prompts: Generate C# code using Aspose.Cells that copies a worksheet and then verifies that paper size, orientation, and all margins are identical between source and destination. | Show how to employ PageSetup.Copy together with tolerance checks to confirm exact page layout replication after Worksheet.Copy. | Provide a concise example that logs each page‑setup property comparison result and reports whether all properties match.
+
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsPageSetupComparison
 {
+    // Demonstrates how to copy a worksheet, duplicate its page‑setup (A3 paper, landscape orientation, custom margins) using Aspose.Cells, and programmatically compare each property to confirm an exact match before saving the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // -------------------- Create source workbook and configure PageSetup --------------------
-            Workbook sourceWorkbook = new Workbook();                     // create a new workbook
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];        // get the first worksheet
+            // Create source workbook and configure its page setup
+            Workbook sourceWorkbook = new Workbook();
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            sourceSheet.Name = "SourceSheet";
 
-            // Set some sample data (optional, just to have content)
-            sourceSheet.Cells["A1"].PutValue("Source Sheet");
+            // Set page setup properties
+            sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
+            sourceSheet.PageSetup.Orientation = PageOrientationType.Landscape;
+            sourceSheet.PageSetup.TopMargin = 1.5;      // centimeters
+            sourceSheet.PageSetup.BottomMargin = 2.0;   // centimeters
+            sourceSheet.PageSetup.LeftMargin = 1.0;     // centimeters
+            sourceSheet.PageSetup.RightMargin = 1.0;    // centimeters
 
-            // Configure page setup for the source worksheet
-            PageSetup srcSetup = sourceSheet.PageSetup;
-            srcSetup.PaperSize = PaperSizeType.PaperA4;                 // set paper size
-            srcSetup.Orientation = PageOrientationType.Landscape;       // set orientation
-            srcSetup.TopMargin = 1.5;                                   // centimeters
-            srcSetup.BottomMargin = 1.0;
-            srcSetup.LeftMargin = 0.8;
-            srcSetup.RightMargin = 0.8;
+            // Add some data to the source sheet (optional)
+            sourceSheet.Cells["A1"].PutValue("Sample Data");
 
-            // -------------------- Create destination workbook --------------------
-            Workbook destWorkbook = new Workbook();                       // create a new (empty) workbook
-            Worksheet destSheet = destWorkbook.Worksheets[0];            // get its first worksheet
+            // Create destination workbook
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
+            destSheet.Name = "DestinationSheet";
 
-            // -------------------- Copy source worksheet to destination worksheet --------------------
-            // Use the Worksheet.Copy method as defined in the documentation
-            destSheet.Copy(sourceSheet);                                 // copies contents and formats
+            // Copy contents and formats from source sheet to destination sheet
+            destSheet.Copy(sourceSheet);
 
-            // -------------------- Compare PageSetup properties --------------------
-            PageSetup destSetup = destSheet.PageSetup;
+            // Copy page setup settings using the provided PageSetup.Copy method
+            destSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
 
-            bool paperSizeMatch = srcSetup.PaperSize == destSetup.PaperSize;
-            bool orientationMatch = srcSetup.Orientation == destSetup.Orientation;
-            bool topMarginMatch = Math.Abs(srcSetup.TopMargin - destSetup.TopMargin) < 0.0001;
-            bool bottomMarginMatch = Math.Abs(srcSetup.BottomMargin - destSetup.BottomMargin) < 0.0001;
-            bool leftMarginMatch = Math.Abs(srcSetup.LeftMargin - destSetup.LeftMargin) < 0.0001;
-            bool rightMarginMatch = Math.Abs(srcSetup.RightMargin - destSetup.RightMargin) < 0.0001;
+            // Compare paper size, orientation, and margins between source and destination
+            bool paperSizeMatch = destSheet.PageSetup.PaperSize == sourceSheet.PageSetup.PaperSize;
+            bool orientationMatch = destSheet.PageSetup.Orientation == sourceSheet.PageSetup.Orientation;
+            bool topMarginMatch = Math.Abs(destSheet.PageSetup.TopMargin - sourceSheet.PageSetup.TopMargin) < 0.0001;
+            bool bottomMarginMatch = Math.Abs(destSheet.PageSetup.BottomMargin - sourceSheet.PageSetup.BottomMargin) < 0.0001;
+            bool leftMarginMatch = Math.Abs(destSheet.PageSetup.LeftMargin - sourceSheet.PageSetup.LeftMargin) < 0.0001;
+            bool rightMarginMatch = Math.Abs(destSheet.PageSetup.RightMargin - sourceSheet.PageSetup.RightMargin) < 0.0001;
 
-            // Output comparison results
-            Console.WriteLine("Paper Size match: " + paperSizeMatch);
+            bool allMatch = paperSizeMatch && orientationMatch && topMarginMatch &&
+                            bottomMarginMatch && leftMarginMatch && rightMarginMatch;
+
+            Console.WriteLine("Paper size match: " + paperSizeMatch);
             Console.WriteLine("Orientation match: " + orientationMatch);
-            Console.WriteLine("Top Margin match: " + topMarginMatch);
-            Console.WriteLine("Bottom Margin match: " + bottomMarginMatch);
-            Console.WriteLine("Left Margin match: " + leftMarginMatch);
-            Console.WriteLine("Right Margin match: " + rightMarginMatch);
+            Console.WriteLine("Top margin match: " + topMarginMatch);
+            Console.WriteLine("Bottom margin match: " + bottomMarginMatch);
+            Console.WriteLine("Left margin match: " + leftMarginMatch);
+            Console.WriteLine("Right margin match: " + rightMarginMatch);
+            Console.WriteLine("All page setup properties match: " + allMatch);
 
-            // -------------------- Save the destination workbook --------------------
-            destWorkbook.Save("DestinationWorkbook.xlsx", SaveFormat.Xlsx);
+            // Save the destination workbook
+            destWorkbook.Save("DestinationWorkbook.xlsx");
         }
     }
 }

@@ -1,49 +1,38 @@
-using System;
-using System.IO;
+// Title: Apply Conditional Freeze Panes to Worksheets Starting with “Report” (Aspose.Cells C#)
+// Description: Shows how to generate a workbook, add multiple sheets, and programmatically freeze the top row and left column (cell B2) only on worksheets whose names begin with the prefix “Report”, using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | FreezePanes | conditional freeze | worksheet name prefix | Report sheet | top row left column | B2 freeze | programmatic freeze panes
+// Common Searches: Aspose.Cells freeze panes based on sheet name | C# conditional FreezePanes example | Freeze top row and column only on certain worksheets | How to apply FreezePanes to sheets starting with Report | Conditional worksheet freeze in .NET
+// Developer Intent: Freeze the first row and column exclusively on sheets whose titles start with “Report”.
+// Use Cases: Automated monthly reports where each report tab stays anchored for quick navigation while data tabs scroll freely. | Financial statement exports that lock header rows on report sheets but leave raw data sheets fully scrollable. | Dashboard workbooks that apply a frozen pane to every analysis view prefixed with “Report” to improve readability.
+// AI Prompts: Generate C# code with Aspose.Cells that freezes at B2 on every worksheet whose name starts with “Report”, ignoring case. | Provide a .NET example that conditionally calls FreezePanes based on a worksheet name prefix. | Explain how to change the freeze location to C3 for sheets matching the “Report” prefix in the given Aspose.Cells snippet.
+
 using Aspose.Cells;
+using System;
 
-namespace ConditionalFreezeDemo
+// Shows how to generate a workbook, add multiple sheets, and programmatically freeze the top row and left column (cell B2) only on worksheets whose names begin with the prefix “Report”, using Aspose.Cells for .NET.
+class ConditionalFreezeDemo
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Prepare sample worksheets
+        workbook.Worksheets[0].Name = "Report_January";
+        workbook.Worksheets.Add("Data");
+        workbook.Worksheets.Add("Report_February");
+
+        // Apply freeze panes only to worksheets whose name starts with "Report"
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            if (sheet.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-
-                // Add sample worksheets
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "Report_January";
-
-                // Worksheets.Add(string) returns the created Worksheet
-                Worksheet sheet2 = workbook.Worksheets.Add("Data_Q1");
-                Worksheet sheet3 = workbook.Worksheets.Add("Report_February");
-
-                // Iterate through all worksheets
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // Apply freeze only when the worksheet name starts with "Report"
-                    if (ws.Name.StartsWith("Report", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Freeze panes at cell C3 (row index 2, column index 2) with 3 frozen rows and 3 frozen columns
-                        ws.FreezePanes("C3", 3, 3);
-                    }
-                }
-
-                // Define output file path
-                string outputPath = "ConditionalFreezeDemo.xlsx";
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                // Freeze the top row and left column (freeze at cell B2)
+                sheet.FreezePanes("B2", 1, 1);
             }
         }
+
+        // Save the workbook
+        workbook.Save("ConditionalFreezeDemo.xlsx");
     }
 }

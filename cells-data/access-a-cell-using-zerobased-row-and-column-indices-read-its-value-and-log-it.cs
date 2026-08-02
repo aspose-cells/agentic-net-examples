@@ -5,7 +5,7 @@ namespace AsposeCellsExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
@@ -13,27 +13,20 @@ namespace AsposeCellsExample
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Access the cells collection
-            Cells cells = worksheet.Cells;
+            // For demonstration, put a value into a cell at zero‑based row 0, column 0 (A1)
+            worksheet.Cells[0, 0].PutValue("Hello Aspose!");
 
-            // Define zero‑based row and column indices
-            int rowIndex = 2;    // corresponds to row 3 in Excel (A3, B3, etc.)
-            int columnIndex = 1; // corresponds to column B
+            // Access the same cell using zero‑based indices
+            Cell cell = worksheet.Cells[0, 0];
 
-            // Put a sample value into the target cell for demonstration
-            cells[rowIndex, columnIndex].PutValue("Sample Text");
+            // Read the cell's value
+            object cellValue = cell.Value;
 
-            // Access the cell using the zero‑based indices
-            Cell targetCell = cells[rowIndex, columnIndex];
+            // Log the value along with its address
+            Console.WriteLine($"Cell {cell.Name} (Row {cell.Row}, Column {cell.Column}) contains: {cellValue}");
 
-            // Read the cell value as a string (handles different data types)
-            string cellValue = targetCell.StringValue;
-
-            // Log the value to the console
-            Console.WriteLine($"Value at cell ({rowIndex}, {columnIndex}) is: {cellValue}");
-
-            // Optionally save the workbook to verify the cell content
-            workbook.Save("ZeroBasedCellAccess.xlsx");
+            // Save the workbook (optional, just to illustrate the save lifecycle)
+            workbook.Save("DemoOutput.xlsx");
         }
     }
 }

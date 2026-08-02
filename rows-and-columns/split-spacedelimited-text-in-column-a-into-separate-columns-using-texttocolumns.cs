@@ -1,40 +1,33 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTextToColumnsDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Sample space‑delimited data in column A
-            cells["A1"].PutValue("John Doe 30");
-            cells["A2"].PutValue("Jane Smith 28");
-            cells["A3"].PutValue("Bob Johnson 45");
+        // Sample space‑delimited data in column A
+        sheet.Cells["A1"].PutValue("John Doe 30");
+        sheet.Cells["A2"].PutValue("Jane Smith 28");
+        sheet.Cells["A3"].PutValue("Bob Johnson 45");
 
-            // Configure load options to use space as the delimiter
-            TxtLoadOptions loadOptions = new TxtLoadOptions();
-            loadOptions.Separator = ' ';                     // space character
-            loadOptions.TreatConsecutiveDelimitersAsOne = true; // optional: ignore multiple spaces
+        // Set up TextToColumns options to split on space
+        TxtLoadOptions options = new TxtLoadOptions();
+        options.Separator = ' '; // space character as delimiter
 
-            // Split the text in column A (column index 0) for the first 3 rows
-            // Parameters: start row, start column, total rows, options
-            cells.TextToColumns(0, 0, 3, loadOptions);
+        // Split the text in column A (row 0, column 0) for 3 rows
+        sheet.Cells.TextToColumns(0, 0, 3, options);
 
-            // Verify the split (optional)
-            Console.WriteLine("After TextToColumns:");
-            Console.WriteLine($"B1: {cells["B1"].StringValue}"); // Expected: Doe
-            Console.WriteLine($"C1: {cells["C1"].StringValue}"); // Expected: 30
-            Console.WriteLine($"B2: {cells["B2"].StringValue}"); // Expected: Smith
-            Console.WriteLine($"C2: {cells["C2"].StringValue}"); // Expected: 28
+        // Optional verification
+        Console.WriteLine(sheet.Cells["B1"].StringValue); // Expected: "Doe"
+        Console.WriteLine(sheet.Cells["C2"].StringValue); // Expected: "28"
 
-            // Save the workbook
-            workbook.Save("SplitResult.xlsx");
-        }
+        // Save the workbook (lifecycle rule)
+        workbook.Save("output.xlsx");
     }
 }
+
+// Author: Aspose.Cells .NET example – splits space‑delimited text using TextToColumns.

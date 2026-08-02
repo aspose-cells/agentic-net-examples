@@ -1,39 +1,67 @@
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class PieChartDataLabelsPercentage
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Add sample data for the pie chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Insert a pie chart
-        int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Populate sample data for the pie chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
 
-        // Define the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Enable data labels and format them to show percentages with one decimal place
-        DataLabels dataLabels = chart.NSeries[0].DataLabels;
-        dataLabels.ShowPercentage = true;   // display percentage values
-        dataLabels.ShowValue = false;       // hide raw values (optional)
-        dataLabels.NumberFormat = "0.0%";   // one decimal place percentage format
+            // Add a pie chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Save the workbook
-        workbook.Save("PieChart_PercentageOneDecimal.xlsx");
+            // Set the data range for the series
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Enable data labels and configure them to show percentages
+            DataLabels dataLabels = chart.NSeries[0].DataLabels;
+            dataLabels.ShowPercentage = true;      // Show percentage values
+            dataLabels.ShowValue = false;          // Hide raw values (optional)
+            dataLabels.NumberFormat = "0.0%";      // One decimal place percentage format
+
+            // Define output file path
+            string outputPath = "PieChartWithPercentageLabels.xlsx";
+
+            // Ensure we can write the file (overwrite if exists)
+            if (File.Exists(outputPath))
+            {
+                File.Delete(outputPath);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+        }
     }
 }

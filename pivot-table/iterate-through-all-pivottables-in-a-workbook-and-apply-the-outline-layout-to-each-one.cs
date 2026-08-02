@@ -2,14 +2,14 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotOutline
+namespace AsposeCellsPivotOutlineDemo
 {
     class Program
     {
         static void Main(string[] args)
         {
             // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
@@ -22,14 +22,11 @@ namespace AsposeCellsPivotOutline
                 {
                     PivotTable pivot = pivots[i];
                     pivot.ShowInOutlineForm();   // Layout the pivot table in outline form
-                    // Optionally refresh and recalculate after changing layout
-                    pivot.RefreshData();
-                    pivot.CalculateData();
                 }
             }
 
             // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+            workbook.Save("output.xlsx");
         }
     }
 }

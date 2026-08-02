@@ -1,57 +1,68 @@
+// Title: Copy a Template Row with a Shared Formula to Multiple Sheets and Verify Results using Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook with a template worksheet, fill columns A and B, set a shared formula in column C (A+B), copy the first row to several new worksheets, recalculate all formulas, read the computed values, and save the file as "TemplateRowCopy.xlsx" using Aspose.Cells for C#.
+// Keywords: Aspose.Cells copy row | shared formula Aspose.Cells | C# Aspose.Cells copy rows with formulas | calculate formulas Aspose.Cells | validate formula results .NET | duplicate template worksheet Aspose.Cells | Workbook.CalculateFormula example | copy rows across worksheets C#
+// Common Searches: How to copy a row with a shared formula to other sheets in Aspose.Cells | Aspose.Cells copy rows and keep formulas intact | Validate copied formula values after Workbook.CalculateFormula | C# example for replicating a template row across multiple worksheets | Aspose.Cells copy rows between worksheets
+// Developer Intent: Copy a template row that contains a shared formula to several worksheets, recalculate the workbook, and confirm that the results are correct.
+// Use Cases: Create a master row that sums two columns and reuse it in monthly report sheets. | Automate the propagation of a header row with embedded calculations to new department worksheets. | Run a post‑copy validation to ensure formulas produce expected totals after calling Workbook.CalculateFormula.
+// AI Prompts: Show me C# code to set a shared formula in Aspose.Cells and copy the row to multiple worksheets. | Provide an Aspose.Cells example that copies a template row with formulas, recalculates the workbook, and prints the results. | Explain how to use Workbook.CalculateFormula and read cell values to assert correctness after copying rows in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTemplateRowExample
+// Demonstrates how to create a workbook with a template worksheet, fill columns A and B, set a shared formula in column C (A+B), copy the first row to several new worksheets, recalculate all formulas, read the computed values, and save the file as "TemplateRowCopy.xlsx" using Aspose.Cells for C#.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // ---------- Create a new workbook ----------
+        Workbook workbook = new Workbook();
+
+        // ---------- Prepare the template worksheet ----------
+        Worksheet templateSheet = workbook.Worksheets[0];
+        templateSheet.Name = "Template";
+
+        // Fill sample data in columns A and B (rows 1-5)
+        for (int i = 0; i < 5; i++)
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet which will serve as the template sheet
-            Worksheet templateSheet = workbook.Worksheets[0];
-            Cells templateCells = templateSheet.Cells;
-
-            // Populate sample data in column A (A1:A5)
-            for (int i = 0; i < 5; i++)
-            {
-                templateCells[i, 0].PutValue(i + 1); // Values 1,2,3,4,5
-            }
-
-            // Set a shared formula in column B starting from B1 for 5 rows:
-            // Each cell in B will be double the value in the same row of column A
-            // This creates a template row (row 0) with a formula that will be copied later
-            templateCells["B1"].SetSharedFormula("=A1*2", 5, 1);
-
-            // Add two additional worksheets where the template row will be copied
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-
-            // Copy the first row (row index 0) from the template sheet to each new sheet
-            // The CopyRows method copies data, formats, and formulas
-            sheet2.Cells.CopyRows(templateCells, 0, 0, 1);
-            sheet3.Cells.CopyRows(templateCells, 0, 0, 1);
-
-            // After copying, also copy the sample data in column A to the new sheets
-            // (so the formulas have proper referenced values)
-            for (int i = 0; i < 5; i++)
-            {
-                sheet2.Cells[i, 0].PutValue(i + 1);
-                sheet3.Cells[i, 0].PutValue(i + 1);
-            }
-
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // Validate and display the calculated results for the formula cell (B1) in each sheet
-            Console.WriteLine("Template Sheet B1 value: " + templateCells["B1"].Value); // Expected 2
-            Console.WriteLine("Sheet2 B1 value: " + sheet2.Cells["B1"].Value);          // Expected 2
-            Console.WriteLine("Sheet3 B1 value: " + sheet3.Cells["B1"].Value);          // Expected 2
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("TemplateRowCopyResult.xlsx");
+            // Column A: 1,2,3,4,5
+            templateSheet.Cells[i, 0].PutValue(i + 1);
+            // Column B: 10,20,30,40,50
+            templateSheet.Cells[i, 1].PutValue((i + 1) * 10);
         }
+
+        // Set a shared formula in column C to calculate A+B for the first 5 rows
+        // The formula is placed in C1 and propagated to C2:C5
+        templateSheet.Cells[0, 2].SetSharedFormula("=A1+B1", 5, 1);
+
+        // ---------- Create additional worksheets and copy the template row ----------
+        int additionalSheets = 3; // number of sheets to copy to
+        for (int idx = 1; idx <= additionalSheets; idx++)
+        {
+            // Add a new worksheet
+            Worksheet targetSheet = workbook.Worksheets.Add($"Sheet{idx}");
+
+            // Copy the first row (row index 0) from the template to the target sheet
+            // Parameters: source cells, source row index, destination row index, number of rows to copy
+            targetSheet.Cells.CopyRows(templateSheet.Cells, 0, 0, 1);
+        }
+
+        // ---------- Calculate all formulas ----------
+        workbook.CalculateFormula();
+
+        // ---------- Validate calculated results ----------
+        // Iterate through all sheets (template + copies) and print values from column C
+        for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
+        {
+            Worksheet ws = workbook.Worksheets[sheetIdx];
+            Console.WriteLine($"--- {ws.Name} ---");
+            for (int row = 0; row < 5; row++)
+            {
+                // Expected result: (A value) + (B value)
+                Console.WriteLine($"C{row + 1} = {ws.Cells[row, 2].Value}");
+            }
+        }
+
+        // ---------- Save the workbook ----------
+        workbook.Save("TemplateRowCopy.xlsx");
     }
 }

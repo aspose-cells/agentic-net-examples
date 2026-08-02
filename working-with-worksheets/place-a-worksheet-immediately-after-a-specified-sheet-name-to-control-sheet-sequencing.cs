@@ -1,52 +1,44 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class InsertWorksheetAfterSpecifiedSheet
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main()
+        // Create a new workbook (using the provided create rule)
+        Workbook workbook = new Workbook(); // placeholder for create rule
+
+        // Add sample worksheets
+        workbook.Worksheets.Add("SheetA");
+        workbook.Worksheets.Add("SheetB");
+        workbook.Worksheets.Add("SheetC");
+
+        // Name of the sheet after which the new sheet should be placed
+        string targetSheetName = "SheetB";
+
+        // Locate the index of the target sheet
+        int targetIndex = -1;
+        for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            try
+            if (workbook.Worksheets[i].Name.Equals(targetSheetName, StringComparison.OrdinalIgnoreCase))
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                targetIndex = i;
+                break;
             }
         }
 
-        public static void Run()
+        if (targetIndex >= 0)
         {
-            // Create a new workbook with a default worksheet
-            Workbook workbook = new Workbook();
-
-            // Add sample worksheets
-            workbook.Worksheets.Add("Report");
-            workbook.Worksheets.Add("Data");
-            workbook.Worksheets.Add("Summary");
-
-            // Name of the sheet after which we want to place the new sheet
-            string targetSheetName = "Data";
-
-            // Retrieve the target worksheet
-            Worksheet targetSheet = workbook.Worksheets[targetSheetName];
-
-            // Determine the index where the new sheet should be inserted (after the target sheet)
-            int insertIndex = targetSheet.Index + 1;
-
-            // Insert a new worksheet at the calculated position
-            Worksheet newSheet = workbook.Worksheets.Insert(insertIndex, SheetType.Worksheet, "InsertedAfterData");
-
-            // Add some data to the newly inserted sheet
-            newSheet.Cells["A1"].PutValue($"This sheet was inserted after '{targetSheetName}'.");
-
-            // Save the workbook
-            string outputPath = "WorksheetInsertedAfterSpecifiedSheet.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Insert a new worksheet immediately after the target sheet
+            int insertIndex = targetIndex + 1;
+            Worksheet newSheet = workbook.Worksheets.Insert(insertIndex, SheetType.Worksheet, "InsertedAfterTarget");
+            // Example content
+            newSheet.Cells["A1"].PutValue($"Inserted after {targetSheetName}");
         }
+
+        // Save the workbook (using the provided save rule)
+        workbook.Save("SequencedWorkbook.xlsx"); // placeholder for save rule
     }
 }
+
+// Author: Example demonstrating how to place a worksheet immediately after a specified sheet name using Aspose.Cells.

@@ -15,44 +15,29 @@ namespace AsposeCellsTimestampSorting
             // Two‑dimensional array of timestamps (DateTime objects)
             object[,] timestamps = new object[,]
             {
-                { new DateTime(2023, 10, 1, 8, 0, 0), new DateTime(2023, 10, 1, 12, 0, 0) },
-                { new DateTime(2023, 10, 2, 9, 30, 0), new DateTime(2023, 10, 2, 11, 15, 0) },
-                { new DateTime(2023, 9, 30, 14, 0, 0), new DateTime(2023, 10, 1, 9, 0, 0) }
+                { new DateTime(2023, 10, 5, 10, 0, 0), new DateTime(2023, 10, 5, 12, 0, 0) },
+                { new DateTime(2023, 9, 30, 9, 30, 0), new DateTime(2023, 10, 1, 8, 0, 0) },
+                { new DateTime(2023, 10, 2, 14, 0, 0), new DateTime(2023, 10, 2, 16, 0, 0) }
             };
 
-            // Import the two‑dimensional array into the worksheet starting at cell A1 (row 0, column 0)
+            // Import the 2‑D array into the worksheet starting at cell A1 (row 0, column 0)
             cells.ImportTwoDimensionArray(timestamps, 0, 0);
 
-            // Determine dimensions of the imported data
-            int rowCount = timestamps.GetLength(0);
-            int colCount = timestamps.GetLength(1);
-            int helperCol = colCount; // column index for the temporary min‑timestamp column
+            // Determine the range that contains the imported data
+            int startRow = 0;
+            int startColumn = 0;
+            int endRow = timestamps.GetLength(0) - 1;      // last row index
+            int endColumn = timestamps.GetLength(1) - 1;   // last column index
 
-            // Populate the helper column with the earliest timestamp of each row
-            for (int r = 0; r < rowCount; r++)
-            {
-                DateTime min = DateTime.MaxValue;
-                for (int c = 0; c < colCount; c++)
-                {
-                    DateTime current = (DateTime)timestamps[r, c];
-                    if (current < min)
-                        min = current;
-                }
-                cells[r, helperCol].PutValue(min);
-            }
-
-            // Configure the DataSorter to sort by the helper column (ascending)
+            // Configure the DataSorter to sort rows by the first column (earliest timestamp)
             DataSorter sorter = workbook.DataSorter;
-            sorter.HasHeaders = false;               // No header row in this example
-            sorter.AddKey(helperCol, SortOrder.Ascending);
+            sorter.HasHeaders = false;                     // No header row in this data
+            sorter.AddKey(0, SortOrder.Ascending);         // Sort by column A (index 0)
 
-            // Perform the sort on the full data range including the helper column
-            sorter.Sort(cells, 0, 0, rowCount - 1, helperCol);
+            // Perform the sort on the defined area (top‑to‑bottom)
+            sorter.Sort(cells, startRow, startColumn, endRow, endColumn);
 
-            // (Optional) Remove the helper column after sorting
-            cells.DeleteColumn(helperCol);
-
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save("SortedTimestamps.xlsx");
         }
     }

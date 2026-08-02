@@ -31,7 +31,7 @@ class Program
         // Hide the legend border for a cleaner layout
         chart.Legend.Border.IsVisible = false;
 
-        // Save the workbook
+        // Save the workbook with the modified chart
         workbook.Save("ChartWithBottomLegend.xlsx");
     }
 }

@@ -1,77 +1,47 @@
 using System;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsDynamicNamedRange
+class DynamicNamedRangeDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "DataSheet";
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        ws.Name = "Data";
 
-                // Populate initial data in the first row (A1, B1, C1)
-                sheet.Cells["A1"].PutValue("Header1");
-                sheet.Cells["B1"].PutValue("Header2");
-                sheet.Cells["C1"].PutValue("Header3");
+        // Populate the first row (header) with initial columns
+        ws.Cells["A1"].PutValue("Header1");
+        ws.Cells["B1"].PutValue("Header2");
+        ws.Cells["C1"].PutValue("Header3");
 
-                // Create a dynamic named range that expands horizontally.
-                // The formula uses OFFSET with COUNTA to count non‑empty cells in row 1.
-                // It always starts at A1, has 1 row height, and width equals the number of filled cells.
-                int nameIndex = workbook.Worksheets.Names.Add("MyDynamicRange");
-                Name dynName = workbook.Worksheets.Names[nameIndex];
-                dynName.RefersTo = "=OFFSET(DataSheet!$A$1,0,0,1,COUNTA(DataSheet!$1:$1))";
+        // Add some sample data under the headers
+        ws.Cells["A2"].PutValue(10);
+        ws.Cells["B2"].PutValue(20);
+        ws.Cells["C2"].PutValue(30);
 
-                // Verify the range before adding new columns
-                AsposeRange initialRange = dynName.GetRange();
-                Console.WriteLine($"Initial range address: {initialRange.Address} (Columns: {initialRange.ColumnCount})");
+        // Create a dynamic named range that expands horizontally as columns are added.
+        // The formula uses OFFSET together with COUNTA to count non‑empty cells in row 1.
+        // =OFFSET(Data!$A$1,0,0,1,COUNTA(Data!$1:$1))
+        int nameIdx = wb.Worksheets.Names.Add("Headers");
+        Name dynamicName = wb.Worksheets.Names[nameIdx];
+        dynamicName.RefersTo = "=OFFSET(Data!$A$1,0,0,1,COUNTA(Data!$1:$1))";
 
-                // Add two more columns to demonstrate automatic expansion
-                sheet.Cells["D1"].PutValue("Header4");
-                sheet.Cells["E1"].PutValue("Header5");
+        // Use the named range in a formula to verify it works (counts columns)
+        ws.Cells["E1"].Formula = "=COLUMNS(Headers)";
 
-                // Recalculate formulas so that COUNTA updates
-                workbook.CalculateFormula();
+        // Calculate formulas so that E1 shows the current column count
+        wb.CalculateFormula();
 
-                // Retrieve the named range again; it should now include the new columns
-                AsposeRange expandedRange = dynName.GetRange();
-                Console.WriteLine($"Expanded range address: {expandedRange.Address} (Columns: {expandedRange.ColumnCount})");
+        // Insert a new column to the right of the existing data (index 3 = column D)
+        ws.Cells.InsertColumn(3);
+        ws.Cells["D1"].PutValue("Header4");
+        ws.Cells["D2"].PutValue(40);
 
-                // Use the dynamic named range in a formula (e.g., concatenate headers)
-                sheet.Cells["A2"].Formula = "=TEXTJOIN(\",\",TRUE,MyDynamicRange)";
-                workbook.CalculateFormula();
-                Console.WriteLine($"Concatenated headers: {sheet.Cells["A2"].StringValue}");
+        // Recalculate to let the dynamic named range pick up the new column
+        wb.CalculateFormula();
 
-                // Define output file path
-                string outputPath = "DynamicNamedRangeDemo.xlsx";
-
-                // Ensure we can write to the target location
-                try
-                {
-                    if (File.Exists(outputPath))
-                    {
-                        File.Delete(outputPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Could not delete existing file. {ex.Message}");
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        wb.Save("DynamicNamedRange.xlsx");
     }
 }

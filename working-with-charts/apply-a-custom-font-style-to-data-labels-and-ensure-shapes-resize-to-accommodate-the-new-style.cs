@@ -1,26 +1,22 @@
+// Title: Aspose.Cells C# – Apply Custom Font and Auto‑Resize Data Labels in a Chart
+// Description: Demonstrates how to create a workbook, add a column chart, enable data labels, set a bold blue Calibri font (size 16) for the labels, and automatically resize the label shapes to fit the new text using the IsResizeShapeToFitText property. The same styling is applied to each chart point and propagated to child label nodes before saving the file.
+// Keywords: Aspose.Cells | C# chart data labels | custom font data labels | auto resize data label shape | IsResizeShapeToFitText | ApplyFont method | column chart Aspose.Cells | .NET Excel chart styling
+// Common Searches: Aspose.Cells change data label font C# | auto fit data label shape Aspose.Cells chart | set bold blue Calibri font for chart labels .NET | IsResizeShapeToFitText example Aspose.Cells | apply font to all data label points Aspose.Cells
+// Developer Intent: Set a custom font for chart data labels and enable automatic shape resizing so the labels fit the new style.
+// Use Cases: Create a column chart, enable data labels, and apply a blue bold Calibri font (size 16) to the series label. | Iterate through each ChartPoint to assign identical font settings and activate IsResizeShapeToFitText for individual point labels. | Call series.DataLabels.ApplyFont() to propagate font changes to any nested label elements before saving the workbook.
+// AI Prompts: Generate C# code with Aspose.Cells that sets a custom font for chart data labels and turns on auto‑resize of label shapes. | Show how to apply the same font settings to every point’s data label in an Aspose.Cells chart and ensure the labels auto‑fit the text. | Explain the purpose of IsResizeShapeToFitText and how ApplyFont works when customizing chart data labels in Aspose.Cells.
+
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDataLabelFontDemo
 {
-    public class CustomDataLabelFontAndResizeDemo
+    // Demonstrates how to create a workbook, add a column chart, enable data labels, set a bold blue Calibri font (size 16) for the labels, and automatically resize the label shapes to fit the new text using the IsResizeShapeToFitText property. The same styling is applied to each chart point and propagated to child label nodes before saving the file.
+    class Program
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -57,38 +53,24 @@ namespace AsposeCellsExamples
             series.DataLabels.Font.Color = Color.Blue;
             series.DataLabels.Font.IsBold = true;
 
-            // Ensure the shape of each data label resizes to fit the new font
+            // Ensure the data label shape resizes to fit the new font
             series.DataLabels.IsResizeShapeToFitText = true;
-            series.DataLabels.AutoScaleFont = true;
 
-            // Apply the font settings to all child nodes of the data labels
-            series.DataLabels.ApplyFont();
-
-            // Enforce resizing for individual point labels as well
+            // Also apply the same settings to each individual point's data label
             foreach (ChartPoint point in series.Points)
             {
-                point.DataLabels.IsResizeShapeToFitText = true;
-                point.DataLabels.AutoScaleFont = true;
                 point.DataLabels.Font.Name = "Calibri";
                 point.DataLabels.Font.Size = 16;
                 point.DataLabels.Font.Color = Color.Blue;
                 point.DataLabels.Font.IsBold = true;
-                point.DataLabels.ApplyFont();
+                point.DataLabels.IsResizeShapeToFitText = true;
             }
 
-            // Define output file path
-            string outputPath = "CustomDataLabelFontAndResizeDemo.xlsx";
+            // Apply the font settings to all child nodes of the data labels
+            series.DataLabels.ApplyFont();
 
-            // Save the workbook (overwrite if exists)
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook
+            workbook.Save("DataLabelsCustomFontAndResize.xlsx");
         }
     }
 }

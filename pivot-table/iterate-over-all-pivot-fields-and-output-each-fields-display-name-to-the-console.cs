@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+namespace AsposeCellsPivotFieldDisplayNameDemo
 {
     class Program
     {
@@ -29,11 +29,11 @@ namespace AsposeCellsPivotDemo
             sheet.Cells["B4"].Value = "Chair";
             sheet.Cells["C4"].Value = 150;
 
-            // Add a pivot table based on the data range
+            // Add a pivot table
             int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add fields to the pivot table (row, column, data)
+            // Add fields to different areas
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
             pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
@@ -42,16 +42,16 @@ namespace AsposeCellsPivotDemo
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Iterate over all base fields and output each field's display name
+            // Iterate over all base pivot fields and output each field's display name
             Console.WriteLine("Pivot Fields Display Names:");
             foreach (PivotField field in pivotTable.BaseFields)
             {
-                // DisplayName defaults to the field's name unless changed explicitly
+                // DisplayName defaults to the field's name unless explicitly changed
                 Console.WriteLine("- " + field.DisplayName);
             }
 
-            // Save the workbook (optional, just to complete the lifecycle)
-            workbook.Save("PivotFieldsDisplayNamesDemo.xlsx");
+            // Save the workbook (required by lifecycle rule)
+            workbook.Save("PivotFieldDisplayNamesDemo.xlsx");
         }
     }
 }

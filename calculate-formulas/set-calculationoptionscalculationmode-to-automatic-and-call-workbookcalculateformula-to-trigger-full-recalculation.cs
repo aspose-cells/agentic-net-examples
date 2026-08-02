@@ -5,30 +5,22 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (empty)
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet and its cells
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Add sample values and formulas
-        cells["A1"].PutValue(5);
-        cells["A2"].PutValue(10);
-        cells["B1"].Formula = "=A1*2";
-        cells["B2"].Formula = "=A2*2";
-        cells["C1"].Formula = "=SUM(B1:B2)";
-
-        // Set the calculation mode to Automatic
+        // Set the calculation mode to Automatic (for Excel compatibility)
         workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-        // Trigger a full recalculation of all formulas
-        workbook.CalculateFormula();
+        // Ensure a full recalculation is performed each time
+        workbook.Settings.FormulaSettings.ForceFullCalculation = true;
 
-        // Display the result of the calculated cell
-        Console.WriteLine("C1 result: " + cells["C1"].Value);
+        // Create default calculation options
+        CalculationOptions calcOptions = new CalculationOptions();
 
-        // Save the workbook to a file
-        workbook.Save("Recalculated.xlsx");
+        // Trigger calculation of all formulas in the workbook
+        workbook.CalculateFormula(calcOptions);
+
+        // Save the workbook (optional, demonstrates that formulas are now calculated)
+        workbook.Save("CalculatedWorkbook.xlsx");
     }
 }

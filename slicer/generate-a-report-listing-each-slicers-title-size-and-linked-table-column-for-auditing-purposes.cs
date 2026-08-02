@@ -1,60 +1,89 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
+using Aspose.Cells.Tables;
+using Aspose.Cells.Pivot;
 
-class SlicerAuditReport
+namespace SlicerAuditReport
 {
-    static void Main()
+    class Program
     {
-        // Load the workbook that contains slicers
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Add a new worksheet to hold the audit report
-        int reportSheetIndex = workbook.Worksheets.Add();
-        Worksheet reportSheet = workbook.Worksheets[reportSheetIndex];
-        reportSheet.Name = "SlicerReport";
-
-        // Write header row
-        reportSheet.Cells["A1"].PutValue("Worksheet");
-        reportSheet.Cells["B1"].PutValue("Slicer Name");
-        reportSheet.Cells["C1"].PutValue("Caption");
-        reportSheet.Cells["D1"].PutValue("Width (px)");
-        reportSheet.Cells["E1"].PutValue("Height (px)");
-        reportSheet.Cells["F1"].PutValue("Linked Source");
-
-        int currentRow = 1; // zero‑based index for the next data row
-
-        // Iterate through all worksheets (except the report sheet itself)
-        foreach (Worksheet ws in workbook.Worksheets)
+        static void Main()
         {
-            if (ws.Name == "SlicerReport")
-                continue;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            SlicerCollection slicers = ws.Slicers;
+            // -----------------------------
+            // Sample data and slicer setup
+            // -----------------------------
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("A");
+            sheet.Cells["B4"].PutValue(30);
 
-            // Process each slicer on the worksheet
-            for (int i = 0; i < slicers.Count; i++)
+            // Add a table based on the data
+            int tableIdx = sheet.ListObjects.Add(0, 0, 3, 1, true);
+            ListObject table = sheet.ListObjects[tableIdx];
+
+            // Add a slicer linked to the first column of the table
+            int slicerIdx = sheet.Slicers.Add(table, 0, "D2");
+            Slicer slicer = sheet.Slicers[slicerIdx];
+            slicer.Caption = "Category Slicer";
+
+            // ---------------------------------
+            // Create a worksheet for the audit report
+            // ---------------------------------
+            Worksheet reportSheet = workbook.Worksheets.Add("SlicerReport");
+
+            // Write header row
+            reportSheet.Cells["A1"].PutValue("Worksheet");
+            reportSheet.Cells["B1"].PutValue("Slicer Name");
+            reportSheet.Cells["C1"].PutValue("Caption");
+            reportSheet.Cells["D1"].PutValue("Width (px)");
+            reportSheet.Cells["E1"].PutValue("Height (px)");
+            reportSheet.Cells["F1"].PutValue("Source Name");
+
+            int reportRow = 1; // zero‑based index; row 1 is the second row (after headers)
+
+            // Iterate through all worksheets (except the report sheet itself)
+            for (int wsIdx = 0; wsIdx < workbook.Worksheets.Count; wsIdx++)
             {
-                Slicer slicer = slicers[i];
+                Worksheet ws = workbook.Worksheets[wsIdx];
+                if (ws.Name == reportSheet.Name) continue; // skip the report sheet
 
-                // Worksheet name
-                reportSheet.Cells[currentRow, 0].PutValue(ws.Name);
-                // Slicer object name
-                reportSheet.Cells[currentRow, 1].PutValue(slicer.Name);
-                // Caption (used as the title)
-                reportSheet.Cells[currentRow, 2].PutValue(slicer.Caption);
-                // Size in pixels
-                reportSheet.Cells[currentRow, 3].PutValue(slicer.WidthPixel);
-                reportSheet.Cells[currentRow, 4].PutValue(slicer.HeightPixel);
-                // Linked source (table or pivot field name)
-                string linkedSource = slicer.SlicerCache != null ? slicer.SlicerCache.SourceName : string.Empty;
-                reportSheet.Cells[currentRow, 5].PutValue(linkedSource);
+                SlicerCollection slicers = ws.Slicers;
+                for (int i = 0; i < slicers.Count; i++)
+                {
+                    Slicer s = slicers[i];
 
-                currentRow++;
+                    // Gather required information
+                    string worksheetName = ws.Name;
+                    string slicerName = s.Name;
+                    string caption = s.Caption;
+                    int widthPx = s.WidthPixel;
+                    int heightPx = s.HeightPixel;
+                    string sourceName = s.SlicerCache?.SourceName ?? "N/A";
+
+                    // Write data to the report sheet
+                    reportSheet.Cells[reportRow, 0].PutValue(worksheetName);
+                    reportSheet.Cells[reportRow, 1].PutValue(slicerName);
+                    reportSheet.Cells[reportRow, 2].PutValue(caption);
+                    reportSheet.Cells[reportRow, 3].PutValue(widthPx);
+                    reportSheet.Cells[reportRow, 4].PutValue(heightPx);
+                    reportSheet.Cells[reportRow, 5].PutValue(sourceName);
+
+                    reportRow++;
+                }
             }
-        }
 
-        // Save the workbook with the added report sheet
-        workbook.Save("SlicerReport.xlsx");
+            // Save the workbook with the audit report
+            workbook.Save("SlicerAuditReport.xlsx");
+        }
     }
 }

@@ -1,68 +1,58 @@
+// Title: C# Unit Test for Aspose.Cells FreezePanes – Verify Frozen Row Count
+// Description: Demonstrates how to create an automated test (NUnit or MSTest) that applies Worksheet.FreezePanes to a workbook, then uses GetFreezedPanes to assert that the frozen rows, columns and start positions match the expected values.
+// Keywords: Aspose.Cells | FreezePanes | C# unit test | NUnit | MSTest | GetFreezedPanes | worksheet freeze panes | Excel API testing | automated verification | Aspose.Cells example
+// Common Searches: Aspose.Cells FreezePanes unit test C# | How to assert frozen rows with GetFreezedPanes | NUnit test for worksheet freeze panes | Validate FreezePanes parameters in Aspose.Cells | MSTest example for FreezePanes verification
+// Developer Intent: Create an automated test that confirms FreezePanes correctly freezes the specified number of rows (and columns) in a worksheet.
+// Use Cases: Validate that FreezePanes(5, 0, 5, 0) sets the correct start row, column, and frozen row count. | Integrate the test into a CI pipeline to detect regressions in pane‑freezing behavior. | Use the pattern as a template for testing other FreezePanes scenarios, such as column freezing or combined row/column freezes.
+// AI Prompts: Generate an NUnit test method that creates a Workbook, calls FreezePanes(5,0,5,0) on the first worksheet, and uses Assert.AreEqual to verify the values returned by GetFreezedPanes. | Provide a MSTest example that checks the FreezePanes parameters and fails with a clear message if any value is incorrect. | Write a reusable helper function for Aspose.Cells tests that validates frozen pane settings given expected row, column, rows, and columns.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTests
+// Demonstrates how to create an automated test (NUnit or MSTest) that applies Worksheet.FreezePanes to a workbook, then uses GetFreezedPanes to assert that the frozen rows, columns and start positions match the expected values.
+public class FreezePanesDemo
 {
-    public class FreezePanesTests
+    public static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                new FreezePanesTests().RunFreezePanesTest();
-                Console.WriteLine("Test completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Test failed: {ex.Message}");
-            }
-        }
-
-        public void RunFreezePanesTest()
-        {
-            // Arrange: create a new workbook and get the first worksheet
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Act: freeze panes at row index 5 (6th row), column index 0,
-            // with 5 frozen rows and 0 frozen columns
+            // Freeze panes: start at row index 5 (6th row), column index 0,
+            // with 5 visible frozen rows and 0 frozen columns
             int freezeRow = 5;
             int freezeColumn = 0;
             int frozenRows = 5;
             int frozenColumns = 0;
-            sheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
+            worksheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
 
-            // Assert: retrieve freeze information and verify it matches the expected values
-            int outRow, outColumn, outFrozenRows, outFrozenColumns;
-            bool hasFreeze = sheet.GetFreezedPanes(out outRow, out outColumn, out outFrozenRows, out outFrozenColumns);
-
+            // Verify that the worksheet reports frozen panes and the parameters match
+            bool hasFreeze = worksheet.GetFreezedPanes(out int row, out int column, out int rows, out int columns);
             if (!hasFreeze)
-                throw new InvalidOperationException("Worksheet should report having frozen panes.");
+                throw new InvalidOperationException("Worksheet should indicate that panes are frozen.");
 
-            if (freezeRow != outRow)
-                throw new InvalidOperationException($"Freeze position row mismatch. Expected {freezeRow}, got {outRow}.");
+            if (row != freezeRow)
+                throw new InvalidOperationException($"Freeze position row does not match. Expected {freezeRow}, got {row}.");
 
-            if (freezeColumn != outColumn)
-                throw new InvalidOperationException($"Freeze position column mismatch. Expected {freezeColumn}, got {outColumn}.");
+            if (column != freezeColumn)
+                throw new InvalidOperationException($"Freeze position column does not match. Expected {freezeColumn}, got {column}.");
 
-            if (frozenRows != outFrozenRows)
-                throw new InvalidOperationException($"Number of frozen rows mismatch. Expected {frozenRows}, got {outFrozenRows}.");
+            if (rows != frozenRows)
+                throw new InvalidOperationException($"Number of frozen rows does not match. Expected {frozenRows}, got {rows}.");
 
-            if (frozenColumns != outFrozenColumns)
-                throw new InvalidOperationException($"Number of frozen columns mismatch. Expected {frozenColumns}, got {outFrozenColumns}.");
+            if (columns != frozenColumns)
+                throw new InvalidOperationException($"Number of frozen columns does not match. Expected {frozenColumns}, got {columns}.");
 
-            // Save the workbook (optional, ensures no runtime errors during save)
-            string outputPath = "FreezePanesTestOutput.xlsx";
+            Console.WriteLine("Freeze panes applied and verified successfully.");
 
-            try
-            {
-                workbook.Save(outputPath);
-            }
-            catch (Exception saveEx)
-            {
-                throw new IOException($"Failed to save workbook to {outputPath}.", saveEx);
-            }
+            // Optional: save the workbook if you want to inspect the file manually
+            // workbook.Save("FreezePanesDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

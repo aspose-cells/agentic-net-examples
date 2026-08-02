@@ -6,17 +6,26 @@ class ChangeWriteProtectionPassword
     static void Main()
     {
         // Path to the existing workbook
-        string inputPath = "ExistingWorkbook.xlsx";
-        // Path for the updated workbook
-        string outputPath = "Workbook_With_NewWritePassword.xlsx";
+        string inputPath = "input.xlsx";
 
-        // Load the workbook (if the file itself is encrypted, set LoadOptions.Password accordingly)
-        Workbook wb = new Workbook(inputPath);
+        // Existing write‑protection password (if the file is write‑protected)
+        string oldPassword = "oldPass";
 
-        // Change the write‑protection password (password required to modify the file)
-        wb.Settings.WriteProtection.Password = "NewWritePassword123";
+        // New password that will replace the old one
+        string newPassword = "newPass";
 
-        // Save the workbook – content remains unchanged, only the write‑protection password is updated
+        // Load the workbook with the current password (required for write‑protected files)
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.Password = oldPassword;               // existing password
+        Workbook wb = new Workbook(inputPath, loadOptions); // load without changing content
+
+        // Change the write‑protection password (password to modify)
+        wb.Settings.WriteProtection.Password = newPassword;
+
+        // Save the workbook – content remains unchanged, only the password is updated
+        string outputPath = "output.xlsx";
         wb.Save(outputPath);
+
+        Console.WriteLine($"Write‑protection password changed and saved to '{outputPath}'.");
     }
 }

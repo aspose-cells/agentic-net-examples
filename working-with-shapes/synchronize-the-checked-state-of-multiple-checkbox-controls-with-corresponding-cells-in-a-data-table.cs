@@ -1,77 +1,64 @@
+// Title: C# Example: Synchronize Aspose.Cells CheckBox Shapes with Linked Worksheet Cells
+// Description: Demonstrates how to create a workbook, add multiple CheckBox shapes, link each CheckBox to a specific cell, set alternating checked states, save the file, reload it, read the linked cell values to confirm synchronization, and finally persist any updates using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells C# checkbox example | link CheckBox to cell Aspose.Cells | synchronize checkbox state Excel | Aspose.Cells CheckBox shapes | read checkbox values after save | programmatically set checkbox state | Excel checklist with Aspose.Cells | C# Aspose.Cells workbook lifecycle
+// Common Searches: How to bind an Aspose.Cells CheckBox to a worksheet cell in C# | Read linked cell value of a CheckBox after loading an Excel file | Set initial checked state for multiple checkboxes with Aspose.Cells | Aspose.Cells example for syncing checkbox state with cells | C# code to add and link CheckBox shapes in Excel
+// Developer Intent: Programmatically keep the checked state of several CheckBox controls in sync with corresponding worksheet cells using Aspose.Cells for .NET.
+// Use Cases: Create a printable checklist where each item has a hidden checkbox linked to a Boolean cell that records user selections. | Load an existing Excel file, read the Boolean values of linked cells to determine which items were marked, and act on the results in C#. | Update the checked state of checkboxes by modifying the linked cell values based on external data, then save the workbook.
+// AI Prompts: Generate C# code with Aspose.Cells that adds CheckBox shapes, links each to a specific cell, and alternates the initial checked state. | Show how to open a workbook containing linked CheckBox shapes, iterate through the CheckBox collection, and output each linked cell's Boolean value. | Provide an example that changes the linked cell values for a set of checkboxes based on a data source and saves the updated workbook using Aspose.Cells.
+
 using System;
-using System.Data;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCheckBoxSync
+// Demonstrates how to create a workbook, add multiple CheckBox shapes, link each CheckBox to a specific cell, set alternating checked states, save the file, reload it, read the linked cell values to confirm synchronization, and finally persist any updates using Aspose.Cells for .NET.
+class SyncCheckBoxes
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Add headers
+        sheet.Cells["A1"].PutValue("Item");
+        sheet.Cells["C1"].PutValue("Checked");
+
+        // Add items and checkboxes for rows 2 to 6
+        for (int row = 2; row <= 6; row++)
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Put item name in column A
+            sheet.Cells[row - 1, 0].PutValue("Item " + (row - 1));
 
-            // ---------- Prepare a sample DataTable ----------
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Option", typeof(string));
-            dt.Columns.Add("Checked", typeof(bool));
+            // Add a checkbox at column B (row index, column index, height, width)
+            int cbIndex = sheet.CheckBoxes.Add(row - 1, 1, 20, 100);
+            CheckBox checkBox = sheet.CheckBoxes[cbIndex];
+            checkBox.Text = ""; // No visible text
 
-            dt.Rows.Add("Enable Feature A", true);
-            dt.Rows.Add("Enable Feature B", false);
-            dt.Rows.Add("Enable Feature C", true);
+            // Link the checkbox to column C of the same row
+            string linkedCell = $"C{row}";
+            checkBox.LinkedCell = linkedCell;
 
-            // ---------- Populate worksheet and add checkboxes ----------
-            // Header
-            sheet.Cells["A1"].PutValue("Option");
-            sheet.Cells["B1"].PutValue("Checked");
-
-            // Start from row 2 (index 1)
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                int rowIndex = i + 1; // zero‑based row index
-
-                // Write option text
-                sheet.Cells[rowIndex, 0].PutValue(dt.Rows[i]["Option"]);
-
-                // Write boolean value to the linked cell (column B)
-                bool isChecked = (bool)dt.Rows[i]["Checked"];
-                sheet.Cells[rowIndex, 1].PutValue(isChecked);
-
-                // Add a checkbox next to the option (column C)
-                // Parameters: topRow, leftColumn, height, width (in pixels)
-                int checkboxIndex = sheet.CheckBoxes.Add(rowIndex, 2, 20, 100);
-                CheckBox checkBox = sheet.CheckBoxes[checkboxIndex];
-
-                // Set the checkbox text (optional)
-                checkBox.Text = " ";
-
-                // Link the checkbox to the cell in column B of the same row
-                string linkedCellAddress = $"B{rowIndex + 1}";
-                checkBox.LinkedCell = linkedCellAddress;
-
-                // Ensure the visual state matches the cell value
-                // When LinkedCell is set, the checkbox reflects the cell automatically,
-                // but we set Value explicitly for clarity.
-                checkBox.Value = isChecked;
-            }
-
-            // ---------- Save the workbook ----------
-            workbook.Save("CheckBoxSyncDemo.xlsx", SaveFormat.Xlsx);
-
-            // ---------- Load the workbook and verify synchronization ----------
-            Workbook loadedWorkbook = new Workbook("CheckBoxSyncDemo.xlsx");
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-            // Iterate through checkboxes and output their linked cell values
-            for (int i = 0; i < loadedSheet.CheckBoxes.Count; i++)
-            {
-                CheckBox cb = loadedSheet.CheckBoxes[i];
-                string linkedCell = cb.LinkedCell;
-                bool cellValue = loadedSheet.Cells[linkedCell].BoolValue;
-                Console.WriteLine($"Checkbox {i + 1} linked to {linkedCell}: Cell value = {cellValue}, Checkbox Value = {cb.Value}");
-            }
+            // Set an initial checked state (alternating true/false)
+            checkBox.Value = (row % 2 == 0);
         }
+
+        // Save the workbook (create lifecycle)
+        workbook.Save("CheckBoxSyncDemo.xlsx");
+
+        // Load the workbook to verify synchronization (load lifecycle)
+        Workbook loadedWorkbook = new Workbook("CheckBoxSyncDemo.xlsx");
+        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+
+        // Output the linked cell values for each checkbox
+        for (int i = 0; i < loadedSheet.CheckBoxes.Count; i++)
+        {
+            CheckBox cb = loadedSheet.CheckBoxes[i];
+            string linkedCell = cb.LinkedCell;
+            bool cellValue = loadedSheet.Cells[linkedCell].BoolValue;
+            Console.WriteLine($"{cb.Name} linked to {linkedCell} = {cellValue}");
+        }
+
+        // Save any changes (save lifecycle)
+        loadedWorkbook.Save("CheckBoxSyncDemo_Updated.xlsx");
     }
 }

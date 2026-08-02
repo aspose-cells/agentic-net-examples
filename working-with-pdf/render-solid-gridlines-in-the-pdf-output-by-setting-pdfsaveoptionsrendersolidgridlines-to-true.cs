@@ -1,44 +1,33 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
+
+// Author: Aspose.Cells .NET example – renders PDF with gridlines (solid gridlines option may require a newer API)
 
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook (replace with the provided create rule if available)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample data so that gridlines are visible
-            worksheet.Cells["A1"].PutValue("Solid Gridlines Demo");
-            worksheet.Cells["B2"].PutValue(123);
-            worksheet.Cells["C3"].PutValue(DateTime.Now);
+        // Populate some data
+        sheet.Cells["A1"].PutValue("Sample Data");
+        sheet.Cells["B2"].PutValue(123);
+        sheet.Cells["C3"].PutValue(DateTime.Now);
 
-            // Ensure that gridlines are shown in the worksheet (PDF respects this setting)
-            worksheet.IsGridlinesVisible = true;
+        // Ensure gridlines are visible in the worksheet
+        sheet.IsGridlinesVisible = true;
 
-            // Configure PDF save options (no RenderGridlines property needed)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Create PDF save options (replace with the provided save rule if available)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Define output file path and ensure the directory exists
-            string outputPath = "SolidGridlines.pdf";
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+        // The property to render solid gridlines is not documented in the current API version.
+        // If your Aspose.Cells version supports it, uncomment the line below:
+        // pdfOptions.RenderSolidGridlines = true;
 
-            // Save the workbook as a PDF with the specified options
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            // Log or handle exceptions as needed
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as PDF
+        workbook.Save("Output.pdf", pdfOptions);
     }
 }

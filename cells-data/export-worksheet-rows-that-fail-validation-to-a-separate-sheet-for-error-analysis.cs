@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsValidationExport
@@ -9,93 +7,86 @@ namespace AsposeCellsValidationExport
     {
         static void Main()
         {
-            try
+            // Load the workbook (replace with your source file)
+            Workbook workbook = new Workbook("SourceData.xlsx");
+
+            // Source worksheet (assumed first sheet)
+            Worksheet srcSheet = workbook.Worksheets[0];
+
+            // Create a new worksheet to hold rows that fail validation
+            Worksheet errorSheet = workbook.Worksheets.Add("ValidationErrors");
+
+            // Index for the next row to write in the error sheet
+            int errorRowIndex = 0;
+
+            // Determine the last row that contains data in the source sheet (using column 0 as reference)
+            int lastRow = srcSheet.Cells.GetLastDataRow(0);
+
+            // Iterate through each data row
+            for (int row = 0; row <= lastRow; row++)
             {
-                // -------------------------------------------------
-                // 1. Create a new workbook and add sample data
-                // -------------------------------------------------
-                Workbook workbook = new Workbook();                     // create
-                Worksheet srcSheet = workbook.Worksheets[0];
-                srcSheet.Name = "SourceData";
+                bool rowIsValid = true;
 
-                // Populate some sample data (column A will have whole number validation)
-                for (int i = 0; i < 10; i++)
+                // Check each validation rule defined in the worksheet
+                foreach (Validation validation in srcSheet.Validations)
                 {
-                    srcSheet.Cells[i, 0].PutValue(i * 5);               // valid values: 0,5,10,...
-                    srcSheet.Cells[i, 1].PutValue("Row " + i);
-                }
-
-                // -------------------------------------------------
-                // 2. Add a data validation rule (WholeNumber between 10 and 30) on column A
-                // -------------------------------------------------
-                // Use the overload that accepts a CellArea (avoids obsolete Add())
-                int validationIndex = srcSheet.Validations.Add(new CellArea
-                {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = 9,
-                    EndColumn = 0
-                });
-                Validation validation = srcSheet.Validations[validationIndex];
-                validation.Type = ValidationType.WholeNumber;
-                validation.Operator = OperatorType.Between;
-                validation.Formula1 = "10";
-                validation.Formula2 = "30";
-                validation.ShowError = true;
-                validation.ErrorTitle = "Invalid Input";
-                validation.ErrorMessage = "Value must be between 10 and 30";
-
-                // -------------------------------------------------
-                // 3. Identify rows that fail the validation (manual check)
-                // -------------------------------------------------
-                HashSet<int> errorRows = new HashSet<int>();
-                for (int row = 0; row <= 9; row++)
-                {
-                    // Retrieve the cell value as double (if numeric)
-                    object valObj = srcSheet.Cells[row, 0].Value;
-                    if (valObj == null) continue;
-
-                    double val;
-                    bool isNumber = double.TryParse(valObj.ToString(), out val);
-                    if (!isNumber || val < 10 || val > 30)
+                    // Examine each area covered by the validation
+                    foreach (CellArea area in validation.Areas)
                     {
-                        errorRows.Add(row);
+                        // If the current row lies within the validation area
+                        if (row >= area.StartRow && row <= area.EndRow)
+                        {
+                            // Iterate through columns of the area
+                            for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                            {
+                                // Get the cell value
+                                Cell cell = srcSheet.Cells[row, col];
+                                string cellValue = cell.StringValue?.Trim();
+
+                                // Simple handling for WholeNumber type with Between operator
+                                if (validation.Type == ValidationType.WholeNumber &&
+                                    validation.Operator == OperatorType.Between)
+                                {
+                                    if (int.TryParse(cellValue, out int numericValue))
+                                    {
+                                        if (int.TryParse(validation.Formula1, out int min) &&
+                                            int.TryParse(validation.Formula2, out int max))
+                                        {
+                                            if (numericValue < min || numericValue > max)
+                                            {
+                                                rowIsValid = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Non‑numeric value fails WholeNumber validation
+                                        rowIsValid = false;
+                                        break;
+                                    }
+                                }
+                                // Additional validation types can be added here following the same pattern
+                            }
+                        }
+
+                        if (!rowIsValid) break;
                     }
+
+                    if (!rowIsValid) break;
                 }
 
-                // -------------------------------------------------
-                // 4. Create a new worksheet to store the error rows
-                // -------------------------------------------------
-                Worksheet errorSheet = workbook.Worksheets.Add("ErrorRows");
-
-                // Copy header row (if any) – here we copy the first row (index 0) as header
-                int destRowIndex = 0;
-                srcSheet.Cells.CopyRow(srcSheet.Cells, 0, destRowIndex);
-                destRowIndex++;
-
-                // -------------------------------------------------
-                // 5. Copy each error row from source to the error sheet
-                // -------------------------------------------------
-                foreach (int srcRowIndex in errorRows)
+                // If the row failed any validation, copy it to the error sheet
+                if (!rowIsValid)
                 {
-                    // Skip the header row if it was already copied
-                    if (srcRowIndex == 0) continue;
-
-                    srcSheet.Cells.CopyRow(srcSheet.Cells, srcRowIndex, destRowIndex);
-                    destRowIndex++;
+                    // Copy the entire row from source to error sheet
+                    errorSheet.Cells.CopyRow(srcSheet.Cells, row, errorRowIndex);
+                    errorRowIndex++;
                 }
+            }
 
-                // -------------------------------------------------
-                // 6. Save the workbook (lifecycle rule)
-                // -------------------------------------------------
-                string outputPath = "ValidationErrorExport.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook with the new error sheet
+            workbook.Save("SourceData_WithValidationErrors.xlsx");
         }
     }
 }

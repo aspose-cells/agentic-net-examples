@@ -2,28 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class SetIsNillableForSharedProperty
+namespace AsposeCellsSharedPropertyDemo
 {
-    static void Main()
+    class Program
     {
-        // Paths of the workbooks to be processed
-        string[] workbookFiles = { "Workbook1.xlsx", "Workbook2.xlsx", "Workbook3.xlsx" };
-
-        foreach (string filePath in workbookFiles)
+        static void Main()
         {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(filePath);
+            // Create a new workbook (in memory)
+            Workbook workbook = new Workbook();
 
-            // Add (or overwrite) a content type property named "Shared"
-            // The value and type are arbitrary; the key part is setting IsNillable
-            int propIndex = workbook.ContentTypeProperties.Add("Shared", "Aspose", "text");
+            // Add a content type property named "Shared"
+            // Parameters: name, value, type (optional). Here we use a simple string value.
+            int index = workbook.ContentTypeProperties.Add("Shared", "True", "Boolean");
 
-            // Retrieve the newly added property and mark it as nillable (optional)
-            ContentTypeProperty sharedProperty = workbook.ContentTypeProperties[propIndex];
+            // Retrieve the added property
+            ContentTypeProperty sharedProperty = workbook.ContentTypeProperties[index];
+
+            // Mark the property as nillable (optional) across all workbooks
             sharedProperty.IsNillable = true;
 
-            // Save the workbook with the updated metadata
-            workbook.Save(filePath);
+            // Optionally, set the workbook itself as shared (not required for IsNillable)
+            workbook.Settings.Shared = true;
+
+            // Save the workbook to a file
+            string outputPath = "SharedPropertyWorkbook.xlsx";
+            workbook.Save(outputPath);
+
+            // Verify the setting
+            Console.WriteLine($"Content type property 'Shared' IsNillable: {sharedProperty.IsNillable}");
+            Console.WriteLine($"Workbook Settings.Shared: {workbook.Settings.Shared}");
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
     }
 }

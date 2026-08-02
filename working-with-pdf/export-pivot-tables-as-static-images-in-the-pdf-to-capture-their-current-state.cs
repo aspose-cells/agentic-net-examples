@@ -1,97 +1,78 @@
+// Title: Export Pivot Table as a Static Image in a PDF using Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook, build a pivot table, render the pivot sheet to a PNG image with SheetRender, embed the image in a new worksheet, and save the result as a PDF. The generated PDF contains a non‑editable snapshot of the pivot table.
+// Keywords: Aspose.Cells | C# | .NET | pivot table | export to PDF | render to image | SheetRender | static snapshot | Excel to PDF | PDF image embedding
+// Common Searches: Aspose.Cells export pivot table as image PDF C# | Render Excel pivot table to PNG and save as PDF | How to embed a pivot snapshot in a PDF using Aspose.Cells | Convert pivot sheet to image for PDF output .NET | Static pivot table image in PDF Aspose
+// Developer Intent: Create a PDF that displays a fixed image of the current pivot table view.
+// Use Cases: Distribute a read‑only view of a pivot report to stakeholders. | Archive pivot analysis for compliance without exposing source data. | Add a visual pivot snapshot to automated PDF dashboards or reports.
+// AI Prompts: Show how to export several pivot tables as separate images within one PDF. | Modify the example to use JPEG instead of PNG and adjust scaling before embedding. | Add a caption or title below the pivot image in the generated PDF.
+
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Pivot;   // PivotTable and PivotFieldType are in this namespace
 
-namespace AsposeCellsPivotToPdfImage
+namespace AsposeCellsPivotToPdfImageDemo
 {
-    class Program
+    // Demonstrates how to create a workbook, build a pivot table, render the pivot sheet to a PNG image with SheetRender, embed the image in a new worksheet, and save the result as a PDF. The generated PDF contains a non‑editable snapshot of the pivot table.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            try
+            // Create a workbook and add sample data
+            Workbook sourceWb = new Workbook();
+            Worksheet dataSheet = sourceWb.Worksheets[0];
+            dataSheet.Name = "Data";
+
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Amount");
+            dataSheet.Cells["A2"].PutValue("Food");
+            dataSheet.Cells["B2"].PutValue(120);
+            dataSheet.Cells["A3"].PutValue("Drink");
+            dataSheet.Cells["B3"].PutValue(80);
+            dataSheet.Cells["A4"].PutValue("Food");
+            dataSheet.Cells["B4"].PutValue(150);
+            dataSheet.Cells["A5"].PutValue("Drink");
+            dataSheet.Cells["B5"].PutValue(70);
+
+            // Add a worksheet for the pivot table
+            Worksheet pivotSheet = sourceWb.Worksheets.Add("Pivot");
+            // Create the pivot table
+            int pivotIdx = pivotSheet.PivotTables.Add("=Data!A1:B5", "A3", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIdx];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Refresh to ensure the pivot reflects the latest data
+            sourceWb.Worksheets.RefreshPivotTables();
+
+            // Render the pivot sheet to an image (captures current state)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // 1. Create a workbook and populate source data
-                Workbook srcWb = new Workbook();
-                Worksheet srcWs = srcWb.Worksheets[0];
-                srcWs.Name = "Data";
+                ImageType = ImageType.Png,
+                OnePagePerSheet = true
+            };
+            SheetRender sheetRender = new SheetRender(pivotSheet, imgOptions);
+            using (MemoryStream imgStream = new MemoryStream())
+            {
+                // Render first (and only) page of the sheet to the stream
+                sheetRender.ToImage(0, imgStream);
+                imgStream.Position = 0; // Reset stream position for reading
 
-                srcWs.Cells["A1"].PutValue("Category");
-                srcWs.Cells["B1"].PutValue("Amount");
-                srcWs.Cells["A2"].PutValue("Food");
-                srcWs.Cells["B2"].PutValue(1200);
-                srcWs.Cells["A3"].PutValue("Beverage");
-                srcWs.Cells["B3"].PutValue(800);
-                srcWs.Cells["A4"].PutValue("Snacks");
-                srcWs.Cells["B4"].PutValue(450);
-
-                // 2. Add a pivot table on a new worksheet
-                Worksheet pivWs = srcWb.Worksheets.Add("Pivot");
-                int pivIndex = pivWs.PivotTables.Add("=Data!A1:B4", "A3", "SalesPivot");
-                PivotTable pivot = pivWs.PivotTables[pivIndex];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // 3. Render the pivot worksheet to an image (PNG)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    ImageType = ImageType.Png,
-                    OnePagePerSheet = true
-                };
-                SheetRender sheetRender = new SheetRender(pivWs, imgOptions);
-                string imagePath = "pivot.png";
-                sheetRender.ToImage(0, imagePath); // render first page to file
-
-                // 4. Create a new workbook to hold the static image
+                // Create a new workbook that will hold the image
                 Workbook pdfWb = new Workbook();
-                Worksheet pdfWs = pdfWb.Worksheets[0];
-                pdfWs.Name = "PivotImage";
+                Worksheet imgSheet = pdfWb.Worksheets[0];
+                imgSheet.Name = "PivotImage";
 
-                // 5. Insert the rendered image into the worksheet
-                if (File.Exists(imagePath))
-                {
-                    try
-                    {
-                        using (FileStream imgStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-                        {
-                            // Add picture at cell A1 (row 0, column 0)
-                            pdfWs.Pictures.Add(0, 0, imgStream);
-                        }
-                    }
-                    catch (Exception exImg)
-                    {
-                        Console.WriteLine($"Image insertion error: {exImg.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Rendered image file not found.");
-                }
+                // Insert the rendered image into the worksheet as a picture
+                // (0,0) specifies the upper‑left cell where the picture will be placed
+                imgSheet.Pictures.Add(0, 0, imgStream);
 
-                // 6. Save the workbook as PDF – the pivot appears as a static image
-                pdfWb.Save("PivotStaticImage.pdf");
-
-                // Clean up temporary image file
-                if (File.Exists(imagePath))
-                {
-                    try
-                    {
-                        File.Delete(imagePath);
-                    }
-                    catch (Exception exDel)
-                    {
-                        Console.WriteLine($"Failed to delete temporary image: {exDel.Message}");
-                    }
-                }
+                // Save the workbook as PDF – the picture (static image of the pivot) will be embedded
+                pdfWb.Save("PivotTable_As_Image.pdf");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            Console.WriteLine("Pivot table exported as static image inside PDF successfully.");
         }
     }
 }

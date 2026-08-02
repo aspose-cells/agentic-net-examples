@@ -1,48 +1,37 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+class PdfBookmarkDemo
 {
-    public class PdfBookmarkWithDestinationNameDemo
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook and obtain the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "TargetSheet";
+
+        // Define the cell that will serve as the bookmark destination
+        sheet.Cells["B2"].PutValue("Bookmark Destination");
+
+        // Create a PDF bookmark entry and assign a stable destination name
+        PdfBookmarkEntry bookmark = new PdfBookmarkEntry
         {
-            Run();
-        }
+            Text = "Target Sheet Bookmark",
+            Destination = sheet.Cells["B2"],
+            DestinationName = "StableDestName", // stable named destination
+            IsOpen = true
+        };
 
-        public static void Run()
+        // Set up PDF save options with the bookmark structure
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            try
-            {
-                // Create a new workbook and add a worksheet named "Report"
-                Workbook workbook = new Workbook();
-                Worksheet reportSheet = workbook.Worksheets[0];
-                reportSheet.Name = "Report";
+            Bookmark = bookmark
+        };
 
-                // Add some sample content to the worksheet
-                reportSheet.Cells["A1"].PutValue("Annual Report Overview");
-                reportSheet.Cells["A2"].PutValue("Details follow...");
-
-                // Define output file path
-                string outputPath = "ReportWithBookmark.pdf";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a PDF file
-                workbook.Save(outputPath, SaveFormat.Pdf);
-
-                Console.WriteLine("PDF created successfully at: " + Path.GetFullPath(outputPath));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook as a PDF file with the custom bookmark
+        workbook.Save("TargetSheetBookmark.pdf", pdfOptions);
     }
 }
+
+// Author: Aspose.Cells example – creates a PDF bookmark with a stable destination name.

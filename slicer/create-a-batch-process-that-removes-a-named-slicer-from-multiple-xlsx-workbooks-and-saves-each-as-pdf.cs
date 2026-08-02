@@ -4,89 +4,51 @@ using Aspose.Cells;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Utility;
 
-namespace BatchSlicerRemovalApp
+class RemoveSlicerAndConvertToPdf
 {
-    class BatchSlicerRemoval
+    // Name of the slicer to be removed from each workbook
+    const string TargetSlicerName = "MySlicer";
+
+    // Folder containing the source XLSX files
+    const string InputFolder = @"C:\InputWorkbooks";
+
+    static void Main()
     {
-        static void Main()
+        // Get all XLSX files in the input folder
+        string[] workbookFiles = Directory.GetFiles(InputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string workbookPath in workbookFiles)
         {
-            // Folder containing the source XLSX workbooks
-            string sourceFolder = @"C:\Input";
-            // Folder where the resulting PDFs will be saved
-            string outputFolder = @"C:\Output";
-            // Name of the slicer to be removed from each workbook
-            string slicerNameToRemove = "FruitSlicer1";
+            // Load the workbook
+            Workbook wb = new Workbook(workbookPath);
 
-            try
+            // Iterate through all worksheets
+            foreach (Worksheet ws in wb.Worksheets)
             {
-                // Verify source folder exists
-                if (!Directory.Exists(sourceFolder))
+                SlicerCollection slicers = ws.Slicers;
+
+                // Scan the slicer collection in reverse order and remove the matching slicer
+                for (int i = slicers.Count - 1; i >= 0; i--)
                 {
-                    Console.WriteLine($"Source folder not found: {sourceFolder}");
-                    return;
-                }
-
-                // Ensure output folder exists
-                Directory.CreateDirectory(outputFolder);
-
-                // Process each XLSX file in the source folder
-                foreach (string xlsxPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
-                {
-                    // Verify the file exists before loading
-                    if (!File.Exists(xlsxPath))
+                    Slicer slicer = slicers[i];
+                    // The Slicer class has a Name property that identifies the slicer
+                    if (slicer.Name.Equals(TargetSlicerName, StringComparison.OrdinalIgnoreCase))
                     {
-                        Console.WriteLine($"File not found (skipped): {xlsxPath}");
-                        continue;
-                    }
-
-                    try
-                    {
-                        // Load the workbook
-                        Workbook workbook = new Workbook(xlsxPath);
-
-                        // Iterate through all worksheets
-                        foreach (Worksheet sheet in workbook.Worksheets)
-                        {
-                            // Get the slicer collection for the current worksheet
-                            SlicerCollection slicers = sheet.Slicers;
-
-                            // Iterate backwards for safe removal
-                            for (int i = slicers.Count - 1; i >= 0; i--)
-                            {
-                                Slicer slicer = slicers[i];
-                                if (slicer.Name == slicerNameToRemove)
-                                {
-                                    slicers.Remove(slicer);
-                                }
-                            }
-                        }
-
-                        // Save the modified workbook to a temporary file
-                        string tempXlsxPath = Path.Combine(outputFolder,
-                            Path.GetFileNameWithoutExtension(xlsxPath) + "_temp.xlsx");
-                        workbook.Save(tempXlsxPath, SaveFormat.Xlsx);
-
-                        // Convert the temporary XLSX file to PDF
-                        string pdfPath = Path.Combine(outputFolder,
-                            Path.GetFileNameWithoutExtension(xlsxPath) + ".pdf");
-                        ConversionUtility.Convert(tempXlsxPath, pdfPath);
-
-                        // Delete the temporary file
-                        if (File.Exists(tempXlsxPath))
-                        {
-                            File.Delete(tempXlsxPath);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing file '{xlsxPath}': {ex.Message}");
+                        slicers.RemoveAt(i);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+
+            // Save the modified workbook (overwrites the original file)
+            wb.Save(workbookPath, SaveFormat.Xlsx);
+
+            // Convert the updated workbook to PDF
+            string pdfPath = Path.ChangeExtension(workbookPath, ".pdf");
+            ConversionUtility.Convert(workbookPath, pdfPath);
+
+            Console.WriteLine($"Processed '{Path.GetFileName(workbookPath)}' -> '{Path.GetFileName(pdfPath)}'");
         }
+
+        Console.WriteLine("Batch processing completed.");
     }
 }

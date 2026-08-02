@@ -1,100 +1,105 @@
+// Title: Memory Profiling: Default vs Custom Calculation Engine in Aspose.Cells for .NET
+// Description: Generates a 5,000‑row workbook with formulas, records heap size before and after CalculateFormula using the built‑in engine, repeats the measurement with a PassThroughEngine custom engine, prints the memory delta, and saves the workbook.
+// Keywords: Aspose.Cells | C# memory profiling | .NET heap usage | calculation engine performance | custom calculation engine | default engine memory impact | large workbook formula evaluation | GC.GetTotalMemory | performance measurement | formula recalculation
+// Common Searches: Aspose.Cells memory profiling example | compare default and custom calculation engine memory usage | heap usage during CalculateFormula in C# | measure memory impact of custom engine Aspose.Cells | performance test for large workbook calculations .NET
+// Developer Intent: The developer wants to quantify the heap memory difference between Aspose.Cells' built‑in calculation engine and a user‑defined engine when processing a large set of formulas.
+// Use Cases: Determine if a custom calculation engine introduces additional memory overhead in high‑volume spreadsheets. | Identify memory bottlenecks during bulk formula recalculation. | Validate that a lightweight pass‑through engine consumes comparable memory to the default engine.
+// AI Prompts: Create C# code that logs detailed memory statistics (pre‑ and post‑GC) for each CalculateFormula call in Aspose.Cells. | Show how to extend AbstractCalculationEngine to handle specific functions while still measuring memory consumption. | Suggest best practices to minimize heap allocation when evaluating formulas in large Aspose.Cells workbooks.
+
 using System;
+using System.Diagnostics;
 using Aspose.Cells;
 
-class MemoryConsumptionComparison
+namespace AsposeCellsMemoryProfiling
 {
-    static void Main()
-    {
-        // Create two identical large workbooks
-        Workbook defaultWb = CreateLargeWorkbook();
-        Workbook customWb = CreateLargeWorkbook();
-
-        // Measure memory usage with the default calculation engine
-        ForceGarbageCollection();
-        long beforeDefault = GC.GetTotalMemory(true);
-        defaultWb.CalculateFormula(); // uses built‑in engine
-        ForceGarbageCollection();
-        long afterDefault = GC.GetTotalMemory(true);
-        long usedDefault = afterDefault - beforeDefault;
-        Console.WriteLine($"Default engine memory usage: {usedDefault / 1024} KB");
-
-        // Measure memory usage with a custom calculation engine
-        CalculationOptions customOptions = new CalculationOptions
-        {
-            CustomEngine = new PassThroughEngine()
-        };
-
-        ForceGarbageCollection();
-        long beforeCustom = GC.GetTotalMemory(true);
-        customWb.CalculateFormula(customOptions);
-        ForceGarbageCollection();
-        long afterCustom = GC.GetTotalMemory(true);
-        long usedCustom = afterCustom - beforeCustom;
-        Console.WriteLine($"Custom engine memory usage: {usedCustom / 1024} KB");
-
-        // Save one of the workbooks (optional, demonstrates lifecycle usage)
-        customWb.Save("MemoryComparisonResult.xlsx");
-    }
-
-    // Creates a workbook with a large number of formulas to stress the calculation engine
-    static Workbook CreateLargeWorkbook()
-    {
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
-
-        int rows = 2000;   // number of rows
-        int cols = 50;     // number of data columns
-        int formulaCol = cols; // column where the heavy formula will be placed
-
-        // Fill cells with numeric data
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                cells[i, j].PutValue(i + j);
-            }
-        }
-
-        // Add a SUM formula per row that references the whole row
-        for (int i = 0; i < rows; i++)
-        {
-            string range = $"A{i + 1}:{GetColumnName(cols)}{i + 1}";
-            cells[i, formulaCol].Formula = $"=SUM({range})";
-        }
-
-        return wb;
-    }
-
-    // Forces a full garbage collection to get a more stable memory measurement
-    static void ForceGarbageCollection()
-    {
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-    }
-
-    // Converts a 1‑based column index to an Excel column name (e.g., 1 -> A, 27 -> AA)
-    static string GetColumnName(int index)
-    {
-        int dividend = index;
-        string columnName = string.Empty;
-        while (dividend > 0)
-        {
-            int modulo = (dividend - 1) % 26;
-            columnName = Convert.ToChar(65 + modulo) + columnName;
-            dividend = (dividend - modulo) / 26;
-        }
-        return columnName;
-    }
-
-    // Custom calculation engine that does not override any function.
-    // By leaving Calculate empty, the default engine handles all calculations.
-    class PassThroughEngine : AbstractCalculationEngine
+    // Simple custom engine that does not process any built‑in functions.
+    // The default engine will handle all calculations.
+    // Generates a 5,000‑row workbook with formulas, records heap size before and after CalculateFormula using the built‑in engine, repeats the measurement with a PassThroughEngine custom engine, prints the memory delta, and saves the workbook.
+    public class PassThroughEngine : AbstractCalculationEngine
     {
         public override void Calculate(CalculationData data)
         {
-            // No custom processing; default engine will compute the result.
+            // No custom processing; let the default engine handle the function.
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // ------------------------------------------------------------
+            // 1. Create a large workbook with many formulas
+            // ------------------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            const int rows = 5000;   // adjust for desired size
+            const int cols = 10;
+
+            // Populate column A with numeric values
+            for (int r = 0; r < rows; r++)
+            {
+                cells[r, 0].PutValue(r + 1);
+            }
+
+            // Populate other columns with formulas that depend on column A
+            for (int c = 1; c < cols; c++)
+            {
+                for (int r = 0; r < rows; r++)
+                {
+                    // Example formula: =A1*2 + COLUMN_INDEX
+                    string formula = $"=A{r + 1}*2+{c}";
+                    cells[r, c].Formula = formula;
+                }
+            }
+
+            // ------------------------------------------------------------
+            // 2. Measure memory usage with the default calculation engine
+            // ------------------------------------------------------------
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            long memBeforeDefault = GC.GetTotalMemory(true);
+
+            // Calculate all formulas using the built‑in engine
+            workbook.CalculateFormula();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            long memAfterDefault = GC.GetTotalMemory(true);
+            long usedDefault = memAfterDefault - memBeforeDefault;
+
+            // ------------------------------------------------------------
+            // 3. Measure memory usage with a custom calculation engine
+            // ------------------------------------------------------------
+            CalculationOptions customOptions = new CalculationOptions
+            {
+                CustomEngine = new PassThroughEngine()
+            };
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            long memBeforeCustom = GC.GetTotalMemory(true);
+
+            // Re‑calculate using the custom engine
+            workbook.CalculateFormula(customOptions);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            long memAfterCustom = GC.GetTotalMemory(true);
+            long usedCustom = memAfterCustom - memBeforeCustom;
+
+            // ------------------------------------------------------------
+            // 4. Output the profiling results
+            // ------------------------------------------------------------
+            Console.WriteLine($"Memory used by default engine : {usedDefault:N0} bytes");
+            Console.WriteLine($"Memory used by custom engine  : {usedCustom:N0} bytes");
+            Console.WriteLine($"Difference (custom - default) : {usedCustom - usedDefault:N0} bytes");
+
+            // ------------------------------------------------------------
+            // 5. Save the workbook (demonstrates the required save lifecycle)
+            // ------------------------------------------------------------
+            workbook.Save("MemoryProfilingResult.xlsx");
         }
     }
 }

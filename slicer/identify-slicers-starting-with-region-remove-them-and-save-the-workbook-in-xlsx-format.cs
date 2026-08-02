@@ -9,8 +9,7 @@ namespace AsposeCellsSlicerRemoval
         static void Main()
         {
             // Load the workbook (replace with your actual file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
@@ -18,13 +17,11 @@ namespace AsposeCellsSlicerRemoval
                 // Get the slicer collection for the current worksheet
                 SlicerCollection slicers = sheet.Slicers;
 
-                // Loop backwards to safely remove items while iterating
+                // Loop backwards so that removal does not affect the index order
                 for (int i = slicers.Count - 1; i >= 0; i--)
                 {
-                    Slicer slicer = slicers[i];
-
                     // Check if the slicer's name starts with "Region"
-                    if (!string.IsNullOrEmpty(slicer.Name) && slicer.Name.StartsWith("Region", StringComparison.OrdinalIgnoreCase))
+                    if (slicers[i].Name.StartsWith("Region", StringComparison.OrdinalIgnoreCase))
                     {
                         // Remove the slicer at the current index
                         slicers.RemoveAt(i);
@@ -33,8 +30,7 @@ namespace AsposeCellsSlicerRemoval
             }
 
             // Save the modified workbook in XLSX format
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

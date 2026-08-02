@@ -1,31 +1,21 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsScaleCropPdfDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-            // Access the built‑in document properties collection
-            BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
+        // Set the ScaleCrop property to true – this controls the thumbnail display mode
+        workbook.BuiltInDocumentProperties.ScaleCrop = true;
 
-            // Set the ScaleCrop flag to true – this controls the display mode of the document thumbnail
-            properties.ScaleCrop = true;
+        // Optional: display the current value to verify
+        Console.WriteLine("ScaleCrop property value: " + workbook.BuiltInDocumentProperties.ScaleCrop);
 
-            // Optional: verify that the property is set
-            Console.WriteLine("ScaleCrop property value: " + properties.ScaleCrop);
-
-            // Save the workbook as a PDF.
-            // The ScaleCrop flag is stored in the document properties and will be persisted in the PDF output.
-            workbook.Save("output.pdf", SaveFormat.Pdf);
-
-            Console.WriteLine("Workbook saved as PDF with ScaleCrop enabled.");
-        }
+        // Save the workbook as PDF; the ScaleCrop flag is persisted in the output file
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

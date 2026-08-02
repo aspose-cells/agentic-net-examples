@@ -1,148 +1,115 @@
+// Title: Export Aspose.Cells Chart to SVG and Add Interactive Zoom/Pan with svg-pan-zoom (C#)
+// Description: Creates a workbook, builds a column chart, renders it to an SVG file with a viewBox, and generates an HTML page that embeds the SVG and enables client‑side zoom and pan using the svg‑pan‑zoom library.
+// Keywords: Aspose.Cells SVG export | C# chart to SVG | interactive SVG zoom | svg-pan-zoom integration | embed SVG in HTML | chart viewBox | client‑side pan and zoom | web dashboard charts
+// Common Searches: Aspose.Cells export chart as SVG with viewBox | How to add zoom and pan to SVG chart in a web page | C# example for svg-pan-zoom with Aspose.Cells | Render Excel chart to interactive SVG | Embedding Aspose.Cells SVG in HTML
+// Developer Intent: Generate an SVG version of an Aspose.Cells chart and embed it in a web page that supports interactive zoom and pan.
+// Use Cases: Display sales or KPI charts on a responsive dashboard where users can explore details by zooming and panning. | Automate creation of static HTML reports that include scalable, interactive SVG graphics. | Integrate Aspose.Cells chart rendering into ASP.NET Core endpoints for on‑the‑fly SVG generation.
+// AI Prompts: Write C# code that uses Aspose.Cells to export a chart to SVG with a viewBox and creates an HTML file that loads svg-pan-zoom for interactive zoom/pan. | Show how to customize the generated HTML to set the initial zoom level, toggle control icons, and define pan boundaries for the embedded SVG. | Explain how to serve the SVG and HTML files from an ASP.NET Core controller so the chart is rendered dynamically per request.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsSvgWebDemo
+// Creates a workbook, builds a column chart, renders it to an SVG file with a viewBox, and generates an HTML page that embeds the SVG and enables client‑side zoom and pan using the svg‑pan‑zoom library.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook and populate it with sample data
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            worksheet.Cells["A1"].PutValue("Month");
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["A2"].PutValue("Jan");
+            worksheet.Cells["A3"].PutValue("Feb");
+            worksheet.Cells["A4"].PutValue("Mar");
+            worksheet.Cells["B2"].PutValue(120);
+            worksheet.Cells["B3"].PutValue(150);
+            worksheet.Cells["B4"].PutValue(180);
+
+            // Add a column chart based on the data
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+            chart.Title.Text = "Quarterly Sales";
+
+            // Render the chart to an SVG file
+            string svgFile = "chart.svg";
             try
             {
-                // 1. Create a workbook and populate it with sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["A5"].PutValue("Apr");
-
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["B2"].PutValue(12000);
-                sheet.Cells["B3"].PutValue(15000);
-                sheet.Cells["B4"].PutValue(18000);
-                sheet.Cells["B5"].PutValue(21000);
-
-                // 2. Add a line chart that uses the data
-                int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 0, 25, 10);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B5", true);          // Values
-                chart.NSeries.CategoryData = "A2:A5";      // Categories
-                chart.Title.Text = "Monthly Sales";
-
-                // 3. Configure SVG rendering options – enable FitToViewPort for responsive scaling
                 SvgImageOptions svgOptions = new SvgImageOptions
                 {
-                    FitToViewPort = true,
-                    CssPrefix = "chart-"
+                    FitToViewPort = true // ensures a viewBox is generated
                 };
+                chart.ToImage(svgFile, svgOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error rendering SVG: {ex.Message}");
+                return;
+            }
 
-                // 4. Render the chart to an SVG file
-                string svgPath = "chart.svg";
-                chart.ToImage(svgPath, svgOptions);
+            // Load the generated SVG content (ensure the file exists)
+            string svgContent = File.Exists(svgFile) ? File.ReadAllText(svgFile) : string.Empty;
 
-                // 5. Load the generated SVG content (ensure file exists)
-                if (!File.Exists(svgPath))
-                    throw new FileNotFoundException("SVG file was not created.", svgPath);
-
-                string svgContent = File.ReadAllText(svgPath);
-
-                // 6. Build an HTML page that embeds the SVG and adds simple zoom/pan support
-                string htmlTemplate = $@"
-<!DOCTYPE html>
+            // Build an HTML page that embeds the SVG and enables zoom/pan via svg-pan-zoom
+            string htmlTemplate = @"<!DOCTYPE html>
 <html>
 <head>
     <meta charset=""utf-8"" />
     <title>Interactive SVG Chart</title>
     <style>
-        /* Ensure the SVG fills the container */
-        #svgContainer {{
-            width: 100%;
-            height: 80vh;
-            border: 1px solid #ccc;
-            overflow: hidden;
-            position: relative;
-        }}
-        svg {{
-            width: 100%;
-            height: 100%;
-            cursor: grab;
-        }}
+        body {{ margin:0; padding:0; overflow:hidden; }}
+        #svgContainer {{ width:100vw; height:100vh; }}
     </style>
+    <!-- svg-pan-zoom library from CDN -->
+    <script src=""https://cdnjs.cloudflare.com/ajax/libs/svg-pan-zoom/3.6.1/svg-pan-zoom.min.js""></script>
 </head>
 <body>
-    <h2>Interactive Zoom & Pan for Aspose.Cells SVG Chart</h2>
     <div id=""svgContainer"">
-        {svgContent}
+        {0}
     </div>
-
     <script>
-        // Simple zoom/pan implementation using viewBox manipulation
-        const svg = document.querySelector('#svgContainer svg');
-        let viewBox = svg.getAttribute('viewBox').split(' ').map(Number);
-        let isPanning = false;
-        let startX, startY;
-
-        // Mouse wheel for zoom
-        svg.addEventListener('wheel', function (e) {{
-            e.preventDefault();
-            const scaleFactor = e.deltaY < 0 ? 0.9 : 1.1; // zoom in/out
-            const [x, y, w, h] = viewBox;
-            const mx = e.offsetX / svg.clientWidth;
-            const my = e.offsetY / svg.clientHeight;
-            const newW = w * scaleFactor;
-            const newH = h * scaleFactor;
-            const newX = x + (w - newW) * mx;
-            const newY = y + (h - newH) * my;
-            viewBox = [newX, newY, newW, newH];
-            svg.setAttribute('viewBox', viewBox.join(' '));
-        }});
-
-        // Mouse down to start panning
-        svg.addEventListener('mousedown', function (e) {{
-            isPanning = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            svg.style.cursor = 'grabbing';
-        }});
-
-        // Mouse move to pan
-        svg.addEventListener('mousemove', function (e) {{
-            if (!isPanning) return;
-            const dx = (e.clientX - startX) * (viewBox[2] / svg.clientWidth);
-            const dy = (e.clientY - startY) * (viewBox[3] / svg.clientHeight);
-            viewBox[0] -= dx;
-            viewBox[1] -= dy;
-            svg.setAttribute('viewBox', viewBox.join(' '));
-            startX = e.clientX;
-            startY = e.clientY;
-        }});
-
-        // Mouse up to stop panning
-        window.addEventListener('mouseup', function () {{
-            isPanning = false;
-            svg.style.cursor = 'grab';
+        document.addEventListener('DOMContentLoaded', function () {{
+            var svg = document.querySelector('#svgContainer svg');
+            if (svg) {{
+                svgPanZoom(svg, {{
+                    zoomEnabled: true,
+                    controlIconsEnabled: true,
+                    fit: true,
+                    center: true
+                }});
+            }}
         }});
     </script>
 </body>
 </html>";
+            string html = string.Format(htmlTemplate, svgContent);
 
-                // 7. Save the HTML file
-                string htmlPath = "chart.html";
-                File.WriteAllText(htmlPath, htmlTemplate);
-
-                Console.WriteLine($"SVG chart generated at: {Path.GetFullPath(svgPath)}");
-                Console.WriteLine($"Interactive HTML page generated at: {Path.GetFullPath(htmlPath)}");
+            // Save the HTML page
+            string htmlFile = "chart.html";
+            try
+            {
+                File.WriteAllText(htmlFile, html);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error writing HTML file: {ex.Message}");
+                return;
             }
+
+            Console.WriteLine($"SVG chart generated: {svgFile}");
+            Console.WriteLine($"HTML page with interactive zoom/pan generated: {htmlFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

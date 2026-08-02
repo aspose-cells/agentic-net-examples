@@ -2,9 +2,9 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsLegendRemoval
 {
-    class RemoveLegendDemo
+    class Program
     {
         static void Main()
         {
@@ -32,7 +32,7 @@ namespace AsposeCellsExamples
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Hide the legend to maximize the plotting area
+            // Remove the legend to maximize the plotting area
             chart.ShowLegend = false;
 
             // Save the workbook

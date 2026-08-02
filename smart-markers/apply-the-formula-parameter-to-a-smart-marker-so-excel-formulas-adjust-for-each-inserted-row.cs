@@ -8,54 +8,46 @@ namespace SmartMarkerFormulaDemo
     {
         static void Main()
         {
-            // 1. Create a new workbook (lifecycle: create)
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // 2. Set up template headers
-            cells["A1"].PutValue("ProductID");
-            cells["B1"].PutValue("Quantity");
-            cells["C1"].PutValue("Total"); // column for formula result
+            // 2. Define smart markers for data columns (ID, Name, Qty, Price)
+            cells["A1"].PutValue("&=$ID");
+            cells["B1"].PutValue("&=$Name");
+            cells["C1"].PutValue("&=$Qty");
+            cells["D1"].PutValue("&=$Price");
 
-            // 3. Insert a template row that will be expanded by smart markers
-            //    Smart markers for data columns
-            cells["A2"].PutValue("&=$ProductID");
-            cells["B2"].PutValue("&=$Quantity");
-            //    Formula that should adjust for each inserted row
-            //    Note: use a relative reference (B2) – Aspose.Cells will copy the formula
-            //    and automatically adjust the row index for each new row.
-            cells["C2"].Formula = "=B2*2";
+            // 3. Place a formula that should be repeated for each inserted row.
+            //    The formula references the cells in the same row (C and D).
+            cells["E1"].PutValue("=C2*D2"); // This will become =C3*D3, =C4*D4, ...
 
-            // 4. Prepare a data source (DataTable) with sample rows
+            // 4. Prepare a data source (DataTable) that matches the smart markers
             DataTable dt = new DataTable("Products");
-            dt.Columns.Add("ProductID", typeof(int));
-            dt.Columns.Add("Quantity", typeof(int));
+            dt.Columns.Add("ID", typeof(int));
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Qty", typeof(int));
+            dt.Columns.Add("Price", typeof(double));
 
-            dt.Rows.Add(101, 5);
-            dt.Rows.Add(102, 8);
-            dt.Rows.Add(103, 12);
+            dt.Rows.Add(1, "Apple", 10, 0.5);
+            dt.Rows.Add(2, "Banana", 20, 0.3);
+            dt.Rows.Add(3, "Cherry", 15, 0.8);
 
-            // 5. Create a WorkbookDesigner, assign the data source and process the template
+            // 5. Create a WorkbookDesigner, assign the data source, and enable formula repetition
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            // Ensure formulas are repeated for each generated row (default behavior works,
-            // but setting this property makes it explicit when subtotal rows are present)
-            designer.RepeatFormulasWithSubtotal = true;
+            designer.RepeatFormulasWithSubtotal = true; // ensures the formula is copied to each generated row
             designer.SetDataSource(dt);
-            designer.Process(); // lifecycle: process smart markers
 
-            // 6. Verify that formulas have been adjusted and values calculated
-            Console.WriteLine("Row\tProductID\tQuantity\tTotal (Formula)");
-            for (int row = 1; row <= dt.Rows.Count; row++) // data starts at row index 1 (A2)
-            {
-                string productId = cells[row, 0].StringValue;
-                string quantity = cells[row, 1].StringValue;
-                string totalFormula = cells[row, 2].Formula; // should be "=B{row}*2"
-                string totalValue = cells[row, 2].StringValue;
-                Console.WriteLine($"{row}\t{productId}\t\t{quantity}\t\t{totalFormula} = {totalValue}");
-            }
+            // 6. Process the smart markers – rows are inserted and the formula adjusts automatically
+            designer.Process();
 
-            // 7. Save the workbook (lifecycle: save)
+            // 7. Verify the formula in the first data row (optional)
+            Console.WriteLine("Formula in E2: " + cells["E2"].Formula); // Expected: =C2*D2
+            Console.WriteLine("Formula in E3: " + cells["E3"].Formula); // Expected: =C3*D3
+            Console.WriteLine("Formula in E4: " + cells["E4"].Formula); // Expected: =C4*D4
+
+            // 8. Save the resulting workbook
             workbook.Save("SmartMarkerFormulaResult.xlsx");
         }
     }

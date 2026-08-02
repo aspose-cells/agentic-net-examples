@@ -25,6 +25,8 @@ class SetChartBackgroundImage
             // Add a column chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
             Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B3", true);
             chart.NSeries.CategoryData = "A2:A3";
 
@@ -33,19 +35,18 @@ class SetChartBackgroundImage
             if (File.Exists(logoPath))
             {
                 byte[] logoBytes = File.ReadAllBytes(logoPath);
+                // Apply texture fill using the logo image
                 chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
                 chart.ChartArea.Area.FillFormat.TextureFill.ImageData = logoBytes;
-                chart.ChartArea.BackgroundMode = BackgroundMode.Opaque;
             }
             else
             {
-                Console.WriteLine($"Logo file not found: {logoPath}. Skipping background image.");
+                Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping background image.");
             }
 
-            // Save the workbook with the chart
-            string outputPath = "ChartWithLogoBackground.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook with the chart background image applied
+            workbook.Save("ChartWithBackgroundImage.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {

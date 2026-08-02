@@ -1,80 +1,93 @@
+// Title: Aspose.Cells .NET – Create an OHLC (Open‑High‑Low‑Close) Stock Chart from a DataTable
+// Description: This C# example shows how to build a DataTable with Date, Open, High, Low, and Close columns, write it to the first worksheet of a new Workbook, add a StockOpenHighLowClose chart, bind each OHLC series to the appropriate range, set the date column as the category axis, optionally name the series, and save the result as an Excel file.
+// Keywords: Aspose.Cells | .NET | C# | OHLC chart | Open High Low Close | StockOpenHighLowClose | DataTable to chart | Excel chart generation | financial charting | global finance
+// Common Searches: Aspose.Cells create OHLC chart C# | bind DataTable to StockOpenHighLowClose chart | C# OHLC chart from Excel data | set date category axis in Aspose.Cells chart | add series names to OHLC chart Aspose.Cells
+// Developer Intent: Generate an Excel workbook that contains an Open‑High‑Low‑Close stock chart populated directly from a DataTable.
+// Use Cases: Produce daily stock price visualizations for financial reports by converting market data tables into OHLC charts. | Automate the creation of separate OHLC charts for multiple securities in a batch process, exporting each to its own Excel file. | Provide analysts with ready‑to‑use Excel workbooks that include OHLC charts for further analysis or presentation.
+// AI Prompts: Show me how to import a DataTable into a worksheet and bind it to an OHLC chart using Aspose.Cells for .NET. | Give a concise example of assigning series names and date categories to a StockOpenHighLowClose chart. | Explain how to customize colors and line styles of an OHLC chart after adding the series in Aspose.Cells.
+
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace OhlcChartExampleApp
+namespace AsposeCellsOHLCExample
 {
-    class OhlcChartExample
+    // This C# example shows how to build a DataTable with Date, Open, High, Low, and Close columns, write it to the first worksheet of a new Workbook, add a StockOpenHighLowClose chart, bind each OHLC series to the appropriate range, set the date column as the category axis, optionally name the series, and save the result as an Excel file.
+    class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                string sheetName = sheet.Name; // usually "Sheet1"
+                // ---------- 1. Prepare a DataTable with OHLC data ----------
+                DataTable ohlcTable = new DataTable("OHLC");
+                ohlcTable.Columns.Add("Date", typeof(DateTime));
+                ohlcTable.Columns.Add("Open", typeof(double));
+                ohlcTable.Columns.Add("High", typeof(double));
+                ohlcTable.Columns.Add("Low", typeof(double));
+                ohlcTable.Columns.Add("Close", typeof(double));
 
-                // 2. Prepare a DataTable with Date, Open, High, Low, Close columns
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Date", typeof(DateTime));
-                dt.Columns.Add("Open", typeof(double));
-                dt.Columns.Add("High", typeof(double));
-                dt.Columns.Add("Low", typeof(double));
-                dt.Columns.Add("Close", typeof(double));
+                // Sample rows
+                ohlcTable.Rows.Add(new DateTime(2023, 1, 2), 100.5, 105.2, 99.8, 104.0);
+                ohlcTable.Rows.Add(new DateTime(2023, 1, 3), 104.0, 108.5, 103.2, 107.1);
+                ohlcTable.Rows.Add(new DateTime(2023, 1, 4), 107.1, 110.0, 106.5, 109.3);
+                ohlcTable.Rows.Add(new DateTime(2023, 1, 5), 109.3, 112.4, 108.7, 111.0);
+                ohlcTable.Rows.Add(new DateTime(2023, 1, 6), 111.0, 113.8, 110.2, 112.5);
 
-                // Sample data rows
-                dt.Rows.Add(new DateTime(2023, 1, 2), 100.5, 105.2, 99.8, 104.0);
-                dt.Rows.Add(new DateTime(2023, 1, 3), 104.0, 108.5, 103.2, 107.1);
-                dt.Rows.Add(new DateTime(2023, 1, 4), 107.1, 110.0, 106.5, 109.3);
-                dt.Rows.Add(new DateTime(2023, 1, 5), 109.3, 112.4, 108.7, 111.0);
-                dt.Rows.Add(new DateTime(2023, 1, 6), 111.0, 113.8, 110.2, 112.5);
+                // ---------- 2. Create a workbook ----------
+                Workbook workbook = new Workbook();                     // create workbook
+                Worksheet sheet = workbook.Worksheets[0];              // get first worksheet
 
-                // 3. Import the DataTable into the worksheet manually
-                int currentRow = 0;
+                // Manually import DataTable into worksheet (avoids ImportDataTable overload issues)
                 // Write column headers
-                for (int c = 0; c < dt.Columns.Count; c++)
-                    sheet.Cells[currentRow, c].PutValue(dt.Columns[c].ColumnName);
-                currentRow++;
-
-                // Write data rows
-                foreach (DataRow dr in dt.Rows)
+                for (int col = 0; col < ohlcTable.Columns.Count; col++)
                 {
-                    for (int c = 0; c < dt.Columns.Count; c++)
-                        sheet.Cells[currentRow, c].PutValue(dr[c]);
-                    currentRow++;
+                    sheet.Cells[0, col].PutValue(ohlcTable.Columns[col].ColumnName);
                 }
 
-                // 4. Add a Stock OHLC chart to the worksheet
-                // Parameters: chart type, top row, left column, bottom row, right column
-                int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 8, 0, 25, 10);
+                // Write rows
+                for (int row = 0; row < ohlcTable.Rows.Count; row++)
+                {
+                    for (int col = 0; col < ohlcTable.Columns.Count; col++)
+                    {
+                        sheet.Cells[row + 1, col].PutValue(ohlcTable.Rows[row][col]);
+                    }
+                }
+
+                // ---------- 3. Add an OHLC (Open‑High‑Low‑Close) stock chart ----------
+                // Chart type for OHLC is StockOpenHighLowClose
+                int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 5, 0, 20, 10);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // 5. Set the category (X) axis data to the Date column (A2:A{last})
-                string catRange = $"='{sheetName}'!$A${2}:$A${dt.Rows.Count + 1}";
-                chart.NSeries.CategoryData = catRange;
+                // ---------- 4. Define the data ranges ----------
+                // Open series
+                chart.NSeries.Add("=Sheet1!$B$2:$B$6", true);
+                // High series
+                chart.NSeries.Add("=Sheet1!$C$2:$C$6", true);
+                // Low series
+                chart.NSeries.Add("=Sheet1!$D$2:$D$6", true);
+                // Close series
+                chart.NSeries.Add("=Sheet1!$E$2:$E$6", true);
 
-                // 6. Add series for Open, High, Low, Close values
-                string openRange = $"='{sheetName}'!$B${2}:$B${dt.Rows.Count + 1}";
-                string highRange = $"='{sheetName}'!$C${2}:$C${dt.Rows.Count + 1}";
-                string lowRange = $"='{sheetName}'!$D${2}:$D${dt.Rows.Count + 1}";
-                string closeRange = $"='{sheetName}'!$E${2}:$E${dt.Rows.Count + 1}";
+                // Category (X‑axis) data – dates
+                chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$6";
 
-                chart.NSeries.Add(openRange, true);   // Open series
-                chart.NSeries.Add(highRange, false); // High series
-                chart.NSeries.Add(lowRange, false);  // Low series
-                chart.NSeries.Add(closeRange, false);// Close series
+                // ---------- 5. (Optional) Set series names ----------
+                chart.NSeries[0].Name = "Open";
+                chart.NSeries[1].Name = "High";
+                chart.NSeries[2].Name = "Low";
+                chart.NSeries[3].Name = "Close";
 
-                // 7. Save the workbook
-                string outputPath = "OhlcChart.xlsx";
+                // ---------- 6. Save the workbook ----------
+                string outputPath = "OHLC_StockChart.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

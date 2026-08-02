@@ -4,9 +4,9 @@ using Aspose.Cells.Properties;
 
 namespace AsposeCellsExamples
 {
-    class Program
+    class BuiltInPropertiesReader
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Path to the Excel file to be opened
             string filePath = "input.xlsx";
@@ -14,7 +14,7 @@ namespace AsposeCellsExamples
             // Load the workbook from the specified file
             Workbook workbook = new Workbook(filePath);
 
-            // Access the collection of built‑in document properties
+            // Retrieve the collection of built‑in document properties
             BuiltInDocumentPropertyCollection builtInProps = workbook.BuiltInDocumentProperties;
 
             // Iterate through each property and log its name and value

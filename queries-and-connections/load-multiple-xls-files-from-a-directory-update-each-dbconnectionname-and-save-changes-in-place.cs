@@ -3,59 +3,35 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class UpdateDbConnectionNames
+class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Folder containing the Excel files
-        string folderPath = @"C:\Path\To\ExcelFiles";
+        // Directory containing the Excel files. Pass as first argument or set a default path.
+        string folderPath = args.Length > 0 ? args[0] : @"C:\ExcelFiles";
 
-        // Verify that the folder exists
-        if (!Directory.Exists(folderPath))
-        {
-            Console.WriteLine($"Folder not found: {folderPath}");
-            return;
-        }
-
-        // Retrieve all .xls and .xlsx files in the folder
+        // Get all .xls and .xlsx files in the directory.
         string[] excelFiles = Directory.GetFiles(folderPath, "*.xls*");
 
         foreach (string filePath in excelFiles)
         {
-            try
+            // Load the workbook from the file.
+            Workbook workbook = new Workbook(filePath);
+
+            // Iterate through all external data connections.
+            foreach (ExternalConnection connection in workbook.DataConnections)
             {
-                // Ensure the file exists before loading
-                if (!File.Exists(filePath))
+                // Process only DBConnection objects.
+                if (connection is DBConnection dbConn)
                 {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
-                    continue;
+                    // Update the connection name as needed.
+                    // Example: append "_Updated" to the existing name.
+                    dbConn.Name = dbConn.Name + "_Updated";
                 }
-
-                // Load the workbook from the file
-                Workbook workbook = new Workbook(filePath);
-
-                // Iterate through all external data connections
-                foreach (ExternalConnection connection in workbook.DataConnections)
-                {
-                    // Process only DBConnection objects
-                    if (connection is DBConnection dbConn)
-                    {
-                        // Example modification: prepend "Updated_" to the existing connection name
-                        dbConn.Name = "Updated_" + dbConn.Name;
-                    }
-                }
-
-                // Save the workbook back to the same file (in‑place update)
-                workbook.Save(filePath);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
-            catch (Exception ex)
-            {
-                // Log any errors for the current file and continue with the next one
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
+
+            // Save the modified workbook back to the same file (in‑place update).
+            workbook.Save(filePath);
         }
-
-        Console.WriteLine("All Excel files have been processed and DBConnection names updated.");
     }
 }

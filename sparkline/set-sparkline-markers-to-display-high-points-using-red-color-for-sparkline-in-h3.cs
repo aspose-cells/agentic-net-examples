@@ -2,7 +2,7 @@ using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class SparklineHighPointMarker
+class Program
 {
     static void Main()
     {
@@ -10,37 +10,36 @@ class SparklineHighPointMarker
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample data for the sparkline (adjust range as needed)
+        // Sample data for the sparkline (range A1:D1)
         sheet.Cells["A1"].PutValue(5);
         sheet.Cells["B1"].PutValue(2);
         sheet.Cells["C1"].PutValue(8);
         sheet.Cells["D1"].PutValue(3);
 
-        // Define the location of the sparkline (cell H3)
+        // Define the location of the sparkline: cell H3 (column index 7, row index 2)
         CellArea sparklineArea = new CellArea
         {
-            StartColumn = 7, // Column H (0‑based index)
+            StartColumn = 7,
             EndColumn = 7,
-            StartRow = 2,    // Row 3 (0‑based index)
+            StartRow = 2,
             EndRow = 2
         };
 
-        // Add a line sparkline group that uses the data range A1:D1 and places the sparkline in H3
+        // Add a sparkline group of type Line
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineArea);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Add the sparkline to the group (required step)
+        // Add the sparkline to the group (optional, but ensures the sparkline exists)
         group.Sparklines.Add(sheet.Name + "!A1:D1", 2, 7);
 
-        // Enable high‑point markers and set their color to red
-        group.ShowHighPoint = true;
-        CellsColor redColor = workbook.CreateCellsColor();
-        redColor.Color = Color.Red;
-        group.HighPointColor = redColor;
-
-        // (Optional) Show markers for all points; they will inherit the high‑point color for high values
+        // Enable markers and highlight the highest points
         group.ShowMarkers = true;
-        group.MarkersColor = redColor;
+        group.ShowHighPoint = true;
+
+        // Set the high point color to red
+        CellsColor red = workbook.CreateCellsColor();
+        red.Color = Color.Red;
+        group.HighPointColor = red;
 
         // Save the workbook
         workbook.Save("SparklineHighPointMarker.xlsx", SaveFormat.Xlsx);

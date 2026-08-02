@@ -3,59 +3,61 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartExport
+namespace AsposeCellsExamples
 {
-    public class ExportChartToPdfA4Portrait
+    class ExportChartToPdfA4
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Fruits");
-                worksheet.Cells["A3"].PutValue("Vegetables");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(50);
-                worksheet.Cells["B3"].PutValue(30);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B3", true);
-                chart.NSeries.CategoryData = "A2:A3";
-
-                // Configure page setup for A4 size and portrait orientation
-                chart.PageSetup.PaperSize = PaperSizeType.PaperA4;               // A4 paper
-                chart.PageSetup.Orientation = PageOrientationType.Portrait;    // Portrait orientation
-
-                // Export the chart to a PDF file
-                string outputPath = "Chart_A4_Portrait.pdf";
-                chart.ToPdf(outputPath);
-
-                Console.WriteLine("Chart exported to PDF with A4 portrait layout successfully.");
+                Run();
+                Console.WriteLine("Chart exported successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during chart export: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            ExportChartToPdfA4Portrait.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Fruits");
+            worksheet.Cells["A3"].PutValue("Vegetables");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(50);
+            worksheet.Cells["B3"].PutValue(30);
+
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
+
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
+
+            // Configure the chart's page setup for A4 size and portrait orientation
+            chart.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            chart.PageSetup.Orientation = PageOrientationType.Portrait;
+
+            // Define output PDF file path
+            string outputPath = "ChartA4Portrait.pdf";
+
+            // Ensure we can write to the output location
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Export the chart to PDF with A4 dimensions (8.27 x 11.69 inches) and centered alignment
+            chart.ToPdf(outputPath, 8.27f, 11.69f, PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
         }
     }
 }

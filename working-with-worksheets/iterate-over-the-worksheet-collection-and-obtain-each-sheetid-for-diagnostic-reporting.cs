@@ -1,30 +1,41 @@
+// Title: Get each worksheet’s internal SheetId (TabId) with Aspose.Cells for .NET
+// Description: Creates a workbook, adds sample worksheets, then loops through Workbook.Worksheets, reads each sheet’s TabId, name, and index, writes the data to the console, and saves the workbook as WorksheetIdsReport.xlsx.
+// Keywords: Aspose.Cells | .NET | C# | Worksheet TabId | SheetId | iterate worksheets | Workbook.Worksheets loop | diagnostic sheet identifier | debug workbook structure | internal sheet ID
+// Common Searches: Aspose.Cells get worksheet TabId .NET | How to read internal SheetId of worksheets in Aspose.Cells | Iterate over worksheets and print TabId using C# | Diagnostic worksheet IDs Aspose.Cells | Retrieve worksheet index and TabId for debugging
+// Developer Intent: The developer needs to enumerate all worksheets in a workbook and obtain each worksheet’s internal SheetId (TabId) for diagnostic or logging purposes.
+// Use Cases: Log worksheet identifiers to confirm correct ordering after programmatic changes. | Create a diagnostic report of worksheet names, indexes, and TabId values for workbook integrity checks. | Validate that newly added sheets receive expected TabId values during workbook generation.
+// AI Prompts: Generate C# code that iterates through an Aspose.Cells workbook and stores each worksheet’s TabId, name, and index in a dictionary. | Show how to export worksheet names, indexes, and TabId values to a CSV file using Aspose.Cells. | Explain how to compare saved TabId values with current worksheet TabId to detect modifications after editing a workbook.
+
 using System;
 using Aspose.Cells;
 
-class Program
+namespace WorksheetIdDiagnostic
 {
-    static void Main()
+    // Creates a workbook, adds sample worksheets, then loops through Workbook.Worksheets, reads each sheet’s TabId, name, and index, writes the data to the console, and saves the workbook as WorksheetIdsReport.xlsx.
+    class Program
     {
-        // Create a new workbook (empty workbook)
-        Workbook workbook = new Workbook();
-
-        // Add sample worksheets for demonstration purposes
-        workbook.Worksheets[0].Name = "FirstSheet";
-        workbook.Worksheets.Add("SecondSheet");
-        workbook.Worksheets.Add("ThirdSheet");
-
-        // Get the worksheet collection
-        WorksheetCollection worksheets = workbook.Worksheets;
-
-        // Iterate over each worksheet and retrieve its internal SheetId (TabId)
-        for (int i = 0; i < worksheets.Count; i++)
+        static void Main()
         {
-            Worksheet sheet = worksheets[i];
-            int sheetId = sheet.TabId; // internal identifier for the sheet
-            Console.WriteLine($"Worksheet Name: {sheet.Name}, Index: {sheet.Index}, SheetId (TabId): {sheetId}");
-        }
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-        // Save the workbook (unchanged except for added sheets)
-        workbook.Save("DiagnosticReport.xlsx");
+            // Add sample worksheets for demonstration
+            workbook.Worksheets.Add("Sales");
+            workbook.Worksheets.Add("Inventory");
+            workbook.Worksheets.Add("Summary");
+
+            // Iterate over the worksheet collection
+            WorksheetCollection sheets = workbook.Worksheets;
+            for (int i = 0; i < sheets.Count; i++)
+            {
+                Worksheet sheet = sheets[i];
+                // Obtain the internal SheetId (TabId) for diagnostic reporting
+                int sheetId = sheet.TabId;
+                Console.WriteLine($"Worksheet Name: {sheet.Name}, Index: {sheet.Index}, SheetId (TabId): {sheetId}");
+            }
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("WorksheetIdsReport.xlsx");
+        }
     }
 }

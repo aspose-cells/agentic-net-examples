@@ -8,31 +8,36 @@ namespace AsposeCellsXmlMapUpdate
     {
         static void Main()
         {
+            // Paths
+            string workbookPath = "InputWorkbook.xlsx";
+            string outputPath = "UpdatedWorkbook.xlsx";
+
+            // Name of the XML map to replace
+            string mapNameToUpdate = "MyXmlMap";
+
+            // New XSD schema as a string
+            string newXsdSchema = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"">
+  <xs:element name=""Root"">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name=""NewElement"" type=""xs:string""/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>";
+
             try
             {
-                // Paths
-                string inputWorkbookPath = "input.xlsx";
-                string newSchemaPath = "newSchema.xsd";
-                string outputWorkbookPath = "output.xlsx";
-
-                // Verify input files exist
-                if (!File.Exists(inputWorkbookPath))
+                // Verify the input workbook exists
+                if (!File.Exists(workbookPath))
                 {
-                    Console.WriteLine($"Input workbook not found: {inputWorkbookPath}");
-                    return;
-                }
-
-                if (!File.Exists(newSchemaPath))
-                {
-                    Console.WriteLine($"XSD schema file not found: {newSchemaPath}");
+                    Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
                     return;
                 }
 
                 // Load the workbook
-                Workbook workbook = new Workbook(inputWorkbookPath);
-
-                // Name of the XML map to replace
-                string targetMapName = "MyMap";
+                Workbook workbook = new Workbook(workbookPath);
 
                 // Access XML maps collection
                 XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
@@ -41,7 +46,7 @@ namespace AsposeCellsXmlMapUpdate
                 int existingMapIndex = -1;
                 for (int i = 0; i < xmlMaps.Count; i++)
                 {
-                    if (xmlMaps[i].Name == targetMapName)
+                    if (xmlMaps[i].Name == mapNameToUpdate)
                     {
                         existingMapIndex = i;
                         break;
@@ -54,19 +59,30 @@ namespace AsposeCellsXmlMapUpdate
                     xmlMaps.RemoveAt(existingMapIndex);
                 }
 
-                // Add new XML map from the XSD schema
-                int newMapIndex = xmlMaps.Add(newSchemaPath);
+                // Write the XSD schema to a temporary file (required by Aspose.Cells API)
+                string tempXsdPath = Path.Combine(Path.GetTempPath(), $"temp_{Guid.NewGuid()}.xsd");
+                File.WriteAllText(tempXsdPath, newXsdSchema);
 
-                // Preserve original map name
-                xmlMaps[newMapIndex].Name = targetMapName;
+                // Add the new XML map using the temporary XSD file
+                int newMapIndex = xmlMaps.Add(tempXsdPath);
+
+                // Set the desired name for the new map
+                XmlMap newMap = xmlMaps[newMapIndex];
+                newMap.Name = mapNameToUpdate;
+
+                // Clean up temporary XSD file
+                if (File.Exists(tempXsdPath))
+                {
+                    File.Delete(tempXsdPath);
+                }
 
                 // Save the updated workbook
-                workbook.Save(outputWorkbookPath);
-                Console.WriteLine($"Workbook saved successfully to {outputWorkbookPath}");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

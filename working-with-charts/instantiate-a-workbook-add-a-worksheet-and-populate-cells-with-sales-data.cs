@@ -1,33 +1,69 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class SalesDataWorkbook
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
-
-        // Add a worksheet named "SalesData"
-        Worksheet sheet = workbook.Worksheets.Add("SalesData");
-
-        // Write header cells
-        sheet.Cells["A1"].PutValue("Month");
-        sheet.Cells["B1"].PutValue("Sales");
-
-        // Sample sales data
-        string[] months = { "January", "February", "March", "April", "May" };
-        double[] sales = { 12000.5, 15000, 13000, 17000.75, 16000 };
-
-        // Populate the worksheet with the data
-        for (int i = 0; i < months.Length; i++)
+        public static void Run()
         {
-            // Row index is zero‑based; i+1 corresponds to rows 2,3,...
-            sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A
-            sheet.Cells[i + 1, 1].PutValue(sales[i]);    // Column B
-        }
+            try
+            {
+                // Create a new workbook (default Xlsx format)
+                Workbook workbook = new Workbook();
 
-        // Save the workbook to a file
-        workbook.Save("SalesReport.xlsx", SaveFormat.Xlsx);
+                // Access the default first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "SalesData";
+
+                // Add header row
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["B1"].PutValue("Product");
+                sheet.Cells["C1"].PutValue("Units Sold");
+                sheet.Cells["D1"].PutValue("Revenue");
+
+                // Populate sample sales data
+                sheet.Cells["A2"].PutValue("January");
+                sheet.Cells["B2"].PutValue("Widget");
+                sheet.Cells["C2"].PutValue(120);
+                sheet.Cells["D2"].PutValue(2400);
+
+                sheet.Cells["A3"].PutValue("February");
+                sheet.Cells["B3"].PutValue("Widget");
+                sheet.Cells["C3"].PutValue(150);
+                sheet.Cells["D3"].PutValue(3000);
+
+                sheet.Cells["A4"].PutValue("January");
+                sheet.Cells["B4"].PutValue("Gadget");
+                sheet.Cells["C4"].PutValue(80);
+                sheet.Cells["D4"].PutValue(2000);
+
+                sheet.Cells["A5"].PutValue("February");
+                sheet.Cells["B5"].PutValue("Gadget");
+                sheet.Cells["C5"].PutValue(95);
+                sheet.Cells["D5"].PutValue(2375);
+
+                // Define output file path
+                string outputPath = "SalesData.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SalesDataWorkbook.Run();
+        }
     }
 }

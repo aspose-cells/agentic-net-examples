@@ -1,25 +1,28 @@
 using System;
 using Aspose.Cells;
 
-class EvaluateCellFormula
+namespace AsposeCellsSingleCellCalculation
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set a formula in cell A1
-        Cell cell = worksheet.Cells["A1"];
-        cell.Formula = "=SUM(10, 20, 30)";
+            // Access a specific cell (A1) and assign a formula to it
+            Cell cell = worksheet.Cells["A1"];
+            cell.Formula = "=SUM(1, 2, 3)";
 
-        // Calculate the formula for this single cell
-        cell.Calculate(new CalculationOptions());
+            // Perform isolated calculation for this cell using default calculation options
+            cell.Calculate(new CalculationOptions());
 
-        // Display the calculated value
-        Console.WriteLine("A1 calculated value: " + cell.Value);
+            // Output the calculated result
+            Console.WriteLine($"Calculated value of {cell.Name}: {cell.Value}");
 
-        // Save the workbook (optional)
-        workbook.Save("CalculatedResult.xlsx");
+            // Optionally save the workbook to verify the result in Excel
+            workbook.Save("SingleCellCalculation.xlsx");
+        }
     }
 }

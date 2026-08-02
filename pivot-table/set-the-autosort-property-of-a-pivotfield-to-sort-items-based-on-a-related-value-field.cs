@@ -4,9 +4,9 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotAutoSortDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -14,7 +14,7 @@ namespace AsposeCellsPivotAutoSortDemo
             Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
+            cells["A1"].Value = "Region";
             cells["B1"].Value = "Sales";
             cells["A2"].Value = "North";
             cells["B2"].Value = 1200;
@@ -29,17 +29,17 @@ namespace AsposeCellsPivotAutoSortDemo
             int ptIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
-            // Add the row field (Category) and the data field (Sales)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            // Add the row field (Region) and the data field (Sales)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
             // Retrieve the row field that will be auto‑sorted
-            PivotField rowField = pivotTable.RowFields["Category"];
+            PivotField regionField = pivotTable.RowFields["Region"];
 
             // Enable auto‑sorting, set ascending order, and sort by the first data field (Sales)
-            rowField.IsAutoSort = true;          // Turn on auto sort
-            rowField.IsAscendSort = true;        // Ascending order
-            rowField.AutoSortField = 0;          // Index of the data field to sort by (Sales)
+            regionField.IsAutoSort = true;          // turn on auto sort
+            regionField.IsAscendSort = true;        // sort ascending
+            regionField.AutoSortField = 0;          // index of the data field to sort by (Sales)
 
             // Refresh the pivot table data and calculate results
             pivotTable.RefreshData();

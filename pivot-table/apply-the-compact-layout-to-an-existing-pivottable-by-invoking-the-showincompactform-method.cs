@@ -1,3 +1,4 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
@@ -8,24 +9,24 @@ class ApplyCompactLayout
         // Load an existing workbook that already contains a pivot table
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the worksheet where the pivot table resides (here we use the first sheet)
+        // Access the first worksheet (adjust index if needed)
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Ensure there is at least one pivot table
+        // Verify that the worksheet has at least one pivot table
         if (sheet.PivotTables.Count > 0)
         {
-            // Get the first pivot table
+            // Retrieve the first pivot table
             PivotTable pivotTable = sheet.PivotTables[0];
 
             // Apply the compact layout to the pivot table
             pivotTable.ShowInCompactForm();
 
-            // Refresh and recalculate so the layout change takes effect
+            // Refresh the data source and recalculate the pivot table
             pivotTable.RefreshData();
             pivotTable.CalculateData();
         }
 
-        // Save the workbook with the updated pivot table layout
+        // Save the workbook with the updated layout
         workbook.Save("output.xlsx");
     }
 }

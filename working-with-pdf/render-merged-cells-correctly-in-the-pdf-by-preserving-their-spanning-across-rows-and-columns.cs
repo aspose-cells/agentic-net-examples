@@ -3,43 +3,30 @@ using Aspose.Cells;
 
 namespace MergedCellsPdfDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Put some sample data
-            cells["A1"].PutValue("Merged Header");
-            cells["A2"].PutValue("Row 1");
-            cells["A3"].PutValue("Row 2");
-            cells["B2"].PutValue("Data 1");
-            cells["B3"].PutValue("Data 2");
-
-            // Merge cells A1:B1 (first row, spanning two columns)
+            // Merge a range of cells (rows 0-2, columns 0-1) => 3 rows x 2 columns
             // Parameters: firstRow, firstColumn, totalRows, totalColumns
-            cells.Merge(0, 0, 1, 2);
+            sheet.Cells.Merge(0, 0, 3, 2);
 
-            // Merge cells A2:A3 (first column, spanning two rows)
-            cells.Merge(1, 0, 2, 1);
+            // Set a value in the merged cell (upper‑left cell of the range)
+            sheet.Cells[0, 0].Value = "Merged Cells in PDF";
 
-            // Apply simple styling to merged cells for better visibility
-            Style style = cells["A1"].GetStyle();
+            // Apply basic styling to the merged cell
+            Style style = sheet.Cells[0, 0].GetStyle();
             style.HorizontalAlignment = TextAlignmentType.Center;
             style.VerticalAlignment = TextAlignmentType.Center;
             style.Font.IsBold = true;
-            cells["A1"].SetStyle(style);
+            sheet.Cells[0, 0].SetStyle(style);
 
-            // Auto-fit rows and columns to ensure merged cells are displayed correctly
-            worksheet.AutoFitRows();
-            worksheet.AutoFitColumns();
-
-            // Save the workbook as PDF, preserving merged cell spans
+            // Save the workbook as PDF – merged cells retain their spanning
             workbook.Save("MergedCellsOutput.pdf", SaveFormat.Pdf);
         }
     }

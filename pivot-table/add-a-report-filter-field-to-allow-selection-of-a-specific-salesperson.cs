@@ -14,45 +14,38 @@ namespace AsposeCellsReportFilterDemo
             Cells cells = sheet.Cells;
 
             // Populate sample data with a Salesperson column
-            // Header row
-            cells["A1"].Value = "Product";
-            cells["B1"].Value = "Salesperson";
-            cells["C1"].Value = "Amount";
+            cells["A1"].Value = "Salesperson";
+            cells["B1"].Value = "Product";
+            cells["C1"].Value = "Quantity";
 
-            // Data rows
-            cells["A2"].Value = "Laptop";
-            cells["B2"].Value = "Alice";
-            cells["C2"].Value = 1200;
+            cells["A2"].Value = "Alice";
+            cells["B2"].Value = "Apple";
+            cells["C2"].Value = 10;
 
-            cells["A3"].Value = "Laptop";
-            cells["B3"].Value = "Bob";
-            cells["C3"].Value = 1500;
+            cells["A3"].Value = "Bob";
+            cells["B3"].Value = "Banana";
+            cells["C3"].Value = 15;
 
-            cells["A4"].Value = "Phone";
-            cells["B4"].Value = "Alice";
-            cells["C4"].Value = 800;
+            cells["A4"].Value = "Alice";
+            cells["B4"].Value = "Orange";
+            cells["C4"].Value = 20;
 
-            cells["A5"].Value = "Phone";
-            cells["B5"].Value = "Charlie";
-            cells["C5"].Value = 950;
+            cells["A5"].Value = "Bob";
+            cells["B5"].Value = "Apple";
+            cells["C5"].Value = 5;
 
-            // Define the source range for the pivot table
-            string sourceRange = "A1:C5";
-
-            // Add a pivot table at cell E3
-            int pivotIndex = sheet.PivotTables.Add(sourceRange, "E3", "SalesPivot");
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add fields:
-            // Row field: Product
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            // Data field: Amount (summed)
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-            // Page (Report Filter) field: Salesperson
+            // Add fields: Salesperson as a report filter (page field)
             pivotTable.AddFieldToArea(PivotFieldType.Page, "Salesperson");
-
             // Optionally rename the page field for clarity
             pivotTable.PageFields[0].Name = "SalespersonFilter";
+
+            // Add row field (Product) and data field (Quantity)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
             // Refresh and calculate the pivot table data
             pivotTable.RefreshData();
@@ -62,7 +55,7 @@ namespace AsposeCellsReportFilterDemo
             pivotTable.ShowReportFilterPageByName("SalespersonFilter");
 
             // Save the workbook
-            workbook.Save("PivotTable_With_Salesperson_Filter.xlsx");
+            workbook.Save("ReportFilterSalespersonDemo.xlsx");
         }
     }
 }

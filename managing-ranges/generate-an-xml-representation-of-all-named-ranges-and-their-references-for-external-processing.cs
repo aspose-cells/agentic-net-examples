@@ -1,81 +1,69 @@
 using System;
-using System.Xml;
+using System.Xml.Linq;
 using Aspose.Cells;
 
 namespace AsposeCellsNamedRangeExport
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Input Excel file path (change as needed)
-            string inputPath = "input.xlsx";
-            // Output XML file path
-            string outputPath = "NamedRanges.xml";
+            // Load an existing workbook (replace with your file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook (uses the provided load rule)
-            Workbook workbook = new Workbook(inputPath);
+            // Create the root element for the XML document
+            XDocument xmlDoc = new XDocument(new XElement("NamedRanges"));
 
-            // Prepare XML writer with indentation for readability
-            XmlWriterSettings settings = new XmlWriterSettings
+            // Iterate through all defined names in the workbook
+            foreach (Name definedName in workbook.Worksheets.Names)
             {
-                Indent = true,
-                IndentChars = "  "
-            };
+                // Create an element for the current name
+                XElement nameElement = new XElement("Name",
+                    new XAttribute("Text", definedName.Text));
 
-            using (XmlWriter writer = XmlWriter.Create(outputPath, settings))
-            {
-                // Start the XML document
-                writer.WriteStartDocument();
-                writer.WriteStartElement("NamedRanges");
+                // Retrieve all referred areas (including external links)
+                ReferredArea[] areas = definedName.GetReferredAreas(true);
 
-                // Iterate through all defined names in the workbook
-                foreach (Name definedName in workbook.Worksheets.Names)
+                if (areas != null)
                 {
-                    writer.WriteStartElement("NamedRange");
-                    // Use the name's text as the identifier
-                    writer.WriteAttributeString("Name", definedName.Text);
-
-                    // Retrieve all referred areas (including external links) – uses GetReferredAreas rule
-                    ReferredArea[] referredAreas = definedName.GetReferredAreas(true);
-
-                    if (referredAreas != null)
+                    foreach (ReferredArea area in areas)
                     {
-                        foreach (ReferredArea area in referredAreas)
+                        XElement areaElement = new XElement("Area",
+                            new XAttribute("IsExternalLink", area.IsExternalLink),
+                            new XAttribute("SheetName", area.SheetName ?? string.Empty),
+                            new XAttribute("IsArea", area.IsArea));
+
+                        // Add external file name if the area refers to an external workbook
+                        if (area.IsExternalLink && !string.IsNullOrEmpty(area.ExternalFileName))
                         {
-                            writer.WriteStartElement("Reference");
-                            writer.WriteAttributeString("IsExternal", area.IsExternalLink.ToString());
-
-                            if (area.IsExternalLink)
-                            {
-                                writer.WriteAttributeString("ExternalFile", area.ExternalFileName);
-                            }
-
-                            writer.WriteAttributeString("Sheet", area.SheetName);
-                            writer.WriteAttributeString("IsArea", area.IsArea.ToString());
-
-                            // Convert cell indices to A1 style addresses
-                            string startAddress = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                            writer.WriteAttributeString("Start", startAddress);
-
-                            if (area.IsArea)
-                            {
-                                string endAddress = CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
-                                writer.WriteAttributeString("End", endAddress);
-                            }
-
-                            writer.WriteEndElement(); // Reference
+                            areaElement.Add(new XAttribute("ExternalFileName", area.ExternalFileName));
                         }
-                    }
 
-                    writer.WriteEndElement(); // NamedRange
+                        // Add cell or range information
+                        if (area.IsArea)
+                        {
+                            string startCell = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                            string endCell = CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
+                            areaElement.Add(new XAttribute("StartCell", startCell));
+                            areaElement.Add(new XAttribute("EndCell", endCell));
+                        }
+                        else
+                        {
+                            string cell = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                            areaElement.Add(new XAttribute("Cell", cell));
+                        }
+
+                        nameElement.Add(areaElement);
+                    }
                 }
 
-                writer.WriteEndElement(); // NamedRanges
-                writer.WriteEndDocument();
+                xmlDoc.Root.Add(nameElement);
             }
 
-            Console.WriteLine($"Named ranges exported to XML file: {outputPath}");
+            // Save the generated XML to a file
+            xmlDoc.Save("NamedRanges.xml");
+
+            Console.WriteLine("Named ranges exported to NamedRanges.xml");
         }
     }
 }

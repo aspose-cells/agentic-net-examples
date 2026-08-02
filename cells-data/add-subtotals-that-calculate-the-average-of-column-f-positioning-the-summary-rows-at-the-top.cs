@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
 
-namespace SubtotalAverageTopDemo
+namespace SubtotalAverageColumnF
 {
     class Program
     {
@@ -12,63 +12,55 @@ namespace SubtotalAverageTopDemo
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Sample data: headers in row 1, data starts from row 2
-            // Column F (index 5) will contain numeric values for which we want the average subtotal
-            cells["A1"].PutValue("Category");
+            // -------------------------------------------------
+            // Sample data setup (columns A to F, rows 1 to 10)
+            // -------------------------------------------------
+            // Header row
+            cells["A1"].PutValue("Group");
             cells["B1"].PutValue("Item");
             cells["C1"].PutValue("Qty");
             cells["D1"].PutValue("Price");
             cells["E1"].PutValue("Date");
-            cells["F1"].PutValue("Score"); // Column to average
+            cells["F1"].PutValue("Score"); // Column F (index 5) – the column we will average
 
-            // Populate some rows of data
-            object[,] data = new object[,]
+            // Populate some rows with dummy data
+            for (int row = 1; row <= 9; row++)
             {
-                { "A", "Item1", 10, 5.5, DateTime.Today, 80 },
-                { "A", "Item2", 7,  3.2, DateTime.Today, 90 },
-                { "B", "Item3", 5,  6.0, DateTime.Today, 75 },
-                { "B", "Item4", 12, 4.1, DateTime.Today, 85 },
-                { "C", "Item5", 9,  2.8, DateTime.Today, 95 }
-            };
-
-            int rows = data.GetLength(0);
-            int cols = data.GetLength(1);
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    cells[r + 1, c].PutValue(data[r, c]); // +1 because row 0 is header
-                }
+                cells[row, 0].PutValue(row % 2 == 0 ? "B" : "A");          // Group
+                cells[row, 1].PutValue($"Item{row}");                     // Item
+                cells[row, 2].PutValue(row * 10);                         // Qty
+                cells[row, 3].PutValue(row * 5.5);                        // Price
+                cells[row, 4].PutValue(DateTime.Today.AddDays(-row));    // Date
+                cells[row, 5].PutValue(row * 2);                          // Score (numeric)
             }
 
-            // Define the cell area that includes the header row and all data rows
-            // StartRow = 0 (header), StartColumn = 0 (A), EndRow = rows (data rows count) , EndColumn = 5 (F)
-            CellArea area = new CellArea
-            {
-                StartRow = 0,
-                StartColumn = 0,
-                EndRow = rows,          // rows count (header + data)
-                EndColumn = 5           // column F (zero‑based index)
-            };
+            // -------------------------------------------------
+            // Define the range that contains the data (A1:F10)
+            // -------------------------------------------------
+            CellArea dataArea = CellArea.CreateCellArea("A1", "F10");
 
-            // Apply subtotal:
-            // - Group by the first column (Category) -> groupBy = 0
+            // -------------------------------------------------
+            // Add subtotals:
+            // - Group by the first column (index 0)
             // - Use Average function
-            // - Subtotal column is column F (index 5)
-            // - Replace existing subtotals = false
-            // - Add page breaks between groups = false
-            // - SummaryBelowData = false (places summary rows at the top)
+            // - Apply to column F (index 5)
+            // - Replace existing subtotals (true)
+            // - No page breaks between groups (false)
+            // - Place summary rows above the data (summaryBelowData = false)
+            // -------------------------------------------------
             cells.Subtotal(
-                area,
-                0,
-                ConsolidationFunction.Average,
-                new int[] { 5 },
-                false,
-                false,
-                false);
+                dataArea,
+                0,                                 // groupBy column (A)
+                ConsolidationFunction.Average,    // average calculation
+                new int[] { 5 },                  // subtotal on column F
+                true,                             // replace existing subtotals
+                false,                            // no page breaks
+                false);                           // summary rows at the top
 
+            // -------------------------------------------------
             // Save the workbook
-            workbook.Save("Subtotal_Average_Top.xlsx");
+            // -------------------------------------------------
+            workbook.Save("Subtotal_Average_ColumnF.xlsx");
         }
     }
 }

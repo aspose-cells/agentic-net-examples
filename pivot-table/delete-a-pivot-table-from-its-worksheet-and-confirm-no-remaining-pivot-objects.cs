@@ -4,33 +4,50 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotRemovalDemo
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Load a workbook that contains at least one pivot table
-            Workbook workbook = new Workbook("PivotTableExample.xlsx");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Access the first worksheet (adjust index if needed)
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the collection of pivot tables on this worksheet
-            PivotTableCollection pivots = sheet.PivotTables;
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["A4"].PutValue("Orange");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(200);
 
-            // If there is at least one pivot table, remove it
-            if (pivots.Count > 0)
+            // Add a pivot table to the worksheet
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+            // Configure the pivot table (row and data fields)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Remove the pivot table using the Remove method
+            sheet.PivotTables.Remove(pivotTable);
+
+            // Verify that no pivot tables remain in the worksheet
+            if (sheet.PivotTables.Count == 0)
             {
-                // Retrieve the first pivot table
-                PivotTable pivot = pivots[0];
-
-                // Remove the pivot table and its data
-                pivots.Remove(pivot);
+                Console.WriteLine("Pivot table removed successfully. No remaining pivot tables.");
+            }
+            else
+            {
+                Console.WriteLine("Pivot table removal failed. Remaining count: " + sheet.PivotTables.Count);
             }
 
-            // Verify that no pivot tables remain on the worksheet
-            Console.WriteLine("Pivot tables remaining after removal: " + pivots.Count);
-
-            // Save the modified workbook
+            // Save the workbook to a file
             workbook.Save("PivotTableRemoved.xlsx");
         }
     }

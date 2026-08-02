@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace WorkbookUnprotectAudit
@@ -8,54 +7,41 @@ namespace WorkbookUnprotectAudit
     {
         static void Main(string[] args)
         {
-            // Path to the protected workbook
-            string inputPath = "ProtectedWorkbook.xlsx";
+            // Paths to the protected and the resulting unprotected workbook
+            string protectedFilePath = "ProtectedWorkbook.xlsx";
+            string unprotectedFilePath = "UnprotectedWorkbook.xlsx";
 
-            // Recovered password for the workbook structure
+            // Recovered password for the workbook structure protection
             string password = "recoveredPassword";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"[{DateTime.UtcNow:u}] Input file '{inputPath}' not found.");
-                return;
-            }
 
             try
             {
-                // Load the workbook (lifecycle: load)
-                Workbook workbook = new Workbook(inputPath);
+                // Load the protected workbook
+                Workbook workbook = new Workbook(protectedFilePath);
 
-                // Check if the workbook structure is protected with a password
+                // Check if the workbook is actually protected with a password
                 if (workbook.IsWorkbookProtectedWithPassword)
                 {
-                    try
-                    {
-                        // Attempt to unprotect the workbook using the provided password
-                        workbook.Unprotect(password);
-                        Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{inputPath}' was unprotected using the provided password.");
-                    }
-                    catch (CellsException)
-                    {
-                        // Invalid password scenario
-                        Console.WriteLine($"[{DateTime.UtcNow:u}] Invalid password provided for workbook '{inputPath}'.");
-                        return;
-                    }
+                    // Unprotect the workbook using the recovered password
+                    workbook.Unprotect(password);
+
+                    // Log the successful unprotection event
+                    Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{protectedFilePath}' was unprotected using the provided password.");
                 }
                 else
                 {
-                    Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{inputPath}' is not protected with a password.");
+                    // Log that the workbook was not password‑protected
+                    Console.WriteLine($"[{DateTime.UtcNow:u}] Workbook '{protectedFilePath}' is not protected with a password; no unprotection needed.");
                 }
 
-                // Save the unprotected workbook (lifecycle: save)
-                string outputPath = "UnprotectedWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved as '{outputPath}'.");
+                // Save the unprotected workbook
+                workbook.Save(unprotectedFilePath);
+                Console.WriteLine($"Workbook saved as '{unprotectedFilePath}'.");
             }
             catch (Exception ex)
             {
-                // General exception handling
-                Console.WriteLine($"[{DateTime.UtcNow:u}] An error occurred: {ex.Message}");
+                // Log any errors that occur during the process
+                Console.WriteLine($"[{DateTime.UtcNow:u}] Error unprotecting workbook: {ex.Message}");
             }
         }
     }

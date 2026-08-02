@@ -2,33 +2,34 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering; // for ImageOrPrintOptions, ColorDepth, TiffCompression
 
-namespace AsposeCellsTiffConversion
+namespace AsposeCellsTiffExample
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the source Excel workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // creates an empty workbook
+            // Example: load an existing file
+            // Workbook workbook = new Workbook("input.xlsx");
 
-            // Configure image rendering options for TIFF output
+            // Add some sample data to demonstrate the conversion
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample data for 8‑bit TIFF conversion");
+            sheet.Cells["B2"].PutValue(12345);
+
+            // Configure image rendering options for TIFF with 8‑bit color depth
             ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                ImageType = ImageType.Tiff,               // Set output format to TIFF
-                TiffColorDepth = ColorDepth.Format8bpp,   // Use 8‑bit color depth for smaller file size
-                TiffCompression = TiffCompression.CompressionLZW // Optional: apply LZW compression
+                ImageType = ImageType.Tiff,          // Specify TIFF output
+                TiffColorDepth = ColorDepth.Format8bpp, // Set 8‑bit per pixel
+                TiffCompression = TiffCompression.CompressionLZW // Optional: use LZW compression
             };
 
-            // Create a renderer for the whole workbook with the specified options
+            // Render the entire workbook to a single TIFF file using the specified options
             WorkbookRender renderer = new WorkbookRender(workbook, options);
-
-            // Render the workbook to a multi‑page TIFF file using the 8‑bit color depth setting
             renderer.ToImage("output_8bpp.tiff");
-
-            // Clean up resources
-            renderer.Dispose();
 
             Console.WriteLine("Workbook successfully converted to 8‑bit TIFF: output_8bpp.tiff");
         }

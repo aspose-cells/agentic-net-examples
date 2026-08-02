@@ -2,62 +2,43 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ExportChartsToPdf
+class ExportChartsToPdf
 {
-    // Custom globalization settings for charts
-    public class CustomChartGlobalizationSettings : ChartGlobalizationSettings
+    static void Main()
     {
-        // Example: customize axis unit names
-        public override string GetAxisUnitName(DisplayUnitType type)
+        // Load the workbook containing charts
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Create custom chart globalization settings
+        var chartSettings = new SettableChartGlobalizationSettings();
+        chartSettings.SetChartTitleName("Custom Chart Title");
+        chartSettings.SetSeriesName("Custom Series");
+        chartSettings.SetLegendIncreaseName("Increase");
+        chartSettings.SetLegendDecreaseName("Decrease");
+
+        // Apply the custom globalization settings to the workbook
+        workbook.Settings.GlobalizationSettings = new GlobalizationSettings
         {
-            switch (type)
-            {
-                case DisplayUnitType.Hundreds:
-                    return "Hundreds_Custom";
-                case DisplayUnitType.Thousands:
-                    return "Thousands_Custom";
-                case DisplayUnitType.TenThousands:
-                    return "TenThousands_Custom";
-                default:
-                    return base.GetAxisUnitName(type);
-            }
-        }
+            ChartSettings = chartSettings
+        };
 
-        // Additional overrides can be added as needed
-    }
-
-    public class Program
-    {
-        public static void Main()
+        // Iterate through all worksheets and their charts
+        for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Worksheet sheet = workbook.Worksheets[wsIndex];
 
-            // Apply custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+            for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
             {
-                ChartSettings = new CustomChartGlobalizationSettings()
-            };
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Iterate through all worksheets
-            for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
-            {
-                Worksheet sheet = workbook.Worksheets[wsIndex];
+                // Generate a unique PDF file name for each chart
+                string pdfFileName = $"{sheet.Name}_Chart{chartIndex + 1}.pdf";
 
-                // Iterate through all charts in the current worksheet
-                for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
-                {
-                    Chart chart = sheet.Charts[chartIndex];
+                // Export the chart to a PDF file, preserving the custom globalization settings
+                chart.ToPdf(pdfFileName);
 
-                    // Build a unique PDF file name for each chart
-                    string pdfFileName = $"Chart_Sheet{wsIndex + 1}_Chart{chartIndex + 1}.pdf";
-
-                    // Export the chart to PDF while preserving the custom globalization settings
-                    chart.ToPdf(pdfFileName);
-                }
+                Console.WriteLine($"Exported chart {chartIndex + 1} from sheet '{sheet.Name}' to '{pdfFileName}'.");
             }
-
-            Console.WriteLine("All charts have been exported to separate PDF files.");
         }
     }
 }

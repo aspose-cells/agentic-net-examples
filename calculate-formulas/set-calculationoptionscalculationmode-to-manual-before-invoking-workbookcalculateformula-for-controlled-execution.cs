@@ -5,34 +5,30 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet and add sample data and formulas
         Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue(5);               // Simple value
+        sheet.Cells["B1"].Formula = "=A1*2";         // Dependent formula
+        sheet.Cells["C1"].Formula = "=B1+10";        // Another dependent formula
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["A2"].PutValue(10);
-
-        // Add a formula that depends on the data above
-        sheet.Cells["B1"].Formula = "=A1+A2";
-
-        // ------------------------------------------------------------
-        // Set the calculation mode to Manual so that formulas are NOT
-        // calculated automatically. This setting is stored in the
-        // FormulaSettings of the workbook.
-        // ------------------------------------------------------------
+        // Set the calculation mode to Manual so formulas are not auto‑calculated
         workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-        // Create a CalculationOptions instance (optional, can be customized)
+        // Create calculation options (default settings are fine for this example)
         CalculationOptions calcOptions = new CalculationOptions();
 
-        // Explicitly trigger formula calculation now that the mode is Manual
+        // Explicitly calculate all formulas using the options
         workbook.CalculateFormula(calcOptions);
 
-        // Display the calculated result
-        Console.WriteLine("Result of B1: " + sheet.Cells["B1"].IntValue);
+        // Display the calculated results
+        Console.WriteLine("A1 value: " + sheet.Cells["A1"].IntValue);
+        Console.WriteLine("B1 value (A1*2): " + sheet.Cells["B1"].IntValue);
+        Console.WriteLine("C1 value (B1+10): " + sheet.Cells["C1"].IntValue);
 
-        // Save the workbook (the calculation mode setting will be persisted)
-        workbook.Save("ManualCalculationDemo.xlsx");
+        // Save the workbook to verify the results are persisted
+        workbook.Save("ManualCalculationResult.xlsx");
     }
 }

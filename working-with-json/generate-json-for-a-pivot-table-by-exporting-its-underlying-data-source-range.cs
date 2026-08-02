@@ -3,66 +3,90 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Utility;
+using Aspose.Cells.Json; // Ensure JsonSaveOptions namespace
+using AsposeRange = Aspose.Cells.Range;
 
-class ExportPivotSourceToJson
+namespace AsposeCellsPivotJsonExport
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
-
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
-            dataSheet.Cells["A2"].PutValue("Food");
-            dataSheet.Cells["B2"].PutValue(100);
-            dataSheet.Cells["A3"].PutValue("Drink");
-            dataSheet.Cells["B3"].PutValue(150);
-            dataSheet.Cells["A4"].PutValue("Food");
-            dataSheet.Cells["B4"].PutValue(200);
-
-            // Add a worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-            // Create a pivot table based on the data range
-            string sourceData = "Data!A1:B4";
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "MyPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-            pivotTable.CalculateData();
-
-            // Retrieve the underlying data source range string from the pivot table
-            string[] sourceArray = pivotTable.GetSource(); // e.g., ["A1:B4"]
-            if (sourceArray.Length > 0)
+            try
             {
-                // Build a Range object on the original data worksheet
-                Aspose.Cells.Range dataRange = dataSheet.Cells.CreateRange(sourceArray[0]);
+                // Create a new workbook and get the first worksheet (data sheet)
+                Workbook workbook = new Workbook();
+                Worksheet dataSheet = workbook.Worksheets[0];
+                dataSheet.Name = "Data";
+
+                // Populate sample data for the pivot table source
+                dataSheet.Cells["A1"].PutValue("Product");
+                dataSheet.Cells["B1"].PutValue("Region");
+                dataSheet.Cells["C1"].PutValue("Sales");
+                dataSheet.Cells["A2"].PutValue("Product1");
+                dataSheet.Cells["B2"].PutValue("North");
+                dataSheet.Cells["C2"].PutValue(1000);
+                dataSheet.Cells["A3"].PutValue("Product2");
+                dataSheet.Cells["B3"].PutValue("South");
+                dataSheet.Cells["C3"].PutValue(2000);
+                dataSheet.Cells["A4"].PutValue("Product1");
+                dataSheet.Cells["B4"].PutValue("East");
+                dataSheet.Cells["C4"].PutValue(1500);
+
+                // Add a new worksheet to host the pivot table
+                Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+
+                // Create a pivot table using the data range from the data sheet
+                // Note: source string must be prefixed with the sheet name and an '=' sign
+                string sourceData = $"=Data!A1:C4";
+                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "SalesPivot");
+                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+
+                // Configure the pivot table fields
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+                // Populate the pivot table with calculated data
+                pivotTable.CalculateData();
+
+                // Retrieve the underlying data source range of the pivot table
+                // GetSource returns an array of strings; the first element contains the range address
+                string[] sourceRangeStrings = pivotTable.GetSource();
+                if (sourceRangeStrings.Length == 0)
+                {
+                    Console.WriteLine("Pivot table source not found.");
+                    return;
+                }
+
+                // Create a Range object from the source address (e.g., "A1:C4")
+                AsposeRange sourceRange = dataSheet.Cells.CreateRange(sourceRangeStrings[0]);
 
                 // Set JSON export options
                 JsonSaveOptions jsonOptions = new JsonSaveOptions
                 {
-                    HasHeaderRow = true,
-                    ExportEmptyCells = true
+                    HasHeaderRow = true,          // First row contains column names
+                    ExportEmptyCells = true,      // Include empty cells in the output
+                    ExportNestedStructure = false // Flat JSON array
                 };
 
                 // Export the range to a JSON string
-                string json = JsonUtility.ExportRangeToJson(dataRange, jsonOptions);
+                string jsonResult = JsonUtility.ExportRangeToJson(sourceRange, jsonOptions);
 
-                // Output the JSON result
-                Console.WriteLine(json);
+                // Output the JSON string
+                Console.WriteLine("Exported JSON:");
+                Console.WriteLine(jsonResult);
+
+                // Optionally, save the workbook (not required for JSON export)
+                string outputPath = "PivotTableWithJsonExport.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Save the workbook (optional, not required for JSON export)
-            string outputPath = "PivotExportDemo.xlsx";
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

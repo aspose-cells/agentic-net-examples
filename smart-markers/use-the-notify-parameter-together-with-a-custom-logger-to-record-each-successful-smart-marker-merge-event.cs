@@ -1,67 +1,81 @@
 using System;
 using System.Data;
 using Aspose.Cells;
+using Aspose.Cells.Markup;
 
-// Simple logger that writes messages to the console
-class SmartMarkerLogger
+namespace AsposeCellsSmartMarkerLogging
 {
-    public void Log(string message)
+    // Simple logger that records messages to the console.
+    public class CustomLogger
     {
-        Console.WriteLine(message);
-    }
-}
-
-// Callback implementation that logs each smart‑marker merge event
-class SmartMarkerCallback : ISmartMarkerCallBack
-{
-    private readonly SmartMarkerLogger _logger;
-
-    public SmartMarkerCallback(SmartMarkerLogger logger)
-    {
-        _logger = logger;
+        public void Log(string message)
+        {
+            Console.WriteLine($"[SmartMarkerLog] {DateTime.Now:O} - {message}");
+        }
     }
 
-    // This method is invoked by WorkbookDesigner for every smart marker it processes
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+    // Callback implementation that is invoked for each smart marker processed.
+    public class SmartMarkerLoggerCallback : ISmartMarkerCallBack
     {
-        _logger.Log($"Smart marker merged – Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}");
+        private readonly CustomLogger _logger;
+
+        public SmartMarkerLoggerCallback(CustomLogger logger)
+        {
+            _logger = logger;
+        }
+
+        // This method is called by Aspose.Cells for every smart marker merge.
+        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+        {
+            // Build a descriptive message and log it.
+            string cellAddress = CellsHelper.CellIndexToName(rowIndex, colIndex);
+            string message = $"Merged smart marker at Sheet[{sheetIndex}] Cell[{cellAddress}] " +
+                             $"Table=\"{tableName}\" Column=\"{columnName}\".";
+            _logger.Log(message);
+        }
     }
-}
 
-class Program
-{
-    static void Main()
+    public class Program
     {
-        // ---------- Create a workbook with smart markers ----------
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            // Initialize logger.
+            CustomLogger logger = new CustomLogger();
 
-        // Insert sample smart markers
-        sheet.Cells["A1"].PutValue("&=Employees.Name");
-        sheet.Cells["B1"].PutValue("&=Employees.Age");
+            // Create a new workbook that will act as a template.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // ---------- Prepare a data source ----------
-        DataTable employees = new DataTable("Employees");
-        employees.Columns.Add("Name", typeof(string));
-        employees.Columns.Add("Age", typeof(int));
-        employees.Rows.Add("Alice", 30);
-        employees.Rows.Add("Bob", 28);
+            // Insert smart markers into the template.
+            // &=$Products.Name and &=$Products.Price will be replaced during processing.
+            cells["A1"].PutValue("&=$Products.Name");
+            cells["B1"].PutValue("&=$Products.Price");
 
-        // ---------- Set up logger and callback ----------
-        SmartMarkerLogger logger = new SmartMarkerLogger();
-        SmartMarkerCallback callback = new SmartMarkerCallback(logger);
+            // Prepare a data source (DataTable) matching the smart markers.
+            DataTable productTable = new DataTable("Products");
+            productTable.Columns.Add("Name", typeof(string));
+            productTable.Columns.Add("Price", typeof(double));
+            productTable.Rows.Add("Apple", 1.20);
+            productTable.Rows.Add("Banana", 0.80);
+            productTable.Rows.Add("Cherry", 2.50);
 
-        // ---------- Configure WorkbookDesigner ----------
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = workbook;          // assign workbook
-        designer.CallBack = callback;          // assign custom callback
-        designer.SetDataSource(employees);     // set data source
+            // Set up the WorkbookDesigner.
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook,
+                // Assign the custom callback to capture merge events.
+                CallBack = new SmartMarkerLoggerCallback(logger)
+            };
 
-        // ---------- Process smart markers ----------
-        // The callback will be triggered for each successful merge
-        designer.Process();
+            // Register the data source.
+            designer.SetDataSource(productTable);
 
-        // ---------- Save the result ----------
-        workbook.Save("SmartMarkerOutput.xlsx");
+            // Process all smart markers in the workbook.
+            designer.Process();
+
+            // Save the resulting workbook.
+            workbook.Save("SmartMarkerMergedOutput.xlsx");
+        }
     }
 }

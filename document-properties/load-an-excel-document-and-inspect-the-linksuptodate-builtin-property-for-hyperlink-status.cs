@@ -6,7 +6,7 @@ class InspectLinksUpToDate
 {
     static void Main()
     {
-        // Load an existing Excel workbook
+        // Load the existing Excel workbook
         Workbook workbook = new Workbook("input.xlsx");
 
         // Access the built‑in document properties collection

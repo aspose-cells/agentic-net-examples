@@ -1,66 +1,57 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsContentTypeReport
 {
-    public class ExportContentTypePropertyNamesToCsv
+    class Program
     {
-        public static void Run(string workbookPath, string csvOutputPath)
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string csvPath = "ContentTypePropertiesReport.csv";
+
             try
             {
-                // Verify input workbook exists
-                if (!File.Exists(workbookPath))
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(workbookPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Ensure output directory exists
-                string outDir = Path.GetDirectoryName(csvOutputPath);
-                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                // Ensure the directory for the CSV file exists
+                string csvDir = Path.GetDirectoryName(csvPath);
+                if (!string.IsNullOrEmpty(csvDir) && !Directory.Exists(csvDir))
                 {
-                    Directory.CreateDirectory(outDir);
+                    Directory.CreateDirectory(csvDir);
                 }
 
-                // Write each ContentTypeProperty name to the CSV file
-                using (StreamWriter writer = new StreamWriter(csvOutputPath))
+                // Prepare the CSV file for writing the report
+                using (StreamWriter writer = new StreamWriter(csvPath))
                 {
-                    foreach (ContentTypeProperty property in workbook.ContentTypeProperties)
+                    // Write header
+                    writer.WriteLine("PropertyName");
+
+                    // Iterate through custom document properties (used as content‑type properties)
+                    var enumerator = workbook.CustomDocumentProperties.GetEnumerator();
+                    while (enumerator.MoveNext())
                     {
-                        writer.WriteLine(property.Name);
+                        // Use dynamic to access the Name property without explicit type reference
+                        dynamic prop = enumerator.Current;
+                        writer.WriteLine(prop.Name);
                     }
                 }
 
-                Console.WriteLine($"Content type property names exported to: {csvOutputPath}");
+                Console.WriteLine($"Content type property names have been exported to '{csvPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            // Expect two arguments: input workbook path and output CSV path
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: AsposeCellsRunner <workbookPath> <csvOutputPath>");
-                return;
-            }
-
-            string workbookPath = args[0];
-            string csvOutputPath = args[1];
-
-            ExportContentTypePropertyNamesToCsv.Run(workbookPath, csvOutputPath);
         }
     }
 }

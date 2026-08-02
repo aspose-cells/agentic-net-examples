@@ -12,7 +12,7 @@ namespace AsposeCellsSubtotalValidation
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Populate some sample data (required for Subtotal to process)
+            // Populate some sample data (required for Subtotal call)
             cells["A1"].PutValue("Category");
             cells["B1"].PutValue("Value");
             for (int i = 2; i <= 5; i++)
@@ -21,19 +21,19 @@ namespace AsposeCellsSubtotalValidation
                 cells[$"B{i}"].PutValue(i * 100);
             }
 
-            // Define a CellArea where StartRow is greater than EndRow (invalid range)
+            // Define an invalid CellArea where StartRow > EndRow
             CellArea invalidArea = new CellArea
             {
-                StartRow = 10,   // Intentionally larger
-                EndRow = 5,      // Smaller than StartRow
+                StartRow = 5,   // Row index 5 (6th row)
+                EndRow = 3,     // Row index 3 (4th row) -> invalid
                 StartColumn = 0,
                 EndColumn = 1
             };
 
             try
             {
-                // Attempt to apply Subtotal on the invalid area.
-                // This should throw an exception because the range is invalid.
+                // Attempt to create subtotals with the invalid range
+                // This should throw an exception
                 cells.Subtotal(
                     invalidArea,
                     groupBy: 0,                     // Group by first column
@@ -50,8 +50,8 @@ namespace AsposeCellsSubtotalValidation
                 Console.WriteLine(ex.Message);
             }
 
-            // Save the workbook (optional, just to follow lifecycle rules)
-            workbook.Save("SubtotalValidationResult.xlsx");
+            // Save the workbook (even though subtotal failed, the file is still valid)
+            workbook.Save("SubtotalInvalidRange.xlsx");
         }
     }
 }

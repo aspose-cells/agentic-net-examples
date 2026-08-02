@@ -1,35 +1,64 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-class ExternalLinkAudit
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class ExternalLinkAuditDemo
     {
-        // Load the workbook that contains external links
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through each external link in the workbook
-        for (int i = 0; i < workbook.Worksheets.ExternalLinks.Count; i++)
+        public static void Run()
         {
-            ExternalLink link = workbook.Worksheets.ExternalLinks[i];
+            const string inputPath = "InputWithExternalLinks.xlsx";
+            const string outputPath = "OutputWithUpdatedLinks.xlsx";
 
-            // Log the original external link path
-            string originalPath = link.OriginalDataSource;
-            Console.WriteLine($"External Link {i} - Original Path: {originalPath}");
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-            // Example modification: replace an old base URL with a new one
-            string updatedPath = originalPath.Replace(
-                @"https://oldserver.com/",
-                @"/new/shared/documents/");
+                // Load the workbook that contains external links
+                Workbook workbook = new Workbook(inputPath);
 
-            // Update the stored original data source with the new path
-            link.OriginalDataSource = updatedPath;
+                // Iterate through each external link in the workbook
+                for (int i = 0; i < workbook.Worksheets.ExternalLinks.Count; i++)
+                {
+                    ExternalLink link = workbook.Worksheets.ExternalLinks[i];
 
-            // Log the updated external link path
-            Console.WriteLine($"External Link {i} - Updated Path: {link.OriginalDataSource}");
+                    // Capture the original external link path for auditing
+                    string originalPath = link.OriginalDataSource;
+
+                    // Example transformation: replace an old base URL with a new one
+                    string updatedPath = originalPath.Replace(
+                        @"https://oldserver.com/files/",
+                        @"/shared/files/");
+
+                    // Update the external link with the new path
+                    link.OriginalDataSource = updatedPath;
+
+                    // Log the original and updated paths
+                    Console.WriteLine($"External Link {i}:");
+                    Console.WriteLine($"  Original Path: {originalPath}");
+                    Console.WriteLine($"  Updated Path : {updatedPath}");
+                }
+
+                // Save the workbook after updating the external links
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
-        // Save the workbook after modifications
-        workbook.Save("output.xlsx");
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
+        }
     }
 }

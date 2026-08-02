@@ -1,63 +1,78 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace ConditionalFormattingSmartMarkers
+namespace ConditionalFormattingSmartMarkerDemo
 {
+    // Simple data class used as a data source for smart markers
+    public class Product
+    {
+        public string Name { get; set; }
+        public double Price { get; set; }
+    }
+
     class Program
     {
         static void Main()
         {
-            // Load the template workbook that contains smart markers and conditional formatting.
-            // The template file should have smart markers like "&=Data.Name" placed in cells
-            // and a conditional formatting rule already defined on the target range.
-            Workbook templateWorkbook = new Workbook("TemplateWithSmartMarkers.xlsx");
+            // 1. Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Prepare a data source that matches the smart marker name "Data".
-            DataTable dataTable = new DataTable("Data");
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Score", typeof(double));
+            // 2. Add header cells with smart markers that will be populated from the data source
+            //    The smart marker syntax "&=Products.Name" and "&=Products.Price" will be replaced.
+            sheet.Cells["A1"].PutValue("Product Name");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("&=Products.Name");
+            sheet.Cells["B2"].PutValue("&=Products.Price");
 
-            // Sample rows – these values will replace the smart markers.
-            dataTable.Rows.Add("Alice", 85.5);
-            dataTable.Rows.Add("Bob", 72.0);
-            dataTable.Rows.Add("Charlie", 91.2);
+            // 3. Define a conditional formatting rule that highlights prices greater than 50
+            //    The rule will be applied to the range B2:B10 (where prices will be inserted).
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
 
-            // Set up the WorkbookDesigner with the loaded workbook.
-            WorkbookDesigner designer = new WorkbookDesigner
+            // Define the area for the conditional formatting
+            CellArea priceArea = new CellArea
             {
-                Workbook = templateWorkbook
+                StartRow = 1,   // Row 2 (zero‑based)
+                EndRow = 9,     // Row 10
+                StartColumn = 1, // Column B
+                EndColumn = 1
+            };
+            fcs.AddArea(priceArea);
+
+            // Add a condition: CellValue > 50
+            int conditionIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+            FormatCondition priceCondition = fcs[conditionIdx];
+            priceCondition.Style.BackgroundColor = System.Drawing.Color.LightSalmon;
+            priceCondition.Style.Font.Color = System.Drawing.Color.Black;
+
+            // 4. Prepare sample data source
+            List<Product> products = new List<Product>
+            {
+                new Product { Name = "Apple", Price = 30 },
+                new Product { Name = "Banana", Price = 55 },
+                new Product { Name = "Cherry", Price = 70 },
+                new Product { Name = "Date", Price = 45 }
             };
 
-            // Bind the data source to the smart marker name.
-            designer.SetDataSource("Data", dataTable);
-
-            // Process the smart markers. This will populate the cells with the data
-            // while preserving any existing conditional formatting rules.
-            designer.Process();
-
-            // OPTIONAL: Verify that the conditional formatting rules are still present
-            // and, for demonstration, adjust the priority of the first rule.
-            Worksheet sheet = designer.Workbook.Worksheets[0];
-            if (sheet.ConditionalFormattings.Count > 0)
+            // 5. Set up WorkbookDesigner, bind the data source, and process smart markers
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                // Get the first ConditionalFormatting collection.
-                FormatConditionCollection conditions = sheet.ConditionalFormattings[0];
+                Workbook = workbook
+            };
+            designer.SetDataSource("Products", products);
+            designer.Process(); // processes all smart markers in the workbook
 
-                // Iterate through all conditions in this collection.
-                for (int i = 0; i < conditions.Count; i++)
-                {
-                    FormatCondition fc = conditions[i];
-                    // Example: set higher priority (lower numeric value) for the first rule.
-                    if (i == 0)
-                    {
-                        fc.Priority = 1; // highest priority
-                    }
-                }
+            // 6. (Optional) Verify that smart markers have been replaced and conditional formatting is intact
+            Console.WriteLine("Smart markers after processing:");
+            foreach (string marker in designer.GetSmartMarkers())
+            {
+                Console.WriteLine(marker);
             }
 
-            // Save the processed workbook. The conditional formatting remains intact.
-            designer.Workbook.Save("ProcessedOutput.xlsx");
+            // 7. Save the resulting workbook
+            workbook.Save("ConditionalFormattingWithSmartMarkers.xlsx");
         }
     }
 }

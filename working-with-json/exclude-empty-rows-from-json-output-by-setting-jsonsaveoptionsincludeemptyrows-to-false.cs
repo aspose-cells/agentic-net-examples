@@ -10,22 +10,23 @@ namespace AsposeCellsJsonExample
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
             // Populate data with an empty row (row index 2)
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue("Data1");
-            sheet.Cells["B2"].PutValue("Data2");
+            cells["A1"].PutValue("Header1");
+            cells["B1"].PutValue("Header2");
+            cells["A2"].PutValue("Data1");
+            cells["B2"].PutValue("Data2");
             // Row 3 (index 2) left empty intentionally
-            sheet.Cells["A4"].PutValue("Data3");
-            sheet.Cells["B4"].PutValue("Data4");
+            cells["A4"].PutValue("Data3");
+            cells["B4"].PutValue("Data4");
 
             // Configure JSON save options to skip empty rows
             JsonSaveOptions jsonOptions = new JsonSaveOptions
             {
-                // When SkipEmptyRows is true, empty rows are omitted from the output
+                // When SkipEmptyRows is true, empty rows are excluded from the output
                 SkipEmptyRows = true
             };
 

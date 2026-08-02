@@ -1,100 +1,99 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
 class ContentTypePropertiesReport
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        try
+        // Folder containing the workbooks to scan.
+        string folderPath = @"C:\Workbooks";
+
+        // Ensure the folder exists.
+        if (!Directory.Exists(folderPath))
         {
-            // Folder containing the workbooks to be inspected
-            string folderPath = @"C:\Workbooks";
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
+        }
 
-            // Output CSV file for the report
-            string reportPath = @"C:\Report\ContentTypePropertiesReport.csv";
+        // Output CSV file.
+        string reportPath = Path.Combine(folderPath, "ContentTypePropertiesReport.csv");
 
-            // Prepare a list to hold report lines (CSV header + data)
-            List<string> reportLines = new List<string>
+        // Prepare CSV header.
+        var sb = new StringBuilder();
+        sb.AppendLine("Workbook,PropertyName,IsNillable");
+
+        // Enumerate all Excel files in the folder (including subfolders).
+        foreach (string file in Directory.GetFiles(folderPath, "*.xlsx", SearchOption.AllDirectories))
+        {
+            // Ensure the file actually exists.
+            if (!File.Exists(file))
+                continue;
+
+            try
             {
-                "Workbook,PropertyName,PropertyType,PropertyValue,IsNillable"
-            };
-
-            // Get all Excel files in the folder
-            string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            foreach (string filePath in workbookFiles)
-            {
-                // Ensure the file still exists before attempting to load
-                if (!File.Exists(filePath))
-                    continue;
-
-                try
+                // Load the workbook. If the file is password‑protected,
+                // Aspose.Cells throws a CellsException.
+                var loadOptions = new LoadOptions();
+                using (Workbook wb = new Workbook(file, loadOptions))
                 {
-                    // Load the workbook (no password; if required, the exception will be caught)
-                    using (Workbook workbook = new Workbook(filePath))
+                    bool hasMissingFlag = false;
+
+                    // Iterate through all content type properties.
+                    for (int i = 0; i < wb.ContentTypeProperties.Count; i++)
                     {
-                        // Access the collection of ContentTypeProperty objects
-                        ContentTypePropertyCollection ctProps = workbook.ContentTypeProperties;
+                        var prop = wb.ContentTypeProperties[i]; // Use var to avoid explicit type issues.
 
-                        // Iterate through each property
-                        for (int i = 0; i < ctProps.Count; i++)
+                        // Record properties where IsNillable is false.
+                        if (!prop.IsNillable)
                         {
-                            ContentTypeProperty prop = ctProps[i];
-
-                            // If IsNillable is false, consider it "lacking the IsNillable flag"
-                            if (!prop.IsNillable)
-                            {
-                                string line = string.Format(
-                                    "\"{0}\",\"{1}\",\"{2}\",\"{3}\",{4}",
-                                    Path.GetFileName(filePath),
-                                    prop.Name,
-                                    prop.Type,
-                                    prop.Value?.Replace("\"", "\"\""),
-                                    prop.IsNillable);
-
-                                reportLines.Add(line);
-                            }
+                            hasMissingFlag = true;
+                            sb.AppendLine($"{Path.GetFileName(file)},{prop.Name},{prop.IsNillable}");
                         }
                     }
-                }
-                catch (CellsException ex)
-                {
-                    // Detect password‑protected files via message content
-                    if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+
+                    // Handle workbooks with no ContentTypeProperties.
+                    if (wb.ContentTypeProperties.Count == 0)
                     {
-                        Console.WriteLine($"Skipped password‑protected workbook: {Path.GetFileName(filePath)}");
+                        sb.AppendLine($"{Path.GetFileName(file)},<No ContentTypeProperties>,");
                     }
-                    else
+                    else if (!hasMissingFlag)
                     {
-                        Console.WriteLine($"CellsException processing '{Path.GetFileName(filePath)}': {ex.Message}");
+                        // All properties are nillable.
+                        sb.AppendLine($"{Path.GetFileName(file)},<All IsNillable>,True");
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Handle other unexpected errors gracefully
-                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
                 }
             }
-
-            // Ensure the output directory exists
-            string? reportDir = Path.GetDirectoryName(reportPath);
-            if (!string.IsNullOrEmpty(reportDir))
+            catch (CellsException ex)
             {
-                Directory.CreateDirectory(reportDir);
+                // Password‑protected files throw a CellsException whose message contains
+                // the word "Password". Treat them as such.
+                if (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    sb.AppendLine($"{Path.GetFileName(file)},<Password Protected>,");
+                }
+                else
+                {
+                    sb.AppendLine($"{Path.GetFileName(file)},<CellsException: {ex.Message}>,");
+                }
             }
+            catch (Exception ex)
+            {
+                // Log any other unexpected errors and continue processing.
+                sb.AppendLine($"{Path.GetFileName(file)},<Error: {ex.Message}>,");
+            }
+        }
 
-            // Write all lines to the CSV file
-            File.WriteAllLines(reportPath, reportLines);
-
-            Console.WriteLine("Report generated at: " + reportPath);
+        // Write the CSV report to disk.
+        try
+        {
+            File.WriteAllText(reportPath, sb.ToString());
+            Console.WriteLine($"Report generated: {reportPath}");
         }
         catch (Exception ex)
         {
-            // Top‑level safety net
-            Console.WriteLine("Fatal error: " + ex.Message);
+            Console.WriteLine($"Failed to write report: {ex.Message}");
         }
     }
 }

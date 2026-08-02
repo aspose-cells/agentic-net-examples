@@ -2,37 +2,44 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class ChangeChartTypeAndExportPdf
+namespace AsposeCellsChartTypeChange
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Fruits");
-        worksheet.Cells["A3"].PutValue("Vegetables");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(50);
-        worksheet.Cells["B3"].PutValue(30);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a column chart (initial type)
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Fruits");
+            sheet.Cells["A3"].PutValue("Vegetables");
+            sheet.Cells["A4"].PutValue("Grains");
 
-        // Set the data source for the chart
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(50);
+            sheet.Cells["B3"].PutValue(30);
+            sheet.Cells["B4"].PutValue(20);
 
-        // Change the chart type from Column to Line
-        chart.Type = ChartType.Line;
+            // Add a column chart (initial type is Column)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Export the chart to a PDF file
-        chart.ToPdf("output_line_chart.pdf");
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Save the workbook (optional, demonstrates the lifecycle rule)
-        workbook.Save("workbook_with_line_chart.xlsx");
+            // Change the chart type from Column to Line
+            chart.Type = ChartType.Line;
+
+            // Export the chart to a PDF file
+            chart.ToPdf("ChartLine.pdf");
+
+            Console.WriteLine("Chart type changed to Line and exported to PDF successfully.");
+        }
     }
 }

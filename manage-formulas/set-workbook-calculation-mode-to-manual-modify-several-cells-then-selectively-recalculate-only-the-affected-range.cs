@@ -1,60 +1,59 @@
+// Title: Aspose.Cells .NET: Manual Calculation Mode with Selective Recalculation (C# Example)
+// Description: Demonstrates how to set a workbook to manual calculation, enable the calculation chain, modify input cells, and trigger CalculateFormula so that only dependent formulas are recomputed before saving the file.
+// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | selective formula recalculation | EnableCalculationChain | CalcModeType.Manual | performance optimization | partial workbook calculation | Excel automation
+// Common Searches: Aspose.Cells set manual calculation mode C# | How to recalculate only dependent cells with Aspose.Cells | EnableCalculationChain example .NET | Selective formula evaluation Aspose.Cells | CalculateFormula specific range C# | Performance tips for large spreadsheets Aspose.Cells
+// Developer Intent: Switch workbook to manual calculation, update cells, and recalculate only affected formulas.
+// Use Cases: Speed up batch updates in large financial models by recalculating only changed formulas. | Create reporting tools that modify input data and need quick partial recalculation. | Implement server‑side Excel processing where full workbook calculation would be costly. | Run automated data imports that adjust a subset of cells without triggering full recompute.
+// AI Prompts: Provide a C# snippet that sets Aspose.Cells workbook to manual mode, enables the calculation chain, updates cells, and triggers selective recalculation. | Explain the impact of EnableCalculationChain on performance when using CalculateFormula in Aspose.Cells. | Show how to recalculate a defined cell range after changes while keeping the rest of the workbook untouched. | Give guidance on switching back to automatic calculation after selective updates in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsManualCalcDemo
+// Demonstrates how to set a workbook to manual calculation, enable the calculation chain, modify input cells, and trigger CalculateFormula so that only dependent formulas are recomputed before saving the file.
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // -----------------------------------------------------------------
+        // Set up initial data and formulas
+        // -----------------------------------------------------------------
+        sheet.Cells["A1"].PutValue(1);
+        sheet.Cells["A2"].PutValue(2);
+        sheet.Cells["A3"].PutValue(3);
 
-            // -------------------------------------------------
-            // Configure formula settings
-            // -------------------------------------------------
-            // Set calculation mode to Manual
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+        // Formulas that depend on the values in column A
+        sheet.Cells["B1"].Formula = "=A1*10";
+        sheet.Cells["B2"].Formula = "=A2*10";
+        sheet.Cells["C1"].Formula = "=SUM(B1:B2)";
 
-            // Enable calculation chain to allow selective recalculation
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+        // -----------------------------------------------------------------
+        // Configure calculation settings
+        // -----------------------------------------------------------------
+        // Switch to manual calculation mode
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-            // Optional: prevent automatic calculation on save
-            workbook.Settings.FormulaSettings.CalculateOnSave = false;
+        // Enable calculation chain so that only dependent cells are recalculated
+        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
 
-            // -------------------------------------------------
-            // Add initial data and formulas
-            // -------------------------------------------------
-            cells["A1"].PutValue(10);               // Input value
-            cells["A2"].PutValue(20);               // Input value
-            cells["B1"].Formula = "=A1*2";          // Dependent formula
-            cells["B2"].Formula = "=A2*3";          // Dependent formula
-            cells["C1"].Formula = "=B1+B2";         // Formula depending on B1 and B2
+        // Perform an initial calculation to build the chain
+        workbook.CalculateFormula();
 
-            // Initial calculation (required to build the calculation chain)
-            workbook.CalculateFormula();
+        // -----------------------------------------------------------------
+        // Modify cells that affect formulas
+        // -----------------------------------------------------------------
+        sheet.Cells["A1"].PutValue(5); // Affects B1 and consequently C1
+        sheet.Cells["A2"].PutValue(7); // Affects B2 and consequently C1
 
-            // -------------------------------------------------
-            // Modify a subset of cells
-            // -------------------------------------------------
-            cells["A1"].PutValue(15);   // Change only A1; only B1 and C1 should be recalculated
-            cells["A2"].PutValue(25);   // Change only A2; only B2 and C1 should be recalculated
+        // Recalculate only the cells that depend on the changed values
+        workbook.CalculateFormula();
 
-            // -------------------------------------------------
-            // Selectively recalculate affected formulas
-            // -------------------------------------------------
-            // Because EnableCalculationChain is true, this call recalculates only the cells
-            // whose values depend on the modified cells.
-            workbook.CalculateFormula();
-
-            // -------------------------------------------------
-            // Save the workbook (lifecycle rule: save)
-            // -------------------------------------------------
-            workbook.Save("ManualCalcSelectiveRecalc.xlsx", SaveFormat.Xlsx);
-        }
+        // -----------------------------------------------------------------
+        // Save the workbook
+        // -----------------------------------------------------------------
+        workbook.Save("ManualCalcSelective.xlsx");
     }
 }

@@ -1,62 +1,72 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+namespace SubtotalExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // ------------------------------------------------------------
+            // Sample data (optional). In a real scenario the data would already exist.
+            // Header row
+            cells["A1"].PutValue("Group");      // Column A – grouping field
+            cells["B1"].PutValue("Item");
+            cells["C1"].PutValue("Quantity");
+            cells["D1"].PutValue("Amount");     // Column D – values to subtotal
+
+            // Populate rows 2‑100 with dummy data
+            for (int row = 1; row < 100; row++)          // zero‑based index: row 1 = Excel row 2
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Sample data (rows 2‑100) – column D will be summed
-                for (int row = 1; row < 100; row++) // zero‑based index: row 1 = Excel row 2
+                // Alternate groups for demonstration (e.g., "A", "B", "C")
+                string group = ((row - 1) / 10 % 3) switch
                 {
-                    // Group column A (replace with your own grouping logic)
-                    cells[row, 0].PutValue(row % 5 == 0 ? "GroupB" : "GroupA");
-                    // Column D (index 3) contains numeric values to be subtotaled
-                    cells[row, 3].PutValue(row * 10);
-                }
-
-                // Define the range that includes rows 2‑100 and columns A‑D
-                CellArea area = new CellArea
-                {
-                    StartRow = 1,      // Excel row 2
-                    StartColumn = 0,   // Column A
-                    EndRow = 99,       // Excel row 100
-                    EndColumn = 3      // Column D
+                    0 => "A",
+                    1 => "B",
+                    _ => "C"
                 };
-
-                // Apply subtotals:
-                // - Group by column A (index 0)
-                // - Use SUM function
-                // - Subtotal column D (index 3)
-                // - Do not replace existing subtotals, no page breaks, place summary below each group
-                cells.Subtotal(
-                    area,
-                    0,                                 // groupBy column index
-                    ConsolidationFunction.Sum,         // subtotal function
-                    new int[] { 3 },                   // totalList – column D
-                    false,                             // replace existing subtotals
-                    false,                             // add page breaks between groups
-                    true                               // place summary below the data
-                );
-
-                // Save the workbook
-                string outputPath = "SubtotalResult.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                cells[row, 0].PutValue(group);          // Group column
+                cells[row, 1].PutValue($"Item {row}");
+                cells[row, 2].PutValue(row * 2);        // Quantity
+                cells[row, 3].PutValue(row * 5.5);      // Amount (column D)
             }
-            catch (Exception ex)
+
+            // ------------------------------------------------------------
+            // Define the range that contains the data (including header)
+            // StartRow = 0 (row 1), StartColumn = 0 (A), EndRow = 99 (row 100), EndColumn = 3 (D)
+            CellArea area = new CellArea
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 99,
+                EndColumn = 3
+            };
+
+            // Apply subtotals:
+            // - Group by the first column (index 0, "Group")
+            // - Use SUM function
+            // - Subtotal column D (zero‑based index 3)
+            // - Replace existing subtotals (false = keep existing, true = replace)
+            // - No page breaks between groups
+            // - Place summary rows below each group (true)
+            cells.Subtotal(
+                area,
+                0,                                 // groupBy column index
+                ConsolidationFunction.Sum,         // subtotal function
+                new int[] { 3 },                   // columns to subtotal (D)
+                true,                              // replace existing subtotals
+                false,                             // no page breaks
+                true                               // summary below data
+            );
+
+            // ------------------------------------------------------------
+            // Save the workbook
+            workbook.Save("SubtotalResult.xlsx");
         }
     }
 }

@@ -25,7 +25,7 @@ class ExportChartAsPng
         sheet.Cells["B3"].PutValue(800);
         sheet.Cells["B4"].PutValue(1500);
 
-        // Add a column chart
+        // Add a column chart to the worksheet
         int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIndex];
 
@@ -33,13 +33,16 @@ class ExportChartAsPng
         chart.SetChartDataRange("A1:B4", true);
 
         // Ensure the output directory exists
-        string outputDir = Path.Combine(Environment.CurrentDirectory, "output");
-        Directory.CreateDirectory(outputDir);
+        string outputFolder = "output";
+        Directory.CreateDirectory(outputFolder);
+
+        // Define the full path for the PNG image
+        string imagePath = Path.Combine(outputFolder, "ChartImage.png");
 
         // Export the chart as a PNG image
-        string imagePath = Path.Combine(outputDir, "ChartImage.png");
         chart.ToImage(imagePath, ImageType.Png);
 
-        Console.WriteLine($"Chart exported successfully to: {imagePath}");
+        // (Optional) Save the workbook for reference
+        workbook.Save(Path.Combine(outputFolder, "Workbook.xlsx"));
     }
 }

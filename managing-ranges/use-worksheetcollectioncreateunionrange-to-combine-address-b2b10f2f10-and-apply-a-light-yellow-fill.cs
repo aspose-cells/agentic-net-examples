@@ -1,6 +1,6 @@
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
 class Program
 {
@@ -9,21 +9,18 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Get the worksheet collection
-        WorksheetCollection sheets = workbook.Worksheets;
-
         // Create a union range that combines B2:B10 and F2:F10 on the first worksheet (index 0)
-        UnionRange unionRange = sheets.CreateUnionRange("B2:B10,F2:F10", 0);
+        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("B2:B10,F2:F10", 0);
 
-        // Create a style with a solid light yellow fill
+        // Define a style with a light yellow background fill
         Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
         style.ForegroundColor = Color.LightYellow;
+        style.Pattern = BackgroundType.Solid;
 
-        // Apply the style to the union range (only the fill)
+        // Apply only the cell shading part of the style to the union range
         unionRange.ApplyStyle(style, new StyleFlag { CellShading = true });
 
-        // Save the workbook
+        // Save the workbook to visualize the result
         workbook.Save("UnionRangeLightYellow.xlsx");
     }
 }

@@ -1,32 +1,35 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
 class WorksheetToPng
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        var workbook = new Workbook("input.xlsx");
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-        // Get the first worksheet (index 0)
-        var worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set image rendering options – PNG format, default resolution
-        var options = new ImageOrPrintOptions
-        {
-            ImageType = Aspose.Cells.Drawing.ImageType.Png
-        };
+        // Optional: add some data to the sheet
+        sheet.Cells["A1"].PutValue("Sample Data");
 
-        // Create a SheetRender for the worksheet with the specified options
-        var sheetRender = new SheetRender(worksheet, options);
+        // Configure image rendering options for PNG (default resolution)
+        ImageOrPrintOptions options = new ImageOrPrintOptions();
+        options.ImageType = ImageType.Png;
 
-        // Render the first page (page index 0) to a PNG file
-        sheetRender.ToImage(0, "first_sheet.png");
+        // Create a SheetRender instance for the worksheet
+        SheetRender renderer = new SheetRender(sheet, options);
 
-        // Release resources used by SheetRender
-        sheetRender.Dispose();
+        // Define the output PNG file path
+        string outputPath = Path.Combine(Environment.CurrentDirectory, "FirstSheet.png");
 
-        Console.WriteLine("First worksheet rendered to PNG successfully.");
+        // Render the first page (index 0) of the worksheet to the PNG file
+        renderer.ToImage(0, outputPath);
+
+        Console.WriteLine($"First worksheet rendered to PNG: {outputPath}");
     }
 }

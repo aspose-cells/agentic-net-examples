@@ -1,36 +1,40 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace ExternalLinkPathUpdate
 {
-    static void Main()
+    class Program
     {
-        // Load the existing workbook (replace with your actual file path)
-        string inputFile = "input.xls";
-        Workbook workbook = new Workbook(inputFile);
-
-        // Iterate through all external links in the workbook
-        for (int i = 0; i < workbook.Worksheets.ExternalLinks.Count; i++)
+        static void Main()
         {
-            // Get the external link object
-            ExternalLink link = workbook.Worksheets.ExternalLinks[i];
+            // Path to the source workbook (XLS format)
+            string sourcePath = Path.GetFullPath("input.xls");
 
-            // Retrieve the stored original data source path
-            string originalPath = link.OriginalDataSource;
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
 
-            // Example conversion:
-            // Change a local folder path (e.g., "C:\Data\") to a network shared folder (e.g., "\\Server\Shared\Data\")
-            // Adjust the strings below to match your actual source and target paths.
-            string newPath = originalPath.Replace(
-                @"C:\Data\",
-                @"\\Server\Shared\Data\");
+            // Iterate through all external links in the workbook
+            for (int i = 0; i < workbook.Worksheets.ExternalLinks.Count; i++)
+            {
+                ExternalLink link = workbook.Worksheets.ExternalLinks[i];
 
-            // Update the external link with the new network path
-            link.OriginalDataSource = newPath;
+                // Get the stored original data source path
+                string originalPath = link.OriginalDataSource;
+
+                // Replace the local folder part with a network shared folder (UNC path)
+                // Example: replace "C:\Temp\" with "\\Server\SharedFolder\"
+                string modifiedPath = originalPath.Replace(
+                    @"C:\Temp\",
+                    @"\\Server\SharedFolder\");
+
+                // Update the external link with the new path
+                link.OriginalDataSource = modifiedPath;
+            }
+
+            // Save the modified workbook
+            string outputPath = Path.Combine(Path.GetDirectoryName(sourcePath), "output.xls");
+            workbook.Save(outputPath);
         }
-
-        // Save the modified workbook (replace with your desired output path)
-        string outputFile = "output.xls";
-        workbook.Save(outputFile);
     }
 }

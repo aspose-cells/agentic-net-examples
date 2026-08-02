@@ -18,12 +18,12 @@ class UpdateProjectIdProperty
         if (projectIdProp != null)
         {
             // Property exists – update its integer value
-            projectIdProp.Value = 12345;   // new integer value
+            projectIdProp.Value = 1001; // new integer value
         }
         else
         {
             // Property does not exist – add it with the desired integer value
-            customProps.Add("ProjectId", 12345);
+            customProps.Add("ProjectId", 1001);
         }
 
         // Save the modified workbook

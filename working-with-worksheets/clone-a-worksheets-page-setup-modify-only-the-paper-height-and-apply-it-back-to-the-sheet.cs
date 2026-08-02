@@ -1,72 +1,50 @@
+// Title: Clone Worksheet PageSetup and Adjust Paper Height with Aspose.Cells for .NET
+// Description: Demonstrates how to copy the full PageSetup from one worksheet to another using PageSetup.Copy, then modify only the paper height via CustomPaperSize while preserving the original width, and finally save the workbook.
+// Keywords: Aspose.Cells PageSetup copy | C# clone worksheet layout | custom paper size Aspose.Cells | PageSetup.Copy example | .NET print settings worksheet | modify paper height programmatically | Aspose.Cells tutorial | Aspose.Cells .NET US | Aspose.Cells Europe
+// Common Searches: copy page setup from one sheet to another Aspose.Cells | change only paper height after cloning page setup | set custom paper dimensions C# Aspose.Cells | how to use PageSetup.Copy in .NET | adjust worksheet print size Aspose.Cells
+// Developer Intent: Duplicate the page layout of a source worksheet on a target sheet and then change just the paper height.
+// Use Cases: Reuse a template worksheet’s margins, orientation, and scaling across multiple reports while tailoring each sheet’s paper height for different print formats. | Generate a batch of printable sheets that share identical layout settings but require distinct paper heights such as Letter, Legal, or custom sizes. | Create automated Excel exports where the overall page setup is standardized, and only the height dimension varies per document.
+// AI Prompts: Show C# code to copy a worksheet’s PageSetup to another sheet with Aspose.Cells and then set a custom paper height. | Explain how to use PageSetup.Copy and CustomPaperSize to preserve all layout settings except PaperHeight. | Provide a step‑by‑step example for cloning page setup and adjusting only the height in Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsPageSetupCloneDemo
 {
+    // Demonstrates how to copy the full PageSetup from one worksheet to another using PageSetup.Copy, then modify only the paper height via CustomPaperSize while preserving the original width, and finally save the workbook.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and access the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sourceSheet = workbook.Worksheets[0];
+            // Create a new workbook and add a second worksheet
+            Workbook workbook = new Workbook();
+            workbook.Worksheets.Add(); // adds worksheet at index 1
 
-                // (Optional) Add some data to visualize the sheet
-                sourceSheet.Cells["A1"].PutValue("Original Sheet");
-                sourceSheet.Cells["A2"].PutValue("Data");
+            // Source worksheet (index 0) – set some initial page setup values
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA4;          // default A4
+            sourceSheet.PageSetup.Orientation = PageOrientationType.Portrait;
+            sourceSheet.PageSetup.FitToPagesWide = 1;
+            sourceSheet.PageSetup.FitToPagesTall = 1;
 
-                // -----------------------------------------------------------------
-                // Clone the page setup of the source worksheet to a temporary worksheet
-                // -----------------------------------------------------------------
-                // Add a temporary worksheet that will hold the cloned settings
-                int tempSheetIndex = workbook.Worksheets.Add();
-                Worksheet tempSheet = workbook.Worksheets[tempSheetIndex];
+            // Target worksheet (index 1) – will receive the cloned page setup
+            Worksheet targetSheet = workbook.Worksheets[1];
 
-                // Copy all page‑setup settings from the source sheet to the temporary sheet
-                // using the Copy method with default CopyOptions
-                tempSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
+            // Clone the page setup from source to target using Copy method
+            // CopyOptions with default settings copies all properties
+            targetSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
 
-                // -----------------------------------------------------------------
-                // Modify only the paper height on the cloned page setup
-                // -----------------------------------------------------------------
-                // Retrieve the current paper width (read‑only) to keep it unchanged
-                double currentWidth = tempSheet.PageSetup.PaperWidth;
+            // Modify only the paper height of the target sheet.
+            // PaperHeight is read‑only, so we use CustomPaperSize to set a new height
+            // while preserving the existing width.
+            double currentWidth = targetSheet.PageSetup.PaperWidth; // width in inches
+            double newHeight = 11.0; // desired height in inches (e.g., Letter height)
 
-                // Define the new paper height (in inches). For example, set it to 11.0 inches.
-                double newHeight = 11.0;
+            // Apply the custom paper size (width stays the same, height changes)
+            targetSheet.PageSetup.CustomPaperSize(currentWidth, newHeight);
 
-                // Apply a custom paper size with the original width and the new height
-                tempSheet.PageSetup.CustomPaperSize(currentWidth, newHeight);
-
-                // -----------------------------------------------------------------
-                // Apply the modified page setup back to the original worksheet
-                // -----------------------------------------------------------------
-                sourceSheet.PageSetup.Copy(tempSheet.PageSetup, new CopyOptions());
-
-                // Remove the temporary worksheet (optional, keeps the workbook clean)
-                workbook.Worksheets.RemoveAt(tempSheetIndex);
-
-                // Save the workbook to demonstrate the result
-                string outputPath = "ClonedPageSetupModifiedHeight.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details for troubleshooting
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook to verify the changes
+            workbook.Save("ClonedPageSetup.xlsx");
         }
     }
 }

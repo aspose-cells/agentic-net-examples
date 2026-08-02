@@ -2,55 +2,77 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-class DataTypeSummaryReport
+namespace AsposeCellsDataTypeSummary
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the worksheet with sample data of various types
-        worksheet.Cells["A1"].PutValue(123);                     // Numeric
-        worksheet.Cells["A2"].PutValue("Hello World");          // String
-        worksheet.Cells["A3"].PutValue(DateTime.Now);           // DateTime
-        worksheet.Cells["A4"].PutValue(true);                  // Boolean
-        worksheet.Cells["A5"].PutValue(null);                  // Null (blank)
-        worksheet.Cells["B1"].PutValue(45.6);                   // Numeric
-        worksheet.Cells["B2"].PutValue("Aspose.Cells");        // String
-        // Cells C1:C3 are left empty to represent blanks
-
-        // Dictionary to store counts of each CellValueType
-        Dictionary<CellValueType, int> typeCounts = new Dictionary<CellValueType, int>();
-
-        // Enumerate all instantiated cells in the worksheet
-        foreach (Cell cell in worksheet.Cells)
+        static void Main()
         {
-            CellValueType type = cell.Type;
-            if (typeCounts.ContainsKey(type))
-                typeCounts[type]++;
-            else
-                typeCounts[type] = 1;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate the worksheet with sample data of various types
+            cells["A1"].PutValue(123);                     // Numeric
+            cells["B1"].PutValue("Hello World");           // String
+            cells["C1"].PutValue(DateTime.Now);            // DateTime
+            cells["D1"].PutValue(true);                    // Boolean
+            cells["E1"].PutValue(null);                    // Null (blank)
+            cells["F1"].PutValue(45.67);                   // Numeric
+            cells["A2"].PutValue("Another string");        // String
+            cells["B2"].PutValue(false);                   // Boolean
+            // Leave some cells empty to represent blanks
+
+            // Dictionary to hold counts of each CellValueType
+            Dictionary<CellValueType, int> typeCounts = new Dictionary<CellValueType, int>();
+
+            // Initialize counts for all possible types
+            foreach (CellValueType type in Enum.GetValues(typeof(CellValueType)))
+            {
+                typeCounts[type] = 0;
+            }
+
+            // Determine the used range of the worksheet
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
+
+            // Enumerate cells within the used range and count value types
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxColumn; col++)
+                {
+                    Cell cell = cells[row, col];
+                    CellValueType cellType = cell.Type;
+                    // Increment the count for the detected type
+                    typeCounts[cellType]++;
+                }
+            }
+
+            // Create a new worksheet to hold the summary report
+            Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            summarySheet.Name = "DataTypeSummary";
+            Cells summaryCells = summarySheet.Cells;
+
+            // Write header
+            summaryCells["A1"].PutValue("Cell Value Type");
+            summaryCells["B1"].PutValue("Count");
+
+            // Write the counts to the summary sheet
+            int summaryRow = 1; // start from second row (index 1)
+            foreach (var kvp in typeCounts)
+            {
+                // Only include types that actually appear (count > 0)
+                if (kvp.Value > 0)
+                {
+                    summaryCells[summaryRow, 0].PutValue(kvp.Key.ToString());
+                    summaryCells[summaryRow, 1].PutValue(kvp.Value);
+                    summaryRow++;
+                }
+            }
+
+            // Save the workbook to a file
+            workbook.Save("DataTypeSummaryReport.xlsx");
         }
-
-        // Add a new worksheet to hold the summary report
-        Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-        int summaryRow = 0;
-
-        // Write header
-        summarySheet.Cells[summaryRow, 0].PutValue("Cell Value Type");
-        summarySheet.Cells[summaryRow, 1].PutValue("Count");
-        summaryRow++;
-
-        // Write each type and its count
-        foreach (KeyValuePair<CellValueType, int> entry in typeCounts)
-        {
-            summarySheet.Cells[summaryRow, 0].PutValue(entry.Key.ToString());
-            summarySheet.Cells[summaryRow, 1].PutValue(entry.Value);
-            summaryRow++;
-        }
-
-        // Save the workbook with the summary report
-        workbook.Save("DataTypeSummaryReport.xlsx");
     }
 }

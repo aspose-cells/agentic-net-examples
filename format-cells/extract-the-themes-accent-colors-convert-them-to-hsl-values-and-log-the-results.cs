@@ -1,16 +1,24 @@
+// Title: Extract Excel Theme Accent Colors and Convert to HSL with Aspose.Cells for .NET (C#)
+// Description: This C# example creates a new Workbook, reads the six default theme accent colors via GetThemeColor, converts each RGB value to HSL using a custom method, and writes the RGB and HSL values to the console.
+// Keywords: Aspose.Cells | C# Excel theme colors | GetThemeColor | ThemeColorType Accent1 | RGB to HSL conversion | extract Excel accent colors | default workbook theme | color conversion .NET | Excel theme palette | HSL values C#
+// Common Searches: Aspose.Cells get theme accent colors C# | Convert Excel theme colors to HSL | How to read Excel theme palette with Aspose | C# code to convert RGB to HSL | GetThemeColor example Aspose.Cells | Extract default theme colors from workbook | Log theme accent colors in .NET
+// Developer Intent: Read the workbook’s theme accent palette, transform each RGB entry to HSL, and output the results.
+// Use Cases: Build a custom color picker that works with HSL sliders | Create charts with gradient fills that require HSL inputs | Automate brand‑compliance checks by comparing extracted HSL values to corporate standards | Generate CSS or design tokens from Excel theme colors | Export theme colors to JSON for front‑end styling
+// AI Prompts: Generate a C# function that returns all theme accent colors from an Aspose.Cells Workbook as a List<Color>. | Provide a minimal RGB‑to‑HSL conversion routine in C# without external libraries. | Show how to write the extracted RGB and HSL values to a CSV file instead of the console. | Explain how to map the HSL values to CSS hue‑rotate filters using Aspose.Cells data. | Create a PowerShell script that calls the compiled .NET assembly to list theme accent colors.
+
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace ThemeAccentColorsHSL
+namespace ThemeAccentExtractor
 {
+    // This C# example creates a new Workbook, reads the six default theme accent colors via GetThemeColor, converts each RGB value to HSL using a custom method, and writes the RGB and HSL values to the console.
     class Program
     {
-        // Convert a System.Drawing.Color to HSL components.
-        // Returns a tuple: (Hue in degrees [0-360), Saturation [0-1], Lightness [0-1])
-        static (double Hue, double Saturation, double Lightness) ColorToHsl(Color color)
+        // Convert an RGB color to HSL.
+        // Returns hue (0-360), saturation (0-1), lightness (0-1).
+        static (double H, double S, double L) RgbToHsl(Color color)
         {
-            // Normalize RGB values to the range 0-1.
             double r = color.R / 255.0;
             double g = color.G / 255.0;
             double b = color.B / 255.0;
@@ -19,18 +27,22 @@ namespace ThemeAccentColorsHSL
             double min = Math.Min(r, Math.Min(g, b));
             double delta = max - min;
 
-            // Lightness calculation.
+            // Lightness
             double l = (max + min) / 2.0;
 
-            double h = 0.0;
-            double s = 0.0;
-
+            // Saturation
+            double s = 0;
             if (delta != 0)
             {
-                // Saturation calculation.
-                s = l < 0.5 ? delta / (max + min) : delta / (2.0 - max - min);
+                s = l < 0.5
+                    ? delta / (max + min)
+                    : delta / (2.0 - max - min);
+            }
 
-                // Hue calculation.
+            // Hue
+            double h = 0;
+            if (delta != 0)
+            {
                 if (max == r)
                 {
                     h = ((g - b) / delta) % 6.0;
@@ -43,43 +55,27 @@ namespace ThemeAccentColorsHSL
                 {
                     h = ((r - g) / delta) + 4.0;
                 }
-
-                h *= 60.0; // Convert to degrees.
-                if (h < 0)
-                    h += 360.0;
+                h *= 60.0;
+                if (h < 0) h += 360.0;
             }
 
             return (h, s, l);
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook (default theme is applied).
+            // Create a new workbook (default theme is applied)
             Workbook workbook = new Workbook();
 
-            // Array of accent theme color types.
-            ThemeColorType[] accentTypes = new ThemeColorType[]
+            // Iterate over the six accent colors defined in the theme
+            for (int i = 4; i <= 9; i++) // ThemeColorType.Accent1 = 4, Accent6 = 9
             {
-                ThemeColorType.Accent1,
-                ThemeColorType.Accent2,
-                ThemeColorType.Accent3,
-                ThemeColorType.Accent4,
-                ThemeColorType.Accent5,
-                ThemeColorType.Accent6
-            };
+                ThemeColorType accentType = (ThemeColorType)i;
+                Color rgbColor = workbook.GetThemeColor(accentType);
+                var (h, s, l) = RgbToHsl(rgbColor);
 
-            // Iterate through each accent color, retrieve the ARGB color,
-            // convert it to HSL, and log the result.
-            foreach (ThemeColorType accent in accentTypes)
-            {
-                Color rgbColor = workbook.GetThemeColor(accent);
-                var (hue, saturation, lightness) = ColorToHsl(rgbColor);
-
-                Console.WriteLine($"Accent {accent} - ARGB: {rgbColor.ToArgb():X8}");
-                Console.WriteLine($"   HSL => Hue: {hue:F2}°, Saturation: {saturation:P1}, Lightness: {lightness:P1}");
+                Console.WriteLine($"Accent{i - 3}: RGB = {rgbColor} | HSL = ({h:F2}°, {s:P2}, {l:P2})");
             }
-
-            // No need to save the workbook for this extraction task.
         }
     }
 }

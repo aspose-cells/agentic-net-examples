@@ -1,80 +1,40 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceLogging
+class WorkbookProcessingLogger
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // List of workbook file paths to process
-            List<string> files = new List<string>
-            {
-                "Input1.xlsx",
-                "Input2.xlsx",
-                // Add more file paths as needed
-            };
+        // Stopwatch to measure each step
+        Stopwatch sw = new Stopwatch();
 
-            foreach (string filePath in files)
-            {
-                Console.WriteLine($"--- Processing workbook: {filePath} ---");
+        // -------------------- Create a new workbook --------------------
+        sw.Start();
+        Workbook newWb = new Workbook();               // creates an empty workbook
+        sw.Stop();
+        Console.WriteLine($"Workbook creation time: {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
 
-                // Verify that the input file exists
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"Error: File not found – {filePath}");
-                    Console.WriteLine();
-                    continue;
-                }
+        // -------------------- Load an existing workbook --------------------
+        sw.Start();
+        LoadOptions loadOpts = new LoadOptions();      // default load options
+        Workbook wb = new Workbook("input.xlsx", loadOpts);
+        sw.Stop();
+        Console.WriteLine($"Workbook loading time: {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
 
-                try
-                {
-                    // Stopwatch to measure total processing time
-                    Stopwatch totalStopwatch = Stopwatch.StartNew();
+        // -------------------- Calculate all formulas --------------------
+        sw.Start();
+        wb.CalculateFormula();                        // performs full formula calculation
+        sw.Stop();
+        Console.WriteLine($"Formula calculation time: {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
 
-                    // 1. Load workbook
-                    Stopwatch loadStopwatch = Stopwatch.StartNew();
-                    Workbook wb = new Workbook(filePath);
-                    loadStopwatch.Stop();
-                    Console.WriteLine($"Load time: {loadStopwatch.ElapsedMilliseconds} ms");
-
-                    // 2. Calculate formulas (if any)
-                    Stopwatch calcStopwatch = Stopwatch.StartNew();
-                    wb.CalculateFormula();
-                    calcStopwatch.Stop();
-                    Console.WriteLine($"Formula calculation time: {calcStopwatch.ElapsedMilliseconds} ms");
-
-                    // 3. Prepare output path and ensure directory exists
-                    string outputDirectory = Path.GetDirectoryName(filePath) ?? string.Empty;
-                    string outputPath = Path.Combine(
-                        outputDirectory,
-                        Path.GetFileNameWithoutExtension(filePath) + "_Processed.xlsx");
-
-                    if (!Directory.Exists(outputDirectory))
-                    {
-                        Directory.CreateDirectory(outputDirectory);
-                    }
-
-                    // 4. Save workbook
-                    Stopwatch saveStopwatch = Stopwatch.StartNew();
-                    wb.Save(outputPath);
-                    saveStopwatch.Stop();
-                    Console.WriteLine($"Save time: {saveStopwatch.ElapsedMilliseconds} ms");
-
-                    // 5. Total time
-                    totalStopwatch.Stop();
-                    Console.WriteLine($"Total processing time: {totalStopwatch.ElapsedMilliseconds} ms");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while processing {filePath}: {ex.Message}");
-                }
-
-                Console.WriteLine();
-            }
-        }
+        // -------------------- Save the workbook --------------------
+        sw.Start();
+        wb.Save("output.xlsx");                        // saves the workbook to disk
+        sw.Stop();
+        Console.WriteLine($"Workbook saving time: {sw.ElapsedMilliseconds} ms");
     }
 }

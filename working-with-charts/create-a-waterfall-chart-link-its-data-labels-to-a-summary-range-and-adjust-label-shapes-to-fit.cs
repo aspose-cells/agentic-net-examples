@@ -1,77 +1,62 @@
-using System;
-using System.IO;
+// Title: C# Aspose.Cells Example: Waterfall Chart with Linked Data Labels & Auto‑Fit Shapes
+// Description: Creates a workbook, adds stage/value data, defines a summary range, inserts a Waterfall chart, links data labels to that range, enables auto‑resize of label shapes, sets a round‑rectangle shape, recalculates layout, and saves the file.
+// Keywords: Aspose.Cells | C# | Waterfall chart | linked data labels | auto resize data label shape | DataLabelShapeType | Excel chart example | Aspose.Cells tutorial
+// Common Searches: Aspose.Cells waterfall chart linked labels C# | auto‑fit data label shape Aspose.Cells | set data label shape type in Aspose.Cells chart | link data labels to another range Aspose.Cells | waterfall chart example Aspose.Cells .NET
+// Developer Intent: Generate a Waterfall chart, link its data labels to a summary range, and make the label shapes automatically fit the linked text.
+// Use Cases: Financial reporting where each waterfall step shows a formatted unit string from a separate column. | Automated Excel dashboards that need data label shapes to expand for longer summary texts. | Presentations that require rounded‑rectangle labels linked to a summary range for visual emphasis.
+// AI Prompts: Give C# code to change the data label shape to an ellipse while keeping the linked source and auto‑fit behavior. | Show how to update the linked source range dynamically based on user‑selected rows in Aspose.Cells. | Explain how to apply a custom font style and color to linked data labels in a Waterfall chart.
+
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;   // For ShapeType enum (if needed)
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+// Creates a workbook, adds stage/value data, defines a summary range, inserts a Waterfall chart, links data labels to that range, enables auto‑resize of label shapes, sets a round‑rectangle shape, recalculates layout, and saves the file.
+class WaterfallChartExample
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+        // Populate sample data for the waterfall chart
+        worksheet.Cells["A1"].PutValue("Stage");
+        worksheet.Cells["A2"].PutValue("Start");
+        worksheet.Cells["A3"].PutValue("Increase");
+        worksheet.Cells["A4"].PutValue("Decrease");
+        worksheet.Cells["A5"].PutValue("End");
 
-                // Populate sample data for a waterfall chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Start");
-                sheet.Cells["A3"].PutValue("Increase");
-                sheet.Cells["A4"].PutValue("Decrease");
-                sheet.Cells["A5"].PutValue("Total");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["B3"].PutValue(30);
+        worksheet.Cells["B4"].PutValue(-20);
+        worksheet.Cells["B5"].PutValue(110);
 
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["B3"].PutValue(30);
-                sheet.Cells["B4"].PutValue(-20);
-                sheet.Cells["B5"].PutValue(110);
+        // Summary range that will be linked to the data labels
+        worksheet.Cells["C2"].PutValue("100 units");
+        worksheet.Cells["C3"].PutValue("130 units");
+        worksheet.Cells["C4"].PutValue("110 units");
+        worksheet.Cells["C5"].PutValue("110 units");
 
-                // Summary range that will be linked to data labels (e.g., formatted text)
-                sheet.Cells["C1"].PutValue("Summary");
-                sheet.Cells["C2"].PutValue("Start");
-                sheet.Cells["C3"].PutValue("Add 30");
-                sheet.Cells["C4"].PutValue("Subtract 20");
-                sheet.Cells["C5"].PutValue("Final");
+        // Add a waterfall chart to the worksheet
+        int chartIndex = worksheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
+        Chart chart = worksheet.Charts[chartIndex];
 
-                // Add a waterfall chart
-                int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
-                Chart chart = sheet.Charts[chartIndex];
+        // Define the series data and categories
+        chart.NSeries.Add("B2:B5", true);
+        chart.NSeries.CategoryData = "A2:A5";
 
-                // Set the data series and categories
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries.CategoryData = "A2:A5";
+        // Configure data labels for the series
+        Series series = chart.NSeries[0];
+        series.DataLabels.ShowValue = true;                     // display the value
+        series.DataLabels.LinkedSource = "C2:C5";                // link to summary range
+        series.DataLabels.IsResizeShapeToFitText = true;        // auto‑fit shape to text
+        series.DataLabels.ShapeType = DataLabelShapeType.RoundRect; // optional shape type
 
-                // Access the first (and only) series
-                Series series = chart.NSeries[0];
+        // Recalculate chart layout (important after modifying labels)
+        chart.Calculate();
 
-                // Enable data labels
-                series.DataLabels.ShowValue = true;
-
-                // Link data labels to the summary range
-                series.DataLabels.ShowCellRange = true;               // Show linked cell range as label
-                series.DataLabels.LinkedSource = "C2:C5";             // Range with summary text
-
-                // Adjust label shape to fit the linked text
-                series.DataLabels.IsResizeShapeToFitText = true;      // Auto‑fit shape to text
-                // series.DataLabels.ShapeType = ShapeType.Rectangle; // Removed: ShapeType not available in this context
-
-                // Optionally set a position for better readability
-                series.DataLabels.Position = LabelPositionType.InsideEnd;
-
-                // Save the workbook
-                string outputPath = "WaterfallChartWithLinkedLabels.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Save the workbook with the chart
+        workbook.Save("WaterfallChartWithLinkedLabels.xlsx");
     }
 }

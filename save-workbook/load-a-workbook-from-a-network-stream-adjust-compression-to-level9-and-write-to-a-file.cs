@@ -1,61 +1,64 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsNetworkExample
 {
-    static async Task Main()
+    class Program
     {
-        // URL of the source Excel file
-        const string sourceUrl = "https://example.com/sample.xlsx";
-
-        // Path where the compressed workbook will be saved
-        const string destinationPath = "output.xlsx";
-
-        try
+        static void Main()
         {
-            // Ensure the destination directory exists
-            string destDir = Path.GetDirectoryName(Path.GetFullPath(destinationPath));
-            if (!Directory.Exists(destDir))
-                Directory.CreateDirectory(destDir);
+            // URL of the Excel file to load from the network
+            const string excelUrl = "https://example.com/sample.xlsx";
 
-            // Download the workbook using HttpClient
-            using (HttpClient httpClient = new HttpClient())
+            // Destination file path
+            const string outputPath = "DownloadedWithCompression.xlsx";
+
+            try
             {
-                HttpResponseMessage response = await httpClient.GetAsync(sourceUrl);
-                response.EnsureSuccessStatusCode(); // Throws if status is not 2xx
-
-                using (Stream networkStream = await response.Content.ReadAsStreamAsync())
+                // Download the file into a memory stream
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    // Load the workbook from the downloaded stream
-                    Workbook workbook = new Workbook(networkStream);
+                    // Get the response and ensure success status
+                    HttpResponseMessage response = httpClient.GetAsync(excelUrl).Result;
+                    response.EnsureSuccessStatusCode();
 
-                    // Configure OOXML save options with maximum compression (Level9)
-                    OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+                    using (Stream networkStream = response.Content.ReadAsStreamAsync().Result)
+                    using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        CompressionType = OoxmlCompressionType.Level9
-                    };
+                        // Copy the network stream to a seekable memory stream
+                        networkStream.CopyTo(memoryStream);
+                        memoryStream.Position = 0; // Reset position for reading
 
-                    // Save the workbook to the specified file using the configured options
-                    workbook.Save(destinationPath, saveOptions);
+                        // Load the workbook from the memory stream
+                        Workbook workbook = new Workbook(memoryStream);
+
+                        // Create OOXML save options and set maximum compression (Level9)
+                        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+                        {
+                            CompressionType = OoxmlCompressionType.Level9
+                        };
+
+                        // Save the workbook to a file using the specified compression options
+                        workbook.Save(outputPath, saveOptions);
+                    }
                 }
-            }
 
-            Console.WriteLine($"Workbook saved successfully to '{destinationPath}'.");
-        }
-        catch (HttpRequestException ex)
-        {
-            Console.Error.WriteLine($"Error downloading the file: {ex.Message}");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.Error.WriteLine($"File not found: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine("Workbook downloaded, compressed with Level9, and saved to file.");
+            }
+            catch (HttpRequestException httpEx)
+            {
+                Console.WriteLine($"Network error while downloading the file: {httpEx.Message}");
+            }
+            catch (IOException ioEx)
+            {
+                Console.WriteLine($"File I/O error: {ioEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

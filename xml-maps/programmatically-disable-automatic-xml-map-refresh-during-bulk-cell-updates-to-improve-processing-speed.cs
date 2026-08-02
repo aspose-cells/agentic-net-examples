@@ -2,52 +2,55 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-class DisableXmlMapRefreshDemo
+namespace AsposeCellsXmlMapRefreshDemo
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                const string templatePath = "TemplateWithXmlMap.xlsx";
+                const string outputPath = "UpdatedWorkbook.xlsx";
 
-            // Load the existing workbook
-            Workbook wb = new Workbook(inputPath);
-
-            // NOTE: In some Aspose.Cells versions the property
-            // WorkbookSettings.EnableXMLMapRefresh is not available.
-            // If it exists, you can uncomment the following lines:
-            // wb.Settings.EnableXMLMapRefresh = false;
-
-            // Perform bulk cell updates
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            for (int row = 0; row < 10000; row++)
-            {
-                for (int col = 0; col < 10; col++)
+                // Verify that the template file exists before loading
+                if (!File.Exists(templatePath))
                 {
-                    cells[row, col].PutValue(row * col);
+                    Console.WriteLine($"Error: Template file not found – {templatePath}");
+                    return;
                 }
+
+                // Load the workbook that contains XML maps (or create a new one)
+                Workbook workbook = new Workbook(templatePath);
+
+                // NOTE: In recent Aspose.Cells versions the EnableXMLMapRefresh property
+                // has been removed. The engine automatically optimizes bulk updates,
+                // so we proceed without explicitly disabling the refresh.
+
+                // Perform bulk updates
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Example: fill 10,000 rows with sample data
+                for (int row = 0; row < 10000; row++)
+                {
+                    cells[row, 0].PutValue($"Item{row + 1}");
+                    cells[row, 1].PutValue(row * 10);
+                    cells[row, 2].PutValue(DateTime.Today.AddDays(row));
+                }
+
+                // If you need to force an XML map refresh, uncomment the line below
+                // workbook.RefreshXmlMap();
+
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-
-            // Re‑enable XML map refresh after updates (if the property is supported)
-            // wb.Settings.EnableXMLMapRefresh = true;
-
-            // Save the modified workbook
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

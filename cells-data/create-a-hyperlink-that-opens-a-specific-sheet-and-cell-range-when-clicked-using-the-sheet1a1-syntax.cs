@@ -1,28 +1,28 @@
 using Aspose.Cells;
 
-class Program
+class HyperlinkToSheetCell
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet (default name is Sheet1)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
-
         // Add a second worksheet that will be the hyperlink target
-        Worksheet targetSheet = workbook.Worksheets.Add("TargetSheet");
-        targetSheet.Cells["A1"].PutValue("Destination cell");
+        Worksheet targetSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+        targetSheet.Name = "Sheet2";
+        targetSheet.Cells["A1"].PutValue("Target Cell in Sheet2");
 
-        // Add a hyperlink in Sheet1 cell B2 that opens TargetSheet!A1
-        // The address uses the '#SheetName!Cell' syntax for internal links
-        int hyperlinkIndex = sheet.Hyperlinks.Add("B2", 1, 1, "#TargetSheet!A1");
+        // Get the first worksheet where the hyperlink will be placed
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        sourceSheet.Name = "Sheet1";
 
-        // Set the text that will be displayed in the cell
-        sheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Go to TargetSheet A1";
+        // Add a hyperlink in cell B2 that opens Sheet2!A1 using the '#Sheet2!A1' syntax
+        int hyperlinkIndex = sourceSheet.Hyperlinks.Add("B2", 1, 1, "#Sheet2!A1");
+
+        // Set the text that will be displayed for the hyperlink
+        sourceSheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Go to Sheet2 A1";
 
         // Save the workbook
-        workbook.Save("HyperlinkInternal.xlsx");
+        workbook.Save("HyperlinkToSheetCell.xlsx");
     }
 }

@@ -11,9 +11,9 @@ This repository contains thousands of production-oriented examples demonstrating
 * Product: Aspose.Cells
 * Platform: .NET
 * Framework: .NET
-* Examples: 5,054
+* Examples: 5,394
 * Categories: 31
-* Last Updated: 2026-06-22
+* Last Updated: 2026-08-01
 
 ## Agent Resources
 

@@ -1,91 +1,54 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsQuotePrefixReport
+class QuotePrefixReport
 {
-    public class ReportGenerator
+    static void Main()
     {
-        public static void Run()
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet where data is stored
+        Worksheet dataSheet = workbook.Worksheets[0];
+        Cells dataCells = dataSheet.Cells;
+
+        // Add a new worksheet to hold the report
+        int reportSheetIndex = workbook.Worksheets.Add();
+        Worksheet reportSheet = workbook.Worksheets[reportSheetIndex];
+        reportSheet.Name = "QuotePrefixReport";
+
+        // Write header row in the report sheet
+        reportSheet.Cells[0, 0].PutValue("Cell Address");
+        reportSheet.Cells[0, 1].PutValue("Row Index");
+        reportSheet.Cells[0, 2].PutValue("Column Index");
+
+        int reportRow = 1; // Start writing data from the second row
+
+        // Determine the used range of the data sheet
+        int maxRow = dataCells.MaxDataRow;
+        int maxCol = dataCells.MaxDataColumn;
+
+        // Iterate through each cell in the used range
+        for (int row = 0; row <= maxRow; row++)
         {
-            try
+            for (int col = 0; col <= maxCol; col++)
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output_with_quoteprefix_report.xlsx";
-
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                Cell cell = dataCells[row, col];
+                if (cell != null && cell.GetStyle().QuotePrefix)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // Convert row/column indices to Excel address (e.g., "B10")
+                    string address = CellsHelper.CellIndexToName(row, col);
+
+                    // Record the cell information in the report sheet
+                    reportSheet.Cells[reportRow, 0].PutValue(address);
+                    reportSheet.Cells[reportRow, 1].PutValue(row);
+                    reportSheet.Cells[reportRow, 2].PutValue(col);
+                    reportRow++;
                 }
-
-                // Load the source workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (source data)
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                Cells sourceCells = sourceSheet.Cells;
-
-                // Create a new worksheet to hold the report
-                Worksheet reportSheet = workbook.Worksheets.Add("QuotePrefixReport");
-                Cells reportCells = reportSheet.Cells;
-
-                // Write header row in the report sheet
-                reportCells[0, 0].PutValue("Row Index");
-                reportCells[0, 1].PutValue("Column Index");
-                reportCells[0, 2].PutValue("Cell Address");
-                reportCells[0, 3].PutValue("Cell Value");
-
-                int reportRow = 1; // Start writing data from the second row
-
-                // Determine the used range of the source sheet
-                int maxRow = sourceCells.MaxDataRow;
-                int maxCol = sourceCells.MaxDataColumn;
-
-                // Iterate through each cell in the used range
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = sourceCells[row, col];
-
-                        // Skip null cells or cells without a value
-                        if (cell == null || cell.Value == null)
-                            continue;
-
-                        // Retrieve the cell's style and check the QuotePrefix property
-                        Style style = cell.GetStyle();
-                        if (style.QuotePrefix)
-                        {
-                            // Record the cell information in the report sheet
-                            reportCells[reportRow, 0].PutValue(row);               // Row index (0‑based)
-                            reportCells[reportRow, 1].PutValue(col);               // Column index (0‑based)
-                            reportCells[reportRow, 2].PutValue(cell.Name);        // Excel address (e.g., "B10")
-                            reportCells[reportRow, 3].PutValue(cell.Value);       // Actual cell value
-                            reportRow++;
-                        }
-                    }
-                }
-
-                // Save the workbook with the added report sheet
-                workbook.Save(outputPath);
-                Console.WriteLine($"Report generated and saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ReportGenerator.Run();
-        }
+        // Save the workbook with the added report worksheet
+        workbook.Save("output_with_report.xlsx");
     }
 }

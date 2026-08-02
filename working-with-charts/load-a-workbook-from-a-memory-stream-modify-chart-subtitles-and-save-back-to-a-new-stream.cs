@@ -1,90 +1,60 @@
+// Title: Modify Excel Chart Subtitle from a MemoryStream and Save to a New Stream with Aspose.Cells (C#)
+// Description: Creates a workbook with a column chart, saves it to a MemoryStream (XLS), reloads it, updates the chart subtitle text and style, and writes the result to a new MemoryStream (XLSX) using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | MemoryStream | load workbook from stream | save workbook to stream | chart subtitle | chart subtitle formatting | update chart title | Excel chart manipulation | in‑memory Excel processing
+// Common Searches: Aspose.Cells change chart subtitle from MemoryStream | C# load Excel file from byte array and edit chart | save modified Excel workbook to new MemoryStream Aspose | update chart subtitle font size Aspose.Cells C# | convert XLS to XLSX after editing chart subtitle
+// Developer Intent: Load an Excel workbook from a MemoryStream, modify the chart subtitle text and formatting, and save the updated workbook to another MemoryStream.
+// Use Cases: Edit chart subtitles in Excel files received as byte arrays before sending them to a client. | Apply uniform subtitle styling to all charts in dynamically generated reports stored in memory. | Convert an in‑memory XLS workbook to XLSX after programmatically updating chart titles and subtitles.
+// AI Prompts: Write C# code that loads an Excel workbook from a MemoryStream, sets every chart subtitle to bold 14pt text, and returns the workbook as a new MemoryStream using Aspose.Cells. | Show how to iterate through all charts in a workbook loaded from a stream and set each subtitle to "Report Generated" with italic style.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartSubtitleDemo
+// Creates a workbook with a column chart, saves it to a MemoryStream (XLS), reloads it, updates the chart subtitle text and style, and writes the result to a new MemoryStream (XLSX) using Aspose.Cells for .NET.
+class ChartSubtitleExample
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // ------------------------------------------------------------
-            // 1. Create a sample workbook with a chart (uses the create rule)
-            // ------------------------------------------------------------
-            Workbook sampleWorkbook = new Workbook();
-            Worksheet sheet = sampleWorkbook.Worksheets[0];
+        // 1. Create a workbook with sample data and a chart
+        Workbook wb = new Workbook();                                   // Workbook()
+        Worksheet ws = wb.Worksheets[0];
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["A2"].PutValue("A");
+        ws.Cells["A3"].PutValue("B");
+        ws.Cells["A4"].PutValue("C");
+        ws.Cells["B1"].PutValue("Value");
+        ws.Cells["B2"].PutValue(10);
+        ws.Cells["B3"].PutValue(20);
+        ws.Cells["B4"].PutValue(30);
 
-            // Populate some data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+        int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 8);    // add chart
+        Chart chart = ws.Charts[chartIdx];
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
+        chart.Title.Text = "Main Title";
+        chart.SubTitle.Text = "Original Subtitle";                      // set initial subtitle
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Sample Chart";
-            chart.SubTitle.Text = "Original Subtitle";
+        // 2. Save the workbook to a memory stream (xls format)
+        MemoryStream sourceStream = wb.SaveToStream();                  // Workbook.SaveToStream()
+        sourceStream.Position = 0;                                      // reset for reading
 
-            // Save the workbook to a memory stream (uses the save rule)
-            MemoryStream inputStream = new MemoryStream();
-            sampleWorkbook.Save(inputStream, SaveFormat.Xlsx);
-            inputStream.Position = 0; // Reset for reading
+        // 3. Load the workbook from the memory stream
+        Workbook loadedWb = new Workbook(sourceStream);                  // Workbook(Stream)
+        Worksheet loadedWs = loadedWb.Worksheets[0];
+        Chart loadedChart = loadedWs.Charts[0];
 
-            // ------------------------------------------------------------
-            // 2. Load the workbook from the memory stream, modify subtitles,
-            //    and save back to a new stream.
-            // ------------------------------------------------------------
-            MemoryStream outputStream = UpdateChartSubtitles(inputStream);
+        // 4. Modify the chart subtitle
+        loadedChart.SubTitle.Text = "Updated Subtitle";
+        loadedChart.SubTitle.Font.IsBold = true;
+        loadedChart.SubTitle.Font.Size = 12;
 
-            // ------------------------------------------------------------
-            // 3. (Optional) Save the resulting stream to a file to verify.
-            // ------------------------------------------------------------
-            using (FileStream file = new FileStream("ChartWithUpdatedSubtitle.xlsx", FileMode.Create, FileAccess.Write))
-            {
-                outputStream.CopyTo(file);
-            }
+        // 5. Save the modified workbook to a new memory stream (xlsx format)
+        MemoryStream resultStream = new MemoryStream();
+        loadedWb.Save(resultStream, SaveFormat.Xlsx);                   // Workbook.Save(Stream, SaveFormat)
+        resultStream.Position = 0;                                      // ready for further use
 
-            Console.WriteLine("Chart subtitles updated and workbook saved to 'ChartWithUpdatedSubtitle.xlsx'.");
-        }
-
-        /// <summary>
-        /// Loads a workbook from the provided stream, updates every chart's subtitle,
-        /// and returns a new memory stream containing the modified workbook.
-        /// </summary>
-        /// <param name="input">MemoryStream containing the original workbook.</param>
-        /// <returns>MemoryStream with the modified workbook.</returns>
-        private static MemoryStream UpdateChartSubtitles(MemoryStream input)
-        {
-            // Ensure the stream is positioned at the beginning before loading
-            input.Position = 0;
-
-            // Load workbook from stream (uses the Workbook(Stream) constructor rule)
-            Workbook wb = new Workbook(input);
-
-            // Iterate through all worksheets and their charts
-            foreach (Worksheet ws in wb.Worksheets)
-            {
-                foreach (Chart ch in ws.Charts)
-                {
-                    // Modify the subtitle text (uses Chart.SubTitle property)
-                    ch.SubTitle.Text = "Updated Subtitle";
-                }
-            }
-
-            // Save the modified workbook to a new memory stream (uses SaveToStream rule)
-            MemoryStream result = wb.SaveToStream();
-
-            // Reset position so the caller can read from the beginning
-            result.Position = 0;
-            return result;
-        }
+        // Optional: verify that the stream contains data
+        Console.WriteLine($"Result stream length: {resultStream.Length} bytes");
     }
 }

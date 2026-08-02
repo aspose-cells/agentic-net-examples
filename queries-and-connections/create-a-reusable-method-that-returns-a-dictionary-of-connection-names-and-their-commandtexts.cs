@@ -6,57 +6,45 @@ using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsDemo
 {
-    public static class ConnectionHelper
+    public static class WorkbookConnectionHelper
     {
         /// <summary>
-        /// Returns a dictionary where the key is the connection name and the value is its Command text.
+        /// Loads a workbook and returns a dictionary of connection names and their command texts.
         /// </summary>
-        /// <param name="workbookPath">Full path to the workbook file.</param>
-        /// <returns>Dictionary of connection names and their Command texts.</returns>
-        public static Dictionary<string, string> GetConnectionCommands(string workbookPath)
+        /// <param name="filePath">Path to the Excel file.</param>
+        /// <returns>Dictionary of connection names and command texts.</returns>
+        public static Dictionary<string, string> GetConnectionCommands(string filePath)
         {
-            var result = new Dictionary<string, string>();
-
-            if (!File.Exists(workbookPath))
-            {
-                Console.Error.WriteLine($"File not found: {workbookPath}");
-                return result;
-            }
-
+            var connectionCommands = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             try
             {
-                var workbook = new Workbook(workbookPath);
-                return GetConnectionCommands(workbook);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error loading workbook: {ex.Message}");
-                return result;
-            }
-        }
+                // Prevent FileNotFoundException
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException($"File not found: {filePath}");
 
-        /// <summary>
-        /// Overload that works directly with an existing Workbook instance.
-        /// </summary>
-        /// <param name="workbook">The Workbook object already loaded or created.</param>
-        /// <returns>Dictionary of connection names and their Command texts.</returns>
-        public static Dictionary<string, string> GetConnectionCommands(Workbook workbook)
-        {
-            var dict = new Dictionary<string, string>();
+                // Load the workbook (lifecycle: load)
+                var workbook = new Workbook(filePath);
 
-            try
-            {
-                foreach (ExternalConnection connection in workbook.DataConnections)
+                // Access the collection of external connections
+                ExternalConnectionCollection connections = workbook.DataConnections;
+
+                // Iterate through each connection and capture its Name and Command
+                foreach (ExternalConnection conn in connections)
                 {
-                    dict[connection.Name] = connection.Command;
+                    if (string.IsNullOrEmpty(conn.Name))
+                        continue;
+
+                    // Command property may be null
+                    string commandText = conn.Command ?? string.Empty;
+                    connectionCommands[conn.Name] = commandText;
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error processing connections: {ex.Message}");
+                Console.Error.WriteLine($"Error retrieving connections: {ex.Message}");
+                // Return whatever has been collected (may be empty)
             }
-
-            return dict;
+            return connectionCommands;
         }
     }
 
@@ -64,13 +52,22 @@ namespace AsposeCellsDemo
     {
         static void Main(string[] args)
         {
-            string workbookPath = args.Length > 0 ? args[0] : "input.xlsx";
-
-            var connections = ConnectionHelper.GetConnectionCommands(workbookPath);
-
-            foreach (var kvp in connections)
+            try
             {
-                Console.WriteLine($"Name: {kvp.Key}, Command: {kvp.Value}");
+                // Use first argument as file path or fallback to a default name
+                string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+
+                var connections = WorkbookConnectionHelper.GetConnectionCommands(filePath);
+
+                Console.WriteLine($"Found {connections.Count} connection(s) in '{filePath}':");
+                foreach (var kvp in connections)
+                {
+                    Console.WriteLine($"Name: {kvp.Key}, Command: {kvp.Value}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

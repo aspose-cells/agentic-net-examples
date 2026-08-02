@@ -7,19 +7,27 @@ namespace ConvertStringNumbers
     {
         static void Main(string[] args)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Path to the source workbook (replace with your actual file)
+            string inputPath = "input.xlsx";
+
+            // Path where the converted workbook will be saved
+            string outputPath = "output_converted.xlsx";
+
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(inputPath);
 
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 // Convert all string values that can be interpreted as numbers
-                // (including dates) to true numeric values in the current sheet.
+                // to true numeric values within the current worksheet.
                 sheet.Cells.ConvertStringToNumericValue();
             }
 
-            // Save the modified workbook (replace with desired output path)
-            workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+
+            Console.WriteLine($"Conversion complete. Saved to '{outputPath}'.");
         }
     }
 }

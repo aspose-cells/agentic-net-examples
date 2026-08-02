@@ -5,19 +5,10 @@ class Program
 {
     static void Main()
     {
-        // Load the main workbook that contains external links
-        Workbook mainWorkbook = new Workbook("Main.xlsx");
+        // Load an existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load external workbook(s) that provide the latest data for the links
-        Workbook externalWorkbook = new Workbook("External.xlsx");
-
-        // Update external links in the main workbook with data from the external workbook(s)
-        mainWorkbook.UpdateLinkedDataSource(new Workbook[] { externalWorkbook });
-
-        // Recalculate formulas after updating links (optional but often needed)
-        mainWorkbook.CalculateFormula();
-
-        // Define custom Ribbon XML
+        // Set custom Ribbon XML
         string ribbonXml =
             "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
             "  <ribbon>" +
@@ -30,27 +21,39 @@ class Program
             "    </tabs>" +
             "  </ribbon>" +
             "</customUI>";
+        workbook.RibbonXml = ribbonXml;
 
-        // Apply the custom Ribbon UI to the workbook
-        mainWorkbook.RibbonXml = ribbonXml;
-
-        // Ask the user for confirmation before saving
-        Console.Write("Save the workbook with updated links and custom ribbon? (y/n): ");
-        string answer = Console.ReadLine();
-
-        if (!string.IsNullOrEmpty(answer) && answer.Trim().ToLower() == "y")
+        // Update external links if any exist
+        if (workbook.Worksheets.ExternalLinks.Count > 0)
         {
-            // Save the workbook (XLSM is required for Ribbon customizations)
-            mainWorkbook.Save("Main_Updated.xlsm", SaveFormat.Xlsm);
-            Console.WriteLine("Workbook saved successfully.");
+            // Example: modify the first external link's data source
+            workbook.Worksheets.ExternalLinks[0].DataSource = "updated_external.xlsx";
+
+            // Load the external workbook that provides the latest data
+            Workbook externalWb = new Workbook("updated_external.xlsx");
+
+            // Refresh linked data sources
+            workbook.UpdateLinkedDataSource(new Workbook[] { externalWb });
+
+            // Recalculate formulas to reflect updated data
+            workbook.CalculateFormula();
+        }
+
+        // Ask user for confirmation before saving
+        Console.Write("Save the workbook with changes? (y/n): ");
+        string response = Console.ReadLine();
+        if (!string.IsNullOrEmpty(response) && response.Equals("y", StringComparison.OrdinalIgnoreCase))
+        {
+            // Save as macro‑enabled workbook to retain Ribbon XML
+            workbook.Save("output.xlsm", SaveFormat.Xlsm);
+            Console.WriteLine("Workbook saved as output.xlsm");
         }
         else
         {
-            Console.WriteLine("Save operation cancelled by the user.");
+            Console.WriteLine("Save operation cancelled.");
         }
 
         // Release resources
-        mainWorkbook.Dispose();
-        externalWorkbook.Dispose();
+        workbook.Dispose();
     }
 }

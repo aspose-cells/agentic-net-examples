@@ -4,79 +4,73 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    public class UpdateExternalLinksToRelativePaths
+    class UpdateExternalLinksToRelativePaths
     {
-        /// <summary>
-        /// Loads a workbook, converts all absolute external link paths to relative paths,
-        /// and saves the workbook.
-        /// </summary>
-        /// <param name="inputFile">Full path of the source workbook.</param>
-        /// <param name="outputFile">Full path where the updated workbook will be saved.</param>
-        public static void Run(string inputFile, string outputFile)
+        static void Main()
         {
             try
             {
-                // Verify that the source workbook exists to avoid FileNotFoundException.
-                if (!File.Exists(inputFile))
+                // Path to the source workbook that contains external links
+                string sourceFilePath = @"C:\Data\MainWorkbook.xlsx";
+
+                // Verify that the source file exists to avoid FileNotFoundException
+                if (!File.Exists(sourceFilePath))
                 {
-                    Console.WriteLine($"Source file not found: {inputFile}");
+                    Console.WriteLine($"Source file not found: {sourceFilePath}");
                     return;
                 }
 
-                // Load the workbook from the specified file.
-                Workbook workbook = new Workbook(inputFile);
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(sourceFilePath);
 
-                // Base directory for relative path calculation – the folder containing the workbook.
-                string baseDirectory = Path.GetDirectoryName(inputFile) ?? string.Empty;
+                // Determine the directory of the workbook – this will be the base for relative paths
+                string workbookDirectory = Path.GetDirectoryName(sourceFilePath);
 
-                // Get the collection of external links.
+                // Access the collection of external links
                 ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
-                // Iterate through each external link and convert its DataSource to a relative path.
+                // Iterate through each external link and convert its DataSource to a relative path
                 for (int i = 0; i < externalLinks.Count; i++)
                 {
                     ExternalLink link = externalLinks[i];
-                    string currentPath = link.DataSource;
 
-                    // Only process if the path is absolute (e.g., starts with a drive letter or UNC).
-                    if (!string.IsNullOrEmpty(currentPath) && Path.IsPathRooted(currentPath))
+                    // Original data source (could be absolute path, UNC path, or URL)
+                    string originalPath = link.DataSource;
+
+                    // Only process if the path is rooted (i.e., an absolute file system path)
+                    if (!string.IsNullOrEmpty(originalPath) && Path.IsPathRooted(originalPath))
                     {
-                        // Compute the relative path from the workbook's folder to the external file.
-                        string relativePath = Path.GetRelativePath(baseDirectory, currentPath);
+                        // Compute the relative path from the workbook's folder to the external file
+                        string relativePath = Path.GetRelativePath(workbookDirectory, originalPath);
 
-                        // Update the external link to use the relative path.
+                        // Update the external link to use the relative path
                         link.DataSource = relativePath;
+
+                        // Optionally also update OriginalDataSource to keep consistency
+                        link.OriginalDataSource = relativePath;
                     }
                 }
 
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(outputFile);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                // Prepare output path and ensure its directory exists
+                string outputFilePath = @"C:\Data\MainWorkbook_RelativeLinks.xlsx";
+                string outputDir = Path.GetDirectoryName(outputFilePath);
+                if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the modified workbook to the desired location.
-                workbook.Save(outputFile);
-                Console.WriteLine("Workbook saved successfully.");
+                // Save the modified workbook (lifecycle rule: save)
+                workbook.Save(outputFilePath);
+
+                Console.WriteLine("External links have been updated to relative paths and workbook saved to:");
+                Console.WriteLine(outputFilePath);
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors.
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine("An error occurred:");
+                Console.WriteLine(ex.Message);
             }
-        }
-
-        // Example usage
-        public static void Main()
-        {
-            string sourcePath = @"C:\Data\MainWorkbook.xlsx";
-            string destinationPath = @"C:\Data\MainWorkbook_Relative.xlsx";
-
-            Run(sourcePath, destinationPath);
-
-            Console.WriteLine("External links have been updated to relative paths and saved to:");
-            Console.WriteLine(destinationPath);
         }
     }
 }

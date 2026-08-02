@@ -1,111 +1,142 @@
+// Title: C# – Extract and Save Embedded OLE Objects from Excel with Aspose.Cells (auto‑decompress)
+// Description: Loads an Excel workbook, walks through every worksheet, pulls each embedded OLE object, determines its original extension via FileFormatType, transparently decompresses GZip data when needed, and writes the file to a user‑defined folder with a unique name.
+// Keywords: Aspose.Cells | C# | OLE object extraction | Excel embedded files | GZip decompression | FileFormatType mapping | save OLE to disk | batch OLE export | extract embedded Word PDF | auto‑decompress OLE
+// Common Searches: extract OLE objects from Excel using Aspose.Cells C# | decompress embedded OLE data in .NET | map Aspose.Cells FileFormatType to file extension | save extracted OLE files to folder | batch export embedded documents from workbook
+// Developer Intent: Retrieve every embedded OLE object from an Excel file, decompress it if compressed, and store it with the correct file extension.
+// Use Cases: Archive all Word, PDF, and image files embedded across multiple sheets for compliance. | Automate a document‑ingestion pipeline that extracts, decompresses, and indexes OLE content in a DMS. | Generate a catalog of embedded objects, including source sheet, inferred type, and saved path.
+// AI Prompts: Write C# code with Aspose.Cells that extracts OLE objects, determines their extensions, auto‑decompresses GZip data, and saves them to a target directory. | Explain a safe way to convert Aspose.Cells FileFormatType values to common file extensions without hard‑coding version‑specific enum members. | Suggest improvements for error handling, unknown format fallback, and preserving original OLE object names during extraction.
+
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;   // Needed for OleObject and OleObjectCollection
+using Aspose.Cells.Drawing;   // Required for OleObject and OleObjectCollection
 
 namespace OleObjectExtractor
 {
+    // Loads an Excel workbook, walks through every worksheet, pulls each embedded OLE object, determines its original extension via FileFormatType, transparently decompresses GZip data when needed, and writes the file to a user‑defined folder with a unique name.
     class Program
     {
         static void Main(string[] args)
         {
+            // Path to the Excel file that contains OLE objects
+            string excelFilePath = @"C:\Input\WorkbookWithOleObjects.xlsx";
+
+            // Folder where extracted files will be saved
+            string outputFolder = @"C:\Output\ExtractedOleObjects";
+
+            // Ensure the output folder exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Verify the input file exists before loading
+            if (!File.Exists(excelFilePath))
+            {
+                Console.WriteLine($"Input file not found: {excelFilePath}");
+                return;
+            }
+
+            Workbook workbook;
             try
             {
-                // Input Excel file containing OLE objects
-                string inputFile = @"C:\Input\WorkbookWithOleObjects.xlsx";
-
-                // Folder where extracted files will be saved
-                string outputFolder = @"C:\Output\ExtractedOleObjects";
-
-                ExtractOleObjects(inputFile, outputFolder);
+                // Load the workbook
+                workbook = new Workbook(excelFilePath);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
             }
-        }
 
-        /// <summary>
-        /// Extracts all embedded OLE objects from the specified workbook and saves them to the given folder.
-        /// </summary>
-        /// <param name="workbookPath">Path to the source Excel workbook.</param>
-        /// <param name="outputDir">Directory where extracted files will be written.</param>
-        static void ExtractOleObjects(string workbookPath, string outputDir)
-        {
-            try
+            // Iterate through all worksheets
+            for (int sheetIdx = 0; sheetIdx < workbook.Worksheets.Count; sheetIdx++)
             {
-                // Ensure the output directory exists
-                if (!Directory.Exists(outputDir))
-                    Directory.CreateDirectory(outputDir);
+                Worksheet sheet = workbook.Worksheets[sheetIdx];
+                OleObjectCollection oleObjects = sheet.OleObjects;
 
-                // Verify the workbook file exists before loading
-                if (!File.Exists(workbookPath))
+                // Process each OLE object in the current worksheet
+                for (int oleIdx = 0; oleIdx < oleObjects.Count; oleIdx++)
                 {
-                    Console.Error.WriteLine($"Workbook not found: {workbookPath}");
-                    return;
-                }
+                    OleObject ole = oleObjects[oleIdx];
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                    // Retrieve the embedded data. Prefer ObjectData; if null, fall back to FullObjectBin.
+                    byte[] data = ole.ObjectData ?? ole.FullObjectBin;
 
-                // Iterate through each worksheet
-                for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
-                {
-                    Worksheet sheet = workbook.Worksheets[wsIndex];
-                    OleObjectCollection oleObjects = sheet.OleObjects;
-
-                    // Process each OLE object in the worksheet
-                    for (int oleIndex = 0; oleIndex < oleObjects.Count; oleIndex++)
+                    if (data == null || data.Length == 0)
                     {
-                        OleObject ole = oleObjects[oleIndex];
+                        Console.WriteLine($"Worksheet {sheetIdx}, OLE {oleIdx}: No data found.");
+                        continue;
+                    }
 
-                        // Retrieve the embedded data (byte array)
-                        byte[] data = ole.ObjectData;
-                        if (data == null || data.Length == 0)
-                            continue; // No data to extract
+                    // Determine file extension based on the FileFormatType property
+                    string extension = GetExtensionFromFormat(ole.FileFormatType);
 
-                        // Determine a file name for the extracted object
-                        string fileName;
+                    // Build a unique file name
+                    string fileName = $"Sheet{sheetIdx}_Ole{oleIdx}{extension}";
+                    string outputPath = Path.Combine(outputFolder, fileName);
 
-                        // Prefer the original source file name if available
-                        if (!string.IsNullOrEmpty(ole.ObjectSourceFullName))
-                        {
-                            fileName = Path.GetFileName(ole.ObjectSourceFullName);
-                        }
-                        else if (!string.IsNullOrEmpty(ole.SourceFullName)) // obsolete property, kept for compatibility
-                        {
-                            fileName = Path.GetFileName(ole.SourceFullName);
-                        }
-                        else
-                        {
-                            // Fallback to a generated name using worksheet and object indices
-                            fileName = $"Sheet{wsIndex + 1}_OleObject{oleIndex + 1}.bin";
-                        }
+                    // Attempt to decompress if the data is compressed
+                    byte[] finalData = TryDecompress(data);
 
-                        // Combine with output directory
-                        string outputPath = Path.Combine(outputDir, fileName);
-
-                        // Decompress if needed; otherwise use raw data
-                        byte[] finalData = TryDecompress(data);
-
-                        // Write the extracted file
+                    try
+                    {
+                        // Save the extracted file
                         File.WriteAllBytes(outputPath, finalData);
                         Console.WriteLine($"Extracted OLE object to: {outputPath}");
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to write file '{outputPath}': {ex.Message}");
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error extracting OLE objects: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Attempts to decompress a byte array assuming it is GZip-compressed.
-        /// Returns the original array if decompression fails.
-        /// </summary>
-        static byte[] TryDecompress(byte[] data)
+        // Maps Aspose.Cells FileFormatType to a typical file extension.
+        private static string GetExtensionFromFormat(FileFormatType format)
+        {
+            // Use the enum name as a string to avoid version‑specific enum members.
+            string name = format.ToString().ToLowerInvariant();
+
+            switch (name)
+            {
+                case "doc":
+                case "docx":
+                    return ".docx";
+
+                case "xls":
+                case "xlsx":
+                case "xlsb":
+                case "xlsm":
+                    return ".xlsx";
+
+                case "ppt":
+                case "pptx":
+                    return ".pptx";
+
+                case "pdf":
+                    return ".pdf";
+
+                case "txt":
+                    return ".txt";
+
+                case "rtf":
+                    return ".rtf";
+
+                case "html":
+                case "mhtml":
+                    return ".html";
+
+                case "csv":
+                    return ".csv";
+
+                default:
+                    return ".bin"; // Fallback for unknown types
+            }
+        }
+
+        // Attempts to decompress data assuming it might be GZip-compressed.
+        // Returns the original data if decompression is not applicable.
+        private static byte[] TryDecompress(byte[] data)
         {
             try
             {
@@ -119,7 +150,7 @@ namespace OleObjectExtractor
             }
             catch
             {
-                // Not a GZip stream or decompression failed; return original data
+                // If decompression fails, assume data was not compressed.
                 return data;
             }
         }

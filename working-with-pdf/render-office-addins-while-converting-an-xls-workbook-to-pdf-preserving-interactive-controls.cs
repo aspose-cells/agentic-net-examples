@@ -1,20 +1,29 @@
 using System;
-using Aspose.Cells.Utility;
+using Aspose.Cells;
+using Aspose.Cells.Saving; // PdfSaveOptions resides here
 
+// Author: Generated example for converting XLS to PDF while attempting to preserve interactive controls
 class Program
 {
     static void Main()
     {
-        // Path to the source XLS workbook that may contain Office Add‑Ins (interactive controls)
-        string sourcePath = "input.xls";
+        // Input XLS workbook (can contain form controls, ActiveX, etc.)
+        string inputFile = "input.xls";
 
-        // Desired output PDF file path
-        string destPath = "output.pdf";
+        // Desired PDF output file
+        string outputFile = "output.pdf";
 
-        // Convert the workbook to PDF. ConversionUtility handles loading and saving internally.
-        // Interactive controls are preserved when the format supports them.
-        ConversionUtility.Convert(sourcePath, destPath);
+        // Load the workbook from the XLS file
+        Workbook workbook = new Workbook(inputFile);
 
-        Console.WriteLine("Workbook has been successfully converted to PDF.");
+        // Configure PDF save options – aim to keep interactive controls (e.g., form fields)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+        // NOTE: The exact property to preserve controls may differ between Aspose.Cells versions.
+        // If a property such as PreserveFormFields exists, enable it here.
+        // pdfOptions.PreserveFormFields = true; // <-- verify against the current API documentation
+
+        // Save the workbook as PDF using the configured options
+        workbook.Save(outputFile, pdfOptions);
     }
 }

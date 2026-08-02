@@ -4,75 +4,53 @@ using Aspose.Cells;
 
 namespace AsposeCellsJsonMergeDemo
 {
-    public static class JsonFilesMerger
+    class Program
     {
-        /// <summary>
-        /// Merges multiple JSON files into a single workbook.
-        /// </summary>
-        /// <param name="jsonFilePaths">Array of JSON file paths to merge.</param>
-        /// <param name="outputPath">Path of the resulting Excel file.</param>
-        public static void MergeJsonFiles(string[] jsonFilePaths, string outputPath)
+        static void Main()
         {
-            try
-            {
-                // Create an empty destination workbook.
-                Workbook destWorkbook = new Workbook();
-
-                foreach (string jsonPath in jsonFilePaths)
-                {
-                    // Ensure the JSON file exists before loading.
-                    if (!File.Exists(jsonPath))
-                    {
-                        Console.WriteLine($"Warning: File not found - {jsonPath}. Skipping.");
-                        continue;
-                    }
-
-                    // Load the JSON file with MultipleWorksheets enabled.
-                    JsonLoadOptions loadOptions = new JsonLoadOptions { MultipleWorksheets = true };
-                    Workbook sourceWorkbook = new Workbook(jsonPath, loadOptions);
-
-                    // Merge the source workbook into the destination workbook.
-                    destWorkbook.Combine(sourceWorkbook);
-                }
-
-                // Save the merged workbook.
-                destWorkbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Merged workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during merging: {ex.Message}");
-            }
-        }
-
-        // Example usage
-        public static void RunDemo()
-        {
+            // Paths to the JSON files to be merged
             string[] jsonFiles = new string[]
             {
-                "Data1.json",
-                "Data2.json",
-                "Data3.json"
+                "data1.json",
+                "data2.json",
+                "data3.json"
             };
 
-            string outputFile = "MergedResult.xlsx";
+            // Destination workbook that will contain all worksheets
+            Workbook mergedWorkbook = new Workbook();
 
-            MergeJsonFiles(jsonFiles, outputFile);
-        }
-    }
+            // Iterate over each JSON file, load it into a temporary workbook,
+            // and combine it with the destination workbook.
+            foreach (string jsonPath in jsonFiles)
+            {
+                if (!File.Exists(jsonPath))
+                {
+                    Console.WriteLine($"File not found: {jsonPath}");
+                    continue;
+                }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                JsonFilesMerger.RunDemo();
+                // Load options for JSON – we keep default behavior (single worksheet per file)
+                JsonLoadOptions loadOptions = new JsonLoadOptions
+                {
+                    // If the JSON structure contains multiple top‑level arrays and you want each
+                    // array as a separate worksheet, set this to true. Here we keep it false
+                    // so each file becomes one worksheet.
+                    MultipleWorksheets = false
+                };
+
+                // Load the JSON file into a temporary workbook
+                Workbook tempWorkbook = new Workbook(jsonPath, loadOptions);
+
+                // Combine the temporary workbook into the merged workbook.
+                // This adds all worksheets from tempWorkbook to mergedWorkbook.
+                mergedWorkbook.Combine(tempWorkbook);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+
+            // Save the merged workbook to an XLSX file
+            string outputPath = "MergedJsonWorkbook.xlsx";
+            mergedWorkbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Merged workbook saved to: {outputPath}");
         }
     }
 }

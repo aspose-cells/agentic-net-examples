@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
@@ -17,61 +18,59 @@ namespace AsposeCellsSlicerChartDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // -------------------------------------------------
-                // 1. Populate sample data (Fruit, Sales)
-                // -------------------------------------------------
+                // Populate sample data (Fruit, Year, Amount)
                 cells["A1"].PutValue("Fruit");
-                cells["B1"].PutValue("Sales");
-                cells["A2"].PutValue("Apple");
-                cells["B2"].PutValue(120);
-                cells["A3"].PutValue("Orange");
-                cells["B3"].PutValue(150);
-                cells["A4"].PutValue("Banana");
-                cells["B4"].PutValue(90);
-                cells["A5"].PutValue("Grape");
-                cells["B5"].PutValue(60);
+                cells["B1"].PutValue("Year");
+                cells["C1"].PutValue("Amount");
 
-                // -------------------------------------------------
-                // 2. Create a PivotTable based on the data
-                // -------------------------------------------------
-                // Place the pivot table starting at cell D1
-                int pivotIdx = sheet.PivotTables.Add("A1:B5", "D1", "FruitPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                string[] fruits = { "Apple", "Orange", "Banana", "Apple", "Orange", "Banana" };
+                int[] years = { 2020, 2020, 2020, 2021, 2021, 2021 };
+                int[] amounts = { 50, 70, 60, 80, 90, 100 };
 
-                // Row field: Fruit, Data field: Sales (Sum)
+                for (int i = 0; i < fruits.Length; i++)
+                {
+                    cells[i + 1, 0].PutValue(fruits[i]);   // Column A
+                    cells[i + 1, 1].PutValue(years[i]);   // Column B
+                    cells[i + 1, 2].PutValue(amounts[i]); // Column C
+                }
+
+                // Add a pivot table based on the data range
+                PivotTableCollection pivots = sheet.PivotTables;
+                int pivotIndex = pivots.Add("=Sheet1!A1:C7", "E2", "FruitPivot");
+                PivotTable pivot = pivots[pivotIndex];
+
+                // Configure pivot fields: Fruit as row, Year as column, Amount as data
                 pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Refresh to calculate the pivot data
+                pivot.AddFieldToArea(PivotFieldType.Column, "Year");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+                pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
                 pivot.RefreshData();
                 pivot.CalculateData();
 
-                // -------------------------------------------------
-                // 3. Add a chart that is linked to the PivotTable
-                // -------------------------------------------------
-                // The chart will be placed at rows 12‑22, columns 0‑7
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 12, 0, 22, 7);
-                Chart chart = sheet.Charts[chartIdx];
-                chart.Title.Text = "Sales by Fruit (Pivot)";
+                // Add a column chart that uses the pivot table as its data source
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-                // Use a static address that covers the pivot table data area.
-                // After the pivot is calculated, the data starts at D2 and ends at E5.
-                chart.NSeries.Add("D2:E5", true);
-                chart.NSeries[0].Name = "Sales";
+                // Convert the pivot table range (CellArea) to an A1‑style address string
+                CellArea area = pivot.TableRange1;
+                string startAddr = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                string endAddr = CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
+                string rangeAddress = $"{sheet.Name}!{startAddr}:{endAddr}";
 
-                // -------------------------------------------------
-                // 4. Add a slicer linked to the PivotTable's "Fruit" field
-                // -------------------------------------------------
-                // Place the slicer at cell G1 (row 0, column 6)
-                int slicerIdx = sheet.Slicers.Add(pivot, 0, 6, "Fruit");
-                Slicer slicer = sheet.Slicers[slicerIdx];
+                // Use the address string for the chart series
+                chart.NSeries.Add(rangeAddress, true);
+                chart.Title.Text = "Fruit Sales by Year";
+
+                // Add a slicer linked to the pivot table to filter by Fruit (placed at G2)
+                int slicerIndex = sheet.Slicers.Add(pivot, "G2", "Fruit");
+                Slicer slicer = sheet.Slicers[slicerIndex];
                 slicer.Caption = "Fruit Filter";
                 slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
 
-                // -------------------------------------------------
-                // 5. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("SlicerChartDemo.xlsx", SaveFormat.Xlsx);
+                // Save the workbook
+                string outputPath = "SlicerChartDemo.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {

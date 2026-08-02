@@ -1,65 +1,52 @@
+// Title: Aspose.Cells for .NET – Turn Off QueryTable BackgroundRefresh (Synchronous Retrieval)
+// Description: Loads a workbook, locates the first QueryTable, accesses its ExternalConnection, sets BackgroundRefresh = false to force synchronous data refresh, and saves the file. Demonstrates how to disable asynchronous background refresh in Aspose.Cells.
+// Keywords: Aspose.Cells | QueryTable | BackgroundRefresh | synchronous data | C# example | ExternalConnection | disable background refresh | Excel data import
+// Common Searches: Aspose.Cells disable query table background refresh | set BackgroundRefresh false C# | synchronous query table refresh Aspose.Cells | turn off background refresh Excel using Aspose | how to make query table refresh synchronously .NET
+// Developer Intent: Disable the background refresh of a QueryTable so that data is fetched synchronously.
+// Use Cases: Ensure query table data is fully refreshed before calculations or export. | Avoid race conditions in automated reporting pipelines that rely on up‑to‑date data. | Standardize connection settings across multiple workbooks for consistent data retrieval.
+// AI Prompts: Write C# code with Aspose.Cells that disables BackgroundRefresh for all QueryTables in a workbook. | Explain how to confirm that BackgroundRefresh = false was saved in the workbook. | Provide error handling for QueryTables without an ExternalConnection when disabling background refresh.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// Loads a workbook, locates the first QueryTable, accesses its ExternalConnection, sets BackgroundRefresh = false to force synchronous data refresh, and saves the file. Demonstrates how to disable asynchronous background refresh in Aspose.Cells.
+class SetQueryTableBackgroundRefresh
 {
-    public class SetQueryTableBackgroundRefresh
+    static void Main()
     {
-        public static void Run()
+        // Load an existing workbook that contains a query table
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Verify that the worksheet has at least one query table
+        if (worksheet.QueryTables.Count > 0)
         {
-            try
+            // Retrieve the first query table
+            QueryTable queryTable = worksheet.QueryTables[0];
+
+            // Obtain the external connection associated with the query table
+            ExternalConnection externalConnection = queryTable.ExternalConnection;
+
+            if (externalConnection != null)
             {
-                // Create a new workbook (or load an existing one if needed)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one query table in the worksheet
-                if (worksheet.QueryTables.Count > 0)
-                {
-                    // Get the first query table
-                    QueryTable queryTable = worksheet.QueryTables[0];
-
-                    // Retrieve the associated external connection (read‑only property)
-                    ExternalConnection externalConnection = queryTable.ExternalConnection;
-
-                    if (externalConnection != null)
-                    {
-                        // Set BackgroundRefresh to false for synchronous data retrieval
-                        externalConnection.BackgroundRefresh = false;
-                        Console.WriteLine("BackgroundRefresh set to: " + externalConnection.BackgroundRefresh);
-                    }
-                    else
-                    {
-                        Console.WriteLine("The query table does not have an associated external connection.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No query tables found in the worksheet.");
-                }
-
-                // Save the workbook with the modified settings
-                string outputPath = "QueryTableBackgroundRefreshDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to " + Path.GetFullPath(outputPath));
+                // Set BackgroundRefresh to false to enforce synchronous data retrieval
+                externalConnection.BackgroundRefresh = false;
+                Console.WriteLine("BackgroundRefresh set to false for the query table.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("The query table does not have an associated external connection.");
             }
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        else
         {
-            SetQueryTableBackgroundRefresh.Run();
+            Console.WriteLine("No query tables found in the worksheet.");
         }
+
+        // Save the workbook with the updated connection settings
+        workbook.Save("output.xlsx");
     }
 }

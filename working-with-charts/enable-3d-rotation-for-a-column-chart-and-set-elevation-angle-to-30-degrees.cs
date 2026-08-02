@@ -2,11 +2,11 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Enable3DRotation
+public class Enable3DRotationDemo
 {
-    static void Main()
+    public static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
@@ -28,13 +28,13 @@ class Enable3DRotation
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Enable 3‑D rotation (set rotation angle)
-        chart.RotationAngle = 45; // Valid range for Column3D is 0‑44
+        // Enable 3‑D rotation (rotation around the Z‑axis)
+        chart.RotationAngle = 30; // valid range 0‑44 for Column3D
 
         // Set elevation angle to 30 degrees
         chart.Elevation = 30;
 
         // Save the workbook
-        workbook.Save("3DColumnChart.xlsx");
+        workbook.Save("Column3D_Rotation_Elevation.xlsx");
     }
 }

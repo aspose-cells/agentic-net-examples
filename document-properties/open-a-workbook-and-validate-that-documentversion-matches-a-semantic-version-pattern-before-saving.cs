@@ -1,31 +1,57 @@
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-class DocumentVersionValidator
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class DocumentVersionValidator
     {
-        // Load an existing workbook
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Retrieve the DocumentVersion property
-        string version = workbook.BuiltInDocumentProperties.DocumentVersion;
-
-        // Semantic version pattern: major.minor.patch with optional prerelease and build metadata
-        string semVerPattern = @"^\d+\.\d+\.\d+(-[0-9A-Za-z-.]+)?(\+[0-9A-Za-z-.]+)?$";
-
-        // Validate the version string
-        if (!Regex.IsMatch(version ?? string.Empty, semVerPattern))
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Invalid DocumentVersion '{version}'. Setting default version.");
-            workbook.BuiltInDocumentProperties.DocumentVersion = "1.0.0";
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Save the workbook
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath, SaveFormat.Xlsx);
-        Console.WriteLine($"Workbook saved to {outputPath}");
+        public static void Run()
+        {
+            // Path to the existing workbook
+            string inputPath = "InputWorkbook.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.Error.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Open the workbook (load rule)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the DocumentVersion property
+            string version = workbook.BuiltInDocumentProperties.DocumentVersion;
+
+            // Define a semantic version pattern: major.minor[.patch] (e.g., 1.0 or 2.5.3)
+            string pattern = @"^\d+\.\d+(\.\d+)?$";
+
+            // Validate the version string against the pattern
+            if (!Regex.IsMatch(version ?? string.Empty, pattern))
+            {
+                throw new InvalidOperationException(
+                    $"DocumentVersion \"{version}\" does not match the required semantic version pattern.");
+            }
+
+            // If validation passes, save the workbook (save rule)
+            string outputPath = "ValidatedWorkbook.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\" with valid DocumentVersion \"{version}\".");
+        }
     }
 }

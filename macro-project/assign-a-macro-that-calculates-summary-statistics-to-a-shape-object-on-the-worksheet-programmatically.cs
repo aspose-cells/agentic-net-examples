@@ -6,26 +6,24 @@ namespace AsposeCellsMacroExample
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet (row, column, upperLeftPixel, upperTopPixel, width, height)
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 50, 200, 100);
+            // Add a rectangle shape to the worksheet (row, column, upperLeftPixel, upperLeftPixel, width, height)
+            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 100, 200, 100);
 
-            // Assign a macro name to the shape.
-            // The macro "CalculateSummaryStats" should exist in the workbook's VBA project.
+            // Assign a macro that calculates summary statistics to the shape
+            // The macro must exist in the workbook's VBA project (e.g., in a standard module)
             shape.MacroName = "CalculateSummaryStats()";
 
-            // Optional: give the shape a visible name
-            shape.Name = "StatsButton";
+            // Optional: give the shape a visible text label
+            shape.Text = "Run Summary Stats";
 
             // Save the workbook (the macro will be linked to the shape)
-            workbook.Save("WorkbookWithMacroShape.xlsx", SaveFormat.Xlsx);
+            workbook.Save("MacroShapeExample.xlsm", SaveFormat.Xlsm);
         }
     }
 }

@@ -1,56 +1,51 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsPasswordDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Path to the Excel file
             string filePath = "sample.xlsx";
 
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+            // Detect file format and check if the workbook is encrypted
+            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
+            Workbook workbook;
 
-            try
+            if (fileInfo.IsEncrypted)
             {
-                // Detect file format and check if the workbook is encrypted
-                FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-                Workbook workbook;
+                // Prompt the user for the password
+                Console.Write("The workbook is password protected. Please enter the password: ");
+                string password = Console.ReadLine();
 
-                if (fileInfo.IsEncrypted)
+                // Load the workbook using the provided password
+                LoadOptions loadOptions = new LoadOptions();
+                loadOptions.Password = password;
+
+                try
                 {
-                    // Prompt the user for the password
-                    Console.Write("The workbook is password protected. Enter password: ");
-                    string password = Console.ReadLine();
-
-                    // Load the workbook using the provided password
-                    LoadOptions loadOptions = new LoadOptions { Password = password };
                     workbook = new Workbook(filePath, loadOptions);
+                    Console.WriteLine("Workbook loaded successfully with the provided password.");
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Load the workbook directly (no password required)
-                    workbook = new Workbook(filePath);
+                    // Handle incorrect password or other loading errors
+                    Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                    return;
                 }
-
-                // Example operation: display the value of cell A1 from the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine("Value of A1: " + sheet.Cells["A1"].Value?.ToString());
-
-                // (Optional) Save the workbook after any modifications
-                // workbook.Save("output.xlsx");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Load the workbook normally (no password required)
+                workbook = new Workbook(filePath);
+                Console.WriteLine("Workbook loaded successfully (no password required).");
             }
+
+            // Example: display the value of the first cell in the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"First cell value: {sheet.Cells["A1"].Value}");
         }
     }
 }

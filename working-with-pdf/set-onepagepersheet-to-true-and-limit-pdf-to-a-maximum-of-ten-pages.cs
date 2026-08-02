@@ -1,53 +1,60 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
 namespace AsposeCellsExamples
 {
-    public class Program
+    // Author: Aspose.Cells .NET example – sets OnePagePerSheet and limits PDF to 10 pages
+    class OnePagePerSheetWithPageLimit
     {
-        public static void Main()
+        static void Main()
         {
-            OnePagePerSheetAndLimitPagesDemo.Run();
+            // Create a new workbook and add sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            for (int i = 0; i < 200; i++)
+            {
+                sheet.Cells[i, 0].Value = $"Row {i + 1}";
+            }
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = true,                     // All content of a sheet fits on one page
+                PageSavingCallback = new MaxPageCallback(10) // Limit output to a maximum of 10 pages
+            };
+
+            // Save the workbook as PDF
+            workbook.Save("OnePagePerSheet_Limited.pdf", pdfOptions);
         }
     }
 
-    public class OnePagePerSheetAndLimitPagesDemo
+    // Callback that stops saving after a specified number of pages
+    internal class MaxPageCallback : IPageSavingCallback
     {
-        public static void Run()
+        private readonly int _maxPages;
+        private int _currentPage;
+
+        public MaxPageCallback(int maxPages)
         {
-            try
+            _maxPages = maxPages;
+            _currentPage = 0;
+        }
+
+        public void PageStartSaving(PageStartSavingArgs args)
+        {
+            // No action needed before a page is saved
+        }
+
+        public void PageEndSaving(PageEndSavingArgs args)
+        {
+            // Increment page counter
+            _currentPage++;
+
+            // If the maximum page count is reached, prevent further pages
+            if (_currentPage >= _maxPages)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Populate the workbook with sample data to generate multiple pages
-                Worksheet sheet = workbook.Worksheets[0];
-                for (int row = 0; row < 200; row++)
-                {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
-
-                // Configure PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    OnePagePerSheet = true, // Render each worksheet on a single page
-                    PageCount = 10          // Limit the output to a maximum of ten pages
-                };
-
-                string outputPath = "OnePagePerSheet_LimitedTo10Pages.pdf";
-
-                // Save the workbook as PDF with the specified options
-                workbook.Save(outputPath, pdfOptions);
-            }
-            catch (Exception ex)
-            {
-                // Log any errors that occur during processing
-                Console.WriteLine($"Error: {ex.Message}");
+                args.HasMorePages = false;
             }
         }
     }

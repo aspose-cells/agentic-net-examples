@@ -1,49 +1,45 @@
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsBooleanLocalizationDemo
+class BooleanLocalizationDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Create custom globalization settings with localized boolean strings
-            SettableGlobalizationSettings globalization = new SettableGlobalizationSettings();
-            globalization.SetBooleanValueString(true, "VRAI");   // French for TRUE
-            globalization.SetBooleanValueString(false, "FAUX"); // French for FALSE
+        // Create custom globalization settings and define localized boolean strings
+        SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
+        gSettings.SetBooleanValueString(true, "YES_LOCAL");
+        gSettings.SetBooleanValueString(false, "NO_LOCAL");
 
-            // Apply the custom settings to the workbook
-            workbook.Settings.GlobalizationSettings = globalization;
+        // Apply the custom globalization settings to the workbook
+        workbook.Settings.GlobalizationSettings = gSettings;
 
-            // Insert logical formulas that evaluate to boolean values
-            worksheet.Cells["A1"].Formula = "=1<2"; // evaluates to TRUE
-            worksheet.Cells["A2"].Formula = "=1>2"; // evaluates to FALSE
+        // Insert logical formulas that evaluate to boolean values
+        sheet.Cells["A1"].Formula = "=2>1"; // evaluates to true
+        sheet.Cells["A2"].Formula = "=1>2"; // evaluates to false
 
-            // Calculate formulas so that BoolValue and StringValue are populated
-            workbook.CalculateFormula();
+        // Calculate the formulas so that the cells contain the evaluated results
+        workbook.CalculateFormula();
 
-            // Retrieve the boolean values from the cells
-            bool boolA1 = worksheet.Cells["A1"].BoolValue;
-            bool boolA2 = worksheet.Cells["A2"].BoolValue;
+        // Retrieve the displayed string values from the cells
+        string displayedA1 = sheet.Cells["A1"].StringValue; // should show "YES_LOCAL"
+        string displayedA2 = sheet.Cells["A2"].StringValue; // should show "NO_LOCAL"
 
-            // Get the localized display strings using the globalization settings
-            string localizedA1 = globalization.GetBooleanValueString(boolA1);
-            string localizedA2 = globalization.GetBooleanValueString(boolA2);
+        // Use GetBooleanValueString to obtain the expected localized strings
+        string expectedTrue = gSettings.GetBooleanValueString(true);
+        string expectedFalse = gSettings.GetBooleanValueString(false);
 
-            // Also retrieve the string representation directly from the cells
-            string cellStringA1 = worksheet.Cells["A1"].StringValue;
-            string cellStringA2 = worksheet.Cells["A2"].StringValue;
+        // Output the results and validation status
+        Console.WriteLine($"Cell A1 displays: {displayedA1} (expected: {expectedTrue})");
+        Console.WriteLine($"Cell A2 displays: {displayedA2} (expected: {expectedFalse})");
 
-            // Output the results for verification
-            Console.WriteLine($"Cell A1 BoolValue: {boolA1}, Localized via settings: {localizedA1}, Cell StringValue: {cellStringA1}");
-            Console.WriteLine($"Cell A2 BoolValue: {boolA2}, Localized via settings: {localizedA2}, Cell StringValue: {cellStringA2}");
+        bool isValid = displayedA1 == expectedTrue && displayedA2 == expectedFalse;
+        Console.WriteLine("Localization validation " + (isValid ? "passed" : "failed"));
 
-            // Save the workbook (demonstrates that the localized strings are persisted)
-            workbook.Save("BooleanLocalizationDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("BooleanLocalizationDemo.xlsx");
     }
 }

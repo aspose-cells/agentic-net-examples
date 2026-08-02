@@ -1,26 +1,18 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-namespace AsposeCellsLanguageDemo
+class SetLanguageDemo
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the existing spreadsheet
-            string inputPath = "input.xlsx";
+        // Load an existing workbook (provide the correct path to your file)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook (uses Aspose.Cells default load options)
-            Workbook workbook = new Workbook(inputPath);
+        // Set the built‑in Language property to French (France)
+        workbook.BuiltInDocumentProperties.Language = "fr-FR";
 
-            // Set the built‑in Language property to French (France)
-            workbook.BuiltInDocumentProperties.Language = "fr-FR";
-
-            // Save the modified workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            
-            Console.WriteLine($"Language property set to 'fr-FR' and workbook saved to '{outputPath}'.");
-        }
+        // Save the workbook with the updated language setting
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,38 +1,51 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class Program
+namespace AsposeCellsSubtotalStdDevDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Sample data: column A as the grouping field, column H as the values for StdDev
-        cells["A1"].PutValue("Group");
-        cells["H1"].PutValue("Value");
-
-        string[] groups = { "X", "X", "Y", "Y", "Z" };
-        double[] values = { 10, 20, 30, 40, 50 };
-
-        for (int i = 0; i < groups.Length; i++)
+        static void Main()
         {
-            cells[i + 1, 0].PutValue(groups[i]);   // Column A (index 0)
-            cells[i + 1, 7].PutValue(values[i]);   // Column H (index 7)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Populate sample data with a grouping column (G) and a numeric column (H)
+            // Header row
+            cells["G1"].PutValue("Group");
+            cells["H1"].PutValue("Value");
+
+            // Sample data rows
+            string[] groups = { "A", "A", "B", "B", "A", "B" };
+            double[] values = { 10, 12, 15, 18, 11, 16 };
+
+            for (int i = 0; i < groups.Length; i++)
+            {
+                cells[i + 1, 6].PutValue(groups[i]);   // Column G (index 6)
+                cells[i + 1, 7].PutValue(values[i]);   // Column H (index 7)
+            }
+
+            // Define the cell area that includes the header and data (G1:H7)
+            CellArea area = CellArea.CreateCellArea("G1", "H7");
+
+            // Add subtotals:
+            // - Group by column G (zero‑based index 6)
+            // - Use StdDev function (ConsolidationFunction.StdDev)
+            // - Apply subtotal to column H (zero‑based index 7)
+            // - Do not replace existing subtotals, no page breaks, summary placed below data (bottom)
+            worksheet.Cells.Subtotal(
+                area,
+                6,                                 // groupBy column index (G)
+                ConsolidationFunction.StdDev,     // StdDev function
+                new int[] { 7 },                  // totalList: column H
+                false,                            // replace existing subtotals
+                false,                            // add page breaks between groups
+                true);                            // summaryBelowData = true (bottom)
+
+            // Save the workbook
+            workbook.Save("SubtotalStdDevBottom.xlsx");
         }
-
-        // Define the cell area covering the data (from A1 to H{rows})
-        CellArea area = CellArea.CreateCellArea(0, 0, groups.Length, 7);
-
-        // Add subtotals:
-        // - Group by column A (index 0)
-        // - Use StdDev function on column H (index 7)
-        // - Do not replace existing subtotals, no page breaks, summary placed below data (bottom)
-        cells.Subtotal(area, 0, ConsolidationFunction.StdDev, new int[] { 7 }, false, false, true);
-
-        // Save the workbook
-        workbook.Save("SubtotalStdDevBottom.xlsx");
     }
 }

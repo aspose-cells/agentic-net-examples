@@ -3,127 +3,118 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsSecurityDemo
+class SecureExternalPathHandling
 {
-    public static class ExternalPathHandler
+    static void Main()
     {
-        // Base directory that is allowed for external file references
-        private static readonly string AllowedBaseDirectory = Path.GetFullPath(@"C:\AllowedData");
-
-        // Directory where the processed workbook will be saved
-        private static readonly string OutputDirectory = Path.GetFullPath(@"C:\ProcessedWorkbooks");
-
-        public static void Run(string inputWorkbookPath)
+        try
         {
-            // Verify input file exists
-            if (!File.Exists(inputWorkbookPath))
-                throw new FileNotFoundException("Input workbook not found.", inputWorkbookPath);
+            // Define a base directory that is considered safe for all external files.
+            string baseDirectory = Path.GetFullPath("AllowedExternalFiles");
+            Directory.CreateDirectory(baseDirectory);
 
-            // Resolve the full path of the input workbook and ensure it is within the allowed base directory
-            string fullInputPath = Path.GetFullPath(inputWorkbookPath);
-            if (!IsPathWithinBase(fullInputPath, AllowedBaseDirectory))
-                throw new UnauthorizedAccessException("Input workbook path is outside the allowed directory.");
+            // Example input workbook path located inside the safe directory.
+            string inputPath = Path.Combine(baseDirectory, "input.xlsx");
+
+            // Verify the input path does not escape the allowed directory.
+            if (!IsPathSecure(inputPath, baseDirectory))
+            {
+                Console.WriteLine("Input path is not within the allowed directory.");
+                return;
+            }
 
             Workbook workbook;
-            try
+
+            // Load the workbook only if the file exists; otherwise create a new workbook.
+            if (File.Exists(inputPath))
             {
-                // Load the workbook (standard Aspose.Cells lifecycle)
-                workbook = new Workbook(fullInputPath);
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                throw new InvalidOperationException("Failed to load workbook.", ex);
+                Console.WriteLine($"Input file not found at {inputPath}. Creating a new workbook.");
+                workbook = new Workbook(); // creates a default workbook
             }
 
-            // Iterate through all external connections and sanitize their SourceFile paths
-            foreach (ExternalConnection connection in workbook.DataConnections)
+            // Iterate over external connections and sanitize their file references.
+            foreach (ExternalConnection conn in workbook.DataConnections)
             {
-                string sourceFile = connection.SourceFile;
-                if (string.IsNullOrEmpty(sourceFile))
-                    continue;
-
-                // Convert to absolute path (handles both URI and system-specific notation)
-                string absoluteSourcePath;
-                try
+                // Secure handling of SourceFile property.
+                if (!string.IsNullOrEmpty(conn.SourceFile))
                 {
-                    // If the source is a URI, attempt to get the local path; otherwise treat as file path
-                    if (Uri.IsWellFormedUriString(sourceFile, UriKind.Absolute))
+                    string secureSource = GetSecurePath(conn.SourceFile, baseDirectory);
+                    if (secureSource != null)
                     {
-                        Uri uri = new Uri(sourceFile);
-                        absoluteSourcePath = uri.IsFile ? uri.LocalPath : string.Empty;
-                    }
-                    else
-                    {
-                        absoluteSourcePath = Path.GetFullPath(sourceFile);
+                        conn.SourceFile = secureSource;
                     }
                 }
-                catch
-                {
-                    // If parsing fails, skip this connection for safety
-                    continue;
-                }
 
-                // Verify the resolved path is within the allowed base directory
-                if (IsPathWithinBase(absoluteSourcePath, AllowedBaseDirectory))
+                // Secure handling of OdcFile property.
+                if (!string.IsNullOrEmpty(conn.OdcFile))
                 {
-                    // Keep the safe path
-                    connection.SourceFile = absoluteSourcePath;
-                }
-                else
-                {
-                    // Clear the path if it is unsafe
-                    connection.SourceFile = string.Empty;
+                    string secureOdc = GetSecurePath(conn.OdcFile, baseDirectory);
+                    if (secureOdc != null)
+                    {
+                        conn.OdcFile = secureOdc;
+                    }
                 }
             }
 
-            // Ensure the output directory exists
-            if (!Directory.Exists(OutputDirectory))
-                Directory.CreateDirectory(OutputDirectory);
+            // Add an external link only if the target file resides within the safe directory.
+            string externalFile = Path.Combine(baseDirectory, "ExternalWorkbook.xlsx");
+            if (File.Exists(externalFile) && IsPathSecure(externalFile, baseDirectory))
+            {
+                string[] sheetNames = new string[] { "Sheet1", "Sheet2" };
+                int linkIndex = workbook.Worksheets.ExternalLinks.Add(DirectoryType.Volume, externalFile, sheetNames);
+                Console.WriteLine($"External link added at index {linkIndex}");
+            }
 
-            // Construct a safe output file name (avoid path traversal by using only the file name)
-            string safeFileName = Path.GetFileName(fullInputPath);
-            string outputPath = Path.Combine(OutputDirectory, safeFileName);
-
-            // Save the workbook (standard Aspose.Cells save lifecycle)
+            // Save the workbook to a location inside the allowed directory (lifecycle rule).
+            string outputPath = Path.Combine(baseDirectory, "output_secure.xlsx");
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Helper method to verify that a path is inside a given base directory
-        private static bool IsPathWithinBase(string path, string baseDir)
+        catch (Exception ex)
         {
-            // Normalize both paths
-            string normalizedPath = Path.GetFullPath(path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-            string normalizedBase = Path.GetFullPath(baseDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-
-            // Compare using case-insensitive comparison on Windows
-            return normalizedPath.StartsWith(normalizedBase, StringComparison.OrdinalIgnoreCase);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    public static class Program
+    // Returns a normalized absolute path if it stays within baseDir; otherwise null.
+    static string GetSecurePath(string path, string baseDir)
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                string inputPath;
-                if (args.Length > 0)
-                {
-                    inputPath = args[0];
-                }
-                else
-                {
-                    Console.WriteLine("Please provide the full path to the input workbook as a command‑line argument.");
-                    return;
-                }
+            // Resolve relative paths against the base directory.
+            string combined = Path.IsPathRooted(path) ? path : Path.Combine(baseDir, path);
+            string fullPath = Path.GetFullPath(combined);
 
-                ExternalPathHandler.Run(inputPath);
-                Console.WriteLine("Workbook processed successfully.");
-            }
-            catch (Exception ex)
+            // Ensure the resolved path starts with the allowed base directory.
+            if (fullPath.StartsWith(baseDir, StringComparison.OrdinalIgnoreCase))
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                return fullPath;
             }
+        }
+        catch
+        {
+            // Ignore malformed paths.
+        }
+
+        Console.WriteLine($"Rejected insecure path: {path}");
+        return null;
+    }
+
+    // Simple validation that a given path resolves inside the allowed base directory.
+    static bool IsPathSecure(string path, string baseDir)
+    {
+        try
+        {
+            string fullPath = Path.GetFullPath(path);
+            return fullPath.StartsWith(baseDir, StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
         }
     }
 }

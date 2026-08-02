@@ -1,9 +1,10 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHeaderRowExample
+namespace AspiseCellsExamples
 {
-    class Program
+    // Author: Aspose.Cells .NET example
+    class HeaderRowHeightDemo
     {
         static void Main()
         {
@@ -12,39 +13,24 @@ namespace AsposeCellsHeaderRowExample
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate header row (row 0) and some sample data rows
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Description");
-            cells["C1"].PutValue("Price");
-
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue("Fresh red apple from the orchard");
-            cells["C2"].PutValue(1.20);
-
-            cells["A3"].PutValue("Banana");
-            cells["B3"].PutValue("Ripe bananas, sweet and soft");
-            cells["C3"].PutValue(0.80);
-
-            // Set a custom height for the header row to make it stand out (height in points)
-            cells.SetRowHeight(0, 30); // e.g., 30 points
-
-            // Determine the last row that contains data
-            int lastDataRow = cells.MaxDataRow; // zero‑based index
-
-            // Auto‑fit all rows except the header (rows 1 … lastDataRow)
-            if (lastDataRow >= 1)
+            // Populate sample data
+            for (int row = 0; row < 10; row++)
             {
-                sheet.AutoFitRows(1, lastDataRow);
+                for (int col = 0; col < 5; col++)
+                {
+                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
             }
 
-            // Optionally auto‑fit columns for better visibility
-            sheet.AutoFitColumns();
+            // Set a custom height for the header row (row index 0)
+            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange("1:1");
+            headerRange.RowHeight = 30;
+
+            // Auto‑fit all other rows while preserving the custom header height
+            sheet.AutoFitRows(true);
 
             // Save the workbook
-            string outputPath = "HeaderRowHeightDemo.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            workbook.Save("HeaderRowHeightDemo.xlsx");
         }
     }
 }

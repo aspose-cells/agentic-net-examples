@@ -2,39 +2,38 @@ using System;
 using System.Globalization;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsCultureDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (uses the provided creation rule)
+            Workbook workbook = new Workbook();
 
-        // Configure the workbook to use a specific culture (German - Germany)
-        // This affects date and number formatting throughout the workbook
-        workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+            // Set a specific CultureInfo for the workbook.
+            // This culture will be used for date and number formatting.
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE"); // German uses comma as decimal separator
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet and a cell
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
 
-        // Demonstrate number formatting with the specified culture
-        Cell numberCell = sheet.Cells["A1"];
-        numberCell.PutValue(1234567.89); // Put a numeric value
+            // Put a numeric value that will be formatted according to the German culture
+            cell.PutValue(1234567.89);
 
-        // Apply a built‑in number format (currency) which will be rendered using German conventions
-        Style numberStyle = numberCell.GetStyle();
-        numberStyle.Number = 4; // Currency format
-        numberCell.SetStyle(numberStyle);
+            // Create a style with a built‑in number format (e.g., Number with two decimal places)
+            Style style = workbook.CreateStyle();
+            style.Number = 2; // Built‑in format: "#,##0.00"
 
-        // Demonstrate date formatting with the specified culture
-        Cell dateCell = sheet.Cells["A2"];
-        dateCell.PutValue(DateTime.Now); // Put the current date/time
+            // Apply the style to the cell
+            cell.SetStyle(style);
 
-        // Apply a built‑in date format which will be rendered using German conventions
-        Style dateStyle = dateCell.GetStyle();
-        dateStyle.Number = 14; // Short date format
-        dateCell.SetStyle(dateStyle);
+            // Output the culture‑adjusted string representation of the cell value
+            Console.WriteLine($"Formatted value (de-DE): {cell.StringValue}");
 
-        // Save the workbook to a file
-        workbook.Save("LocalizedWorkbook.xlsx");
+            // Save the workbook (uses the provided save rule)
+            workbook.Save("CultureDemo.xlsx");
+        }
     }
 }

@@ -5,26 +5,25 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // create
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data containing commas
-        worksheet.Cells["A1"].PutValue("Apple, Banana, Cherry");
+        // Example data: a cell containing commas
+        sheet.Cells["A1"].PutValue("Apple, Banana, Cherry");
 
         // Retrieve the formatted text from the cell
-        Cell cell = worksheet.Cells["A1"];
-        string formattedText = cell.StringValue; // Gets the displayed string value
+        string originalText = sheet.Cells["A1"].StringValue;
 
-        // Replace commas with semicolons
-        string modifiedText = formattedText.Replace(",", ";");
+        // Replace all commas with semicolons
+        string modifiedText = originalText.Replace(",", ";");
 
         // Write the modified string back to the same cell
-        cell.PutValue(modifiedText);
+        sheet.Cells["A1"].PutValue(modifiedText);
 
         // Save the workbook
-        workbook.Save("ModifiedCell.xlsx");
+        workbook.Save("Modified.xlsx");
     }
 }

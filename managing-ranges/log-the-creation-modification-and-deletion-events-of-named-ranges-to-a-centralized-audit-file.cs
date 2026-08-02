@@ -4,97 +4,95 @@ using Aspose.Cells;
 
 namespace NamedRangeAuditDemo
 {
-    class Program
+    // Simple logger that appends audit entries to a text file
+    public static class AuditLogger
     {
-        // Path to the centralized audit file
-        private const string AuditFilePath = "NamedRangeAudit.log";
+        private static readonly string LogFilePath = "NamedRangeAudit.log";
 
-        // Append a message with timestamp to the audit file
-        static void Log(string message)
+        public static void Log(string message)
         {
-            try
-            {
-                string entry = $"{DateTime.UtcNow:O} - {message}";
-                File.AppendAllLines(AuditFilePath, new[] { entry });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Logging error: {ex.Message}");
-            }
+            string entry = $"{DateTime.UtcNow:O} - {message}";
+            File.AppendAllLines(LogFilePath, new[] { entry });
+        }
+    }
+
+    public static class NamedRangeHelper
+    {
+        // Creates a named range and logs the creation event
+        public static void AddNamedRange(Workbook workbook, string name, string refersTo)
+        {
+            // Add the name to the collection (global scope)
+            int index = workbook.Worksheets.Names.Add(name);
+            Name definedName = workbook.Worksheets.Names[index];
+            definedName.RefersTo = refersTo;
+
+            AuditLogger.Log($"Created named range '{name}' with RefersTo = \"{refersTo}\"");
         }
 
+        // Modifies an existing named range and logs the modification event
+        public static void ModifyNamedRange(Workbook workbook, string name, string newRefersTo)
+        {
+            Name definedName = workbook.Worksheets.Names[name];
+            if (definedName == null)
+            {
+                AuditLogger.Log($"Attempted to modify non‑existent named range '{name}'");
+                return;
+            }
+
+            string oldRefersTo = definedName.RefersTo;
+            definedName.RefersTo = newRefersTo;
+
+            AuditLogger.Log($"Modified named range '{name}': RefersTo changed from \"{oldRefersTo}\" to \"{newRefersTo}\"");
+        }
+
+        // Removes a named range and logs the deletion event
+        public static void RemoveNamedRange(Workbook workbook, string name)
+        {
+            Name definedName = workbook.Worksheets.Names[name];
+            if (definedName == null)
+            {
+                AuditLogger.Log($"Attempted to delete non‑existent named range '{name}'");
+                return;
+            }
+
+            workbook.Worksheets.Names.Remove(name);
+            AuditLogger.Log($"Deleted named range '{name}'");
+        }
+    }
+
+    class Program
+    {
         static void Main()
         {
-            try
-            {
-                // Ensure the audit file is clean for this run
-                if (File.Exists(AuditFilePath))
-                {
-                    File.Delete(AuditFilePath);
-                }
+            // ---------- Create ----------
+            Workbook wb = new Workbook();                     // Create a new workbook
+            Worksheet ws = wb.Worksheets[0];                  // Access first worksheet
 
-                // -------------------- Create Workbook --------------------
-                Workbook workbook = new Workbook(); // create new workbook
-                Worksheet sheet = workbook.Worksheets[0];
+            // Populate some data to be referenced by named ranges
+            ws.Cells["A1"].PutValue("Item");
+            ws.Cells["A2"].PutValue("Apple");
+            ws.Cells["A3"].PutValue("Banana");
 
-                // Add some sample data
-                sheet.Cells["A1"].PutValue("Apple");
-                sheet.Cells["A2"].PutValue("Banana");
-                sheet.Cells["A3"].PutValue("Cherry");
+            // Create a named range and log the creation
+            NamedRangeHelper.AddNamedRange(wb, "FruitList", "=Sheet1!$A$2:$A$3");
 
-                // -------------------- Create Named Range --------------------
-                // Use the workbook's global Names collection
-                NameCollection names = workbook.Worksheets.Names;
+            // ---------- Modify ----------
+            // Change the range to include an extra cell
+            NamedRangeHelper.ModifyNamedRange(wb, "FruitList", "=Sheet1!$A$2:$A$4");
 
-                // Define a new name "Fruits"
-                int nameIndex = names.Add("Fruits");
-                Name fruitName = names[nameIndex];
-                // Use the actual worksheet name (default is "Sheet1")
-                string sheetName = sheet.Name;
-                fruitName.RefersTo = $"={sheetName}!$A$1:$A$3";
+            // Add another cell so the new reference is valid
+            ws.Cells["A4"].PutValue("Cherry");
 
-                Log($"Created named range '{fruitName.Text}' referring to {fruitName.RefersTo}");
+            // ---------- Delete ----------
+            // Remove the named range and log the deletion
+            NamedRangeHelper.RemoveNamedRange(wb, "FruitList");
 
-                // -------------------- Modify Named Range --------------------
-                // Change the reference to include an extra row
-                fruitName.RefersTo = $"={sheetName}!$A$1:$A$4";
-                Log($"Modified named range '{fruitName.Text}' new reference {fruitName.RefersTo}");
+            // ---------- Save ----------
+            wb.Save("NamedRangeAuditDemo.xlsx");              // Save the workbook
 
-                // Add the extra data row
-                sheet.Cells["A4"].PutValue("Date");
-
-                // -------------------- Delete Named Range --------------------
-                // Remove the named range from the collection
-                names.Remove(fruitName.Text);
-                Log($"Deleted named range '{fruitName.Text}'");
-
-                // -------------------- Save Workbook --------------------
-                string outputPath = "NamedRangeAuditDemo.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                }
-                catch (Exception ex)
-                {
-                    Log($"Error saving workbook: {ex.Message}");
-                }
-
-                // -------------------- Output Audit Log --------------------
-                Console.WriteLine("Audit log entries:");
-                if (File.Exists(AuditFilePath))
-                {
-                    Console.WriteLine(File.ReadAllText(AuditFilePath));
-                }
-                else
-                {
-                    Console.WriteLine("No audit log found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Optional: Load the workbook back to demonstrate load lifecycle
+            Workbook loadedWb = new Workbook("NamedRangeAuditDemo.xlsx");
+            // No further actions; the audit log already contains the events
         }
     }
 }

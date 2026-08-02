@@ -6,27 +6,33 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Fruit");
-        sheet.Cells["B1"].PutValue("Quantity");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["B3"].PutValue(15);
-        sheet.Cells["A4"].PutValue("Banana");
-        sheet.Cells["B4"].PutValue(20);
+        // Fill sample data for the pivot table
+        Cells cells = sheet.Cells;
+        cells["A1"].Value = "Fruit";
+        cells["B1"].Value = "Quantity";
+        cells["A2"].Value = "Apple";
+        cells["B2"].Value = 10;
+        cells["A3"].Value = "Orange";
+        cells["B3"].Value = 15;
+        cells["A4"].Value = "Banana";
+        cells["B4"].Value = 20;
 
-        // Create and configure the pivot table
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "FruitPivot");
+        // Add a pivot table based on the data range
+        int pivotIndex = sheet.PivotTables.Add("A1:B4", "C3", "FruitPivot");
         PivotTable pivot = sheet.PivotTables[pivotIndex];
+
+        // Configure the pivot table: Fruit as rows, Quantity as data
         pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
         pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
+        // Optional: do not embed the source data with the file
+        pivot.SaveData = false;
+
         // Save the workbook to XLSX format using default save options
-        workbook.Save("PivotTableDemo.xlsx", SaveFormat.Xlsx);
+        workbook.Save("PivotTableDemo.xlsx");
     }
 }

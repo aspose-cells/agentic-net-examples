@@ -9,42 +9,38 @@ namespace PivotRefreshDateLogger
     {
         static void Main(string[] args)
         {
-            // Path to the Excel file to be processed
+            // Input Excel file path (modify as needed)
             string inputPath = "input.xlsx";
 
-            // Path to the log file where RefreshDate information will be written
-            string logPath = "PivotRefreshDates.log";
+            // Output log file path
+            string logPath = "PivotRefreshDates.txt";
 
-            // Load the workbook (load rule)
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Open a StreamWriter for logging (overwrites existing file)
+            // Ensure all pivot tables are refreshed so RefreshDate is up‑to‑date
+            workbook.Worksheets.RefreshPivotTables();
+
+            // Open a StreamWriter for logging
             using (StreamWriter writer = new StreamWriter(logPath, false))
             {
-                // Iterate through all worksheets in the workbook
+                // Iterate through each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Access the collection of pivot tables in the current worksheet
-                    PivotTableCollection pivotTables = sheet.PivotTables;
-
-                    // If there are no pivot tables, continue to next worksheet
-                    if (pivotTables == null || pivotTables.Count == 0)
-                        continue;
+                    // Get the collection of pivot tables in the current worksheet
+                    PivotTableCollection pivots = sheet.PivotTables;
 
                     // Iterate through each pivot table
-                    foreach (PivotTable pivot in pivotTables)
+                    foreach (PivotTable pt in pivots)
                     {
-                        // Retrieve the RefreshDate property
-                        DateTime refreshDate = pivot.RefreshDate;
-
-                        // Write worksheet name, pivot table name, and refresh date to the log
-                        writer.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivot.Name}, RefreshDate: {refreshDate}");
+                        // Write worksheet name, pivot table name and its RefreshDate
+                        writer.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pt.Name}, RefreshDate: {pt.RefreshDate}");
                     }
                 }
             }
 
-            // Optionally save the workbook (save rule) – unchanged in this scenario
-            workbook.Save("output.xlsx");
+            // Optionally save the workbook if any changes were made
+            // workbook.Save("output.xlsx");
         }
     }
 }

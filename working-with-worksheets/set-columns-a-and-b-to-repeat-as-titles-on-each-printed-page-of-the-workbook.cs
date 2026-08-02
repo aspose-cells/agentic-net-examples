@@ -1,59 +1,36 @@
+// Title: C# – Repeat Columns A‑B on Every Printed Page with Aspose.Cells
+// Description: Shows how to assign PageSetup.PrintTitleColumns = "$A:$B" so that columns A and B appear as repeating titles on each printed page. The sample adds data, saves the file as PrintTitleColumnsAB.xlsx, and illustrates the effect.
+// Keywords: Aspose.Cells | C# | PrintTitleColumns | repeat columns on printed pages | Excel print titles | page setup | worksheet export | Aspose.Cells .NET example | Excel repeat header columns | print layout
+// Common Searches: Aspose.Cells set print title columns C# | repeat columns A B on each printed page Aspose.Cells | how to use PrintTitleColumns property | C# code to repeat header columns when printing Excel | Aspose.Cells page setup repeat columns
+// Developer Intent: Set columns A and B to repeat as titles on each printed page of the workbook.
+// Use Cases: Create printable reports where the first two columns act as persistent identifiers on every page. | Generate multi‑page invoices or data sheets that keep column headers visible in hard‑copy form. | Automate Excel exports that require consistent column titles for compliance documentation. | Produce catalogues or inventories where row data spans several printed pages while header columns stay fixed.
+// AI Prompts: Provide C# code to set non‑adjacent columns as print titles using Aspose.Cells. | Explain how to configure both PrintTitleRows and PrintTitleColumns together and adjust margins. | Show how to programmatically verify that PrintTitleColumns is applied before printing or previewing the workbook.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Shows how to assign PageSetup.PrintTitleColumns = "$A:$B" so that columns A and B appear as repeating titles on each printed page. The sample adds data, saves the file as PrintTitleColumnsAB.xlsx, and illustrates the effect.
+class SetPrintTitleColumns
 {
-    public class RepeatColumnsAsPrintTitles
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Set columns A and B to repeat on each printed page
+        worksheet.PageSetup.PrintTitleColumns = "$A:$B";
+
+        // Add sample data (optional, just to illustrate the effect)
+        for (int i = 0; i < 100; i++)
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add sample data
-                for (int row = 0; row < 100; row++)
-                {
-                    worksheet.Cells[row, 0].PutValue($"Title A - Row {row + 1}");
-                    worksheet.Cells[row, 1].PutValue($"Title B - Row {row + 1}");
-                    worksheet.Cells[row, 2].PutValue($"Data C - Row {row + 1}");
-                    worksheet.Cells[row, 3].PutValue($"Data D - Row {row + 1}");
-                }
-
-                // Set columns A and B to repeat on each printed page
-                worksheet.PageSetup.PrintTitleColumns = "$A:$B";
-
-                // Save the workbook
-                string outputPath = "RepeatColumnsPrintTitles.xlsx";
-
-                // Ensure the directory exists
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            worksheet.Cells[i, 0].PutValue($"Row {i + 1} - Column A");
+            worksheet.Cells[i, 1].PutValue($"Row {i + 1} - Column B");
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RepeatColumnsAsPrintTitles.Run();
-        }
+        // Save the workbook
+        workbook.Save("PrintTitleColumnsAB.xlsx");
     }
 }

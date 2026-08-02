@@ -8,7 +8,7 @@ namespace AsposeCellsPivotMultipleFiltersDemo
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -16,32 +16,31 @@ namespace AsposeCellsPivotMultipleFiltersDemo
             Cells cells = sheet.Cells;
             cells["A1"].Value = "Category";
             cells["B1"].Value = "Amount";
-            cells["A2"].Value = "Fruit";
+            cells["A2"].Value = "Food";
             cells["B2"].Value = 120;
-            cells["A3"].Value = "Vegetable";
+            cells["A3"].Value = "Drink";
             cells["B3"].Value = 80;
-            cells["A4"].Value = "Fruit";
+            cells["A4"].Value = "Food";
             cells["B4"].Value = 150;
-            cells["A5"].Value = "Grain";
+            cells["A5"].Value = "Drink";
             cells["B5"].Value = 60;
-            cells["A6"].Value = "Vegetable";
-            cells["B6"].Value = 90;
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
+            // Add a pivot table based on the data range A1:B5, place it at C3, and give it a name
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "C3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
             // Configure the pivot table fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");   // Data field
 
-            // Enable multiple filters per field (allows selecting multiple items in a filter)
+            // Enable multiple filters per field for the pivot table
             pivotTable.AllowMultipleFiltersPerField = true;
 
-            // Save the workbook
-            workbook.Save("PivotTable_MultipleFilters.xlsx");
+            // Save the workbook to a file
+            workbook.Save("PivotTable_EnableMultipleFilters.xlsx");
 
-            Console.WriteLine("Pivot table created with AllowMultipleFiltersPerField set to true.");
+            // Optional: output confirmation
+            Console.WriteLine("PivotTable created with AllowMultipleFiltersPerField = true.");
         }
     }
 }

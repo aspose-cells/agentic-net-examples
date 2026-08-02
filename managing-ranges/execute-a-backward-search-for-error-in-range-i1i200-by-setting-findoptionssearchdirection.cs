@@ -1,55 +1,50 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFindBackwardDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Populate column I (index 8) with sample data, inserting "Error" at some rows
+        for (int i = 0; i < 200; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // (Optional) Populate sample data in column I (index 8) rows 1-200
-            for (int row = 0; row < 200; row++)
-            {
-                // Example: put the word "Error" in every 10th row
-                if (row % 10 == 0)
-                    worksheet.Cells[row, 8].PutValue("Error");
-                else
-                    worksheet.Cells[row, 8].PutValue($"Info_{row}");
-            }
-
-            // Create FindOptions and configure it for a backward search
-            FindOptions options = new FindOptions
-            {
-                LookInType = LookInType.Values,          // Search in cell values
-                LookAtType = LookAtType.Contains,        // Match if the cell contains the key
-                SearchBackward = true                    // Enable backward search
-            };
-
-            // Define the search range I1:I200 (rows 0-199, column 8)
-            CellArea searchRange = new CellArea
-            {
-                StartRow = 0,
-                StartColumn = 8,
-                EndRow = 199,
-                EndColumn = 8
-            };
-            options.SetRange(searchRange);
-
-            // Perform the find operation for the text "Error"
-            Cell foundCell = worksheet.Cells.Find("Error", null, options);
-
-            // Output the result
-            if (foundCell != null)
-                Console.WriteLine($"Found \"Error\" at cell {foundCell.Name}");
+            if (i == 50 || i == 150)
+                worksheet.Cells[i, 8].PutValue("Error");
             else
-                Console.WriteLine("The text \"Error\" was not found in the specified range.");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("FindBackwardResult.xlsx");
+                worksheet.Cells[i, 8].PutValue($"Value_{i}");
         }
+
+        // Define the search range I1:I200
+        CellArea searchRange = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 8,
+            EndRow = 199,
+            EndColumn = 8
+        };
+
+        // Configure FindOptions for a backward search
+        FindOptions options = new FindOptions
+        {
+            LookInType = LookInType.Values,          // Search in cell values
+            LookAtType = LookAtType.EntireContent,   // Exact match
+            SearchBackward = true                    // Search from bottom to top
+        };
+        options.SetRange(searchRange);
+
+        // Perform the backward search for the string "Error"
+        Cell foundCell = worksheet.Cells.Find("Error", null, options);
+
+        if (foundCell != null)
+            Console.WriteLine($"Found 'Error' at {foundCell.Name}");
+        else
+            Console.WriteLine("No 'Error' found in the specified range.");
+
+        // Save the workbook (optional)
+        workbook.Save("BackwardSearchResult.xlsx");
     }
 }

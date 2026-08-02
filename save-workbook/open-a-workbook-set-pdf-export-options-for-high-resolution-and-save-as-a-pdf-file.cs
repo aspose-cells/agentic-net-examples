@@ -8,28 +8,22 @@ namespace AsposeCellsPdfExport
     {
         static void Main()
         {
-            // Path to the source Excel workbook
-            string sourceFile = "input.xlsx";
-
-            // Load the workbook from the file system
-            Workbook workbook = new Workbook(sourceFile);
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Create PDF save options
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set options for high‑quality output
-            // Use standard optimization (high print quality) and Flate compression
-            pdfSaveOptions.OptimizationType = PdfOptimizationType.Standard;
-            pdfSaveOptions.PdfCompression = PdfCompressionCore.Flate;
+            // Set image resampling to achieve high resolution (e.g., 300 DPI, 90% JPEG quality)
+            pdfOptions.SetImageResample(300, 90);
 
-            // Optional: calculate formulas before saving
-            pdfSaveOptions.CalculateFormula = true;
+            // Optionally, you can enable other high‑quality settings, such as optimization type
+            // pdfOptions.OptimizationType = PdfOptimizationType.Standard;
 
-            // Save the workbook as a PDF file with the specified options
-            string outputFile = "output.pdf";
-            workbook.Save(outputFile, pdfSaveOptions);
+            // Save the workbook as a PDF using the options
+            workbook.Save("output.pdf", pdfOptions);
 
-            Console.WriteLine($"Workbook successfully saved as PDF to '{outputFile}'.");
+            Console.WriteLine("Workbook has been exported to PDF with high‑resolution settings.");
         }
     }
 }

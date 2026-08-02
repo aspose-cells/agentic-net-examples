@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Process localized Excel dates, numbers, formulas, labels, and regional settings in C#
 primary_apis: [GlobalizationSettings, CultureInfo, WorkbookSettings, LoadOptions, Cell.FormulaLocal]
 related_categories: [../format-cells/, ../manage-formulas/, ../conversion/, ../cells-data/]

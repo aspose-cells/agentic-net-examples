@@ -2,7 +2,7 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+namespace AsposeCellsPivotExample
 {
     public class CreatePivotTable
     {
@@ -38,46 +38,41 @@ namespace AsposeCellsPivotDemo
                 sourceSheet.Cells["B5"].PutValue("Broccoli");
                 sourceSheet.Cells["C5"].PutValue(430);
 
-                // Add a new worksheet that will host the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
-
                 // Determine the source data range (including headers)
                 Aspose.Cells.Range sourceRange = sourceSheet.Cells.MaxDisplayRange;
                 string sourceData = $"=SourceData!{sourceRange.Address}";
+
+                // Add a new worksheet to host the pivot table
+                Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
                 // Add the pivot table to the new worksheet
                 PivotTableCollection pivotTables = pivotSheet.PivotTables;
                 int pivotIndex = pivotTables.Add(sourceData, "A1", "SalesPivot");
 
-                // Retrieve the created pivot table
-                PivotTable pivotTable = pivotTables[pivotIndex];
-
                 // Configure the pivot table fields
+                PivotTable pivotTable = pivotTables[pivotIndex];
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Refresh the pivot table to calculate and display data
+                // Refresh the pivot table to calculate data
                 pivotSheet.RefreshPivotTables();
 
-                // Save the workbook
-                string outputPath = "PivotTableDemo.xlsx";
+                // Save the workbook (overwrite if exists)
+                string outputPath = "PivotTableResult.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the console application
-    public class Program
-    {
+        // Entry point for the application
         public static void Main(string[] args)
         {
-            CreatePivotTable.Run();
+            Run();
         }
     }
 }

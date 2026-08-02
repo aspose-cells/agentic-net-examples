@@ -2,9 +2,8 @@ using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsImageQualityCheck
+namespace AsposeCellsImageQualityValidation
 {
     class Program
     {
@@ -24,16 +23,16 @@ namespace AsposeCellsImageQualityCheck
             sheet.Cells["B3"].PutValue(80);
             sheet.Cells["B4"].PutValue(150);
 
-            // Set up image rendering options for JPEG with a specific quality
+            // Configure image rendering options for JPEG with a specific quality
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                ImageType = ImageType.Jpeg, // Export as JPEG
-                Quality = 80               // Desired JPEG quality (0-100)
+                ImageType = Aspose.Cells.Drawing.ImageType.Jpeg,
+                Quality = 80 // Quality range: 0-100
             };
 
-            // Render the first worksheet page to a JPEG file
-            string imagePath = "WorksheetExport.jpg";
+            // Render the worksheet to a JPEG image
             SheetRender renderer = new SheetRender(sheet, imgOptions);
+            string imagePath = "ExportedSheet.jpg";
             renderer.ToImage(0, imagePath);
 
             // Validate the exported JPEG file size
@@ -47,15 +46,15 @@ namespace AsposeCellsImageQualityCheck
 
             if (fileSize < minSizeBytes)
             {
-                Console.WriteLine("Warning: JPEG file size is smaller than the acceptable minimum.");
+                Console.WriteLine("Image size is too small; quality may be insufficient.");
             }
             else if (fileSize > maxSizeBytes)
             {
-                Console.WriteLine("Warning: JPEG file size exceeds the acceptable maximum.");
+                Console.WriteLine("Image size is too large; quality may be higher than needed.");
             }
             else
             {
-                Console.WriteLine("JPEG file size is within the acceptable range.");
+                Console.WriteLine("Image size is within the acceptable range.");
             }
         }
     }

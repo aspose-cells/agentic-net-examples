@@ -2,32 +2,26 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsUnionRangeDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a UnionRange that covers X1:X5 and Z1:Z5 using the provided API
-            // The address string can contain multiple areas separated by commas
-            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("X1:X5,Z1:Z5", 0);
+        // Create a union range that covers X1:X5 and Z1:Z5 on the first worksheet (index 0)
+        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("X1:X5,Z1:Z5", 0);
 
-            // Prepare a style with a light green background
-            Style style = workbook.CreateStyle();
-            style.Pattern = BackgroundType.Solid;
-            style.ForegroundColor = Color.LightGreen; // Light green fill
+        // Define a style with a solid light green background
+        Style style = workbook.CreateStyle();
+        style.Pattern = BackgroundType.Solid;
+        style.ForegroundColor = Color.LightGreen;
 
-            // Apply the style to the entire union range
-            // Use a StyleFlag that applies all formatting properties
-            StyleFlag flag = new StyleFlag { All = true };
-            unionRange.ApplyStyle(style, flag);
+        // Apply the style to the entire union range
+        unionRange.ApplyStyle(style, new StyleFlag { All = true });
 
-            // Save the workbook (lifecycle save)
-            workbook.Save("UnionRangeLightGreen.xlsx");
-        }
+        // Save the workbook to visualize the result
+        workbook.Save("UnionRangeLightGreen.xlsx");
     }
 }

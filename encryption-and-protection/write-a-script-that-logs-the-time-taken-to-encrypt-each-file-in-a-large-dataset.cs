@@ -1,104 +1,98 @@
+// Title: C# Batch Encrypt Excel Files with Aspose.Cells and Record Per‑File Timing
+// Description: A console utility that scans a source directory for .xlsx workbooks, skips already‑encrypted files, applies a password with 128‑bit strong encryption using Aspose.Cells, saves the protected copies to a target folder, and logs the elapsed time for each encryption operation.
+// Keywords: Aspose.Cells C# encryption | batch encrypt Excel workbooks | measure encryption performance .NET | password protect .xlsx files | stopwatch timing Aspose.Cells | large dataset Excel security
+// Common Searches: how to encrypt multiple Excel files with Aspose.Cells in C# | C# script to log encryption time for each workbook | batch password protect .xlsx using Aspose.Cells | measure Aspose.Cells encryption speed | encrypt Excel files in bulk and track duration
+// Developer Intent: Automatically protect a collection of Excel spreadsheets with a password using Aspose.Cells while capturing the processing time for each file.
+// Use Cases: Compliance‑driven archiving of thousands of spreadsheets with performance metrics | Data‑migration pipelines that need to skip already‑encrypted workbooks | Generating logs for monitoring encryption throughput in on‑prem or cloud environments | Creating benchmark reports for Aspose.Cells encryption capabilities
+// AI Prompts: Generate a C# method that accepts input and output folder paths and returns a dictionary of workbook names and their encryption times in milliseconds using Aspose.Cells. | Show how to modify the program to write file names and elapsed times to a CSV file instead of console output. | Provide code to parallelize the encryption loop safely while preserving accurate per‑file timing logs.
+
 using System;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-namespace EncryptTimingDemo
+namespace AsposeCellsEncryptionTimer
 {
+    // A console utility that scans a source directory for .xlsx workbooks, skips already‑encrypted files, applies a password with 128‑bit strong encryption using Aspose.Cells, saves the protected copies to a target folder, and logs the elapsed time for each encryption operation.
     class Program
     {
-        // Adjust these paths as needed
-        private const string InputFolder = @"C:\Data\LargeDataset";
-        private const string OutputFolder = @"C:\Data\EncryptedOutput";
-        private const string LogFilePath = @"C:\Data\EncryptionLog.csv";
-
-        // Encryption settings
-        private const string Password = "StrongPassword123";
-        private const EncryptionType EncType = EncryptionType.StrongCryptographicProvider;
-        private const int KeyLength = 128; // 40, 128, or 256
-
-        static void Main()
+        static void Main(string[] args)
         {
+            // Input folder containing the original workbooks
+            string inputFolder = @"C:\Data\Workbooks";
+            // Output folder where encrypted workbooks will be saved
+            string outputFolder = @"C:\Data\EncryptedWorkbooks";
+
             try
             {
                 // Verify input folder exists
-                if (!Directory.Exists(InputFolder))
+                if (!Directory.Exists(inputFolder))
                 {
-                    Console.WriteLine($"Input folder not found: {InputFolder}");
+                    Console.WriteLine($"Input folder does not exist: {inputFolder}");
                     return;
                 }
 
-                // Ensure output directory exists
-                Directory.CreateDirectory(OutputFolder);
+                // Ensure the output directory exists
+                Directory.CreateDirectory(outputFolder);
 
-                // Prepare log file
-                using (var logWriter = new StreamWriter(LogFilePath, false))
+                // Password to use for encryption
+                const string password = "SecurePassword123";
+
+                // Process each Excel file in the input folder (including subfolders)
+                foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.AllDirectories))
                 {
-                    logWriter.WriteLine("FileName,IsInitiallyEncrypted,EncryptionTimeMs,OutputFile");
-
-                    foreach (string filePath in Directory.GetFiles(InputFolder))
+                    try
                     {
-                        // Guard against missing files
+                        string fileName = Path.GetFileName(filePath);
+                        string outputPath = Path.Combine(outputFolder, fileName);
+
+                        // Detect if the file is already encrypted
+                        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+                        if (formatInfo.IsEncrypted)
+                        {
+                            Console.WriteLine($"{fileName} is already encrypted. Skipping.");
+                            continue;
+                        }
+
+                        // Verify the file exists before loading
                         if (!File.Exists(filePath))
                         {
-                            Console.WriteLine($"File not found, skipping: {filePath}");
+                            Console.WriteLine($"File not found: {filePath}");
                             continue;
                         }
 
-                        string fileName = Path.GetFileName(filePath);
-                        string outputPath = Path.Combine(OutputFolder, fileName);
-
-                        // Detect if the source file is already encrypted
-                        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                        bool initiallyEncrypted = formatInfo.IsEncrypted;
-
-                        // Load workbook (provide password if needed)
-                        var loadOptions = new LoadOptions();
-                        if (initiallyEncrypted)
-                        {
-                            // If you know the password for already encrypted files, set it here
-                            // loadOptions.Password = "ExistingPassword";
-                        }
-
-                        Workbook workbook;
-                        try
-                        {
-                            workbook = new Workbook(filePath, loadOptions);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to load '{fileName}': {ex.Message}");
-                            continue;
-                        }
-
-                        // Apply encryption settings
-                        workbook.Settings.Password = Password;
-                        workbook.SetEncryptionOptions(EncType, KeyLength);
-
-                        // Measure encryption (save) time
+                        // Start timing the encryption process
                         Stopwatch sw = Stopwatch.StartNew();
-                        try
-                        {
-                            workbook.Save(outputPath);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to save encrypted '{fileName}': {ex.Message}");
-                            continue;
-                        }
+
+                        // Load the workbook
+                        Workbook workbook = new Workbook(filePath);
+
+                        // Set password protection
+                        workbook.Settings.Password = password;
+
+                        // Set encryption options (strong encryption with 128‑bit key)
+                        workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+
+                        // Save the encrypted workbook
+                        workbook.Save(outputPath);
+
+                        // Stop timing
                         sw.Stop();
 
-                        // Log results
-                        Console.WriteLine($"{fileName} encrypted in {sw.ElapsedMilliseconds} ms");
-                        logWriter.WriteLine($"{fileName},{initiallyEncrypted},{sw.ElapsedMilliseconds},{outputPath}");
+                        // Log the time taken
+                        Console.WriteLine($"{fileName}: Encryption completed in {sw.ElapsedMilliseconds} ms");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                     }
                 }
 
-                Console.WriteLine("Encryption process completed. Log saved to: " + LogFilePath);
+                Console.WriteLine("Encryption process completed for all files.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Fatal error: {ex.Message}");
             }
         }
     }

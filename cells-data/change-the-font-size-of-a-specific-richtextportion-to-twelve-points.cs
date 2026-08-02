@@ -1,7 +1,7 @@
 using System;
 using Aspose.Cells;
 
-class ChangeRichTextPortionFontSize
+class Program
 {
     static void Main()
     {
@@ -9,14 +9,15 @@ class ChangeRichTextPortionFontSize
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put rich text into cell A1
+        // Set a cell value that contains text
         Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("Hello World");
+        cell.Value = "Hello Aspose";
 
-        // Select the portion "World" (starts at index 6, length 5)
-        FontSetting richTextPortion = cell.Characters(6, 5);
+        // Obtain the RichTextPortion (FontSetting) for the word "Aspose"
+        // Start index 6 (zero‑based) and length 6 characters
+        FontSetting richTextPortion = cell.Characters(6, 6);
 
-        // Change its font size to 12 points
+        // Change the font size of this portion to 12 points
         richTextPortion.Font.Size = 12;
 
         // Save the workbook

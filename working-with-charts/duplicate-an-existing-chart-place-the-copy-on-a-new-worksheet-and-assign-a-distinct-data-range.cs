@@ -2,53 +2,77 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsChartDuplication
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet (source sheet)
-        Workbook workbook = new Workbook();
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        sourceSheet.Name = "Source";
+        static void Main()
+        {
+            // ------------------------------------------------------------
+            // 1. Create a source workbook with sample data and a chart
+            // ------------------------------------------------------------
+            Workbook srcWorkbook = new Workbook();
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
+            srcSheet.Name = "SourceSheet";
 
-        // Populate source data (A1:B4)
-        sourceSheet.Cells["A1"].PutValue("Category");
-        sourceSheet.Cells["B1"].PutValue("Value");
-        sourceSheet.Cells["A2"].PutValue("A");
-        sourceSheet.Cells["B2"].PutValue(10);
-        sourceSheet.Cells["A3"].PutValue("B");
-        sourceSheet.Cells["B3"].PutValue(20);
-        sourceSheet.Cells["A4"].PutValue("C");
-        sourceSheet.Cells["B4"].PutValue(30);
+            // Populate source data (A1:B4)
+            srcSheet.Cells["A1"].PutValue("Category");
+            srcSheet.Cells["B1"].PutValue("Value");
+            srcSheet.Cells["A2"].PutValue("A");
+            srcSheet.Cells["B2"].PutValue(10);
+            srcSheet.Cells["A3"].PutValue("B");
+            srcSheet.Cells["B3"].PutValue(20);
+            srcSheet.Cells["A4"].PutValue("C");
+            srcSheet.Cells["B4"].PutValue(30);
 
-        // Add a chart on the source sheet
-        int srcChartIndex = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart srcChart = sourceSheet.Charts[srcChartIndex];
-        srcChart.SetChartDataRange("A1:B4", true);
-        srcChart.Title.Text = "Source Chart";
+            // Add a chart that uses the above data
+            int chartIdx = srcSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart srcChart = srcSheet.Charts[chartIdx];
+            srcChart.SetChartDataRange("A1:B4", true);
+            srcChart.Title.Text = "Source Chart";
 
-        // Add a new worksheet that will hold the duplicated chart
-        Worksheet destSheet = workbook.Worksheets.Add("Copy");
+            // ------------------------------------------------------------
+            // 2. Add a new worksheet that will receive the duplicated chart
+            // ------------------------------------------------------------
+            Worksheet destSheet = srcWorkbook.Worksheets.Add("CopiedChartSheet");
 
-        // Populate distinct data for the copied chart (C1:D4)
-        destSheet.Cells["C1"].PutValue("Category");
-        destSheet.Cells["D1"].PutValue("Value");
-        destSheet.Cells["C2"].PutValue("X");
-        destSheet.Cells["D2"].PutValue(40);
-        destSheet.Cells["C3"].PutValue("Y");
-        destSheet.Cells["D3"].PutValue(50);
-        destSheet.Cells["C4"].PutValue("Z");
-        destSheet.Cells["D4"].PutValue(60);
+            // ------------------------------------------------------------
+            // 3. Copy the source worksheet (including the chart) to the new sheet
+            //    Use CopyOptions.ReferToDestinationSheet = true so that the
+            //    chart's data source points to the destination sheet.
+            // ------------------------------------------------------------
+            CopyOptions copyOpts = new CopyOptions();
+            copyOpts.ReferToDestinationSheet = true;   // chart will refer to destSheet
+            srcSheet.Copy(destSheet, copyOpts);
 
-        // Add a chart on the destination sheet with the same type and position as the source chart
-        int destChartIndex = destSheet.Charts.Add(srcChart.Type, 5, 0, 15, 5);
-        Chart destChart = destSheet.Charts[destChartIndex];
+            // ------------------------------------------------------------
+            // 4. Prepare a distinct data range on the destination sheet
+            //    (e.g., cells A10:B13) and fill it with new values.
+            // ------------------------------------------------------------
+            destSheet.Cells["A10"].PutValue("Category");
+            destSheet.Cells["B10"].PutValue("Value");
+            destSheet.Cells["A11"].PutValue("X");
+            destSheet.Cells["B11"].PutValue(40);
+            destSheet.Cells["A12"].PutValue("Y");
+            destSheet.Cells["B12"].PutValue(50);
+            destSheet.Cells["A13"].PutValue("Z");
+            destSheet.Cells["B13"].PutValue(60);
 
-        // Assign the distinct data range to the duplicated chart
-        destChart.SetChartDataRange("C1:D4", true);
-        destChart.Title.Text = "Copied Chart";
+            // ------------------------------------------------------------
+            // 5. Locate the copied chart in the destination sheet and assign
+            //    the new data range to it.
+            // ------------------------------------------------------------
+            if (destSheet.Charts.Count > 0)
+            {
+                Chart copiedChart = destSheet.Charts[0];
+                copiedChart.SetChartDataRange("A10:B13", true);
+                copiedChart.Title.Text = "Copied Chart with New Data";
+            }
 
-        // Save the workbook
-        workbook.Save("ChartDuplicate.xlsx");
+            // ------------------------------------------------------------
+            // 6. Save the workbook
+            // ------------------------------------------------------------
+            srcWorkbook.Save("ChartDuplicationResult.xlsx");
+        }
     }
 }

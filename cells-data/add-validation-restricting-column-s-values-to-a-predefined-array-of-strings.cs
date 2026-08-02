@@ -1,35 +1,41 @@
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-class Program
+namespace AsposeCellsValidationExample
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Predefined list of allowed strings for column S
-        string[] allowedValues = new string[] { "Apple", "Banana", "Cherry" };
-        string list = string.Join(",", allowedValues); // "Apple,Banana,Cherry"
+            // Define the allowed values for column S
+            string[] allowedValues = new string[] { "Apple", "Banana", "Cherry", "Date" };
 
-        // Define the validation area: column S (index 18), rows 0 to 99
-        CellArea validationArea = CellArea.CreateCellArea(0, 18, 99, 18);
+            // Create a cell area that covers column S (index 18) from row 0 to row 99
+            // Adjust the end row as needed for your data range
+            CellArea area = CellArea.CreateCellArea(0, 18, 99, 18);
 
-        // Add a validation to the worksheet for the defined area
-        int validationIndex = sheet.Validations.Add(validationArea);
-        Validation validation = sheet.Validations[validationIndex];
+            // Add a new validation to the worksheet for the defined area
+            int validationIndex = worksheet.Validations.Add(area);
+            Validation validation = worksheet.Validations[validationIndex];
 
-        // Configure the validation as a list with a dropdown
-        validation.Type = ValidationType.List;
-        validation.Formula1 = list;               // Set allowed values
-        validation.InCellDropDown = true;         // Show dropdown in cells
-        validation.AlertStyle = ValidationAlertType.Stop;
-        validation.ErrorTitle = "Invalid entry";
-        validation.ErrorMessage = "Please select a value from the predefined list.";
-        validation.ShowError = true;
+            // Configure the validation as a list with the predefined values
+            validation.Type = ValidationType.List;
+            // Use comma‑separated string for the list values
+            validation.Formula1 = string.Join(",", allowedValues);
+            // Show the drop‑down list in the cell
+            validation.InCellDropDown = true;
 
-        // Save the workbook
-        workbook.Save("ColumnSValidation.xlsx");
+            // Optional: set an error message that appears when an invalid value is entered
+            validation.AlertStyle = ValidationAlertType.Stop;
+            validation.ErrorTitle = "Invalid Entry";
+            validation.ErrorMessage = "Please select a value from the list.";
+
+            // Save the workbook to a file
+            workbook.Save("ColumnS_Validation.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

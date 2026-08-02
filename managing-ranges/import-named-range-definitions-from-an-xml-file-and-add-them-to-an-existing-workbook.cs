@@ -1,31 +1,38 @@
 using System;
 using Aspose.Cells;
 
-class ImportNamedRanges
+namespace AsposeCellsNamedRangeImport
 {
-    static void Main()
+    class Program
     {
-        // Path to the existing workbook
-        string workbookPath = "ExistingWorkbook.xlsx";
-
-        // Path to the XML file that contains named range definitions
-        string xmlPath = "NamedRanges.xml";
-
-        // Load the existing workbook
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Import the XML data into the first worksheet starting at cell A1 (row 0, column 0)
-        // This operation also brings in any named range definitions present in the XML.
-        workbook.ImportXml(xmlPath, "Sheet1", 0, 0);
-
-        // Display the imported named ranges for verification
-        Console.WriteLine("Imported Named Ranges:");
-        foreach (Name name in workbook.Worksheets.Names)
+        static void Main()
         {
-            Console.WriteLine($"{name.Text} => {name.RefersTo}");
-        }
+            // Path to the existing Excel workbook
+            string workbookPath = "ExistingWorkbook.xlsx";
 
-        // Save the workbook with the newly added named ranges
-        workbook.Save("UpdatedWorkbook.xlsx");
+            // Path to the XML file that contains named range definitions
+            string xmlPath = "NamedRanges.xml";
+
+            // Load the existing workbook
+            Workbook wb = new Workbook(workbookPath);
+
+            // Import the XML data (including named range definitions) into the first worksheet,
+            // starting at cell A1 (row 0, column 0)
+            wb.ImportXml(xmlPath, "Sheet1", 0, 0);
+
+            // Optional: list all named ranges after import to verify they were added
+            NameCollection names = wb.Worksheets.Names;
+            Console.WriteLine($"Total named ranges after import: {names.Count}");
+            foreach (Name name in names)
+            {
+                Console.WriteLine($"Name: {name.Text}, RefersTo: {name.RefersTo}");
+            }
+
+            // Save the updated workbook
+            string outputPath = "WorkbookWithImportedNames.xlsx";
+            wb.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
     }
 }

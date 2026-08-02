@@ -1,52 +1,22 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class SetColumnWidthExample
+    static void Main()
     {
-        // Entry point required by the .NET runtime
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (use the provided creation rule)
+        Workbook workbook = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook (no template file needed)
-            Workbook workbook = new Workbook();
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the Cells collection of the first worksheet
-            Cells cells = workbook.Worksheets[0].Cells;
+        // Set the width of column 3 (zero‑based index 2) to 25.5 characters
+        worksheet.Cells.SetColumnWidth(2, 25.5);
 
-            // Set the width of column 3 (zero‑based index 2) to 25.5 characters
-            cells.SetColumnWidth(2, 25.5);
-
-            // Add sample data to demonstrate the column width
-            cells["C1"].PutValue("Column 3 width set to 25.5 characters");
-
-            // Define output file path
-            string outputPath = "Column3WidthDemo.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
+        // Save the workbook (use the provided save rule)
+        workbook.Save("ColumnWidthDemo.xlsx", SaveFormat.Xlsx);
     }
 }
+
+// Author: Example demonstrating Cells.SetColumnWidth to adjust column width.

@@ -14,40 +14,46 @@ namespace AsposeCellsImportExample
             Cells cells = worksheet.Cells;
 
             // ------------------------------------------------------------
-            // Add some existing data to demonstrate that it will be shifted
+            // Existing data that will be present before the import operation
             // ------------------------------------------------------------
-            // Existing data occupies rows 0 to 4 (A1 to A5)
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i, 0].PutValue($"Existing Row {i + 1}");
-            }
+            // Populate some rows above the import area
+            cells["A1"].PutValue("Header Above Import");
+            cells["A2"].PutValue(123);
+            cells["A3"].PutValue(456);
+            cells["A4"].PutValue(789);
+            cells["A5"].PutValue("Row before import start");
 
             // ------------------------------------------------------------
-            // Prepare a DataTable that will be imported starting at row index 5 (i.e., row 6 in Excel)
+            // Prepare the DataTable to be imported
             // ------------------------------------------------------------
             DataTable table = new DataTable("Products");
             table.Columns.Add("ID", typeof(int));
             table.Columns.Add("Name", typeof(string));
             table.Columns.Add("Price", typeof(decimal));
 
-            table.Rows.Add(101, "Laptop", 999.99m);
-            table.Rows.Add(102, "Smartphone", 699.49m);
-            table.Rows.Add(103, "Tablet", 399.00m);
+            table.Rows.Add(1, "Laptop", 999.99m);
+            table.Rows.Add(2, "Smartphone", 699.49m);
+            table.Rows.Add(3, "Tablet", 399.00m);
 
             // ------------------------------------------------------------
             // Configure import options:
-            //   InsertRows = true  -> new rows are inserted, pushing any existing rows down
-            //   IsFieldNameShown = true -> column headers will be imported as the first row
+            // - InsertRows = true  => new rows are added, existing rows are shifted down
+            // - IsFieldNameShown = true (optional, shows column headers)
             // ------------------------------------------------------------
-            ImportTableOptions importOptions = new ImportTableOptions
+            ImportTableOptions options = new ImportTableOptions
             {
                 InsertRows = true,
                 IsFieldNameShown = true
             };
 
-            // Import the DataTable starting at row index 5 (zero‑based), column 0 (A column)
-            // Existing rows at and below this position will be shifted down.
-            cells.ImportData(table, 5, 0, importOptions);
+            // ------------------------------------------------------------
+            // Import the DataTable starting at row index 5 (i.e., sixth row, zero‑based)
+            // Existing rows from row 5 onward will be pushed down.
+            // ------------------------------------------------------------
+            int firstRowOffset = 5; // zero‑based index for the 6th row (A6)
+            int firstColumn = 0;    // start at column A
+
+            cells.ImportData(table, firstRowOffset, firstColumn, options);
 
             // ------------------------------------------------------------
             // Save the workbook to verify the result

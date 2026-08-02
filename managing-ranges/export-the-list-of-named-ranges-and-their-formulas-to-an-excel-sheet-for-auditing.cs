@@ -1,56 +1,54 @@
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace NamedRangeAuditor
+class ExportNamedRanges
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // -------------------------------------------------
+        // Sample data and named ranges (for demonstration)
+        // -------------------------------------------------
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Sheet1";
+
+        // Populate some cells
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["B1"].PutValue(30);
+        sheet.Cells["B2"].PutValue(40);
+
+        // Create named ranges
+        sheet.Cells.CreateRange("A1:B2").Name = "MyRange";
+        sheet.Cells.CreateRange("A1").Name = "SingleCell";
+
+        // -------------------------------------------------
+        // Create an audit worksheet to list named ranges
+        // -------------------------------------------------
+        int auditSheetIndex = workbook.Worksheets.Add();
+        Worksheet auditSheet = workbook.Worksheets[auditSheetIndex];
+        auditSheet.Name = "NamedRangesAudit";
+
+        // Write header
+        auditSheet.Cells["A1"].PutValue("Name");
+        auditSheet.Cells["B1"].PutValue("RefersTo");
+
+        // Iterate through all defined names and export their details
+        int currentRow = 1; // zero‑based index; row 1 is the second row
+        foreach (Name definedName in workbook.Worksheets.Names)
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "AuditedWorkbook.xlsx";
-
-                // Verify that the source workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the source workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Add a new worksheet to hold the audit information
-                Worksheet auditSheet = workbook.Worksheets.Add("Audit");
-                Cells auditCells = auditSheet.Cells;
-
-                // Write header titles
-                auditCells["A1"].PutValue("Named Range");
-                auditCells["B1"].PutValue("Refers To");
-
-                // Retrieve all defined names (named ranges) in the workbook
-                NameCollection names = workbook.Worksheets.Names;
-
-                // Iterate through each name and write its details to the audit sheet
-                int row = 1; // zero‑based index; start after header
-                foreach (Name name in names)
-                {
-                    auditCells[row, 0].PutValue(name.Text);      // Column A: name text
-                    auditCells[row, 1].PutValue(name.RefersTo); // Column B: formula the name refers to
-                    row++;
-                }
-
-                // Save the workbook with the audit sheet added
-                workbook.Save(outputPath);
-                Console.WriteLine($"Audit completed. Saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Column A: Name text
+            auditSheet.Cells[currentRow, 0].PutValue(definedName.Text);
+            // Column B: Formula the name refers to (e.g., "=Sheet1!$A$1:$B$2")
+            auditSheet.Cells[currentRow, 1].PutValue(definedName.RefersTo);
+            currentRow++;
         }
+
+        // -------------------------------------------------
+        // Save the workbook with the audit sheet
+        // -------------------------------------------------
+        workbook.Save("NamedRangesAudit.xlsx");
     }
 }

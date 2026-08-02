@@ -1,55 +1,47 @@
+// Title: Apply a 50% Transparent Custom Reflection to a Shape with Aspose.Cells for .NET
+// Description: C# example that creates a workbook, adds a rectangle shape, accesses the read‑only Shape.Reflection object, sets Transparency to 0.5 and Type to Custom, and saves the file. Demonstrates how to use Aspose.Cells Shape.Reflection for semi‑transparent reflections.
+// Keywords: Aspose.Cells shape reflection | Shape.Reflection C# | custom reflection effect | shape transparency Aspose.Cells | add rectangle shape .NET | Excel shape reflection example | Aspose.Cells API tutorial
+// Common Searches: Aspose.Cells set shape reflection transparency | C# apply 50% transparent reflection to Excel shape | Shape.Reflection custom type Aspose.Cells | how to add rectangle shape with reflection in Aspose.Cells | save workbook after modifying shape reflection
+// Developer Intent: Add a rectangle shape to a worksheet and apply a 50% transparent custom reflection using the Shape.Reflection API in Aspose.Cells for .NET.
+// Use Cases: Design Excel reports with subtle shape reflections for a polished look. | Generate marketing or branding worksheets where logos appear with semi‑transparent reflections. | Automate creation of visual‑rich workbooks that maintain consistent styling across multiple files.
+// AI Prompts: Write C# code that adds a circle shape and applies a 30% transparent reflection using Aspose.Cells. | Show how to change a shape's reflection type to 'Flat' and set transparency to 0.2 in Aspose.Cells. | Provide best‑practice error handling for modifying Shape.Reflection properties in a .NET workbook.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-class ApplyReflectionDemo
+namespace AsposeCellsReflectionDemo
 {
-    static void Main()
+    // C# example that creates a workbook, adds a rectangle shape, accesses the read‑only Shape.Reflection object, sets Transparency to 0.5 and Type to Custom, and saves the file. Demonstrates how to use Aspose.Cells Shape.Reflection for semi‑transparent reflections.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Prepare a temporary PNG image (1x1 pixel) for the picture shape
-            string tempImagePath = Path.Combine(Path.GetTempPath(), "tempShapeImage.png");
-            // Base64 encoded PNG (transparent 1x1 pixel)
-            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII=";
-            byte[] pngBytes = Convert.FromBase64String(base64Png);
-            File.WriteAllBytes(tempImagePath, pngBytes);
-
-            // Ensure the temporary image file exists before adding the picture
-            if (!File.Exists(tempImagePath))
-                throw new FileNotFoundException("Temporary image file not found.", tempImagePath);
-
-            // Add a picture shape using a file stream (compatible with recent Aspose.Cells versions)
-            using (FileStream imgStream = File.OpenRead(tempImagePath))
+            try
             {
-                // upperRow, upperColumn, lowerRow, lowerColumn define the shape's position
-                Shape pictureShape = worksheet.Shapes.AddPicture(1, 0, 1, 0, imgStream);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Obtain the reflection effect object for the shape
-                ReflectionEffect reflection = pictureShape.Reflection;
-                if (reflection == null)
-                    throw new InvalidOperationException("Reflection effect is not supported for this shape.");
+                // Add a rectangle shape to the worksheet
+                // Parameters: upper left row, upper left column, upper left row offset (pixels),
+                // upper left column offset (pixels), width (pixels), height (pixels)
+                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
 
-                // Configure reflection properties
+                // Obtain the existing ReflectionEffect object from the shape (read‑only property)
+                ReflectionEffect reflection = shape.Reflection;
+
+                // Apply a 50% transparent reflection using a custom type
+                reflection.Transparency = 0.5; // 0.0 = opaque, 1.0 = fully clear
                 reflection.Type = ReflectionEffectType.Custom;
-                reflection.Transparency = 0.5;   // 50% transparency
-                reflection.Size = 55;            // End alpha position (percentage)
-                reflection.Blur = 0.5;           // Blur radius
-                reflection.Distance = 0;        // Distance from the shape
-            }
 
-            // Save the workbook with the applied reflection effect
-            string outputPath = "ShapeWithReflection.xlsx";
-            workbook.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Save the workbook with the applied reflection effect
+                workbook.Save("ShapeReflection50Percent.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

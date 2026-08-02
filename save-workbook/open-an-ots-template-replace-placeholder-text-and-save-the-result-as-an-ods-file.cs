@@ -3,49 +3,42 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-namespace OtsToOdsExample
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the OTS template file
-            string templatePath = "Template.ots";
+            const string templatePath = "template.ots";
+            const string resultPath = "result.ods";
 
-            // Verify that the template file exists
+            // Ensure the template file exists before loading
             if (!File.Exists(templatePath))
             {
-                Console.WriteLine($"Error: Template file not found at '{Path.GetFullPath(templatePath)}'.");
+                Console.WriteLine($"Template file not found: {Path.GetFullPath(templatePath)}");
                 return;
             }
 
-            try
+            // Load the OTS template workbook
+            Workbook workbook = new Workbook(templatePath);
+
+            // Replace placeholder texts
+            workbook.Replace("{Name}", "John Doe");
+            workbook.Replace("{Date}", DateTime.Now.ToString("yyyy-MM-dd"));
+
+            // Configure ODS save options (optional)
+            OdsSaveOptions saveOptions = new OdsSaveOptions
             {
-                // Load the OTS template using OdsLoadOptions
-                OdsLoadOptions loadOptions = new OdsLoadOptions();
-                Workbook workbook = new Workbook(templatePath, loadOptions);
+                GeneratorType = OdsGeneratorType.LibreOffice
+            };
 
-                // Replace placeholder text in the workbook
-                // Example: replace all occurrences of "{{Name}}" with "John Doe"
-                workbook.Replace("{{Name}}", "John Doe");
-
-                // Prepare ODS save options
-                OdsSaveOptions saveOptions = new OdsSaveOptions
-                {
-                    GeneratorType = OdsGeneratorType.LibreOffice
-                };
-
-                // Save the modified workbook as an ODS file
-                string outputPath = "Result.ods";
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Template processed and saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook as an ODS file
+            workbook.Save(resultPath, saveOptions);
+            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

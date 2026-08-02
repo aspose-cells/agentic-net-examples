@@ -1,72 +1,62 @@
+// Title: Refresh a linked ListBox shape after changing its linked cell using Aspose.Cells for .NET
+// Description: Demonstrates how to synchronize a ListBox (or other form control) with its linked cell after the cell value changes. The example creates a workbook, adds a ListBox linked to a range, sets the linked cell, calls UpdateSelectedValue on the shape and on the worksheet's Shapes collection, and saves the file.
+// Keywords: Aspose.Cells | C# | .NET | linked shape refresh | UpdateSelectedValue | ListBox linked cell | form control synchronization | worksheet.Shapes.UpdateSelectedValue | Excel shape refresh programmatically
+// Common Searches: Aspose.Cells refresh linked shape after cell update | UpdateSelectedValue for ListBox in Aspose.Cells | How to sync ListBox selection with linked cell .NET | Refresh all form controls in worksheet Aspose.Cells | C# Aspose.Cells linked cell shape update
+// Developer Intent: Synchronize linked form controls with their source cells so the visual selection reflects the latest cell values.
+// Use Cases: After programmatically changing the value of a linked cell (e.g., B1), call sheet.Shapes.UpdateSelectedValue() to refresh the ListBox selection. | When multiple controls (ListBox, ComboBox, CheckBox) are linked to cells, invoke UpdateSelectedValue on each shape or on the worksheet's Shapes collection to keep all controls in sync after bulk data modifications. | Refresh linked shapes before saving a workbook to ensure the on‑screen representation matches the underlying data.
+// AI Prompts: Generate C# code that updates several linked ListBox and ComboBox shapes after modifying their linked cells using Aspose.Cells. | Explain the difference between Shape.UpdateSelectedValue() and Worksheet.Shapes.UpdateSelectedValue() and provide scenarios for each. | Provide a step‑by‑step tutorial for setting a ListBox's selected index, refreshing it, and verifying the selection with Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLinkedShapeRefresh
+namespace AsposeCellsLinkedShapeRefreshDemo
 {
-    public class RefreshLinkedShapesDemo
+    // Demonstrates how to synchronize a ListBox (or other form control) with its linked cell after the cell value changes. The example creates a workbook, adds a ListBox linked to a range, sets the linked cell, calls UpdateSelectedValue on the shape and on the worksheet's Shapes collection, and saves the file.
+    class Program
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a ListBox shape (dropdown) to the worksheet
-            // Parameters: upper left row, upper left column, top, left, width, height
-            Shape listBoxShape = worksheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
+            // Populate source data for a ListBox control
+            sheet.Cells["A1"].Value = "Option 1";
+            sheet.Cells["A2"].Value = "Option 2";
+            sheet.Cells["A3"].Value = "Option 3";
 
-            // Define the range that provides the list items
-            listBoxShape.SetInputRange("$A$1:$A$5", false, false);
+            // Add a ListBox shape to the worksheet
+            // Parameters: upperRow, leftColumn, upperOffset, leftOffset, height, width
+            Shape listBoxShape = sheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
 
-            // Link the selected value of the ListBox to a cell (e.g., A10)
-            listBoxShape.SetLinkedCell("$A$10", false, true);
+            // Set the range that provides the list items
+            listBoxShape.SetInputRange("$A$1:$A$3", false, false);
 
-            // Populate the input range with sample items
-            worksheet.Cells["A1"].Value = "Option 1";
-            worksheet.Cells["A2"].Value = "Option 2";
-            worksheet.Cells["A3"].Value = "Option 3";
-            worksheet.Cells["A4"].Value = "Option 4";
-            worksheet.Cells["A5"].Value = "Option 5";
+            // Link the selected value of the ListBox to cell B1
+            listBoxShape.SetLinkedCell("$B$1", false, true);
 
-            // Set an initial value in the linked cell (select "Option 2")
-            worksheet.Cells["A10"].Value = "Option 2";
+            // Initial selection: set linked cell to the second item (value "Option 2")
+            sheet.Cells["B1"].Value = "Option 2";
 
-            // Refresh the shape so it reflects the linked cell value
+            // Refresh the shape so it reflects the current linked cell value
             listBoxShape.UpdateSelectedValue();
 
-            // Change the linked cell value to a different option (e.g., "Option 4")
-            worksheet.Cells["A10"].Value = "Option 4";
+            // Verify the selection (optional)
+            ListBox listBox = (ListBox)listBoxShape;
+            Console.WriteLine("Initially selected: " + (listBox.IsSelected(1) ? "Option 2" : "None"));
 
-            // Refresh the shape again to display the new selection
-            listBoxShape.UpdateSelectedValue();
+            // Change the linked cell value to "Option 3"
+            sheet.Cells["B1"].Value = "Option 3";
 
-            // Save the workbook to verify the result
-            string outputPath = "LinkedShapeRefreshDemo.xlsx";
+            // Refresh all shapes in the worksheet (updates the ListBox selection)
+            sheet.Shapes.UpdateSelectedValue();
 
-            // Ensure we can write to the output location
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Verify the new selection
+            Console.WriteLine("After update selected: " + (listBox.IsSelected(2) ? "Option 3" : "None"));
+
+            // Save the workbook
+            workbook.Save("LinkedShapeRefreshDemo.xlsx");
         }
     }
 }

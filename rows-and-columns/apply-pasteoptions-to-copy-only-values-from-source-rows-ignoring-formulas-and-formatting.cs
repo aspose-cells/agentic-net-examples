@@ -1,54 +1,59 @@
-using System;
-using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+// Title: Copy rows as values only with PasteOptions in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to use Aspose.Cells' PasteOptions with PasteType.Values to copy all populated rows from one worksheet to another while discarding formulas, formatting, and links. The example sets SkipBlanks, configures CopyRows, and saves the destination workbook containing only calculated values.
+// Keywords: Aspose.Cells CopyRows values only | PasteOptions PasteType.Values C# | copy rows without formulas Aspose | skip blanks Aspose.Cells | export calculated values Excel .NET | ignore formatting Aspose.Cells copy | PasteOptions example C#
+// Common Searches: Aspose.Cells copy rows values only | PasteOptions to ignore formulas in C# | CopyRows method example Aspose.Cells | skip blanks when copying rows Aspose | export only values from worksheet .NET
+// Developer Intent: Copy a range of rows from a source worksheet to a destination worksheet, preserving only the evaluated cell values and omitting formulas, formatting, and external links.
+// Use Cases: Generate a clean data export for reporting by copying calculation results without any formulas. | Create a summary sheet that contains only final values, eliminating hidden links and style information. | Prepare a dataset for third‑party processing where only raw values are required, with blanks skipped.
+// AI Prompts: Show how to copy rows 5‑10 as values only using PasteOptions in Aspose.Cells. | Provide code to copy rows while keeping number formats but removing formulas. | Explain how to retain column widths when copying rows with PasteType.Values.
 
-class Program
+using System;
+using Aspose.Cells;
+
+// Demonstrates how to use Aspose.Cells' PasteOptions with PasteType.Values to copy all populated rows from one worksheet to another while discarding formulas, formatting, and links. The example sets SkipBlanks, configures CopyRows, and saves the destination workbook containing only calculated values.
+class CopyRowsValuesOnly
 {
     static void Main()
     {
-        try
+        // Create source workbook and fill with data, formulas and formatting
+        Workbook srcWb = new Workbook();
+        Worksheet srcWs = srcWb.Worksheets[0];
+        srcWs.Cells["A1"].PutValue(10);
+        srcWs.Cells["B1"].Formula = "=A1*2";          // formula that should be ignored
+        srcWs.Cells["A2"].PutValue(20);
+        srcWs.Cells["B2"].Formula = "=A2*2";
+        srcWs.Cells["A3"].PutValue(30);
+        srcWs.Cells["B3"].Formula = "=A3*2";
+
+        // Create destination workbook (empty)
+        Workbook destWb = new Workbook();
+        Worksheet destWs = destWb.Worksheets[0];
+
+        // Configure PasteOptions to copy only values
+        PasteOptions pasteOptions = new PasteOptions
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            PasteType = PasteType.Values,   // copy only cell values
+            SkipBlanks = true,
+            OnlyVisibleCells = false,
+            Transpose = false,
+            IgnoreLinksToOriginalFile = true
+        };
 
-            // Populate source rows with values and formulas
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["B1"].Formula = "=A1*2";   // Formula that should be ignored
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["B2"].Formula = "=A2*2";   // Another formula
+        // Default CopyOptions (no special behavior)
+        CopyOptions copyOptions = new CopyOptions();
 
-            // Define the source range covering the rows to copy (A1:B2)
-            AsposeRange sourceRange = sheet.Cells.CreateRange(0, 0, 2, 2); // rows 0-1, columns 0-1
+        // Determine number of rows to copy (all rows that contain data)
+        int rowsToCopy = srcWs.Cells.MaxDisplayRange.RowCount;
 
-            // Define the destination range where rows will be pasted (starting at row 5)
-            AsposeRange destinationRange = sheet.Cells.CreateRange(4, 0, 2, 2); // rows 4-5, columns 0-1
+        // Copy rows from source to destination using the specified options
+        destWs.Cells.CopyRows(
+            srcWs.Cells,          // source cells
+            0,                    // source start row index
+            0,                    // destination start row index
+            rowsToCopy,           // number of rows to copy
+            copyOptions,          // copy options
+            pasteOptions);        // paste options (values only)
 
-            // Configure PasteOptions to copy only values (ignore formulas and formatting)
-            PasteOptions pasteOptions = new PasteOptions
-            {
-                PasteType = PasteType.Values,   // Copy only cell values
-                SkipBlanks = true,
-                OnlyVisibleCells = false,
-                Transpose = false,
-                IgnoreLinksToOriginalFile = true
-            };
-
-            // Perform the copy operation using the specified paste options
-            destinationRange.Copy(sourceRange, pasteOptions);
-
-            // Define output file path
-            string outputPath = "CopyValuesOnly.xlsx";
-
-            // Save the workbook to a file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            // Log any unexpected errors
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the result
+        destWb.Save("RowsCopiedValuesOnly.xlsx");
     }
 }

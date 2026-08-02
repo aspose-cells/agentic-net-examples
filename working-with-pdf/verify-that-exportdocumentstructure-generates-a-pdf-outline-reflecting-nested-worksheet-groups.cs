@@ -1,9 +1,9 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsOutlinePdfDemo
+namespace AsposeCellsPdfOutlineDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
@@ -11,40 +11,35 @@ namespace AsposeCellsOutlinePdfDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "OutlineDemo";
 
-            // Populate some sample data
-            for (int row = 0; row < 10; row++)
+            // Populate sample data
+            for (int i = 0; i < 12; i++)
             {
-                sheet.Cells[row, 0].PutValue($"Item {row + 1}");
-                sheet.Cells[row, 1].PutValue((row + 1) * 10);
+                sheet.Cells[$"A{i + 1}"].PutValue($"Item {i + 1}");
+                sheet.Cells[$"B{i + 1}"].PutValue((i + 1) * 10);
             }
 
-            // Create first level row group (rows 1‑4)
-            sheet.Cells.GroupRows(0, 3, false);
-            // Create nested row group inside the first group (rows 2‑3)
-            sheet.Cells.GroupRows(1, 2, true);
+            // Create outline groups:
+            // First level group rows 1-6 (0‑based indices 0‑5)
+            sheet.Cells.GroupRows(0, 5, false);
+            // Second level nested group rows 3-5 (indices 2‑4) inside the first group
+            sheet.Cells.GroupRows(2, 4, true);
+            // Third level group rows 9-12 (indices 8‑11) as a separate outline
+            sheet.Cells.GroupRows(8, 11, false);
 
-            // Create first level column group (columns A‑B)
-            sheet.Cells.GroupColumns(0, 1, false);
-            // Create nested column group inside the first group (column B only)
-            sheet.Cells.GroupColumns(1, 1, true);
-
-            // Ensure the outline is visible in the worksheet
+            // Ensure the outline is visible in the worksheet view
             sheet.IsOutlineShown = true;
 
-            // Configure PDF save options to export document structure (outline)
+            // Configure PDF save options to export the document structure (outline)
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                ExportDocumentStructure = true
+                ExportDocumentStructure = true   // Enables PDF bookmarks reflecting the worksheet outline
             };
 
-            // Save the workbook as PDF; the resulting PDF will contain an outline
-            // that mirrors the nested row and column groups defined above.
-            string outputPath = "OutlineExported.pdf";
-            workbook.Save(outputPath, pdfOptions);
+            // Save the workbook as PDF with the specified options
+            workbook.Save("WorkbookWithOutline.pdf", pdfOptions);
 
-            Console.WriteLine($"PDF saved to '{outputPath}' with document structure exported.");
+            Console.WriteLine("PDF saved with exported document structure (outline).");
         }
     }
 }

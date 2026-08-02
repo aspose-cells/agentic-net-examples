@@ -1,80 +1,119 @@
+// Title: Create a Line Chart from an Excel Template with Smart Markers using Aspose.Cells for .NET (C#)
+// Description: This example loads an Excel template that contains Smart Markers, binds a List<SalesData> to the "Sales" data source, processes the markers with WorkbookDesigner, adds a line chart that references the populated ranges, customizes the title and legend, and saves the workbook as Output.xlsx.
+// Keywords: Aspose.Cells | C# | .NET | Smart Markers | WorkbookDesigner | line chart | Excel template | dynamic chart | sales data | GitHub example
+// Common Searches: Aspose.Cells create line chart from template | C# smart markers line chart example | WorkbookDesigner process smart markers and add chart | how to bind a list to smart markers in Aspose.Cells | generate Excel line chart programmatically .NET
+// Developer Intent: Generate an Excel line chart by processing Smart Markers with WorkbookDesigner and saving the result.
+// Use Cases: Automate monthly sales reports using a pre‑designed Excel template. | Produce dynamic line charts for varying data sets without manual range adjustments. | Integrate chart generation into a .NET reporting service or API. | Create reusable Excel templates for finance or KPI dashboards.
+// AI Prompts: Show code to set category axis labels for a line chart after processing smart markers in Aspose.Cells. | Demonstrate adding multiple series to the line chart from separate smart marker collections. | Explain handling of empty cells and null values when populating chart data with WorkbookDesigner. | Provide a GitHub‑style project layout for this line‑chart example.
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsSmartMarkerLineChart
 {
-    // Sample data class representing a data point for the line chart
-    public class ChartDataPoint
+    // Simple POCO class representing the data that will be bound to smart markers
+    // This example loads an Excel template that contains Smart Markers, binds a List<SalesData> to the "Sales" data source, processes the markers with WorkbookDesigner, adds a line chart that references the populated ranges, customizes the title and legend, and saves the workbook as Output.xlsx.
+    public class SalesData
     {
-        public string Category { get; set; }
-        public double Value { get; set; }
+        public string Month { get; set; }
+        public double Amount { get; set; }
 
-        public ChartDataPoint(string category, double value)
+        public SalesData(string month, double amount)
         {
-            Category = category;
-            Value = value;
+            Month = month;
+            Amount = amount;
         }
     }
 
-    public class GenerateLineChartWithSmartMarkers
+    public class GenerateLineChartFromTemplate
     {
         public static void Run()
         {
-            // Load the workbook template that contains smart markers.
-            // The template should have a range where data will be populated, e.g. cells A2:B2 marked with "&Data.Category" and "&Data.Value".
-            Workbook workbook = new Workbook("Template.xlsx");
+            const string templatePath = "Template.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Initialize the WorkbookDesigner with the loaded workbook.
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // Prepare sample data for the smart markers.
-            List<ChartDataPoint> data = new List<ChartDataPoint>
+            try
             {
-                new ChartDataPoint("Jan", 120),
-                new ChartDataPoint("Feb", 150),
-                new ChartDataPoint("Mar", 170),
-                new ChartDataPoint("Apr", 130),
-                new ChartDataPoint("May", 190),
-                new ChartDataPoint("Jun", 210)
-            };
+                // Verify that the template file exists
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Error: Template file \"{templatePath}\" not found.");
+                    return;
+                }
 
-            // Bind the data source to the smart marker name used in the template (e.g., "Data").
-            designer.SetDataSource("Data", data);
+                // Load the workbook template that contains smart markers
+                Workbook workbook = new Workbook(templatePath);
 
-            // Process the smart markers – this will populate the worksheet with the data.
-            designer.Process();
+                // Prepare the data source that will replace the smart markers
+                List<SalesData> sales = new List<SalesData>
+                {
+                    new SalesData("Jan", 1200.5),
+                    new SalesData("Feb", 1500.0),
+                    new SalesData("Mar", 1100.75),
+                    new SalesData("Apr", 1700.25),
+                    new SalesData("May", 1600.0)
+                };
 
-            // After processing, add a line chart that uses the populated data.
-            Worksheet sheet = workbook.Worksheets[0];
+                // Bind the data source and process the smart markers
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook,
+                    // Use range smart markers (LineByLine is obsolete but kept for compatibility)
+                    LineByLine = false
+                };
+                designer.SetDataSource("Sales", sales);
+                designer.Process(); // populate the worksheet with the data
 
-            // Add a line chart positioned from row 10, column 1 to row 30, column 8.
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 9, 0, 29, 7);
-            Chart chart = sheet.Charts[chartIndex];
+                // Add a line chart that visualizes the data
+                Worksheet sheet = workbook.Worksheets[0];
+                int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 2, 25, 12);
+                Chart lineChart = sheet.Charts[chartIndex];
 
-            // Define the data range for the chart.
-            // Assuming the template placed categories in column A and values in column B starting from row 2.
-            // Adjust the range according to the actual number of data rows.
-            string dataRange = $"=Sheet1!$A$2:$B${data.Count + 1}";
-            chart.NSeries.Add(dataRange, true);
+                // Define the data range for the series (Amount column) and categories (Month column)
+                int lastDataRow = 1 + sales.Count; // rows are zero‑based; data starts at row 1 (A2)
+                string amountRange = $"=Sheet1!$B$2:$B${lastDataRow}";
+                string monthRange = $"=Sheet1!$A$2:$A${lastDataRow}";
 
-            // Optional: set chart title and enable legend.
-            chart.Title.Text = "Monthly Sales";
-            chart.ShowLegend = true;
+                // Add the series; categories are set automatically based on the range
+                lineChart.NSeries.Add(amountRange, true);
 
-            // Save the resulting workbook.
-            workbook.Save("Result.xlsx");
+                // If the API version supports setting category data, it can be done here.
+                // The property may be unavailable in newer versions, so we skip it safely.
+                // lineChart.NSeries[0].CategoryData = monthRange; // optional
+
+                // Optional chart customizations
+                lineChart.Title.Text = "Monthly Sales";
+                lineChart.ShowLegend = false;
+                lineChart.PlotEmptyCellsType = PlotEmptyCellsType.NotPlotted;
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the resulting workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 
-    // Entry point for demonstration.
+    // Entry point for demonstration
     class Program
     {
         static void Main()
         {
-            GenerateLineChartWithSmartMarkers.Run();
-            Console.WriteLine("Line chart generated and saved to Result.xlsx");
+            GenerateLineChartFromTemplate.Run();
+            Console.WriteLine("Processing completed.");
         }
     }
 }

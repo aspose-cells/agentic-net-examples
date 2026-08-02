@@ -12,50 +12,51 @@ namespace AsposeCellsRowHeightAdjustment
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // Sample data with long wrapped text
-            cells["A1"].PutValue("This is a very long text that should wrap inside the cell and cause the row height to increase accordingly.");
-            cells["B1"].PutValue("Short text");
-            cells["A2"].PutValue("Another long piece of text that will be wrapped and needs proper row height.");
-            cells["B2"].PutValue("Another short");
+            // Sample data with long text that requires wrapping
+            string longText = "This is a very long piece of text that will be wrapped inside the cell. " +
+                              "It contains multiple sentences to ensure that the row height needs to be increased " +
+                              "to display all the content properly when text wrapping is enabled.";
 
-            // Enable text wrapping for the cells that contain long text
-            Style wrapStyle = worksheet.Cells["A1"].GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            worksheet.Cells["A1"].SetStyle(wrapStyle);
-            worksheet.Cells["A2"].SetStyle(wrapStyle);
+            // Populate a few rows with wrapped text
+            for (int row = 0; row < 5; row++)
+            {
+                // Put the same long text in column A for demonstration
+                cells[row, 0].PutValue(longText);
 
-            // Determine the maximum row index that contains data
+                // Enable text wrapping for the cell
+                Style style = cells[row, 0].GetStyle();
+                style.IsTextWrapped = true;
+                cells[row, 0].SetStyle(style);
+            }
+
+            // Enumerate each row that contains data
             int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-            // Iterate through each row to calculate required pixel height
             for (int rowIndex = 0; rowIndex <= maxRow; rowIndex++)
             {
-                int maxPixelHeight = 0;
+                int requiredHeightPixel = 0;
 
-                // Iterate through each column in the current row
-                for (int colIndex = 0; colIndex <= cells.MaxDataColumn; colIndex++)
+                // Examine each cell in the current row to find the maximum required height
+                for (int colIndex = 0; colIndex <= maxCol; colIndex++)
                 {
                     Cell cell = cells[rowIndex, colIndex];
-                    if (cell == null) continue;
-
-                    // Check if the cell has text wrapping enabled
-                    Style cellStyle = cell.GetStyle();
-                    if (cellStyle.IsTextWrapped)
+                    if (cell != null && !string.IsNullOrEmpty(cell.StringValue))
                     {
-                        // Get the height required for the cell's value in pixels
-                        int cellPixelHeight = cell.GetHeightOfValue();
+                        // Get the height needed for the cell's content (in pixels)
+                        int cellHeightPixel = cell.GetHeightOfValue();
 
-                        // Keep the maximum height among cells in the row
-                        if (cellPixelHeight > maxPixelHeight)
-                            maxPixelHeight = cellPixelHeight;
+                        // Keep the greatest height among cells in the row
+                        if (cellHeightPixel > requiredHeightPixel)
+                            requiredHeightPixel = cellHeightPixel;
                     }
                 }
 
-                // If any wrapped cell was found, set the row height in pixels
-                if (maxPixelHeight > 0)
+                // If any cell required a height greater than the default, apply it to the row
+                if (requiredHeightPixel > 0)
                 {
-                    // SetRowHeightPixel expects height in pixels
-                    cells.SetRowHeightPixel(rowIndex, maxPixelHeight);
+                    // Set row height directly in pixels
+                    cells.SetRowHeightPixel(rowIndex, requiredHeightPixel);
                 }
             }
 

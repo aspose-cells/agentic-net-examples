@@ -1,59 +1,74 @@
+// Title: Prevent Duplicate Worksheet TabId Values in Aspose.Cells for .NET
+// Description: Demonstrates how to assign a unique TabId to each worksheet by checking a HashSet of existing IDs, incrementing the desired value until it is free, and then saving the workbook.
+// Keywords: Aspose.Cells TabId uniqueness | C# worksheet TabId duplicate prevention | Aspose.Cells set TabId .NET | HashSet TabId tracking | worksheet identifier collision handling
+// Common Searches: Aspose.Cells assign unique TabId | prevent duplicate TabId in Excel worksheets | C# check existing TabIds before setting | Aspose.Cells TabId conflict resolution | how to ensure unique worksheet identifiers
+// Developer Intent: Assign a TabId to each worksheet only when it does not clash with any TabId already used in the workbook.
+// Use Cases: Automatically generate sequential TabIds for newly added worksheets. | Update a worksheet's TabId based on external data while guaranteeing uniqueness. | Validate and correct TabId collisions before exporting a workbook to Excel.
+// AI Prompts: Create a C# method for Aspose.Cells that receives a Worksheet, a desired TabId, and a collection of used TabIds, then sets the next available TabId. | Show an Aspose.Cells example that scans all worksheets, detects duplicate TabIds, and resolves them before saving. | Explain how to reset the HashSet of used TabIds when a workbook is closed or reloaded.
+
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-class PreventDuplicateTabIdDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to assign a unique TabId to each worksheet by checking a HashSet of existing IDs, incrementing the desired value until it is free, and then saving the workbook.
+    public class WorksheetTabIdUniqueDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the default worksheet and add two more worksheets
-        Worksheet ws1 = workbook.Worksheets[0];
-        ws1.Name = "Sheet1";
-
-        Worksheet ws2 = workbook.Worksheets.Add("Sheet2");
-        Worksheet ws3 = workbook.Worksheets.Add("Sheet3");
-
-        // Assign TabIds while ensuring uniqueness
-        SetUniqueTabId(ws1, 101, workbook);
-        SetUniqueTabId(ws2, 102, workbook);
-        // Attempt to assign a duplicate TabId (101) to ws3; the method will resolve it
-        SetUniqueTabId(ws3, 101, workbook);
-
-        // Save the workbook
-        workbook.Save("UniqueTabIds.xlsx");
-    }
-
-    // Assigns a TabId to a worksheet, adjusting it if the desired value already exists
-    static void SetUniqueTabId(Worksheet sheet, int desiredId, Workbook wb)
-    {
-        // Gather all existing TabIds in the workbook
-        HashSet<int> existingIds = new HashSet<int>();
-        foreach (Worksheet ws in wb.Worksheets)
+        // Assigns a TabId to a worksheet only if it does not duplicate existing TabIds.
+        private static void SetUniqueTabId(Worksheet sheet, int desiredTabId, HashSet<int> existingTabIds)
         {
-            existingIds.Add(ws.TabId);
+            // If the desired TabId is already used, find the next free integer.
+            int newTabId = desiredTabId;
+            while (existingTabIds.Contains(newTabId))
+            {
+                newTabId++;
+            }
+
+            // Apply the unique TabId and record it.
+            sheet.TabId = newTabId;
+            existingTabIds.Add(newTabId);
+            Console.WriteLine($"Worksheet \"{sheet.Name}\" assigned TabId: {newTabId}");
         }
 
-        int finalId = desiredId;
-        // Find the next available TabId if the desired one is already taken
-        while (existingIds.Contains(finalId))
+        public static void Run()
         {
-            finalId++;
+            try
+            {
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
+
+                // Ensure there are multiple worksheets to demonstrate the feature.
+                Worksheet sheet1 = workbook.Worksheets[0]; // default first sheet
+                sheet1.Name = "SheetA";
+
+                Worksheet sheet2 = workbook.Worksheets.Add("SheetB");
+                Worksheet sheet3 = workbook.Worksheets.Add("SheetC");
+
+                // Collect existing TabIds (initially empty because none have been set)
+                HashSet<int> existingTabIds = new HashSet<int>();
+
+                // Assign TabIds, intentionally using duplicate desired values to test the check.
+                SetUniqueTabId(sheet1, 100, existingTabIds); // Expected to set 100
+                SetUniqueTabId(sheet2, 100, existingTabIds); // Duplicate, should become 101
+                SetUniqueTabId(sheet3, 102, existingTabIds); // Unique, stays 102
+                SetUniqueTabId(sheet3, 100, existingTabIds); // Attempt duplicate on same sheet, will become 103
+
+                // Save the workbook (lifecycle rule: save)
+                string outputPath = "WorksheetTabIdUniqueDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
-        // Apply the unique TabId
-        sheet.TabId = finalId;
-
-        // Output the result
-        if (finalId != desiredId)
+        // Entry point required for compilation.
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Desired TabId {desiredId} for worksheet '{sheet.Name}' was already used. Assigned new TabId {finalId}.");
-        }
-        else
-        {
-            Console.WriteLine($"Assigned TabId {finalId} to worksheet '{sheet.Name}'.");
+            Run();
         }
     }
 }

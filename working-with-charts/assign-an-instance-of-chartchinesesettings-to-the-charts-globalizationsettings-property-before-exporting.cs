@@ -1,64 +1,69 @@
+// Title: Set Chinese Globalization Settings for Aspose.Cells Charts in C# Before Export
+// Description: Demonstrates how to create a custom ChartChineseSettings class derived from SettableChartGlobalizationSettings, assign Chinese names to chart titles, axis titles, units, legends and series, apply the settings to a workbook's GlobalizationSettings.ChartSettings, and export the workbook as an Excel file.
+// Keywords: Aspose.Cells C# chart globalization | Chinese chart localization | SettableChartGlobalizationSettings example | Excel chart export Chinese labels | Aspose.Cells chart titles Chinese | axis unit Chinese Aspose.Cells | chart legend Chinese Aspose | GitHub Aspose.Cells chart localization | globalization settings for Excel charts
+// Common Searches: how to localize Aspose.Cells chart labels to Chinese | apply custom ChartGlobalizationSettings in C# | Aspose.Cells chart Chinese axis units example | set Chinese legend names for Excel charts using Aspose | C# code for chart globalization settings Aspose.Cells
+// Developer Intent: Apply a custom ChartChineseSettings object to a workbook’s GlobalizationSettings.ChartSettings so that all chart elements are rendered with Chinese terminology before saving.
+// Use Cases: Generate Excel reports with column charts that display titles, axis labels, and legends in Chinese for regional users. | Standardize chart unit displays (hundreds, thousands, ten‑thousands) using Chinese characters across multiple workbooks. | Create a reusable localization class for Aspose.Cells charts that can be applied to any workbook prior to export.
+// AI Prompts: Show how to assign ChartChineseSettings to a single chart instead of the whole workbook in Aspose.Cells C#. | Generate C# code that configures Japanese chart globalization settings using SettableChartGlobalizationSettings. | Explain how to read, modify, and re‑apply ChartGlobalizationSettings after loading an existing Excel file with Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsChartChineseSettingsDemo
 {
-    static void Main()
+    // Custom globalization settings for charts with Chinese labels
+    // Demonstrates how to create a custom ChartChineseSettings class derived from SettableChartGlobalizationSettings, assign Chinese names to chart titles, axis titles, units, legends and series, apply the settings to a workbook's GlobalizationSettings.ChartSettings, and export the workbook as an Excel file.
+    public class ChartChineseSettings : SettableChartGlobalizationSettings
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Add sample data for the chart
-        ws.Cells["A1"].PutValue("类别");
-        ws.Cells["A2"].PutValue("第一组");
-        ws.Cells["A3"].PutValue("第二组");
-        ws.Cells["B1"].PutValue("数值");
-        ws.Cells["B2"].PutValue(120);
-        ws.Cells["B3"].PutValue(250);
-
-        // Create a column chart
-        int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = ws.Charts[chartIndex];
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
-
-        // Apply custom Chinese globalization settings to the chart via workbook settings
-        wb.Settings.GlobalizationSettings = new GlobalizationSettings
+        public ChartChineseSettings()
         {
-            ChartSettings = new ChartChineseSettings()
-        };
-
-        // Export the workbook (saving to a file)
-        wb.Save("ChartWithChineseSettings.xlsx");
+            // Set Chinese names for various chart elements
+            SetChartTitleName("图表标题");
+            SetAxisTitleName("轴标题");
+            SetAxisUnitName(DisplayUnitType.Hundreds, "百");
+            SetAxisUnitName(DisplayUnitType.Thousands, "千");
+            SetAxisUnitName(DisplayUnitType.TenThousands, "万");
+            SetLegendIncreaseName("增加");
+            SetLegendDecreaseName("减少");
+            SetLegendTotalName("合计");
+            SetOtherName("其他");
+            SetSeriesName("系列");
+        }
     }
 
-    // Custom globalization settings for Chinese language
-    class ChartChineseSettings : ChartGlobalizationSettings
+    public class Program
     {
-        // Override axis unit names to Chinese characters
-        public override string GetAxisUnitName(DisplayUnitType type)
+        public static void Main()
         {
-            switch (type)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("类别");
+            sheet.Cells["A2"].PutValue("第一季度");
+            sheet.Cells["A3"].PutValue("第二季度");
+            sheet.Cells["A4"].PutValue("第三季度");
+            sheet.Cells["B1"].PutValue("数值");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Apply custom Chinese globalization settings to the workbook
+            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
             {
-                case DisplayUnitType.Hundreds:
-                    return "百";
-                case DisplayUnitType.Thousands:
-                    return "千";
-                case DisplayUnitType.TenThousands:
-                    return "万";
-                default:
-                    return base.GetAxisUnitName(type);
-            }
-        }
+                ChartSettings = new ChartChineseSettings()
+            };
 
-        // Override chart title name
-        public override string GetChartTitleName()
-        {
-            return "图表标题";
+            // Save the workbook (export)
+            workbook.Save("ChartWithChineseSettings.xlsx");
         }
-
-        // Additional overrides can be added here as needed
     }
 }

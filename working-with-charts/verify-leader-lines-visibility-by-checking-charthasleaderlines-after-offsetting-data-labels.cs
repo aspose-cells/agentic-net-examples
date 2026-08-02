@@ -35,16 +35,18 @@ namespace VerifyLeaderLines
             // Access the first series
             Series series = chart.NSeries[0];
 
-            // Enable data labels and offset them by placing them outside the slice
-            series.DataLabels.ShowValue = true;
-            series.DataLabels.Position = LabelPositionType.OutsideEnd; // offset
-
             // Enable leader lines for the series
             series.HasLeaderLines = true;
 
-            // Verify the visibility of leader lines after offsetting data labels
+            // Configure data labels and offset them slightly
+            series.DataLabels.ShowValue = true;
+            series.DataLabels.Position = LabelPositionType.OutsideEnd;
+            // Offset the data label horizontally by 10 pixels (example)
+            series.DataLabels.XPixel = series.DataLabels.XPixel + 10;
+
+            // Verify leader lines visibility by reading the property
             bool leaderLinesVisible = series.HasLeaderLines;
-            Console.WriteLine("Leader lines visible after offsetting data labels: " + leaderLinesVisible);
+            Console.WriteLine("Leader lines enabled: " + leaderLinesVisible);
 
             // Save the workbook
             workbook.Save("VerifyLeaderLines.xlsx");

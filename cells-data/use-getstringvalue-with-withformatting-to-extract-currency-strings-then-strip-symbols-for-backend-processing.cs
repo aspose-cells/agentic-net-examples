@@ -1,62 +1,44 @@
 using System;
-using System.Globalization;
-using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsCurrencyProcessing
+namespace AsposeCellsCurrencyExample
 {
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Put a numeric value into cell A1
+            Cell cell = cells["A1"];
+            cell.PutValue(1234.56);
+
+            // Apply a custom currency format (e.g., $1,234.56)
+            Style style = workbook.CreateStyle();
+            style.Custom = "$#,##0.00";
+            cell.SetStyle(style);
+
+            // Get the formatted string value as it appears in Excel (includes the currency symbol)
+            string formattedCurrency = cell.GetStringValue(CellValueFormatStrategy.DisplayString);
+            Console.WriteLine("Formatted (with currency symbol): " + formattedCurrency);
+
+            // Strip all non-numeric characters except decimal separator and minus sign
+            // This yields a plain numeric string suitable for backend processing
+            string numericString = Regex.Replace(formattedCurrency, @"[^\d\.\-]", "");
+            Console.WriteLine("Numeric string (symbols removed): " + numericString);
+
+            // Optionally, convert the numeric string to a decimal for further calculations
+            if (decimal.TryParse(numericString, out decimal numericValue))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Put a numeric value that represents an amount
-                Cell amountCell = cells["B2"];
-                amountCell.PutValue(1234.56);
-
-                // Apply a built‑in currency format (Number format ID 44 = "$#,##0.00")
-                Style currencyStyle = workbook.CreateStyle();
-                currencyStyle.Number = 44; // Currency format
-                amountCell.SetStyle(currencyStyle);
-
-                // Extract the formatted string using GetStringValue with DisplayString strategy
-                // This returns exactly what Excel would display (e.g., "$1,234.56")
-                string formattedCurrency = amountCell.GetStringValue(CellValueFormatStrategy.DisplayString);
-                Console.WriteLine($"Formatted currency string: {formattedCurrency}");
-
-                // Strip currency symbols and grouping separators, keep digits, decimal separator and sign
-                NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
-                string decimalSeparator = Regex.Escape(nfi.NumberDecimalSeparator);
-                // Build a regex that removes everything except digits, sign, and decimal separator
-                string cleaned = Regex.Replace(formattedCurrency, $"[^0-9\\-+{decimalSeparator}]", string.Empty);
-                Console.WriteLine($"Cleaned numeric string: {cleaned}");
-
-                // Optionally convert the cleaned string back to a numeric type for backend processing
-                if (double.TryParse(cleaned, NumberStyles.Any, CultureInfo.CurrentCulture, out double numericValue))
-                {
-                    Console.WriteLine($"Numeric value for backend: {numericValue}");
-                }
-                else
-                {
-                    Console.WriteLine("Failed to parse the cleaned string to a numeric value.");
-                }
-
-                // Save the workbook (optional, just to demonstrate lifecycle compliance)
-                string outputPath = "CurrencyProcessingDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine("Parsed decimal value: " + numericValue);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook to a file
+            workbook.Save("CurrencyExample.xlsx");
         }
     }
 }

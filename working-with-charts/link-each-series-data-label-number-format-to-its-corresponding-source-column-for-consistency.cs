@@ -1,129 +1,82 @@
+// Title: Link Chart Series Data Labels to Source Cells' Number Format with Aspose.Cells for .NET
+// Description: Demonstrates how to create a workbook, populate category and series data, add a column chart, and link each series' data labels to a separate source column (D or E). The example uses the DataLabels.LinkedSource and NumberFormatLinked properties so the label text and number format follow the source cells, then saves the file as an Excel workbook.
+// Keywords: Aspose.Cells | C# | .NET | Excel chart data labels | LinkedSource property | NumberFormatLinked | custom label formatting | column chart | chart series formatting | Excel automation
+// Common Searches: Aspose.Cells link data label to cell range | DataLabels.LinkedSource C# example | NumberFormatLinked Aspose.Cells chart | how to use custom data labels in Excel with Aspose | C# chart series label formatting from cells
+// Developer Intent: Associate each chart series' data label number format with its dedicated source column to keep label appearance consistent with the underlying cells.
+// Use Cases: Generate Excel reports where data labels show values with units or custom text stored in separate columns. | Maintain synchronized formatting between chart labels and source cells, so updates to cell styles automatically reflect on the chart. | Create multi‑series charts that require distinct label formats (e.g., different units or currency symbols) without manual label editing.
+// AI Prompts: Convert the column chart in the example to a line chart while preserving data label linking. | Write code that determines the LinkedSource range dynamically based on the number of rows in the worksheet. | Explain the effect of NumberFormatLinked and show how to disable it for only the second series.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsSeriesDataLabelLinkDemo
 {
-    public class LinkDataLabelNumberFormatDemo
+    // Demonstrates how to create a workbook, populate category and series data, add a column chart, and link each series' data labels to a separate source column (D or E). The example uses the DataLabels.LinkedSource and NumberFormatLinked properties so the label text and number format follow the source cells, then saves the file as an Excel workbook.
+    public class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
             // Populate sample data
-            // -------------------------------------------------
-            // Header row
+            // Column A: Categories
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["C1"].PutValue("Series 2");
-            sheet.Cells["D1"].PutValue("Series 3");
-            sheet.Cells["E1"].PutValue("Formatted 1");
-            sheet.Cells["F1"].PutValue("Formatted 2");
-            sheet.Cells["G1"].PutValue("Formatted 3");
-
-            // Category labels
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
             sheet.Cells["A4"].PutValue("C");
 
-            // Raw numeric values for each series
-            sheet.Cells["B2"].PutValue(1000);
-            sheet.Cells["B3"].PutValue(1500);
-            sheet.Cells["B4"].PutValue(2000);
+            // Column B: Series 1 values
+            sheet.Cells["B1"].PutValue("Series1");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(180);
 
-            sheet.Cells["C2"].PutValue(1200);
-            sheet.Cells["C3"].PutValue(1800);
-            sheet.Cells["C4"].PutValue(2400);
+            // Column C: Series 2 values
+            sheet.Cells["C1"].PutValue("Series2");
+            sheet.Cells["C2"].PutValue(80);
+            sheet.Cells["C3"].PutValue(110);
+            sheet.Cells["C4"].PutValue(140);
 
-            sheet.Cells["D2"].PutValue(1400);
-            sheet.Cells["D3"].PutValue(2100);
-            sheet.Cells["D4"].PutValue(2800);
+            // Column D: Formatted labels for Series 1 (e.g., with units)
+            sheet.Cells["D1"].PutValue("Series1 Labels");
+            sheet.Cells["D2"].PutValue("120 units");
+            sheet.Cells["D3"].PutValue("150 units");
+            sheet.Cells["D4"].PutValue("180 units");
 
-            // Formatted strings that we want the data labels to follow
-            sheet.Cells["E2"].PutValue("1,000 units");
-            sheet.Cells["E3"].PutValue("1,500 units");
-            sheet.Cells["E4"].PutValue("2,000 units");
+            // Column E: Formatted labels for Series 2
+            sheet.Cells["E1"].PutValue("Series2 Labels");
+            sheet.Cells["E2"].PutValue("80 units");
+            sheet.Cells["E3"].PutValue("110 units");
+            sheet.Cells["E4"].PutValue("140 units");
 
-            sheet.Cells["F2"].PutValue("1,200 units");
-            sheet.Cells["F3"].PutValue("1,800 units");
-            sheet.Cells["F4"].PutValue("2,400 units");
-
-            sheet.Cells["G2"].PutValue("1,400 units");
-            sheet.Cells["G3"].PutValue("2,100 units");
-            sheet.Cells["G4"].PutValue("2,800 units");
-
-            // -------------------------------------------------
             // Add a column chart
-            // -------------------------------------------------
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 25, 15);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add three series, each using its own numeric column
-            chart.NSeries.Add("B2:B4", true); // Series 1
-            chart.NSeries.Add("C2:C4", true); // Series 2
-            chart.NSeries.Add("D2:D4", true); // Series 3
+            // Add first series (values from B2:B4) and link its data labels to D column
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[0].XValues = "A2:A4";
+            chart.NSeries[0].DataLabels.ShowValue = true;
+            chart.NSeries[0].DataLabels.LinkedSource = "D2:D4";
+            chart.NSeries[0].DataLabels.NumberFormatLinked = true; // link number format to source cells
 
-            // Set category (X‑axis) data
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add second series (values from C2:C4) and link its data labels to E column
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries[1].XValues = "A2:A4";
+            chart.NSeries[1].DataLabels.ShowValue = true;
+            chart.NSeries[1].DataLabels.LinkedSource = "E2:E4";
+            chart.NSeries[1].DataLabels.NumberFormatLinked = true; // link number format to source cells
 
-            // -------------------------------------------------
-            // Link each series' data label number format to its formatted source column
-            // -------------------------------------------------
-            // Series 0 -> formatted values in column E
-            Series s0 = chart.NSeries[0];
-            s0.DataLabels.ShowValue = true;
-            s0.DataLabels.LinkedSource = "E2:E4";
-            s0.DataLabels.NumberFormatLinked = true;
+            // Optional: customize appearance
+            chart.Title.Text = "Series Data Labels Linked to Source Formats";
+            chart.Legend.Position = LegendPositionType.Bottom;
 
-            // Series 1 -> formatted values in column F
-            Series s1 = chart.NSeries[1];
-            s1.DataLabels.ShowValue = true;
-            s1.DataLabels.LinkedSource = "F2:F4";
-            s1.DataLabels.NumberFormatLinked = true;
-
-            // Series 2 -> formatted values in column G
-            Series s2 = chart.NSeries[2];
-            s2.DataLabels.ShowValue = true;
-            s2.DataLabels.LinkedSource = "G2:G4";
-            s2.DataLabels.NumberFormatLinked = true;
-
-            // Optional: style the data labels for better visibility
-            foreach (Series ser in chart.NSeries)
-            {
-                ser.DataLabels.Font.Color = Color.DarkBlue;
-                ser.DataLabels.Font.Size = 10;
-            }
-
-            // -------------------------------------------------
             // Save the workbook
-            // -------------------------------------------------
-            string outputPath = "LinkDataLabelNumberFormatDemo.xlsx";
-
-            // Ensure we can write the file (overwrite if exists)
-            if (File.Exists(outputPath))
-            {
-                File.Delete(outputPath);
-            }
-
-            workbook.Save(outputPath);
+            workbook.Save("SeriesDataLabelsLinked.xlsx");
         }
     }
 }

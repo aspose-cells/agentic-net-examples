@@ -1,72 +1,86 @@
+// Title: Refresh an Excel Pivot Table After Expanding Its Named Range with Aspose.Cells (C#)
+// Description: Shows how to load a workbook, append rows to a data sheet, enlarge the "SourceData" named range, refresh pivot tables on another sheet, and save the updated file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells | C# | Excel pivot table refresh | named range expansion | update pivot source | RefreshPivotTables | Workbook.Save | data worksheet | pivot worksheet | programmatic Excel automation
+// Common Searches: Aspose.Cells refresh pivot after adding rows | C# expand named range for pivot table | how to update pivot source range in Aspose.Cells | refresh all pivot tables in a workbook using Aspose.Cells | add rows to Excel sheet and refresh pivot programmatically
+// Developer Intent: Programmatically extend the source named range and trigger a refresh so the pivot tables include the newly added rows.
+// Use Cases: Automated daily data loads where new records are appended and reporting pivots must reflect them instantly. | Batch processing of Excel files that require dynamic pivot updates after importing additional data. | Server‑side .NET services that generate refreshed pivot‑based dashboards on demand.
+// AI Prompts: Generate C# code with Aspose.Cells that adds rows to a worksheet, expands a named range, refreshes pivot tables on another sheet, and saves the workbook. | Explain step‑by‑step how to modify a named range and refresh associated pivot tables in an Aspose.Cells workbook after inserting new data rows. | Provide a concise example that loads an existing Excel file, updates the source data, adjusts the "SourceData" reference, calls RefreshPivotTables, and writes the result to disk.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// Shows how to load a workbook, append rows to a data sheet, enlarge the "SourceData" named range, refresh pivot tables on another sheet, and save the updated file using Aspose.Cells for .NET.
+class RefreshPivotAfterRangeExpand
 {
-    public class RefreshPivotAfterRangeExpansion
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists.
             if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Load the workbook containing the named range and pivot table
+            // Load the workbook that contains the source data and the pivot table.
             Workbook workbook = new Workbook(inputPath);
 
-            // Assume the data source is on the first worksheet
-            Worksheet dataSheet = workbook.Worksheets[0];
+            // -------------------------------------------------
+            // 1. Append new rows to the source data worksheet.
+            // -------------------------------------------------
+            Worksheet dataSheet = workbook.Worksheets["Data"]; // assume the data sheet is named "Data"
+            if (dataSheet == null)
+                throw new InvalidOperationException("Worksheet named 'Data' was not found.");
 
-            // Append new rows of data below the existing data
-            int startRow = dataSheet.Cells.MaxDataRow + 1; // first empty row after existing data
-            dataSheet.Cells[startRow, 0].PutValue("NewItem1");   // Column A
-            dataSheet.Cells[startRow, 1].PutValue(123);         // Column B
-            dataSheet.Cells[startRow + 1, 0].PutValue("NewItem2");
-            dataSheet.Cells[startRow + 1, 1].PutValue(456);
+            // Determine the last row that currently contains data (zero‑based index).
+            int lastDataRow = dataSheet.Cells.MaxDataRow;
 
-            // Expand the named range "DataRange" to include the newly added rows
-            // Retrieve the existing named range from the workbook's Names collection
-            Name dataRange = workbook.Worksheets.Names["DataRange"];
-            if (dataRange != null)
-            {
-                // Build a new address that covers the original range plus the new rows
-                string sheetName = dataSheet.Name;
-                string newAddress = $"={sheetName}!$A$1:$B${startRow + 1}";
-                dataRange.RefersTo = newAddress;
-            }
-            else
-            {
-                Console.WriteLine("Named range 'DataRange' not found.");
-            }
+            // Add two new rows of sample data.
+            dataSheet.Cells[lastDataRow + 1, 0].PutValue("NewItem1"); // Column A
+            dataSheet.Cells[lastDataRow + 1, 1].PutValue(123);       // Column B
 
-            // Refresh pivot tables so they pick up the expanded range
-            // Assuming the pivot table is on the same sheet; adjust index if needed
-            Worksheet pivotSheet = workbook.Worksheets[0];
-            pivotSheet.RefreshPivotTables();
+            dataSheet.Cells[lastDataRow + 2, 0].PutValue("NewItem2"); // Column A
+            dataSheet.Cells[lastDataRow + 2, 1].PutValue(456);       // Column B
 
-            // Save the updated workbook
+            // -------------------------------------------------
+            // 2. Expand the named range used by the pivot table.
+            // -------------------------------------------------
+            // Assume the named range that the pivot table references is called "SourceData".
+            Name sourceRange = workbook.Worksheets.Names["SourceData"];
+            if (sourceRange == null)
+                throw new InvalidOperationException("Named range 'SourceData' was not found.");
+
+            // Calculate the new address for the expanded range.
+            // Columns A (0) to B (1) are used; rows start at 1 in Excel notation.
+            int newLastRowIndex = lastDataRow + 2;               // zero‑based index of the new last row
+            int newLastRowNumber = newLastRowIndex + 1;          // Excel row number (1‑based)
+            string newAddress = $"=Data!$A$1:${CellsHelper.ColumnIndexToName(1)}${newLastRowNumber}";
+
+            // Update the named range to point to the expanded area.
+            sourceRange.RefersTo = newAddress;
+
+            // -------------------------------------------------
+            // 3. Refresh the pivot table so it picks up the new rows.
+            // -------------------------------------------------
+            // Assume the pivot table resides on a sheet named "Pivot".
+            Worksheet pivotSheet = workbook.Worksheets["Pivot"];
+            if (pivotSheet == null)
+                throw new InvalidOperationException("Worksheet named 'Pivot' was not found.");
+
+            pivotSheet.RefreshPivotTables(); // Refreshes all pivot tables on this worksheet.
+
+            // -------------------------------------------------
+            // 4. Save the workbook with the refreshed pivot table.
+            // -------------------------------------------------
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

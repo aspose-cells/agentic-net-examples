@@ -1,45 +1,34 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitDemo
+class Program
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Load workbook with OnlyAuto enabled (auto‑fit only rows without custom height)
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.AutoFitterOptions = new AutoFitterOptions();
+        loadOptions.AutoFitterOptions.OnlyAuto = true;
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source workbook
-            string inputPath = "input.xlsx";
+            // Auto‑fit rows, respecting the OnlyAuto flag
+            sheet.AutoFitRows(true);
 
-            // Configure load options with OnlyAuto enabled
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.AutoFitterOptions = new AutoFitterOptions
+            // Verify row heights
+            int lastRow = sheet.Cells.MaxDataRow;
+            for (int i = 0; i <= lastRow; i++)
             {
-                OnlyAuto = true
-            };
-
-            // Load the workbook using the configured options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Ensure rows are auto‑fitted (optional, as OnlyAuto was applied on load)
-                sheet.AutoFitRows();
-
-                // Determine the last row that contains data
-                int lastDataRow = sheet.Cells.MaxDataRow;
-
-                // Verify each row's height and whether it matches the default font height
-                for (int rowIndex = 0; rowIndex <= lastDataRow; rowIndex++)
-                {
-                    Row row = sheet.Cells.Rows[rowIndex];
-                    Console.WriteLine($"Sheet: {sheet.Name}, Row: {rowIndex}, Height: {row.Height}, IsHeightMatched: {row.IsHeightMatched}");
-                }
+                Row row = sheet.Cells.Rows[i];
+                Console.WriteLine($"Sheet: {sheet.Name}, Row: {i}, Height: {row.Height}, IsHeightMatched: {row.IsHeightMatched}");
             }
-
-            // Save the workbook to verify that the auto‑fit settings persist
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
+
+        // Save the workbook after verification
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }
+
+// Author: Aspose.Cells .NET example – loads with OnlyAuto, auto‑fits rows, and checks heights.

@@ -6,17 +6,18 @@ class RenameButtonDemo
 {
     static void Main()
     {
-        // Load the workbook that contains the button
+        // Load an existing workbook that contains a form control button
         Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the worksheet where the button resides
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Locate the button by its current name
+        // The current name of the button we want to rename
+        string oldButtonName = "MyButton";
+
+        // Locate the button shape by its name
         Button button = null;
         foreach (Shape shape in worksheet.Shapes)
         {
-            if (shape is Button && shape.Name == "OldButton")
+            if (shape is Button && shape.Name == oldButtonName)
             {
                 button = (Button)shape;
                 break;
@@ -29,13 +30,17 @@ class RenameButtonDemo
             string existingMacro = button.MacroName;
 
             // Rename the button
-            button.Name = "NewButton";
+            button.Name = "NewButtonName";
 
-            // Reassign the macro name to ensure it remains linked
+            // Reassign the macro name to ensure it remains unchanged
             button.MacroName = existingMacro;
         }
+        else
+        {
+            Console.WriteLine($"Button with name '{oldButtonName}' not found.");
+        }
 
-        // Save the modified workbook
+        // Save the workbook with the updated button name
         workbook.Save("output.xlsx");
     }
 }

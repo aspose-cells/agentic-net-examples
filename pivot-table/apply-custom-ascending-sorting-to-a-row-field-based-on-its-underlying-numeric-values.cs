@@ -14,50 +14,42 @@ namespace AsposeCellsPivotSortingDemo
             Cells cells = sheet.Cells;
 
             // Populate sample data
-            // Header row
+            // Column A: Product (row field)
+            // Column B: Sales (numeric data field)
             cells["A1"].Value = "Product";
-            cells["B1"].Value = "UnitsSold";
+            cells["B1"].Value = "Sales";
+            cells["A2"].Value = "B";
+            cells["A3"].Value = "A";
+            cells["A4"].Value = "C";
+            cells["B2"].Value = 200;
+            cells["B3"].Value = 300;
+            cells["B4"].Value = 100;
 
-            // Data rows (numeric values in column B)
-            cells["A2"].Value = "Widget";
-            cells["B2"].Value = 150;
-            cells["A3"].Value = "Gadget";
-            cells["B3"].Value = 45;
-            cells["A4"].Value = "Doohickey";
-            cells["B4"].Value = 300;
-            cells["A5"].Value = "Thingamajig";
-            cells["B5"].Value = 120;
-
-            // Add a pivot table based on the data range A1:B5, place it at E3
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "E3", "SalesPivot");
+            // Add a pivot table covering the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add the product column as a row field
+            // Add the row field (Product) and the data field (Sales)
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add the units sold column as a data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "UnitsSold");
-
-            // Retrieve the row field (the first row field)
+            // Retrieve the row field object
             PivotField rowField = pivotTable.RowFields[0];
 
             // Enable automatic sorting and set it to ascending
             rowField.IsAutoSort = true;          // Turn on auto‑sorting
             rowField.IsAscendSort = true;        // Ascending order
 
-            // Specify that sorting should be based on the first data field (UnitsSold)
+            // Specify that sorting should be based on the first data field (Sales)
             // Index 0 refers to the first data field added to the pivot table
             rowField.AutoSortField = 0;
-
-            // Alternatively, you can achieve the same with the SortBy method:
-            // rowField.SortBy(SortOrder.Ascending, 0);
 
             // Refresh the pivot table to apply sorting
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
             // Save the workbook
-            workbook.Save("PivotTable_CustomAscendingSort.xlsx");
+            workbook.Save("PivotTable_SortedByNumericValues.xlsx");
         }
     }
 }

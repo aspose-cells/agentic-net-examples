@@ -1,37 +1,63 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-class SlicerLinkedToPivot
+class SlicerDemo
 {
     static void Main()
     {
-        // Load an existing workbook that already contains a pivot table
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Assume the pivot table is on the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Retrieve the first pivot table in the worksheet
-        if (sheet.PivotTables.Count == 0)
+        try
         {
-            Console.WriteLine("No pivot tables found in the worksheet.");
-            return;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Obtain or create a pivot table
+            PivotTable pivot;
+            if (worksheet.PivotTables.Count > 0)
+            {
+                pivot = worksheet.PivotTables[0];
+            }
+            else
+            {
+                // Create a simple pivot table from a sample range (A1:C10)
+                int pivotIndex = worksheet.PivotTables.Add("=Sheet1!A1:C10", "E5", "DemoPivot");
+                pivot = worksheet.PivotTables[pivotIndex];
+
+                // Note: Aspose.Cells automatically adds default fields when a pivot table is created.
+                // Additional field configuration can be added here if needed.
+            }
+
+            // Determine a field name for the slicer (use first row field if available)
+            string slicerField = "Fruit";
+            if (pivot.RowFields.Count > 0)
+                slicerField = pivot.RowFields[0].Name;
+
+            // Add slicer linked to the pivot table
+            int slicerIndex = worksheet.Slicers.Add(pivot, "E2", slicerField);
+            Slicer slicer = worksheet.Slicers[slicerIndex];
+            slicer.Caption = $"{slicerField} Slicer";
+            slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-        PivotTable pivot = sheet.PivotTables[0];
-
-        // Add a slicer linked to the pivot table.
-        // The slicer will be placed with its upper‑left corner at cell E2
-        // and will filter by the pivot field named "fruit".
-        int slicerIndex = sheet.Slicers.Add(pivot, "E2", "fruit");
-        Slicer slicer = sheet.Slicers[slicerIndex];
-
-        // Optional: set a caption and style for the slicer
-        slicer.Caption = "Fruit Slicer";
-        slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

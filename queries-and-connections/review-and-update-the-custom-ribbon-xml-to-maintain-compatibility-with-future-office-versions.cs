@@ -1,63 +1,34 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class UpdateRibbonXml
 {
-    public class RibbonXmlUpdateDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Updated Ribbon XML using the newer 2009/07 namespace for better forward compatibility
+        string ribbonXml = 
+            @"<customUI xmlns=""http://schemas.microsoft.com/office/2009/07/customui"">
+                <ribbon>
+                    <tabs>
+                        <tab id=""customTab"" label=""My Tab"">
+                            <group id=""customGroup"" label=""My Group"">
+                                <button id=""customButton"" label=""My Button"" size=""large"" onAction=""OnButtonClick"" />
+                            </group>
+                        </tab>
+                    </tabs>
+                </ribbon>
+            </customUI>";
 
-            // Define Ribbon XML using the newer namespace (Office 2010+)
-            string ribbonXml =
-                "<customUI xmlns=\"http://schemas.microsoft.com/office/2009/07/customui\">" +
-                "  <ribbon>" +
-                "    <tabs>" +
-                "      <tab id=\"customTab\" label=\"My Tab\">" +
-                "        <group id=\"customGroup\" label=\"My Group\">" +
-                "          <button id=\"customButton\" label=\"My Button\" size=\"large\" />" +
-                "        </group>" +
-                "      </tab>" +
-                "    </tabs>" +
-                "  </ribbon>" +
-                "</customUI>";
+        // Assign the custom Ribbon XML to the workbook
+        workbook.RibbonXml = ribbonXml;
 
-            // Assign the Ribbon XML to the workbook
-            workbook.RibbonXml = ribbonXml;
+        // Set OOXML compliance to the strict ISO standard for future Office versions
+        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
 
-            // Set OOXML compliance to strict mode for better future compatibility
-            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
-
-            // Define output file path
-            string outputPath = "UpdatedRibbonWorkbook.xlsm";
-
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as a macro-enabled file (required for custom UI)
-            workbook.Save(outputPath);
-
-            // Confirmation output
-            Console.WriteLine("Ribbon XML updated and workbook saved.");
-        }
+        // Save the workbook as a macro‑enabled file (required for custom UI)
+        workbook.Save("UpdatedRibbon.xlsm");
     }
 }

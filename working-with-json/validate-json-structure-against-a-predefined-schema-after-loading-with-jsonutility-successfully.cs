@@ -6,18 +6,14 @@ class JsonSchemaValidationDemo
 {
     static void Main()
     {
-        // Sample JSON data to import
+        // Sample JSON data to be imported
         string jsonData = @"{
             ""Products"": [
-                {
-                    ""ID"": 101,
-                    ""Name"": ""Product A"",
-                    ""Price"": 99.99
-                }
+                { ""ID"": 101, ""Name"": ""Product A"", ""Price"": 99.99 }
             ]
         }";
 
-        // JSON schema to validate against
+        // Predefined JSON schema for validation
         string schema = @"{
             ""$schema"": ""http://json-schema.org/draft-07/schema#"",
             ""type"": ""object"",
@@ -38,31 +34,31 @@ class JsonSchemaValidationDemo
             ""required"": [""Products""]
         }";
 
-        // Create a new workbook
+        // Create a new workbook instance
         Workbook workbook = new Workbook();
 
-        // Configure layout options (keep schema for later validation)
-        JsonLayoutOptions layoutOptions = new JsonLayoutOptions();
-        layoutOptions.KeptSchema = true;
+        // Configure layout options for JSON import
+        JsonLayoutOptions layoutOptions = new JsonLayoutOptions
+        {
+            // Keep the original schema after import (optional but useful for later validation)
+            KeptSchema = true
+        };
 
-        // Import JSON data into the first worksheet
+        // Import JSON data into the first worksheet starting at cell A1 (row 0, column 0)
         JsonUtility.ImportData(jsonData, workbook.Worksheets[0].Cells, 0, 0, layoutOptions);
 
-        // Prepare JSON save options with the predefined schema
-        JsonSaveOptions saveOptions = new JsonSaveOptions();
-        saveOptions.Schemas = new string[] { schema };
-        saveOptions.ExportNestedStructure = true;
-        saveOptions.SkipEmptyRows = true;
+        // Prepare JSON save options and attach the schema for validation
+        JsonSaveOptions saveOptions = new JsonSaveOptions
+        {
+            Schemas = new string[] { schema },   // Assign the predefined schema
+            ExportNestedStructure = true,        // Preserve nested JSON structure
+            SkipEmptyRows = true                 // Omit empty rows in the output
+        };
 
-        // Save workbook to JSON; validation occurs during save
-        try
-        {
-            workbook.Save("validated_output.json", saveOptions);
-            Console.WriteLine("JSON validated against schema and saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("JSON validation failed: " + ex.Message);
-        }
+        // Save the workbook to a JSON file; Aspose.Cells will validate against the schema
+        string outputPath = "validated_output.json";
+        workbook.Save(outputPath, saveOptions);
+
+        Console.WriteLine("JSON saved and validated successfully.");
     }
 }

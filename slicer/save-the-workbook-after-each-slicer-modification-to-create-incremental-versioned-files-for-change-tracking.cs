@@ -3,87 +3,53 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerVersioningDemo
+class SlicerVersionedSaveDemo
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Initialize a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and add sample data
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
+        dataSheet.Cells["A1"].PutValue("Product");
+        dataSheet.Cells["B1"].PutValue("Sales");
+        dataSheet.Cells["A2"].PutValue("Apple");
+        dataSheet.Cells["B2"].PutValue(120);
+        dataSheet.Cells["A3"].PutValue("Banana");
+        dataSheet.Cells["B3"].PutValue(150);
+        dataSheet.Cells["A4"].PutValue("Orange");
+        dataSheet.Cells["B4"].PutValue(90);
 
-            // -------------------------------------------------
-            // 1. Prepare sample data for the pivot table
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+        // Create a pivot table based on the data
+        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+        int pivotIndex = pivotSheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
 
-            // Header row
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
+        // Add a slicer linked to the pivot table
+        Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
+        int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Product");
+        Slicer slicer = slicerSheet.Slicers[slicerIndex];
 
-            // Sample rows
-            dataSheet.Cells["A2"].PutValue("Food");
-            dataSheet.Cells["B2"].PutValue(120);
-            dataSheet.Cells["A3"].PutValue("Beverage");
-            dataSheet.Cells["B3"].PutValue(80);
-            dataSheet.Cells["A4"].PutValue("Food");
-            dataSheet.Cells["B4"].PutValue(150);
-            dataSheet.Cells["A5"].PutValue("Beverage");
-            dataSheet.Cells["B5"].PutValue(70);
-            dataSheet.Cells["A6"].PutValue("Stationery");
-            dataSheet.Cells["B6"].PutValue(40);
+        // Save version 0 (initial state)
+        workbook.Save("Workbook_Version_0.xlsx");
 
-            // -------------------------------------------------
-            // 2. Create a pivot table based on the data
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            int pivotIndex = pivotSheet.PivotTables.Add("A1:B6", "C3", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+        // ---- Modification 1: Change slicer caption ----
+        slicer.Caption = "Product Filter";
+        slicer.Refresh(); // Refresh slicer and associated pivot table
+        workbook.Save("Workbook_Version_1.xlsx");
 
-            // Configure pivot fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sum of Amount
+        // ---- Modification 2: Lock slicer position ----
+        slicer.LockedPosition = true;
+        slicer.Refresh();
+        workbook.Save("Workbook_Version_2.xlsx");
 
-            // -------------------------------------------------
-            // 3. Add a slicer linked to the pivot table
-            // -------------------------------------------------
-            Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
-            int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Category");
-            Slicer slicer = slicerSheet.Slicers[slicerIndex];
+        // ---- Modification 3: Change number of columns in slicer ----
+        slicer.NumberOfColumns = 3;
+        slicer.Refresh();
+        workbook.Save("Workbook_Version_3.xlsx");
 
-            // Initial save (version 1)
-            workbook.Save("Workbook_V1.xlsx");
-
-            // -------------------------------------------------
-            // 4. First modification: change caption
-            // -------------------------------------------------
-            slicer.Caption = "Product Category";
-            slicer.Refresh(); // Refresh slicer and underlying pivot table
-            workbook.Save("Workbook_V2.xlsx");
-
-            // -------------------------------------------------
-            // 5. Second modification: lock the slicer position
-            // -------------------------------------------------
-            slicer.LockedPosition = true;
-            slicer.Refresh();
-            workbook.Save("Workbook_V3.xlsx");
-
-            // -------------------------------------------------
-            // 6. Third modification: change visual layout
-            // -------------------------------------------------
-            slicer.NumberOfColumns = 2;
-            slicer.WidthPixel = 250;
-            slicer.HeightPixel = 180;
-            slicer.Refresh();
-            workbook.Save("Workbook_V4.xlsx");
-
-            // -------------------------------------------------
-            // 7. Cleanup
-            // -------------------------------------------------
-            workbook.Dispose();
-
-            Console.WriteLine("Workbook versions saved successfully.");
-        }
+        // Clean up resources
+        workbook.Dispose();
     }
 }

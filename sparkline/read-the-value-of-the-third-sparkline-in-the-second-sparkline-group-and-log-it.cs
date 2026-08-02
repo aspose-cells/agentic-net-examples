@@ -1,52 +1,75 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+namespace AsposeCellsSparklineDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate data for two rows (each row will be a sparkline group)
-        ws.Cells["A1"].PutValue(5);
-        ws.Cells["B1"].PutValue(3);
-        ws.Cells["C1"].PutValue(7);
-        ws.Cells["D1"].PutValue(2);
+                // Populate sample data for two sparkline groups
+                // Group 1 data (row 0)
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["B1"].PutValue(3);
+                sheet.Cells["C1"].PutValue(8);
+                sheet.Cells["D1"].PutValue(2);
+                // Group 2 data (row 1)
+                sheet.Cells["A2"].PutValue(7);
+                sheet.Cells["B2"].PutValue(1);
+                sheet.Cells["C2"].PutValue(4);
+                sheet.Cells["D2"].PutValue(6);
 
-        ws.Cells["A2"].PutValue(4);
-        ws.Cells["B2"].PutValue(6);
-        ws.Cells["C2"].PutValue(1);
-        ws.Cells["D2"].PutValue(8);
+                // Define locations where sparklines will be placed
+                // First group will be placed in column E (index 4) row 0
+                CellArea locationGroup1 = new CellArea { StartRow = 0, EndRow = 0, StartColumn = 4, EndColumn = 4 };
+                // Second group will be placed in column F (index 5) row 1
+                CellArea locationGroup2 = new CellArea { StartRow = 1, EndRow = 1, StartColumn = 5, EndColumn = 5 };
 
-        // Define locations where the sparklines will be placed
-        CellArea locGroup1 = CellArea.CreateCellArea("E1", "E1");
-        CellArea locGroup2 = CellArea.CreateCellArea("E2", "E2");
+                // Add first sparkline group (shown for completeness)
+                int groupIdx1 = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, locationGroup1);
+                SparklineGroup group1 = sheet.SparklineGroups[groupIdx1];
+                // Add three sparklines to the first group (same location)
+                group1.Sparklines.Add("A1:D1", 0, 4);
+                group1.Sparklines.Add("A1:D1", 0, 4);
+                group1.Sparklines.Add("A1:D1", 0, 4);
 
-        // Add first sparkline group (row 1) and create three sparklines
-        int idxGroup1 = ws.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, locGroup1);
-        SparklineGroup group1 = ws.SparklineGroups[idxGroup1];
-        // The group already contains one sparkline at E1; add two more at F1 and G1
-        group1.Sparklines.Add(ws.Name + "!A1:D1", 0, 5); // column F (index 5)
-        group1.Sparklines.Add(ws.Name + "!A1:D1", 0, 6); // column G (index 6)
+                // Add second sparkline group – this is the group we will read from
+                int groupIdx2 = sheet.SparklineGroups.Add(SparklineType.Line, "A2:D2", false, locationGroup2);
+                SparklineGroup group2 = sheet.SparklineGroups[groupIdx2];
+                // Add three sparklines to the second group
+                group2.Sparklines.Add("A2:D2", 1, 5); // sparkline 0
+                group2.Sparklines.Add("A2:D2", 1, 5); // sparkline 1
+                group2.Sparklines.Add("A2:D2", 1, 5); // sparkline 2
 
-        // Add second sparkline group (row 2) and create three sparklines
-        int idxGroup2 = ws.SparklineGroups.Add(SparklineType.Line, "A2:D2", false, locGroup2);
-        SparklineGroup group2 = ws.SparklineGroups[idxGroup2];
-        // The group already contains one sparkline at E2; add two more at F2 and G2
-        group2.Sparklines.Add(ws.Name + "!A2:D2", 1, 5); // column F (index 5)
-        group2.Sparklines.Add(ws.Name + "!A2:D2", 1, 6); // column G (index 6)
+                // Access the third sparkline (index 2) in the second sparkline group
+                Sparkline thirdSparkline = sheet.SparklineGroups[groupIdx2].Sparklines[2];
 
-        // Access the third sparkline (index 2) in the second sparkline group
-        Sparkline thirdSparkline = group2.Sparklines[2];
-        string dataRange = thirdSparkline.DataRange;
+                // Log its DataRange – this represents the source data for the sparkline
+                Console.WriteLine("Third sparkline DataRange: " + thirdSparkline.DataRange);
 
-        // Log the data range
-        Console.WriteLine("Third sparkline in second group DataRange: " + dataRange);
+                // Demonstrate extracting the first cell value from the DataRange
+                string range = thirdSparkline.DataRange; // e.g., "Sheet1!A2:D2"
+                string address = range.Contains("!") ? range.Split('!')[1] : range;
+                Cell firstCell = sheet.Cells[address];
+                Console.WriteLine("First cell value in the sparkline range: " + firstCell.Value);
 
-        // Save the workbook (optional)
-        wb.Save("SparklinesDemo.xlsx", SaveFormat.Xlsx);
+                // Save the workbook (output file)
+                string outputPath = "SparklineDemoOutput.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

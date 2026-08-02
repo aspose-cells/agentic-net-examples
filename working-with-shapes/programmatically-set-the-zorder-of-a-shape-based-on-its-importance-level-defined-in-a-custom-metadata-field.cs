@@ -1,62 +1,82 @@
+// Title: Set Shape Z‑Order by Custom Importance Metadata (AlternativeText) in Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to read an "Importance" value from the AlternativeText property of worksheet shapes, sort the shapes by that value, and adjust their Z‑order with Shape.ToFrontOrBack so that higher‑importance shapes appear on top. The workbook is saved with the new stacking order.
+// Keywords: Aspose.Cells shape Z-order | C# Aspose.Cells shape ordering | AlternativeText custom metadata | shape importance priority | ToFrontOrBack method | reorder worksheet shapes programmatically | Excel drawing objects Z‑order | set shape stacking order | custom metadata for shapes | Aspose.Cells .NET example
+// Common Searches: Aspose.Cells change shape Z order based on metadata | C# move Excel shapes to front using AlternativeText | How to sort worksheet shapes by priority in Aspose.Cells | Set shape stacking order programmatically Aspose.Cells | ToFrontOrBack usage example C#
+// Developer Intent: Reorder worksheet shapes according to an importance level stored in each shape’s AlternativeText using Aspose.Cells for .NET.
+// Use Cases: Extract a numeric importance value from the AlternativeText of each shape and sort the shape collection before reordering. | Apply Shape.ToFrontOrBack with the extracted importance to move higher‑priority shapes forward in the Z‑order stack. | Save the workbook after reordering so the visual layout reflects the defined priorities. | Integrate dynamic shape layering in reports where business rules dictate visual prominence.
+// AI Prompts: Generate C# code that reads an "Importance" field from Shape.AlternativeText and adjusts the Z‑order with ToFrontOrBack in Aspose.Cells. | Write a method to sort worksheet shapes by a numeric priority stored in AlternativeText and bring them to the front in order. | Explain how Shape.ToFrontOrBack works for moving shapes forward by a specific number of positions in Aspose.Cells.
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsZOrderDemo
 {
+    // Demonstrates how to read an "Importance" value from the AlternativeText property of worksheet shapes, sort the shapes by that value, and adjust their Z‑order with Shape.ToFrontOrBack so that higher‑importance shapes appear on top. The workbook is saved with the new stacking order.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add shapes with a custom metadata field encoded in the shape's Name.
-            // Format: "ShapeName|Importance=Level"
-            Shape shapeA = worksheet.Shapes.AddRectangle(10, 10, 100, 100, 0, 0);
-            shapeA.Name = "ShapeA|Importance=1";
-
-            Shape shapeB = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
-            shapeB.Name = "ShapeB|Importance=3";
-
-            Shape shapeC = worksheet.Shapes.AddRectangle(90, 90, 100, 100, 0, 0);
-            shapeC.Name = "ShapeC|Importance=2";
-
-            // Collect all shapes and their importance levels
-            List<(Shape shape, int importance)> shapeInfo = new List<(Shape, int)>();
-            foreach (Shape shp in worksheet.Shapes)
+            try
             {
-                int importance = 0; // default importance
-                // Parse the custom metadata from the Name property
-                // Expected pattern: "...|Importance=Level"
-                string[] parts = shp.Name.Split('|');
-                foreach (string part in parts)
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Add three rectangle shapes with a custom metadata field stored in AlternativeText
+                // The metadata represents an importance level (higher value = more important)
+                Shape shapeA = sheet.Shapes.AddRectangle(5, 5, 100, 50, 0, 0);
+                shapeA.AlternativeText = "Importance=2";
+
+                Shape shapeB = sheet.Shapes.AddRectangle(30, 30, 100, 50, 0, 0);
+                shapeB.AlternativeText = "Importance=5";
+
+                Shape shapeC = sheet.Shapes.AddRectangle(60, 60, 100, 50, 0, 0);
+                shapeC.AlternativeText = "Importance=1";
+
+                // Copy shapes to a separate list to avoid modifying the collection during enumeration
+                List<Shape> shapes = sheet.Shapes.Cast<Shape>().ToList();
+
+                // Sort shapes by importance (higher importance later so they end up in front)
+                shapes.Sort((s1, s2) =>
                 {
-                    if (part.StartsWith("Importance=", StringComparison.OrdinalIgnoreCase))
+                    int imp1 = GetImportance(s1);
+                    int imp2 = GetImportance(s2);
+                    return imp1.CompareTo(imp2);
+                });
+
+                // Bring shapes to front in order of increasing importance
+                foreach (Shape shp in shapes)
+                {
+                    int importance = GetImportance(shp);
+                    if (importance != 0)
                     {
-                        string value = part.Substring("Importance=".Length);
-                        int.TryParse(value, out importance);
-                        break;
+                        // Move the shape forward by its importance value
+                        shp.ToFrontOrBack(importance);
                     }
                 }
-                shapeInfo.Add((shp, importance));
+
+                // Save the workbook with the updated Z‑order
+                workbook.Save("ZOrderByImportance.xlsx");
             }
-
-            // Sort shapes by importance descending (higher importance -> front)
-            shapeInfo.Sort((x, y) => y.importance.CompareTo(x.importance));
-
-            // Assign ZOrderPosition so that the most important shape gets the highest position
-            // ZOrderPosition 0 is the backmost; higher values are closer to the front.
-            for (int i = 0; i < shapeInfo.Count; i++)
+            catch (Exception ex)
             {
-                // Backmost shape gets position 0, next gets 1, etc.
-                shapeInfo[i].shape.ZOrderPosition = i;
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
 
-            // Save the workbook
-            workbook.Save("ShapesZOrderByImportance.xlsx");
+        // Helper method to extract importance from AlternativeText
+        private static int GetImportance(Shape shape)
+        {
+            int importance = 0;
+            string meta = shape.AlternativeText;
+            if (!string.IsNullOrEmpty(meta) && meta.StartsWith("Importance=", StringComparison.OrdinalIgnoreCase))
+            {
+                int.TryParse(meta.Substring("Importance=".Length), out importance);
+            }
+            return importance;
         }
     }
 }

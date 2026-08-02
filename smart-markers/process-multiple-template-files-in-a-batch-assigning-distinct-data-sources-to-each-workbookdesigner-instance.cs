@@ -1,122 +1,58 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-namespace BatchWorkbookDesignerDemo
+class BatchSmartMarkerProcessor
 {
-    public class BatchProcessor
+    static void Main()
     {
-        /// <summary>
-        /// Processes a batch of Excel template files. Each template is bound to its own data source,
-        /// processed with smart markers, and saved to a corresponding output file.
-        /// </summary>
-        /// <param name="templateFiles">Full paths of the template Excel files.</param>
-        /// <param name="dataSources">Data sources (DataTable, List<T>, etc.) for each template.</param>
-        /// <param name="outputFiles">Full paths where the processed workbooks will be saved.</param>
-        public void ProcessBatch(IList<string> templateFiles, IList<object> dataSources, IList<string> outputFiles)
+        // Define each template file, its output file, the smart‑marker name, and a distinct data source.
+        var templates = new List<(string templatePath, string outputPath, string dataSourceName, DataTable data)>
         {
-            if (templateFiles == null) throw new ArgumentNullException(nameof(templateFiles));
-            if (dataSources == null) throw new ArgumentNullException(nameof(dataSources));
-            if (outputFiles == null) throw new ArgumentNullException(nameof(outputFiles));
-            if (templateFiles.Count != dataSources.Count || templateFiles.Count != outputFiles.Count)
-                throw new ArgumentException("All input collections must have the same number of elements.");
+            ("Template1.xlsx", "Result1.xlsx", "Employees", CreateEmployeesTable()),
+            ("Template2.xlsx", "Result2.xlsx", "Products",  CreateProductsTable())
+        };
 
-            for (int i = 0; i < templateFiles.Count; i++)
-            {
-                try
-                {
-                    // Verify that the template file exists
-                    if (!File.Exists(templateFiles[i]))
-                        throw new FileNotFoundException($"Template file not found: {templateFiles[i]}");
+        foreach (var item in templates)
+        {
+            // Load the template workbook (Workbook(string) constructor).
+            Workbook workbook = new Workbook(item.templatePath);
 
-                    // Load the template workbook
-                    Workbook workbook = new Workbook(templateFiles[i]);
+            // Create a WorkbookDesigner for this workbook (WorkbookDesigner(Workbook) constructor).
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-                    // Assign workbook to a designer
-                    WorkbookDesigner designer = new WorkbookDesigner { Workbook = workbook };
+            // Assign the distinct data source to the designer (SetDataSource(string, object) method).
+            designer.SetDataSource(item.dataSourceName, item.data);
 
-                    // Bind the data source to the variable name "Data"
-                    designer.SetDataSource("Data", dataSources[i]);
+            // Process the smart markers (Process() method).
+            designer.Process();
 
-                    // Process smart markers
-                    designer.Process();
-
-                    // Ensure output directory exists
-                    string outputDir = Path.GetDirectoryName(outputFiles[i]);
-                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                        Directory.CreateDirectory(outputDir);
-
-                    // Save the processed workbook
-                    designer.Workbook.Save(outputFiles[i]);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file pair #{i + 1}: {ex.Message}");
-                    // Optionally continue with next file or rethrow
-                }
-            }
+            // Save the processed workbook (Workbook.Save(string) method).
+            designer.Workbook.Save(item.outputPath);
         }
     }
 
-    // Example usage
-    class Program
+    // Sample data source for the first template.
+    private static DataTable CreateEmployeesTable()
     {
-        static void Main()
-        {
-            try
-            {
-                // Prepare a list of template files
-                var templates = new List<string>
-                {
-                    @"C:\Templates\Report1.xlsx",
-                    @"C:\Templates\Report2.xlsx"
-                };
-
-                // Prepare corresponding data sources
-                var dataSources = new List<object>();
-
-                // First data source: a DataTable
-                DataTable dt1 = new DataTable("Sales");
-                dt1.Columns.Add("Region", typeof(string));
-                dt1.Columns.Add("Amount", typeof(decimal));
-                dt1.Rows.Add("North", 1200.50m);
-                dt1.Rows.Add("South", 950.75m);
-                dataSources.Add(dt1);
-
-                // Second data source: a list of custom objects
-                var employees = new List<Employee>
-                {
-                    new Employee { Name = "John Doe", Age = 30 },
-                    new Employee { Name = "Jane Smith", Age = 28 }
-                };
-                dataSources.Add(employees);
-
-                // Prepare output file paths
-                var outputs = new List<string>
-                {
-                    @"C:\Outputs\Report1_Processed.xlsx",
-                    @"C:\Outputs\Report2_Processed.xlsx"
-                };
-
-                // Execute batch processing
-                var processor = new BatchProcessor();
-                processor.ProcessBatch(templates, dataSources, outputs);
-
-                Console.WriteLine("Batch processing completed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
+        DataTable dt = new DataTable("Employees");
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Age",  typeof(int));
+        dt.Rows.Add("John Doe",   30);
+        dt.Rows.Add("Jane Smith", 28);
+        return dt;
     }
 
-    // Sample custom class used in the second data source
-    public class Employee
+    // Sample data source for the second template.
+    private static DataTable CreateProductsTable()
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        DataTable dt = new DataTable("Products");
+        dt.Columns.Add("ProductID",   typeof(int));
+        dt.Columns.Add("ProductName", typeof(string));
+        dt.Columns.Add("Price",       typeof(decimal));
+        dt.Rows.Add(1, "Laptop",     1200.00m);
+        dt.Rows.Add(2, "Smartphone",  799.99m);
+        return dt;
     }
 }

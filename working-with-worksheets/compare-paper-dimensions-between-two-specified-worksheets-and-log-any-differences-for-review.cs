@@ -1,80 +1,76 @@
+// Title: Compare paper size, width, and height of two worksheets using Aspose.Cells for .NET
+// Description: Loads an Excel workbook, selects two worksheets by name, reads each sheet's PageSetup, compares PaperSize, PaperWidth, and PaperHeight, logs any differences to the console, and saves the workbook unchanged.
+// Keywords: Aspose.Cells | C# | .NET | worksheet page setup comparison | paper size difference | PaperWidth | PaperHeight | compare Excel sheets | print layout validation | PageSetup API
+// Common Searches: Aspose.Cells compare worksheet page setup | C# detect different paper size between Excel sheets | log paper dimensions differences Aspose.Cells | check print layout consistency across worksheets .NET | compare sheet print settings with Aspose.Cells
+// Developer Intent: Identify mismatches in paper size, width, or height between two specified worksheets and output the discrepancies.
+// Use Cases: Validate that all sheets in a reporting workbook share identical print settings before bulk printing. | Audit template worksheets to ensure consistent page layout for automated document generation. | Generate a console report of page‑setup differences for quality‑control checks in a CI pipeline.
+// AI Prompts: Write a reusable method that returns a list of PageSetup property differences between two worksheets using Aspose.Cells. | Extend the comparison to include orientation, margins, and scaling, and output the results to a structured log file. | Refactor the logic into a utility class with separate functions for paper size, width, height, and other page‑setup attributes.
+
 using System;
 using Aspose.Cells;
 
 namespace PaperDimensionComparer
 {
+    // Loads an Excel workbook, selects two worksheets by name, reads each sheet's PageSetup, compares PaperSize, PaperWidth, and PaperHeight, logs any differences to the console, and saves the workbook unchanged.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Path to the Excel file containing the worksheets to compare
-            string inputFile = "InputWorkbook.xlsx";
+            string workbookPath = "InputWorkbook.xlsx";
 
-            // Names (or indexes) of the two worksheets to compare
+            // Names of the two worksheets to compare
             string firstSheetName = "Sheet1";
             string secondSheetName = "Sheet2";
 
-            // Load the workbook (creation and loading follow Aspose.Cells standard pattern)
-            Workbook workbook = new Workbook(inputFile);
+            // Load the workbook (load rule)
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Retrieve the two worksheets
-            Worksheet ws1 = workbook.Worksheets[firstSheetName];
-            Worksheet ws2 = workbook.Worksheets[secondSheetName];
+            // Retrieve the worksheets
+            Worksheet sheet1 = workbook.Worksheets[firstSheetName];
+            Worksheet sheet2 = workbook.Worksheets[secondSheetName];
 
-            if (ws1 == null || ws2 == null)
+            if (sheet1 == null || sheet2 == null)
             {
                 Console.WriteLine("One or both specified worksheets were not found.");
                 return;
             }
 
-            // Access PageSetup for each worksheet
-            PageSetup ps1 = ws1.PageSetup;
-            PageSetup ps2 = ws2.PageSetup;
+            // Access PageSetup for each sheet
+            PageSetup ps1 = sheet1.PageSetup;
+            PageSetup ps2 = sheet2.PageSetup;
 
-            // Compare paper width
-            double width1 = ps1.PaperWidth;   // inches, considers orientation
+            // Compare PaperSize enum
+            if (ps1.PaperSize != ps2.PaperSize)
+            {
+                Console.WriteLine($"PaperSize differs: {firstSheetName} = {ps1.PaperSize}, {secondSheetName} = {ps2.PaperSize}");
+            }
+
+            // Compare PaperWidth (in inches, orientation considered)
+            double width1 = ps1.PaperWidth;
             double width2 = ps2.PaperWidth;
+            if (Math.Abs(width1 - width2) > 0.001) // tolerance for floating point
+            {
+                Console.WriteLine($"PaperWidth differs: {firstSheetName} = {width1:F3} in, {secondSheetName} = {width2:F3} in");
+            }
 
-            // Compare paper height
+            // Compare PaperHeight (in inches, orientation considered)
             double height1 = ps1.PaperHeight;
             double height2 = ps2.PaperHeight;
-
-            // Compare paper size enum (useful when custom sizes are not set)
-            PaperSizeType size1 = ps1.PaperSize;
-            PaperSizeType size2 = ps2.PaperSize;
-
-            bool differencesFound = false;
-
-            // Log differences in width
-            if (Math.Abs(width1 - width2) > 0.0001) // tolerance for floating point comparison
+            if (Math.Abs(height1 - height2) > 0.001)
             {
-                Console.WriteLine($"Width differs: '{firstSheetName}' = {width1} inches, '{secondSheetName}' = {width2} inches");
-                differencesFound = true;
+                Console.WriteLine($"PaperHeight differs: {firstSheetName} = {height1:F3} in, {secondSheetName} = {height2:F3} in");
             }
 
-            // Log differences in height
-            if (Math.Abs(height1 - height2) > 0.0001)
+            // If no differences were found
+            if (ps1.PaperSize == ps2.PaperSize && Math.Abs(width1 - width2) <= 0.001 && Math.Abs(height1 - height2) <= 0.001)
             {
-                Console.WriteLine($"Height differs: '{firstSheetName}' = {height1} inches, '{secondSheetName}' = {height2} inches");
-                differencesFound = true;
+                Console.WriteLine("No differences in paper dimensions between the two worksheets.");
             }
 
-            // Log differences in PaperSize enum (covers standard sizes)
-            if (size1 != size2)
-            {
-                Console.WriteLine($"PaperSize enum differs: '{firstSheetName}' = {size1}, '{secondSheetName}' = {size2}");
-                differencesFound = true;
-            }
-
-            if (!differencesFound)
-            {
-                Console.WriteLine("No differences in paper dimensions were found between the two worksheets.");
-            }
-
-            // Optionally, save the workbook if any modifications were made (here we just demonstrate saving)
-            string outputFile = "OutputWorkbook.xlsx";
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved to '{outputFile}'.");
+            // Optionally, save the workbook after any modifications (save rule)
+            // In this example we do not modify the workbook, but the save call demonstrates the rule usage.
+            workbook.Save("OutputWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }
 }

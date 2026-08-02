@@ -1,96 +1,79 @@
+// Title: Find dates older than one year in a named range using FindOptions (Aspose.Cells for .NET)
+// Description: Creates a workbook, defines a named range, configures FindOptions with a matching CellArea, scans for DateTime cells earlier than one year, prints their addresses, and saves the file.
+// Keywords: Aspose.Cells | FindOptions | named range | date comparison | C# | .NET | CellArea | old dates | Excel automation
+// Common Searches: Aspose.Cells FindOptions date older than one year | search named range for dates Aspose.Cells C# | filter DateTime cells in Excel using Aspose | retrieve cells before specific date Aspose.Cells | set search area with CellArea Aspose.Cells
+// Developer Intent: Locate and list cells that contain DateTime values older than one year within a specific named range.
+// Use Cases: Audit contracts with expiration dates beyond a year | Clean up stale transaction timestamps in financial reports | Generate compliance reports for overdue dates | Flag legacy entries in budgeting models
+// AI Prompts: Generate C# code that uses Aspose.Cells FindOptions to directly return addresses of cells with DateTime values earlier than a given cutoff inside a named range. | Show how to replace the manual nested loops with worksheet.Cells.FindAll and a custom predicate for old dates. | Explain the steps to configure FindOptions.SetRange with a CellArea derived from a named range and retrieve matching cells.
+
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsFindOldDates
+// Creates a workbook, defines a named range, configures FindOptions with a matching CellArea, scans for DateTime cells earlier than one year, prints their addresses, and saves the file.
+class FindOldDates
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data with dates
+            worksheet.Cells["A1"].PutValue("Date");
+            worksheet.Cells["A2"].PutValue(DateTime.Now.AddMonths(-6));               // 6 months ago
+            worksheet.Cells["A3"].PutValue(DateTime.Now.AddYears(-2));                // 2 years ago
+            worksheet.Cells["A4"].PutValue(DateTime.Now.AddYears(-1).AddDays(-1));    // just over a year ago
+            worksheet.Cells["A5"].PutValue(DateTime.Now);                            // today
+
+            // Create a named range that includes the date cells (A2:A5)
+            AsposeRange dateRange = worksheet.Cells.CreateRange("A2:A5");
+            dateRange.Name = "DateRange";
+
+            // Retrieve the named range via the workbook
+            AsposeRange namedRange = workbook.Worksheets.GetRangeByName("DateRange");
+
+            // Configure FindOptions to limit the search to the named range
+            FindOptions findOptions = new FindOptions();
+            CellArea searchArea = new CellArea
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                StartRow = namedRange.FirstRow,
+                StartColumn = namedRange.FirstColumn,
+                EndRow = namedRange.FirstRow + namedRange.RowCount - 1,
+                EndColumn = namedRange.FirstColumn + namedRange.ColumnCount - 1
+            };
+            findOptions.SetRange(searchArea);
 
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+            // Define the cutoff date (one year ago from today)
+            DateTime cutoffDate = DateTime.Now.AddYears(-1);
+
+            // Iterate through cells within the search area and locate dates older than one year
+            for (int row = searchArea.StartRow; row <= searchArea.EndRow; row++)
+            {
+                for (int col = searchArea.StartColumn; col <= searchArea.EndColumn; col++)
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Retrieve the named range "DateRange"
-                AsposeRange namedRange = workbook.Worksheets.GetRangeByName("DateRange");
-                if (namedRange == null)
-                {
-                    Console.WriteLine("Named range 'DateRange' not found.");
-                    return;
-                }
-
-                // Configure FindOptions (not used directly in the loop but kept for completeness)
-                FindOptions findOptions = new FindOptions
-                {
-                    LookInType = LookInType.Values,
-                    LookAtType = LookAtType.EntireContent,
-                    SearchBackward = false,
-                    SearchOrderByRows = true
-                };
-
-                // Define the search area based on the named range
-                CellArea area = new CellArea
-                {
-                    StartRow = namedRange.FirstRow,
-                    StartColumn = namedRange.FirstColumn,
-                    EndRow = namedRange.FirstRow + namedRange.RowCount - 1,
-                    EndColumn = namedRange.FirstColumn + namedRange.ColumnCount - 1
-                };
-                findOptions.SetRange(area);
-
-                // Threshold date: one year ago from today
-                DateTime thresholdDate = DateTime.Now.AddYears(-1);
-
-                // Collect cells with dates older than the threshold
-                List<Cell> oldDateCells = new List<Cell>();
-                Worksheet sheet = namedRange.Worksheet;
-
-                for (int row = area.StartRow; row <= area.EndRow; row++)
-                {
-                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                    Cell cell = worksheet.Cells[row, col];
+                    if (cell.Type == CellValueType.IsDateTime)
                     {
-                        Cell cell = sheet.Cells[row, col];
-                        if (cell.Type == CellValueType.IsDateTime)
+                        DateTime cellDate = cell.DateTimeValue;
+                        if (cellDate < cutoffDate)
                         {
-                            DateTime cellDate = cell.DateTimeValue;
-                            if (cellDate < thresholdDate)
-                            {
-                                oldDateCells.Add(cell);
-                            }
+                            Console.WriteLine($"Old date found at {cell.Name}: {cellDate:d}");
                         }
                     }
                 }
-
-                // Output results
-                Console.WriteLine($"Cells with dates older than {thresholdDate:d}:");
-                foreach (Cell c in oldDateCells)
-                {
-                    Console.WriteLine($"{c.Name} = {c.DateTimeValue:d}");
-                }
-
-                // Save the workbook (even if unchanged, to demonstrate successful processing)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook
+            string outputPath = "OldDates.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

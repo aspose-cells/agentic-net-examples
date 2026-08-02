@@ -1,84 +1,79 @@
+// Title: Link a ListBox shape to a dynamic array spill and auto‑sync with Aspose.Cells for .NET
+// Description: Creates a workbook, sets B1 as the size for a SEQUENCE dynamic array in A1, adds a ListBox shape, links its selected cell and input range to the spill, refreshes formulas, updates the shape, changes B1 to expand the array, and saves the file using Aspose.Cells.
+// Keywords: Aspose.Cells | C# | .NET | dynamic array formula | SEQUENCE function | ListBox shape | shape linking | SetLinkedCell | SetInputRange | RefreshDynamicArrayFormulas | UpdateSelectedValue | spreadsheet automation
+// Common Searches: Aspose.Cells link shape to dynamic array spill | C# update ListBox after SEQUENCE formula changes | RefreshDynamicArrayFormulas example | SetLinkedCell for ListBox in Aspose.Cells | Auto‑expand ListBox items with dynamic array
+// Developer Intent: Bind a ListBox shape to a dynamic array spill and keep it synchronized when the array size changes.
+// Use Cases: Show SEQUENCE results in a ListBox that grows or shrinks automatically. | Maintain the selected value of a shape in sync with the first element of a spill range. | Generate workbooks where form controls reflect the latest calculated data without manual edits.
+// AI Prompts: Generate C# code that links a ListBox shape to a SEQUENCE dynamic array spill and updates it after the source cell changes using Aspose.Cells. | Explain how to use RefreshDynamicArrayFormulas and UpdateSelectedValue to keep a shape synchronized with a dynamic array in Aspose.Cells for .NET. | Provide step‑by‑step instructions to bind a shape’s linked cell and input range to a dynamic array formula in Aspose.Cells.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsDynamicArrayShapeDemo
 {
+    // Creates a workbook, sets B1 as the size for a SEQUENCE dynamic array in A1, adds a ListBox shape, links its selected cell and input range to the spill, refreshes formulas, updates the shape, changes B1 to expand the array, and saves the file using Aspose.Cells.
     class Program
     {
         static void Main()
         {
-            // ------------------------------------------------------------
-            // 1. Create a new workbook and get the first worksheet
-            // ------------------------------------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Create a new workbook (lifecycle rule: create)
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
             // ------------------------------------------------------------
-            // 2. Prepare data that will drive the dynamic array formula
-            //    Cell B1 will hold the number of items to generate
+            // 1. Prepare data that drives a dynamic array formula
             // ------------------------------------------------------------
-            cells["B1"].PutValue(3); // initial size = 3
+            // Cell B1 will hold the size of the sequence
+            cells["B1"].PutValue(3);
 
-            // ------------------------------------------------------------
-            // 3. Set a dynamic array formula in A1 that spills into A1:A{n}
-            //    Formula: =SEQUENCE(B1)  (creates a vertical list 1..B1)
-            // ------------------------------------------------------------
+            // Set a dynamic array formula in A1 that spills into A1:A3
+            // The formula uses SEQUENCE which returns a vertical array
             cells["A1"].SetDynamicArrayFormula("=SEQUENCE(B1)", new FormulaParseOptions(), true);
 
             // ------------------------------------------------------------
-            // 4. Add a ListBox shape that will display the spilled values.
-            //    The shape is placed at row 5, column 1 with width/height.
+            // 2. Add a ListBox shape and link it to the spilled range
             // ------------------------------------------------------------
-            ListBox listBox = (ListBox)sheet.Shapes.AddListBox(5, 1, 120, 80, 1, 5);
+            // Add a ListBox shape (type ListBox inherits from Shape)
+            ListBox listBox = (ListBox)ws.Shapes.AddListBox(0, 0, 150, 100, 3, 20);
 
-            // ------------------------------------------------------------
-            // 5. Link the ListBox to the first cell of the spill range (A1).
-            //    The shape will read the values from the spill range automatically.
-            // ------------------------------------------------------------
+            // The spilled range of the dynamic array formula is A1:A3.
+            // Link the ListBox's selected value to the first cell of the spill range (A1).
+            // When the spill changes size, we will refresh the shape's selected value.
             listBox.SetLinkedCell("$A$1", false, true);
 
-            // ------------------------------------------------------------
-            // 6. Populate the ListBox's input range with the spill range.
-            //    Use the spill operator (#) to refer to the whole dynamic array.
-            // ------------------------------------------------------------
-            listBox.SetInputRange("A1#", false, false);
+            // Optionally set the input range for the ListBox items to the spill range.
+            // This makes the ListBox display the array values.
+            listBox.SetInputRange("A1:A3", false, false);
 
             // ------------------------------------------------------------
-            // 7. Update the shape's selected value based on the linked cell.
+            // 3. Initial calculation and shape synchronization
             // ------------------------------------------------------------
-            sheet.Shapes.UpdateSelectedValue();
+            // Calculate formulas and refresh dynamic array spill
+            wb.CalculateFormula();
+            wb.RefreshDynamicArrayFormulas(true);
+
+            // Update the shape's selected value based on the linked cell
+            ws.Shapes.UpdateSelectedValue();
 
             // ------------------------------------------------------------
-            // 8. Change the driving parameter (B1) to expand the array.
+            // 4. Change the driving data, refresh, and sync shape again
             // ------------------------------------------------------------
-            cells["B1"].PutValue(6); // now the array should spill 1..6
+            // Change B1 to expand the sequence to 5 items
+            cells["B1"].PutValue(5);
+
+            // Refresh dynamic array formulas (re‑spill) and recalculate
+            wb.RefreshDynamicArrayFormulas(true);
+            wb.CalculateFormula();
+
+            // Update the ListBox so it reflects the new spill range
+            ws.Shapes.UpdateSelectedValue();
 
             // ------------------------------------------------------------
-            // 9. Refresh dynamic array formulas so the spill range is recalculated.
-            //    Pass true to also calculate the new values.
+            // 5. Save the workbook (lifecycle rule: save)
             // ------------------------------------------------------------
-            workbook.RefreshDynamicArrayFormulas(true);
-
-            // ------------------------------------------------------------
-            // 10. After refreshing, update the shape again so it reflects the new spill.
-            // ------------------------------------------------------------
-            sheet.Shapes.UpdateSelectedValue();
-
-            // ------------------------------------------------------------
-            // 11. (Optional) Verify the spill range values in the console.
-            // ------------------------------------------------------------
-            Console.WriteLine("Spill values after refresh:");
-            for (int row = 0; row < 6; row++)
-            {
-                Console.WriteLine($"A{row + 1} = {cells[row, 0].Value}");
-            }
-
-            // ------------------------------------------------------------
-            // 12. Save the workbook to a file.
-            // ------------------------------------------------------------
-            workbook.Save("DynamicArrayLinkedShape.xlsx");
+            wb.Save("DynamicArrayLinkedShape.xlsx");
         }
     }
 }

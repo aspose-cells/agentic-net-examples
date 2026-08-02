@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: C# examples for template-driven Excel reports, Smart Marker syntax, object and DataTable binding, grouping, formulas, images, formatting, and WorkbookDesigner processing
 primary_apis: [WorkbookDesigner, WorkbookDesigner.SetDataSource, WorkbookDesigner.Process, WorkbookDesigner.Workbook, DataTable]
 search_intents: [Smart Markers Aspose.Cells C#, generate Excel report from DataTable, bind objects to Excel template, WorkbookDesigner Process]

@@ -1,97 +1,67 @@
+// Title: Load a Legacy XLS File from a Stream and Process It In‑Memory with Aspose.Cells for .NET
+// Description: Demonstrates how to open a legacy .xls workbook using a FileStream, optionally detect its format with FileFormatUtil, reset the stream, create a Workbook, read cell values, and save the workbook back to a MemoryStream—all without writing to disk.
+// Keywords: Aspose.Cells load xls from stream | detect excel format stream .NET | read cell value legacy xls | save workbook to memory stream | in‑memory Excel processing | C# Aspose.Cells stream handling
+// Common Searches: open legacy xls from stream Aspose.Cells | detect excel file format before loading .NET | reset stream after format detection Aspose | save Aspose.Cells workbook to MemoryStream | process xls in memory C#
+// Developer Intent: Load a legacy .xls workbook from any Stream, read or modify its data, and optionally write the result to a MemoryStream.
+// Use Cases: Read an old .xls file received from a web service or database without creating a temporary file. | Validate the format of an incoming Excel stream before loading it with Aspose.Cells. | Extract specific cell values (e.g., A1) for business logic processing. | Modify worksheets and return the updated workbook as a byte array for API responses.
+// AI Prompts: Write C# code that opens a legacy .xls file from a Stream using Aspose.Cells, detects the file format, resets the Stream, reads cell A1, and saves the workbook to a MemoryStream. | Explain why resetting the Stream position is required after calling FileFormatUtil.DetectFileFormat. | Show how to use Workbook.SaveToStream to obtain the XLS data as a byte array after making changes.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
-public static class LegacyXlsProcessor
+namespace AsposeCellsExamples
 {
-    /// <summary>
-    /// Loads a legacy XLS file from the provided stream, processes its data,
-    /// and returns the workbook saved into a memory stream.
-    /// </summary>
-    /// <param name="xlsStream">Stream containing the legacy XLS file.</param>
-    /// <returns>MemoryStream with the processed workbook (saved as XLS).</returns>
-    public static MemoryStream LoadAndProcessLegacyXls(Stream xlsStream)
+    // Demonstrates how to open a legacy .xls workbook using a FileStream, optionally detect its format with FileFormatUtil, reset the stream, create a Workbook, read cell values, and save the workbook back to a MemoryStream—all without writing to disk.
+    class LoadLegacyXlsFromStream
     {
-        try
+        static void Main(string[] args)
         {
-            // Ensure the stream supports seeking
-            if (!xlsStream.CanSeek)
-                throw new ArgumentException("The input stream must support seeking.", nameof(xlsStream));
-
-            // Detect the file format of the incoming stream
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(xlsStream);
-
-            // Reset the stream position after detection so the workbook can read from the start
-            xlsStream.Position = 0;
-
-            // Verify that the detected format is the legacy Excel 97‑2003 format
-            if (formatInfo.LoadFormat != LoadFormat.Excel97To2003)
-                throw new InvalidOperationException($"Expected a legacy XLS format, but detected {formatInfo.LoadFormat}.");
-
-            // Load the workbook from the stream using the constructor that accepts Stream and LoadOptions
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Excel97To2003);
-            Workbook workbook = new Workbook(xlsStream, loadOptions);
-
-            // ----- Begin processing the workbook -----
-            // Example: read the value of cell A1 from the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cellA1 = sheet.Cells["A1"];
-            Console.WriteLine($"Original A1 value: {cellA1.StringValue}");
-
-            // Example modification: append text to A1
-            cellA1.PutValue(cellA1.StringValue + " - processed");
-            // ----- End processing -----
-
-            // Save the modified workbook back to a memory stream
-            MemoryStream resultStream = workbook.SaveToStream();
-
-            // Position the stream at the beginning for the caller
-            resultStream.Position = 0;
-            return resultStream;
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception)
-        {
-            // Rethrow to allow caller to handle or log
-            throw;
-        }
-    }
-}
 
-public static class Program
-{
-    public static void Main(string[] args)
-    {
-        try
+        public static void Run()
         {
-            string inputPath = "input.xls";
-            string outputPath = "output.xls";
+            const string inputPath = "legacy.xls";
 
-            // Prevent FileNotFoundException for the input file
+            // Ensure the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Open the input file as a read‑only stream
-            using (FileStream inputStream = File.OpenRead(inputPath))
+            // Open the legacy XLS file as a stream
+            using (Stream inputStream = File.OpenRead(inputPath))
             {
-                // Process the legacy XLS and obtain the result stream
-                MemoryStream processedStream = LegacyXlsProcessor.LoadAndProcessLegacyXls(inputStream);
+                // OPTIONAL: Detect the file format from the stream
+                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(inputStream);
+                Console.WriteLine($"Detected format: {formatInfo.FileFormatType}");
 
-                // Write the processed workbook to the output file
-                using (FileStream outputStream = File.Create(outputPath))
+                // Reset the stream position after detection
+                inputStream.Seek(0, SeekOrigin.Begin);
+
+                // Load the workbook from the stream (legacy XLS is supported)
+                Workbook workbook = new Workbook(inputStream);
+
+                // Example processing: read a value from the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+
+                // OPTIONAL: Save the workbook back to a memory stream using the provided rule
+                using (MemoryStream outputStream = workbook.SaveToStream())
                 {
-                    processedStream.CopyTo(outputStream);
+                    // outputStream now contains the workbook data in XLS format
+                    Console.WriteLine($"Workbook saved to memory stream. Length: {outputStream.Length} bytes.");
                 }
-
-                Console.WriteLine($"Processed file saved to: {outputPath}");
             }
-        }
-        catch (Exception ex)
-        {
-            // Runtime safety: log any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,35 +1,51 @@
+// Title: Resize and reposition an ActiveX control using Shape properties in AspNet Aspose.Cells
+// Description: Demonstrates how to insert an ActiveX CheckBox into a worksheet and then change its location and dimensions by setting the Shape object's Top, Left, Width, and Height properties before saving the workbook.
+// Keywords: Aspose.Cells ActiveX resize | Shape.Top Shape.Left Aspose.Cells | C# set ActiveX control size | adjust Excel ActiveX position programmatically | Aspose.Cells .NET shape dimensions
+// Common Searches: change size of ActiveX control after adding with Aspose.Cells | move ActiveX checkbox to another cell using Shape properties | set width and height of ActiveX control in C# Aspose.Cells | reposition Excel ActiveX element programmatically
+// Developer Intent: Modify the pixel‑based Top, Left, Width, and Height of a Shape that hosts an ActiveX control after it has been added to a worksheet.
+// Use Cases: Align a newly added ActiveX button with a custom form layout. | Update the position of a checkbox when rows are inserted or deleted. | Scale a dropdown list to fit the width of merged cells at runtime.
+// AI Prompts: Write C# code that adds an ActiveX ListBox at cell C5 with Aspose.Cells and sets its Top, Left, Width, and Height to specific pixel values. | Show how to relocate an existing ActiveX control to column D and increase its height using the Shape object's properties in Aspose.Cells for .NET. | Create an example that inserts three ActiveX controls and aligns them in a row by assigning identical Shape.Top values and incremental Shape.Left offsets.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.ActiveXControls;
 
-class Program
+namespace AsposeCellsActiveXExample
 {
-    static void Main()
+    // Demonstrates how to insert an ActiveX CheckBox into a worksheet and then change its location and dimensions by setting the Shape object's Top, Left, Width, and Height properties before saving the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Insert an ActiveX CheckBox control with an initial size and position
-        Shape shape = worksheet.Shapes.AddActiveXControl(
-            ControlType.CheckBox, // type of control
-            2, 0,                 // upper left row index and vertical offset (pixels)
-            2, 0,                 // upper left column index and horizontal offset (pixels)
-            100, 30);             // initial width and height (pixels)
+            // Insert an ActiveX CheckBox control at row 2, column 2 with initial size
+            Shape shape = worksheet.Shapes.AddActiveXControl(
+                ControlType.CheckBox, // type of control
+                1,    // upper left row index (zero‑based)
+                0,    // vertical offset in pixels
+                1,    // upper left column index (zero‑based)
+                0,    // horizontal offset in pixels
+                100,  // initial width in pixels
+                50    // initial height in pixels
+            );
 
-        // Set the desired position (in pixels) after insertion
-        shape.Top = 50;    // distance from the top of the worksheet (pixels)
-        shape.Left = 150;  // distance from the left of the worksheet (pixels)
+            // Adjust the position and size using the Shape object's properties
+            shape.Top = 20;      // vertical offset from the top row (pixels)
+            shape.Left = 30;    // horizontal offset from the left column (pixels)
+            shape.Width = 150;  // new width (pixels)
+            shape.Height = 40;  // new height (pixels)
 
-        // Set the desired size (in pixels) after insertion
-        shape.Width = 200; // width in pixels
-        shape.Height = 40; // height in pixels
+            // Optionally, access the underlying ActiveX control to set additional properties
+            CheckBoxActiveXControl checkBox = (CheckBoxActiveXControl)shape.ActiveXControl;
+            checkBox.Caption = "Accept Terms";
+            checkBox.IsEnabled = true;
 
-        // Example: link the control to a cell (optional)
-        shape.SetLinkedCell("B5", false, false);
-
-        // Save the workbook
-        workbook.Save("ActiveXControlPosition.xlsx");
+            // Save the workbook
+            workbook.Save("ActiveXControlPositionSize.xlsx");
+        }
     }
 }

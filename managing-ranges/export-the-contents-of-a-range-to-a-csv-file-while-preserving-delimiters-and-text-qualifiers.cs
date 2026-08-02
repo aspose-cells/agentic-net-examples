@@ -1,9 +1,8 @@
 using System;
 using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-namespace AsposeCellsCsvExport
+namespace ExportRangeToCsvDemo
 {
     class Program
     {
@@ -11,41 +10,46 @@ namespace AsposeCellsCsvExport
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate some sample data
+            // Populate sample data (including commas and quotes to test qualifiers)
             cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["A2"].PutValue("John, Doe");          // Contains delimiter
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("\"Alice\"");          // Contains text qualifier
-            cells["B3"].PutValue(25);
+            cells["B1"].PutValue("Description");
+            cells["C1"].PutValue("Price");
 
-            // Define the range to be exported (A1:B3)
+            cells["A2"].PutValue("Widget");
+            cells["B2"].PutValue("Small, \"light\" widget"); // contains comma and quotes
+            cells["C2"].PutValue(19.99);
+
+            cells["A3"].PutValue("Gadget");
+            cells["B3"].PutValue("Large gadget"); // simple text
+            cells["C3"].PutValue(29.99);
+
+            // Define the range to export (A1:C3)
             CellArea exportArea = new CellArea
             {
-                StartRow = 0,   // Row index is zero‑based
-                EndRow = 2,
-                StartColumn = 0,
-                EndColumn = 1
+                StartRow = 0,   // Row 0 = A1
+                EndRow = 2,     // Row 2 = A3
+                StartColumn = 0, // Column 0 = A
+                EndColumn = 2    // Column 2 = C
             };
 
-            // Configure TxtSaveOptions for CSV export
+            // Configure text save options for CSV export
             TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
             {
-                Separator = ',',                     // Delimiter to use
-                QuoteType = TxtValueQuoteType.Always, // Always quote values to preserve qualifiers
-                ExportArea = exportArea,              // Export only the defined range
-                Encoding = Encoding.UTF8,             // Use UTF‑8 encoding
-                TrimLeadingBlankRowAndColumn = true, // Optional: trim leading blanks
-                KeepSeparatorsForBlankRow = false    // Optional: omit separators for empty rows
+                Separator = ',',                 // Use comma as delimiter
+                ExportArea = exportArea,         // Export only the defined range
+                QuoteType = TxtValueQuoteType.Normal, // Quote only when needed (preserves qualifiers)
+                Encoding = Encoding.UTF8,        // Ensure proper encoding
+                TrimLeadingBlankRowAndColumn = true,
+                KeepSeparatorsForBlankRow = false
             };
 
-            // Save the workbook as a CSV file using the configured options
+            // Save the selected range to a CSV file
             workbook.Save("ExportedRange.csv", saveOptions);
 
-            Console.WriteLine("Range exported to CSV successfully.");
+            Console.WriteLine("Range exported successfully to ExportedRange.csv");
         }
     }
 }

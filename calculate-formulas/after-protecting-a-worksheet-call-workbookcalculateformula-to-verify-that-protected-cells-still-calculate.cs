@@ -1,41 +1,38 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectedCalculationDemo
+namespace AsposeCellsProtectedFormulaDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Set initial values
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-
-            // Set a formula that depends on the values above
-            cells["B1"].Formula = "=A1+A2";
+            // Populate cells with values and a formula that depends on them
+            cells["A1"].PutValue(5);               // Input value
+            cells["B1"].Formula = "=A1*2";          // Formula to calculate
+            cells["C1"].Formula = "=B1+10";         // Dependent formula
 
             // Protect the worksheet with a password
-            // ProtectionType.All protects all aspects (cells, objects, etc.)
             sheet.Protect(ProtectionType.All, "myPassword", null);
 
-            // Verify that the worksheet is indeed protected
+            // Verify protection status (optional)
             Console.WriteLine($"Worksheet protected: {sheet.IsProtected}");
 
-            // Calculate formulas after protection
+            // Calculate all formulas in the workbook after protection
             workbook.CalculateFormula();
 
-            // Display the result of the formula cell
-            Console.WriteLine($"B1 formula result after protection: {cells["B1"].IntValue}");
+            // Display the calculated results
+            Console.WriteLine($"A1 value: {cells["A1"].IntValue}");
+            Console.WriteLine($"B1 formula result: {cells["B1"].IntValue}");
+            Console.WriteLine($"C1 formula result: {cells["C1"].IntValue}");
 
-            // Save the workbook (optional, demonstrates that protection persists)
-            workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (optional)
+            workbook.Save("ProtectedFormulaDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

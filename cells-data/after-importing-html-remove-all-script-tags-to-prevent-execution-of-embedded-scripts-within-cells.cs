@@ -2,50 +2,50 @@ using System;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlScriptRemoval
+class RemoveScriptTagsFromHtmlImport
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the HTML file into a workbook
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+        Workbook workbook = new Workbook("input.html", loadOptions);
+
+        // Iterate through all worksheets and cells to clean <script> tags
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source HTML file
-            string htmlPath = "input.html";
-
-            // Load the HTML file into a workbook using HtmlLoadOptions
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-            // Optional: enable support for <div> tags if needed
-            loadOptions.SupportDivTag = true;
-            // Load the workbook
-            Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-            // Iterate through all used cells in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
+            Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
             for (int row = 0; row <= maxRow; row++)
             {
                 for (int col = 0; col <= maxCol; col++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    // Process only cells that contain an HTML string
-                    if (!string.IsNullOrEmpty(cell.HtmlString))
-                    {
-                        // Remove any <script>...</script> blocks (case‑insensitive, single‑line)
-                        string cleaned = Regex.Replace(
-                            cell.HtmlString,
-                            "<script.*?</script>",
-                            string.Empty,
-                            RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    Cell cell = cells[row, col];
+                    string html = cell.HtmlString;
 
-                        // Update the cell with the cleaned HTML
-                        cell.HtmlString = cleaned;
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        // Remove any <script>...</script> blocks (case‑insensitive, multiline)
+                        string cleaned = Regex.Replace(
+                            html,
+                            @"<script\b[^>]*>.*?</script>",
+                            string.Empty,
+                            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+                        if (cleaned != html)
+                        {
+                            cell.HtmlString = cleaned;
+                        }
                     }
                 }
             }
-
-            // Save the cleaned workbook to an Excel file
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
+
+        // Optional: ensure no macros are present
+        workbook.RemoveMacro();
+
+        // Save the cleaned workbook
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

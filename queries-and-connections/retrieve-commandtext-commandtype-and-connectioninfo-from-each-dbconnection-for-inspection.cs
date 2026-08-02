@@ -2,40 +2,46 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    class RetrieveDbConnectionInfo
     {
-        // Load an existing workbook that may contain DB connections.
-        // Replace "input.xlsx" with the path to your workbook.
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all external data connections in the workbook.
-        foreach (ExternalConnection conn in workbook.DataConnections)
+        static void Main()
         {
-            // Process only DBConnection instances.
-            if (conn is DBConnection dbConn)
-            {
-                Console.WriteLine("DBConnection found:");
-                
-                // Retrieve the command text (SQL, table name, etc.).
-                Console.WriteLine($"Command (CommandText): {dbConn.Command}");
-                
-                // Retrieve the command type (e.g., SqlStatement, TableName).
-                Console.WriteLine($"CommandType: {dbConn.CommandType}");
-                
-                // Retrieve the obsolete ConnectionInfo property for inspection.
-                Console.WriteLine($"ConnectionInfo (obsolete): {dbConn.ConnectionInfo}");
-                
-                // Preferred property: the full connection string.
-                Console.WriteLine($"ConnectionString: {dbConn.ConnectionString}");
-                
-                Console.WriteLine();
-            }
-        }
+            // Load an existing workbook that may contain external DB connections
+            // Replace "input.xlsx" with the path to your workbook file
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Save the workbook if any modifications were made.
-        // Replace "output.xlsx" with the desired output path.
-        workbook.Save("output.xlsx");
+            // Access the collection of external connections in the workbook
+            ExternalConnectionCollection connections = workbook.DataConnections;
+
+            // Iterate through each connection and process only DBConnection instances
+            foreach (ExternalConnection conn in connections)
+            {
+                if (conn is DBConnection dbConn)
+                {
+                    // Retrieve the command text (SQL, table name, etc.)
+                    string commandText = dbConn.Command;
+
+                    // Retrieve the command type (e.g., SqlStatement, TableName, etc.)
+                    OLEDBCommandType commandType = dbConn.CommandType;
+
+                    // Retrieve the (obsolete) connection information string
+                    // Note: ConnectionInfo is marked obsolete; ConnectionString is the preferred property
+                    string connectionInfo = dbConn.ConnectionInfo;
+
+                    // Output the retrieved values for inspection
+                    Console.WriteLine("DBConnection found:");
+                    Console.WriteLine($"  Command Text   : {commandText}");
+                    Console.WriteLine($"  Command Type   : {commandType}");
+                    Console.WriteLine($"  ConnectionInfo : {connectionInfo}");
+                    Console.WriteLine();
+                }
+            }
+
+            // Optionally, save the workbook if any modifications were made
+            // Here we simply re‑save the original file (or specify a new file name)
+            workbook.Save("output.xlsx");
+        }
     }
 }

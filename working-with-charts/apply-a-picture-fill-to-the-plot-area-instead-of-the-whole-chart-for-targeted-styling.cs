@@ -1,26 +1,13 @@
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Needed for FillType and FillPictureType enums
 
 namespace AsposeCellsExamples
 {
     public class PlotAreaPictureFillDemo
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             try
@@ -42,8 +29,6 @@ namespace AsposeCellsExamples
                 // Add a column chart
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data range for the chart
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
@@ -51,33 +36,49 @@ namespace AsposeCellsExamples
                 // Apply picture fill to the plot area (not the whole chart)
                 // ------------------------------------------------------------
 
-                // Access the plot area's Area object
-                Area plotAreaArea = chart.PlotArea.Area;
+                // Access the plot area of the chart
+                PlotArea plotArea = chart.PlotArea;
 
-                // Set the fill type to Texture (used for picture fills)
-                plotAreaArea.FillFormat.FillType = FillType.Texture;
+                // Set the fill type to Texture (required for picture fill)
+                plotArea.Area.FillFormat.FillType = FillType.Texture;
 
-                // Choose a picture fill mode (e.g., Stretch)
-                plotAreaArea.FillFormat.PictureFormatType = FillPictureType.Stretch;
+                // Choose how the picture is applied (e.g., StackAndScale)
+                plotArea.Area.FillFormat.PictureFormatType = FillPictureType.StackAndScale;
 
-                // Provide image data – a tiny white pixel encoded in Base64
+                // Load an image (for demo we use a small in‑memory PNG)
+                // Here we create a 1x1 white pixel PNG from a base64 string.
                 string base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
-                byte[] imageBytes = Convert.FromBase64String(base64Image);
-                plotAreaArea.FillFormat.ImageData = imageBytes;
+                byte[] imageData = Convert.FromBase64String(base64Image);
+                plotArea.Area.FillFormat.ImageData = imageData;
 
-                // Optional: adjust transparency (0.0 = opaque, 1.0 = fully transparent)
-                plotAreaArea.FillFormat.Transparency = 0.0;
-
-                // Save the workbook to a file
+                // ------------------------------------------------------------
+                // Save the workbook
+                // ------------------------------------------------------------
                 string outputPath = "PlotAreaPictureFillDemo.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Run error: {ex.Message}");
-                throw;
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PlotAreaPictureFillDemo.Run();
         }
     }
 }

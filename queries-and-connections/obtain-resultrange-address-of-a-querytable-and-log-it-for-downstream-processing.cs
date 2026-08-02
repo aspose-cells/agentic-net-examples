@@ -1,6 +1,6 @@
 using Aspose.Cells;
 using System;
-using AsposeRange = Aspose.Cells.Range;
+using System.IO;
 
 class QueryTableResultRangeLogger
 {
@@ -8,57 +8,46 @@ class QueryTableResultRangeLogger
     {
         try
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            const string inputPath = "InputWithQueryTable.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Access the first worksheet
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook containing at least one QueryTable
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (index 0)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add sample data to simulate a query table
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("John");
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Mary");
-
-            // Check if any QueryTables exist in the worksheet
+            // Check for QueryTables in the worksheet
             if (worksheet.QueryTables.Count > 0)
             {
                 // Retrieve the first QueryTable
                 QueryTable queryTable = worksheet.QueryTables[0];
 
-                // Obtain the ResultRange using the ResultRange property (rule‑based usage)
-                AsposeRange resultRange = queryTable.ResultRange;
+                // Use fully qualified Aspose.Cells.Range to avoid ambiguity with System.Range
+                Aspose.Cells.Range resultRange = queryTable.ResultRange;
 
-                // Log the address of the ResultRange for downstream processing
+                // Log the address of the result range
                 Console.WriteLine("ResultRange Address: " + resultRange.Address);
-
-                // Example of passing the address to another method/component
-                string resultRangeAddress = resultRange.Address;
-                ProcessResultRangeAddress(resultRangeAddress);
             }
             else
             {
                 Console.WriteLine("No query tables found in the worksheet.");
             }
 
-            // Save the workbook (lifecycle rule)
-            string outputPath = "QueryTableResultRangeDemo.xlsx";
+            // Save the workbook (optional if modifications were made)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            // Runtime safety: log any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-    }
-
-    // Placeholder method representing downstream processing of the address
-    static void ProcessResultRangeAddress(string address)
-    {
-        // Implement downstream logic here
-        Console.WriteLine("Downstream processing of address: " + address);
     }
 }

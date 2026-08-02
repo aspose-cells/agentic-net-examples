@@ -3,25 +3,28 @@ using Aspose.Cells;
 
 namespace HyperlinkPdfDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put display text into a cell
+            // Put some display text into cell A1
             sheet.Cells["A1"].PutValue("Visit Aspose");
 
-            // Add a hyperlink to the cell (A1)
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+            // Add a hyperlink to cell A1 (row 0, column 0)
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink address
             sheet.Hyperlinks.Add(0, 0, 1, 1, "https://www.aspose.com");
 
-            // Save the workbook as PDF (lifecycle: save)
-            // Hyperlinks are preserved automatically in PDF output
+            // Optionally, customize the hyperlink's display text and screen tip
+            Hyperlink link = sheet.Hyperlinks[0];
+            link.TextToDisplay = "Aspose";
+            link.ScreenTip = "Click to open Aspose website";
+
+            // Save the workbook as PDF; hyperlinks are preserved by default
             workbook.Save("HyperlinkPreserved.pdf", SaveFormat.Pdf);
         }
     }

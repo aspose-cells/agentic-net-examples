@@ -1,50 +1,60 @@
 using System;
 using Aspose.Cells;
 
-class WorkbookProtectionDemo
+namespace AsposeCellsWorkbookProtectionDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Protect the workbook structure with a password
-        workbook.Protect(ProtectionType.Structure, "myPassword");
-
-        // Verify that the workbook is protected with a password
-        Console.WriteLine("Is workbook protected with password: " + workbook.IsWorkbookProtectedWithPassword);
-
-        // Attempt to add a new worksheet (should be blocked by protection)
-        try
+        static void Main(string[] args)
         {
-            workbook.Worksheets.Add("NewSheet");
-            Console.WriteLine("Worksheet added successfully (unexpected).");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to add worksheet as expected: " + ex.Message);
-        }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Save the protected workbook
-        string filePath = "ProtectedWorkbook.xlsx";
-        workbook.Save(filePath, SaveFormat.Xlsx);
-        workbook.Dispose();
+            // Protect the workbook structure with a password
+            // This prevents adding, removing, or renaming worksheets
+            string password = "mySecretPwd";
+            workbook.Protect(ProtectionType.Structure, password);
 
-        // Load the saved workbook to verify protection persists
-        Workbook loadedWorkbook = new Workbook(filePath);
-        Console.WriteLine("Loaded workbook protected with password: " + loadedWorkbook.IsWorkbookProtectedWithPassword);
+            // Save the protected workbook
+            string protectedPath = "ProtectedWorkbook.xlsx";
+            workbook.Save(protectedPath);
+            Console.WriteLine($"Workbook saved and protected at: {protectedPath}");
 
-        // Attempt to add another worksheet after loading (should also fail)
-        try
-        {
-            loadedWorkbook.Worksheets.Add("AnotherSheet");
-            Console.WriteLine("Worksheet added after load (unexpected).");
+            // Load the protected workbook
+            Workbook loadedWorkbook = new Workbook(protectedPath);
+            Console.WriteLine("Loaded the protected workbook.");
+
+            // Attempt to add a new worksheet while the workbook is protected
+            try
+            {
+                loadedWorkbook.Worksheets.Add("NewSheetWhileProtected");
+                Console.WriteLine("Unexpected: Worksheet added while workbook is protected.");
+            }
+            catch (Exception ex)
+            {
+                // Expected exception because the workbook structure is protected
+                Console.WriteLine($"Failed to add worksheet as expected: {ex.Message}");
+            }
+
+            // Unprotect the workbook using the correct password
+            loadedWorkbook.Unprotect(password);
+            Console.WriteLine("Workbook unprotected successfully.");
+
+            // Now adding a new worksheet should succeed
+            try
+            {
+                loadedWorkbook.Worksheets.Add("NewSheetAfterUnprotect");
+                Console.WriteLine("Worksheet added after unprotecting the workbook.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error after unprotecting: {ex.Message}");
+            }
+
+            // Save the final workbook
+            string finalPath = "UnprotectedWorkbook.xlsx";
+            loadedWorkbook.Save(finalPath);
+            Console.WriteLine($"Final workbook saved at: {finalPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to add worksheet after load as expected: " + ex.Message);
-        }
-
-        loadedWorkbook.Dispose();
     }
 }

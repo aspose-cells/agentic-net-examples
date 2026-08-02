@@ -4,121 +4,114 @@ using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Custom globalization settings that map standard error codes to localized strings
+    // Custom globalization settings that map standard Excel error strings to friendly messages.
     public class CustomErrorGlobalizationSettings : SettableGlobalizationSettings
     {
-        private readonly Dictionary<string, string> _errorMap = new Dictionary<string, string>
-        {
-            { "#DIV/0!", "Division by zero" },
-            { "#VALUE!", "Invalid value" },
-            { "#NAME?", "Invalid name" },
-            { "#N/A", "Not available" },
-            { "#REF!", "Invalid reference" },
-            { "#NUM!", "Invalid number" },
-            { "#NULL!", "Intersection error" },
-            { "#SPILL!", "Spill error" },
-            { "#BUSY!", "Busy error" },
-            { "#CALC!", "Calculation error" }
-        };
-
         public override string GetErrorValueString(string err)
         {
-            // Return the localized string if a mapping exists; otherwise fall back to default behavior
-            return _errorMap.TryGetValue(err, out var localized) ? localized : base.GetErrorValueString(err);
+            return err switch
+            {
+                "#DIV/0!" => "Division by zero",
+                "#N/A" => "Not available",
+                "#VALUE!" => "Invalid value",
+                "#NAME?" => "Invalid name",
+                "#REF!" => "Invalid reference",
+                "#NUM!" => "Invalid number",
+                "#NULL!" => "Null intersection",
+                "#SPILL!" => "Spill error",
+                "#CALC!" => "Calculation error",
+                "#CONNECT!" => "Connection error",
+                "#BUSY!" => "Busy error",
+                "#BLOCKED!" => "Blocked error",
+                "#UNKNOWN!" => "Unknown error",
+                "#TIMEOUT!" => "Timeout error",
+                "#EXTERNAL!" => "External error",
+                "#FIELD!" => "Field error",
+                _ => base.GetErrorValueString(err)
+            };
         }
     }
 
-    public static class Program
+    class Program
     {
-        private static SettableGlobalizationSettings _settings;
-
-        public static void Main()
+        // List of standard Excel error strings.
+        private static readonly string[] StandardErrors = new[]
         {
-            try
-            {
-                Setup();
-                RunAllTests();
-                Console.WriteLine("All tests passed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Test failed: {ex.Message}");
-            }
+            "#DIV/0!", "#N/A", "#VALUE!", "#NAME?", "#REF!", "#NUM!", "#NULL!",
+            "#SPILL!", "#CALC!", "#CONNECT!", "#BUSY!", "#BLOCKED!", "#UNKNOWN!",
+            "#TIMEOUT!", "#EXTERNAL!", "#FIELD!"
+        };
+
+        static void Main()
+        {
+            RunDefaultGlobalizationSettingsTest();
+            RunCustomGlobalizationSettingsTest();
         }
 
-        // Create a workbook and assign the custom globalization settings
-        private static void Setup()
+        // Test default globalization settings – should return the same string.
+        static void RunDefaultGlobalizationSettingsTest()
         {
             try
             {
                 var workbook = new Workbook();
-                _settings = new CustomErrorGlobalizationSettings();
-                workbook.Settings.GlobalizationSettings = _settings;
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Failed to set up workbook with custom globalization settings.", ex);
-            }
-        }
+                var settings = workbook.Settings.GlobalizationSettings;
 
-        // Execute each test case manually
-        private static void RunAllTests()
-        {
-            // Standard error codes and their expected localized strings
-            var testCases = new Dictionary<string, string>
-            {
-                { "#DIV/0!", "Division by zero" },
-                { "#VALUE!", "Invalid value" },
-                { "#NAME?", "Invalid name" },
-                { "#N/A", "Not available" },
-                { "#REF!", "Invalid reference" },
-                { "#NUM!", "Invalid number" },
-                { "#NULL!", "Intersection error" },
-                { "#SPILL!", "Spill error" },
-                { "#BUSY!", "Busy error" },
-                { "#CALC!", "Calculation error" }
-            };
-
-            foreach (var kvp in testCases)
-            {
-                VerifyLocalizedString(kvp.Key, kvp.Value);
-            }
-
-            VerifyUnknownError();
-        }
-
-        // Verify that a known error code returns the expected localized string
-        private static void VerifyLocalizedString(string errorCode, string expectedLocalized)
-        {
-            try
-            {
-                string actual = _settings.GetErrorValueString(errorCode);
-                if (!string.Equals(actual, expectedLocalized, StringComparison.Ordinal))
+                foreach (var err in StandardErrors)
                 {
-                    throw new Exception($"Error code '{errorCode}' expected '{expectedLocalized}' but got '{actual}'.");
+                    string result = settings.GetErrorValueString(err);
+                    if (result != err)
+                        Console.WriteLine($"FAIL: Expected {err}, got {result}");
+                    else
+                        Console.WriteLine($"PASS: {err}");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Verification failed for error code '{errorCode}'.", ex);
+                Console.WriteLine($"Unexpected exception in Default_GlobalizationSettings_Test: {ex.Message}");
             }
         }
 
-        // Verify that an unknown error code is returned unchanged (default behavior)
-        private static void VerifyUnknownError()
+        // Test custom globalization settings – should map errors to friendly messages.
+        static void RunCustomGlobalizationSettingsTest()
         {
-            const string unknownError = "#UNKNOWN!";
             try
             {
-                string result = _settings.GetErrorValueString(unknownError);
-                if (!string.Equals(result, unknownError, StringComparison.Ordinal))
+                var workbook = new Workbook();
+                var customSettings = new CustomErrorGlobalizationSettings();
+                workbook.Settings.GlobalizationSettings = customSettings;
+
+                var expectedMappings = new Dictionary<string, string>
                 {
-                    throw new Exception($"Unknown error code expected to be unchanged but got '{result}'.");
+                    {"#DIV/0!", "Division by zero"},
+                    {"#N/A", "Not available"},
+                    {"#VALUE!", "Invalid value"},
+                    {"#NAME?", "Invalid name"},
+                    {"#REF!", "Invalid reference"},
+                    {"#NUM!", "Invalid number"},
+                    {"#NULL!", "Null intersection"},
+                    {"#SPILL!", "Spill error"},
+                    {"#CALC!", "Calculation error"},
+                    {"#CONNECT!", "Connection error"},
+                    {"#BUSY!", "Busy error"},
+                    {"#BLOCKED!", "Blocked error"},
+                    {"#UNKNOWN!", "Unknown error"},
+                    {"#TIMEOUT!", "Timeout error"},
+                    {"#EXTERNAL!", "External error"},
+                    {"#FIELD!", "Field error"}
+                };
+
+                foreach (var kvp in expectedMappings)
+                {
+                    string result = customSettings.GetErrorValueString(kvp.Key);
+                    if (result != kvp.Value)
+                        Console.WriteLine($"FAIL: {kvp.Key} expected {kvp.Value}, got {result}");
+                    else
+                        Console.WriteLine($"PASS: {kvp.Key} mapped correctly");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Verification failed for unknown error code.", ex);
+                Console.WriteLine($"Unexpected exception in Custom_GlobalizationSettings_Test: {ex.Message}");
             }
         }
     }

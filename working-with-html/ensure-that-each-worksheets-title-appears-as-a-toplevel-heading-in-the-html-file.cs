@@ -3,46 +3,47 @@ using Aspose.Cells;
 
 namespace AsposeCellsHtmlExport
 {
+    // Author: Aspose.Cells .NET example – export worksheets with titles as headings
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and add a few worksheets
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "Summary";
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Cells["A1"].PutValue("Summary data");
 
-            Worksheet sheet2 = workbook.Worksheets.Add("Details");
-            sheet2.Cells["A1"].PutValue("Detail data");
+            // ----- Worksheet 1 -----
+            Worksheet sheet1 = workbook.Worksheets[0]; // default first sheet
+            sheet1.Name = "Sales Summary";
+            sheet1.Cells["A1"].PutValue("Product");
+            sheet1.Cells["B1"].PutValue("Quantity");
+            sheet1.Cells["A2"].PutValue("Apples");
+            sheet1.Cells["B2"].PutValue(150);
+            sheet1.Cells["A3"].PutValue("Oranges");
+            sheet1.Cells["B3"].PutValue(200);
 
-            Worksheet sheet3 = workbook.Worksheets.Add("Statistics");
-            sheet3.Cells["A1"].PutValue("Statistics data");
+            // ----- Worksheet 2 -----
+            int sheet2Index = workbook.Worksheets.Add();
+            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+            sheet2.Name = "Inventory";
+            sheet2.Cells["A1"].PutValue("Item");
+            sheet2.Cells["B1"].PutValue("Stock");
+            sheet2.Cells["A2"].PutValue("Pens");
+            sheet2.Cells["B2"].PutValue(500);
+            sheet2.Cells["A3"].PutValue("Notebooks");
+            sheet2.Cells["B3"].PutValue(300);
 
-            // Set each worksheet's header to display its name (sheet title)
-            // The header will be rendered as a top‑level heading in the HTML output
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Configure HTML save options to export worksheet titles as top‑level headings
+            HtmlSaveOptions options = new HtmlSaveOptions
             {
-                // Center section (index 1) shows the sheet name using the &A placeholder
-                ws.PageSetup.SetHeader(1, "&A");
-            }
+                // ExportRowColumnHeadings also adds the worksheet name as a heading in the HTML output
+                ExportRowColumnHeadings = true,
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export the page header (which now contains the sheet name)
-                ExportPageHeaders = true,
-
-                // Save all sheets into a single HTML file so each header appears as a separate heading
-                SaveAsSingleFile = true,
-                ShowAllSheets = true
+                // Optional: export all worksheets into a single HTML file
+                ExportActiveWorksheetOnly = false
             };
 
-            // Save the workbook as HTML
-            string outputPath = "WorkbookWithSheetHeadings.html";
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"HTML file saved to: {outputPath}");
+            // Save the workbook as a single HTML file; each worksheet name appears as a heading
+            workbook.Save("WorksheetsWithHeadings.html", options);
         }
     }
 }

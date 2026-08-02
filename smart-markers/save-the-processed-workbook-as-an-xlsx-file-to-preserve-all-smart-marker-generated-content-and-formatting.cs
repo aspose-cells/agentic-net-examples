@@ -8,35 +8,33 @@ namespace SmartMarkerSaveExample
     {
         static void Main()
         {
-            // Load the workbook that contains smart markers (template.xlsx should exist in the execution folder)
-            Workbook workbook = new Workbook("template.xlsx");
+            // Load the Excel template that contains smart markers
+            Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
 
-            // Create a data source – for demonstration we use an ArrayList of simple objects
+            // Prepare a simple data source (could be any collection, DataTable, JSON, etc.)
             ArrayList persons = new ArrayList();
+            persons.Add(new Person { Name = "John Doe", Age = 30 });
+            persons.Add(new Person { Name = "Jane Smith", Age = 28 });
 
-            // Sample data class
-            var person1 = new { Name = "John Doe", Age = 30 };
-            var person2 = new { Name = "Jane Smith", Age = 28 };
-            persons.Add(person1);
-            persons.Add(person2);
+            // Initialize the WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-            // Initialize WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-
-            // Set the data source for the smart markers (the name "Persons" must match the marker prefix in the template)
+            // Assign the data source to a name used in the smart markers
             designer.SetDataSource("Persons", persons);
 
-            // Process all smart markers in the workbook
+            // Process the smart markers – this populates the worksheet with data
             designer.Process();
 
             // Save the processed workbook as XLSX to preserve all generated content and formatting
-            // This uses the provided Save(string, SaveFormat) method as required by the rules
-            workbook.Save("ProcessedOutput.xlsx", SaveFormat.Xlsx);
-
-            Console.WriteLine("Workbook saved successfully as ProcessedOutput.xlsx");
+            // Using the Save(string, SaveFormat) overload as defined in the Aspose.Cells API
+            workbook.Save("ProcessedResult.xlsx", SaveFormat.Xlsx);
         }
+    }
+
+    // Simple POCO class used as a data source for the smart markers
+    public class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace SlicerHeaderHideDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -29,6 +29,7 @@ namespace SlicerHeaderHideDemo
             PivotTable pivot = sheet.PivotTables[pivotIdx];
             pivot.AddFieldToArea(PivotFieldType.Row, "Category");
             pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+            pivot.RefreshData();
             pivot.CalculateData();
 
             // Add a slicer linked to the pivot table
@@ -39,7 +40,7 @@ namespace SlicerHeaderHideDemo
             slicer.ShowCaption = false;
 
             // Optional: adjust appearance
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
+            slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
             slicer.NumberOfColumns = 1;
 
             // Save the workbook

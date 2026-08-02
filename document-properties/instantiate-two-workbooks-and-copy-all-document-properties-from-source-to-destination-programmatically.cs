@@ -3,7 +3,7 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-namespace AsposeCellsDocumentPropertiesCopy
+namespace AsposeCellsPropertyCopyDemo
 {
     class Program
     {
@@ -11,47 +11,53 @@ namespace AsposeCellsDocumentPropertiesCopy
         {
             try
             {
-                // Create source workbook and set some built‑in and custom properties
-                Workbook sourceWorkbook = new Workbook();
-                sourceWorkbook.BuiltInDocumentProperties["Author"].Value = "John Smith";
-                sourceWorkbook.BuiltInDocumentProperties["Title"].Value = "Sample Source Workbook";
-                sourceWorkbook.CustomDocumentProperties.Add("ReviewedBy", "Jane Doe");
-                sourceWorkbook.CustomDocumentProperties.Add("Revision", 3);
+                // Path to the source workbook (replace with actual file path)
+                string sourcePath = "source.xlsx";
 
-                // Create destination workbook (empty)
+                // Verify source file exists
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
+
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
+
+                // Create an empty destination workbook
                 Workbook destinationWorkbook = new Workbook();
 
                 // ----- Copy Built‑in Document Properties -----
                 foreach (DocumentProperty srcProp in sourceWorkbook.BuiltInDocumentProperties)
                 {
-                    // Ensure the destination has the same property and assign its value
+                    // Destination always contains the same built‑in properties
                     destinationWorkbook.BuiltInDocumentProperties[srcProp.Name].Value = srcProp.Value;
                 }
 
                 // ----- Copy Custom Document Properties -----
                 foreach (DocumentProperty srcProp in sourceWorkbook.CustomDocumentProperties)
                 {
-                    // If the property already exists, update its value; otherwise add it
                     if (destinationWorkbook.CustomDocumentProperties.Contains(srcProp.Name))
                     {
+                        // Update existing property
                         destinationWorkbook.CustomDocumentProperties[srcProp.Name].Value = srcProp.Value;
                     }
                     else
                     {
-                        // Convert the value to string to match the overload that accepts (string, string)
+                        // Add new property (value converted to string if required by overload)
                         destinationWorkbook.CustomDocumentProperties.Add(srcProp.Name, srcProp.Value?.ToString() ?? string.Empty);
                     }
                 }
 
-                // Save both workbooks to verify the copy
-                sourceWorkbook.Save("SourceWorkbook.xlsx");
-                destinationWorkbook.Save("DestinationWorkbook.xlsx");
+                // Save the destination workbook with the copied properties
+                string destPath = "destination.xlsx";
+                destinationWorkbook.Save(destPath);
 
                 Console.WriteLine("Document properties copied successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

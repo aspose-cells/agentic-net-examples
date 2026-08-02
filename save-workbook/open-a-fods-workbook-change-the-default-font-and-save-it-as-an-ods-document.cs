@@ -6,7 +6,7 @@ class Program
 {
     static void Main()
     {
-        // Load the FODS file using OdsLoadOptions (default constructor)
+        // Load the FODS file with default load options
         OdsLoadOptions loadOptions = new OdsLoadOptions();
         Workbook workbook = new Workbook("input.fods", loadOptions);
 
@@ -18,7 +18,7 @@ class Program
         OdsSaveOptions saveOptions = new OdsSaveOptions();
         saveOptions.GeneratorType = OdsGeneratorType.LibreOffice;
 
-        // Save the workbook as an ODS file
+        // Save the workbook as an ODS file using the specified options
         workbook.Save("output.ods", saveOptions);
     }
 }

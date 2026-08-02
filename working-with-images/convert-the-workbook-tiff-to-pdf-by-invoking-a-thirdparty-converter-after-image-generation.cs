@@ -1,43 +1,82 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-class Program
+namespace AsposeCellsTiffToPdf
 {
-    static void Main()
+    class Program
     {
-        // Load the source workbook (uses the load rule)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Configure options for rendering the workbook as a multi‑page TIFF
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        static void Main()
         {
-            ImageType = ImageType.Tiff,
-            TiffCompression = TiffCompression.CompressionLZW
-        };
+            // Paths for source Excel, intermediate TIFF and final PDF
+            string excelPath = "input.xlsx";
+            string tiffPath = "intermediate.tiff";
+            string pdfPath = "output.pdf";
 
-        // Render the entire workbook to a TIFF file (uses the WorkbookRender.ToImage(string) rule)
-        string tiffPath = "workbook.tiff";
-        WorkbookRender renderer = new WorkbookRender(workbook, options);
-        renderer.ToImage(tiffPath);
+            // Load the workbook (create/load lifecycle handled by Aspose.Cells)
+            Workbook workbook = new Workbook(excelPath);
 
-        // Convert the generated TIFF to PDF using a third‑party converter (placeholder implementation)
-        string pdfPath = "workbook.pdf";
-        ConvertTiffToPdf(tiffPath, pdfPath);
+            // Configure rendering options for TIFF output
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            {
+                ImageType = ImageType.Tiff,
+                TiffCompression = TiffCompression.CompressionLZW,
+                HorizontalResolution = 300,
+                VerticalResolution = 300
+            };
 
-        Console.WriteLine("TIFF to PDF conversion completed.");
-    }
+            // Render the entire workbook to a multi‑page TIFF file
+            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
+            renderer.ToImage(tiffPath); // Uses the ToImage(string) method to save as TIFF
 
-    // Placeholder for third‑party TIFF‑to‑PDF conversion logic
-    static void ConvertTiffToPdf(string tiffFile, string pdfFile)
-    {
-        // Example of how a third‑party library might be invoked:
-        // var converter = new ThirdPartyPdfConverter();
-        // converter.Convert(tiffFile, pdfFile);
+            // ------------------------------------------------------------
+            // Invoke a third‑party converter to transform the TIFF to PDF.
+            // This example uses a command‑line tool (e.g., ImageMagick's convert)
+            // Replace the command and arguments with the actual converter you have.
+            // ------------------------------------------------------------
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "magick", // Example: ImageMagick's 'magick' command
+                    Arguments = $"\"{tiffPath}\" \"{pdfPath}\"",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
 
-        // For demonstration purposes, simply copy the file (no real conversion)
-        File.Copy(tiffFile, pdfFile, overwrite: true);
+                using (Process proc = Process.Start(psi))
+                {
+                    proc.WaitForExit();
+
+                    string output = proc.StandardOutput.ReadToEnd();
+                    string error = proc.StandardError.ReadToEnd();
+
+                    if (proc.ExitCode == 0)
+                    {
+                        Console.WriteLine($"Successfully converted TIFF to PDF: {pdfPath}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Conversion failed with exit code {proc.ExitCode}");
+                        Console.WriteLine($"Error: {error}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception while invoking converter: {ex.Message}");
+            }
+
+            // Optional: clean up the intermediate TIFF file
+            if (File.Exists(tiffPath))
+            {
+                File.Delete(tiffPath);
+            }
+        }
     }
 }

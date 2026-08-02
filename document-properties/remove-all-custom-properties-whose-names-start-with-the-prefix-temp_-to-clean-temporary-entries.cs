@@ -4,40 +4,62 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class RemoveTempCustomProperties
+namespace AsposeCellsCustomPropertyCleaner
 {
-    static void Main()
+    class Program
     {
-        // Paths for input and output workbooks
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        // Load the workbook from the input file
-        using (FileStream stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+        static void Main()
         {
-            Workbook workbook = new Workbook(stream);
+            // Paths for input and output workbooks
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the custom document properties collection
-            CustomDocumentPropertyCollection customProps = (CustomDocumentPropertyCollection)workbook.Worksheets.CustomDocumentProperties;
-
-            // Collect names of properties that start with "Temp_"
-            List<string> namesToRemove = new List<string>();
-            foreach (DocumentProperty prop in customProps)
+            // Load the workbook from the input file
+            using (FileStream stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                if (prop.Name.StartsWith("Temp_", StringComparison.OrdinalIgnoreCase))
+                Workbook workbook = new Workbook(stream);
+
+                // ----- Remove custom document properties starting with "Temp_" -----
+                DocumentPropertyCollection docProps = workbook.Worksheets.CustomDocumentProperties;
+                List<string> docPropNamesToRemove = new List<string>();
+
+                foreach (DocumentProperty prop in docProps)
                 {
-                    namesToRemove.Add(prop.Name);
+                    if (prop.Name.StartsWith("Temp_", StringComparison.OrdinalIgnoreCase))
+                    {
+                        docPropNamesToRemove.Add(prop.Name);
+                    }
                 }
-            }
 
-            // Remove the identified properties
-            foreach (string name in namesToRemove)
-            {
-                customProps.Remove(name);
-            }
+                foreach (string name in docPropNamesToRemove)
+                {
+                    docProps.Remove(name);
+                }
 
-            // Save the cleaned workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+                // ----- Remove worksheet custom properties starting with "Temp_" -----
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    CustomPropertyCollection customProps = sheet.CustomProperties;
+                    List<int> indicesToRemove = new List<int>();
+
+                    for (int i = 0; i < customProps.Count; i++)
+                    {
+                        if (customProps[i].Name.StartsWith("Temp_", StringComparison.OrdinalIgnoreCase))
+                        {
+                            indicesToRemove.Add(i);
+                        }
+                    }
+
+                    // Remove by index in descending order to keep remaining indices valid
+                    for (int i = indicesToRemove.Count - 1; i >= 0; i--)
+                    {
+                        customProps.RemoveAt(indicesToRemove[i]);
+                    }
+                }
+
+                // Save the cleaned workbook to the output file
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+            }
         }
     }
 }

@@ -1,81 +1,71 @@
+// Title: Detect Plain‑Text Passwords in Excel Custom Document Properties with AspNet Aspose.Cells
+// Description: A .NET utility that loads an Excel file, checks if the workbook is encrypted, reads only the document‑properties metadata, scans custom properties for names containing "password", and raises an alert when a non‑empty string value is found. It also reports the workbook's encryption status.
+// Keywords: Aspose.Cells | .NET | Excel password detection | custom document properties | metadata security | plain text password | workbook encryption check | document properties API | security audit | Excel protection
+// Common Searches: Aspose.Cells detect password in custom metadata | check Excel workbook for plain text password | read custom document properties with Aspose.Cells | Excel file security audit .NET | find exposed password in workbook metadata
+// Developer Intent: Scan an Excel workbook's custom document properties for any plain‑text password entries and generate an alert if such a value is discovered.
+// Use Cases: Automated security scan of a repository of Excel files to ensure passwords are not stored in custom metadata before release. | CI/CD gate that fails the build when a workbook contains a plain‑text password in its custom properties. | Runtime validation of user‑uploaded Excel files, warning users if a password is exposed in the file's metadata.
+// AI Prompts: Create a reusable Aspose.Cells method that returns the names of custom document properties containing the word "password" with non‑empty values. | Write unit tests for the plain‑text password detection logic covering encrypted, unencrypted, and non‑password property scenarios. | Suggest a metadata‑only approach to detect exposed passwords without loading the full workbook, using Aspose.Cells APIs.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Metadata;
 
-class DetectPlainTextPasswordInMetadata
+namespace AsposeCellsSecurityCheck
 {
-    static void Main()
+    // A .NET utility that loads an Excel file, checks if the workbook is encrypted, reads only the document‑properties metadata, scans custom properties for names containing "password", and raises an alert when a non‑empty string value is found. It also reports the workbook's encryption status.
+    class Program
     {
-        // Path to the workbook file
-        string filePath = "SensitiveWorkbook.xlsx";
-
-        try
+        static void Main()
         {
-            // -----------------------------------------------------------------
-            // Step 1: Create a workbook, set an encryption password, add a custom
-            //         document property that (insecurely) stores the same password,
-            //         and save the file.
-            // -----------------------------------------------------------------
-            using (Workbook wb = new Workbook())
+            // Path to the workbook to be inspected
+            string filePath = "sample.xlsx";
+
+            // Ensure the file exists before attempting to load it
+            if (!File.Exists(filePath))
             {
-                // Set workbook encryption password
-                wb.Settings.Password = "Secret123";
-
-                // Add some sample data
-                wb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-
-                // Save the workbook (encrypted)
-                wb.Save(filePath);
+                Console.WriteLine($"Error: File '{filePath}' not found.");
+                return;
             }
 
-            // Ensure the file was created before working with metadata
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException($"The workbook file '{filePath}' was not found.");
-
-            // Open metadata for the saved workbook to add a custom property
-            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
-            WorkbookMetadata metadata = new WorkbookMetadata(filePath, metaOptions);
-
-            // Insecurely store the encryption password in a custom property
-            metadata.CustomDocumentProperties.Add("EncryptionPassword", "Secret123");
-
-            // Save metadata changes back to the workbook
-            metadata.Save(filePath);
-
-            // -----------------------------------------------------------------
-            // Step 2: Load the workbook (using the known password) to retrieve the
-            //         actual encryption password from the workbook settings.
-            // -----------------------------------------------------------------
-            LoadOptions loadOpts = new LoadOptions { Password = "Secret123" };
-            using (Workbook loadedWb = new Workbook(filePath, loadOpts))
+            try
             {
-                string workbookPassword = loadedWb.Settings.Password; // should be "Secret123"
+                // Load the workbook to check if it is encrypted (standard workbook loading)
+                Workbook workbook = new Workbook(filePath);
+                bool isWorkbookEncrypted = workbook.Settings.IsEncrypted;
 
-                // -----------------------------------------------------------------
-                // Step 3: Load the custom metadata and check if any property value
-                //         matches the workbook's encryption password.
-                // -----------------------------------------------------------------
-                WorkbookMetadata loadedMeta = new WorkbookMetadata(filePath, metaOptions);
+                // Load only the document properties metadata (no need to load the whole workbook again)
+                MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+                WorkbookMetadata metadata = new WorkbookMetadata(filePath, metaOptions);
 
-                foreach (var prop in loadedMeta.CustomDocumentProperties)
+                // Iterate through all custom document properties
+                foreach (var prop in metadata.CustomDocumentProperties)
                 {
-                    // Only consider string values
-                    if (prop.Value is string value && value == workbookPassword)
+                    // Check if the property name suggests it holds a password
+                    if (prop.Name.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        Console.WriteLine(
-                            $"ALERT: Encryption password is stored in plain text in custom metadata property '{prop.Name}'.");
+                        // If the value is a non‑empty string, it is stored in plain text
+                        if (prop.Value is string plainText && !string.IsNullOrWhiteSpace(plainText))
+                        {
+                            Console.WriteLine($"ALERT: Encryption password stored in plain text in custom metadata property '{prop.Name}'.");
+                        }
                     }
                 }
+
+                // Additional check: if the workbook itself is encrypted, the password should not be in plain text
+                if (isWorkbookEncrypted)
+                {
+                    Console.WriteLine("Workbook is encrypted. Ensure the password is not exposed in metadata.");
+                }
+                else
+                {
+                    Console.WriteLine("Workbook is not encrypted.");
+                }
             }
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.WriteLine($"File error: {fnfEx.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            }
         }
     }
 }

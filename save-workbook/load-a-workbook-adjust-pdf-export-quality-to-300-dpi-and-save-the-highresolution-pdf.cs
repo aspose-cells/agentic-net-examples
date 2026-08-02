@@ -1,22 +1,46 @@
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output_high_res.pdf";
 
-        // Create PDF save options instance
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Set the desired image resolution to 300 DPI and maximum JPEG quality (100%)
-        // This ensures that images inside the PDF are rendered at high resolution.
-        pdfSaveOptions.SetImageResample(300, 100);
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as a high‑resolution PDF using the configured options
-        workbook.Save("output_300dpi.pdf", pdfSaveOptions);
+            // Set the global DPI to 300 for high‑resolution rendering
+            CellsHelper.DPI = 300;
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Resample images to 300 PPI and use maximum JPEG quality (100)
+            pdfOptions.SetImageResample(300, 100);
+
+            // (Optional) Use standard optimization for best print quality
+            // pdfOptions.OptimizationType = PdfOptimizationOptions.Standard; // Uncomment if enum is available in your version
+
+            // Save the workbook as a high‑resolution PDF
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

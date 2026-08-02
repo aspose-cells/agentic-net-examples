@@ -1,84 +1,67 @@
+// Title: Clone a PivotTable, modify its data source, and place it on a new worksheet – Aspose.Cells for .NET (C#)
+// Description: Demonstrates how to create a workbook with sample data, build an original PivotTable, clone it to a newly added worksheet using the Add(PivotTable, string, string) overload, change the cloned table's data source with ChangeDataSource, refresh and recalculate the pivot, and save the file containing both tables.
+// Keywords: Aspose.Cells | C# | .NET | PivotTable clone | ChangeDataSource | Add pivot to new sheet | RefreshData | CalculateData | Excel automation | workbook pivot example
+// Common Searches: Aspose.Cells clone PivotTable C# | Change data source of a cloned pivot Aspose.Cells | Add PivotTable to another worksheet using Aspose.Cells | Refresh and recalculate cloned PivotTable .NET | Aspose.Cells ChangeDataSource method example
+// Developer Intent: Copy an existing PivotTable, assign a different data range, and insert the copy into a separate worksheet programmatically.
+// Use Cases: Create a summary sheet that shows a pivot based on a subset of rows from the original data. | Generate multiple pivot reports from the same workbook, each using a distinct data slice. | Automate report generation where each worksheet contains a cloned pivot reflecting a specific timeframe or category.
+// AI Prompts: Write C# code with Aspose.Cells to clone a PivotTable, set a new data range, and add it to a new worksheet. | Explain how to refresh and recalculate a cloned PivotTable after changing its source using Aspose.Cells. | Show the syntax for Add(PivotTable, string, string) and ChangeDataSource together in an Aspose.Cells .NET example.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCloneExample
+// Demonstrates how to create a workbook with sample data, build an original PivotTable, clone it to a newly added worksheet using the Add(PivotTable, string, string) overload, change the cloned table's data source with ChangeDataSource, refresh and recalculate the pivot, and save the file containing both tables.
+class Program
 {
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Create a new workbook and add sample data on the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        sourceSheet.Name = "SourceData";
+
+        // Header row
+        sourceSheet.Cells["A1"].PutValue("Category");
+        sourceSheet.Cells["B1"].PutValue("Product");
+        sourceSheet.Cells["C1"].PutValue("Sales");
+
+        // Populate rows 2‑10 with sample data
+        for (int i = 2; i <= 10; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "SourceData";
-
-            // Populate sample data for the source pivot table
-            Cells srcCells = sourceSheet.Cells;
-            srcCells["A1"].PutValue("Category");
-            srcCells["B1"].PutValue("Product");
-            srcCells["C1"].PutValue("Sales");
-
-            srcCells["A2"].PutValue("Fruit");
-            srcCells["B2"].PutValue("Apple");
-            srcCells["C2"].PutValue(120);
-
-            srcCells["A3"].PutValue("Fruit");
-            srcCells["B3"].PutValue("Banana");
-            srcCells["C3"].PutValue(80);
-
-            srcCells["A4"].PutValue("Vegetable");
-            srcCells["B4"].PutValue("Carrot");
-            srcCells["C4"].PutValue(150);
-
-            // Create a pivot table on the source sheet
-            string sourceDataRange = "A1:C4";
-            PivotTableCollection srcPivots = sourceSheet.PivotTables;
-            int srcPivotIndex = srcPivots.Add(sourceDataRange, "E1", "SourcePivot");
-            PivotTable sourcePivot = srcPivots[srcPivotIndex];
-            sourcePivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            sourcePivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            sourcePivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-            sourcePivot.CalculateData();
-
-            // Add a new worksheet where the cloned pivot table will be placed
-            Worksheet destSheet = workbook.Worksheets.Add("ClonedData");
-
-            // Populate a different data range on the destination sheet (new source for the cloned pivot)
-            Cells destCells = destSheet.Cells;
-            destCells["A1"].PutValue("Category");
-            destCells["B1"].PutValue("Product");
-            destCells["C1"].PutValue("Sales");
-
-            destCells["A2"].PutValue("Fruit");
-            destCells["B2"].PutValue("Apple");
-            destCells["C2"].PutValue(200);
-
-            destCells["A3"].PutValue("Fruit");
-            destCells["B3"].PutValue("Banana");
-            destCells["C3"].PutValue(150);
-
-            destCells["A4"].PutValue("Vegetable");
-            destCells["B4"].PutValue("Carrot");
-            destCells["C4"].PutValue(180);
-
-            // Clone the source pivot table into the new worksheet
-            // The Add method clones based on an existing PivotTable
-            PivotTableCollection destPivots = destSheet.PivotTables;
-            int clonedPivotIndex = destPivots.Add(sourcePivot, "E1", "ClonedPivot");
-            PivotTable clonedPivot = destPivots[clonedPivotIndex];
-
-            // Change the data source of the cloned pivot table to the new range on the destination sheet
-            // The source array format: {"RangeAddress", "SheetName"}
-            string[] newDataSource = new string[] { "A1:C4", destSheet.Name };
-            clonedPivot.ChangeDataSource(newDataSource);
-
-            // Refresh and recalculate the cloned pivot table to reflect the new data source
-            clonedPivot.RefreshData();
-            clonedPivot.CalculateData();
-
-            // Save the workbook
-            workbook.Save("ClonedPivotTableExample.xlsx");
+            sourceSheet.Cells[$"A{i}"].PutValue("Cat" + (i % 3 + 1));
+            sourceSheet.Cells[$"B{i}"].PutValue("Prod" + i);
+            sourceSheet.Cells[$"C{i}"].PutValue(i * 100);
         }
+
+        // Create the original pivot table on the source sheet
+        PivotTableCollection sourcePivots = sourceSheet.PivotTables;
+        int sourcePivotIdx = sourcePivots.Add("=SourceData!A1:C10", "E1", "OriginalPivot");
+        PivotTable sourcePivot = sourcePivots[sourcePivotIdx];
+
+        // Configure fields: Category & Product as rows, Sales as data
+        sourcePivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category column
+        sourcePivot.AddFieldToArea(PivotFieldType.Row, 1);   // Product column
+        sourcePivot.AddFieldToArea(PivotFieldType.Data, 2);  // Sales column
+        sourcePivot.CalculateData();
+
+        // Add a new worksheet that will host the cloned pivot table
+        Worksheet clonedSheet = workbook.Worksheets.Add("ClonedPivotSheet");
+
+        // Clone the existing pivot table into the new sheet using Add(PivotTable, string, string)
+        PivotTableCollection clonedPivots = clonedSheet.PivotTables;
+        int clonedPivotIdx = clonedPivots.Add(sourcePivot, "A1", "ClonedPivot");
+        PivotTable clonedPivot = clonedPivots[clonedPivotIdx];
+
+        // Change the data source of the cloned pivot table to a different range (rows 1‑5)
+        // The array format is { "RangeAddress", "SheetName" }
+        string[] newDataSource = new string[] { "A1:C5", "SourceData" };
+        clonedPivot.ChangeDataSource(newDataSource);
+
+        // Refresh and recalculate the cloned pivot to reflect the new source
+        clonedPivot.RefreshData();
+        clonedPivot.CalculateData();
+
+        // Save the workbook with both pivot tables
+        workbook.Save("ClonedPivotExample.xlsx");
     }
 }

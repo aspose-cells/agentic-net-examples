@@ -1,77 +1,33 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsBackupExample
 {
-    public class XmlMapBackupDemo
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Path to the original workbook
-            string originalPath = "OriginalWorkbook.xlsx";
-
-            // Verify the original file exists
-            if (!File.Exists(originalPath))
-            {
-                Console.WriteLine($"File not found: {originalPath}");
-                return;
-            }
-
             // Load the original workbook
-            Workbook originalWorkbook = new Workbook(originalPath);
+            Workbook originalWorkbook = new Workbook("InputWorkbook.xlsx");
 
-            // -----------------------------------------------------------------
-            // Create a backup copy of the workbook before making any changes
-            // -----------------------------------------------------------------
-            // Create an empty workbook instance
+            // Create a backup copy of the workbook
             Workbook backupWorkbook = new Workbook();
-
             // Copy all contents from the original workbook to the backup workbook
-            backupWorkbook.Copy(originalWorkbook);
-
+            originalWorkbook.Copy(backupWorkbook);
             // Save the backup workbook to a separate file
-            string backupPath = "BackupWorkbook.xlsx";
-            backupWorkbook.Save(backupPath);
-            Console.WriteLine($"Backup created at: {backupPath}");
+            backupWorkbook.Save("BackupWorkbook.xlsx");
 
-            // ---------------------------------------------------------------
-            // Now modify XML maps in the original workbook as needed
-            // ---------------------------------------------------------------
-            // Example: Add a new XML map to the original workbook
-            string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                    <xs:element name='Root'>
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name='Item' type='xs:string'/>
-                                            </xs:sequence>
-                                        </xs:complexType>
-                                    </xs:element>
-                                </xs:schema>";
-
-            // Add the XML map and retrieve its index
-            int mapIndex = originalWorkbook.Worksheets.XmlMaps.Add(xmlSchema);
-
-            // Access the newly added XML map (optional, e.g., set a name)
+            // ----- Begin modifications to XML maps -----
+            // Add a new XML map to the original workbook (example schema file path)
+            int mapIndex = originalWorkbook.Worksheets.XmlMaps.Add("SampleSchema.xsd");
+            // Access the newly added XML map
             XmlMap xmlMap = originalWorkbook.Worksheets.XmlMaps[mapIndex];
+            // Optionally set a name for the map
             xmlMap.Name = "SampleMap";
+            // ----- End modifications -----
 
-            // Save the modified workbook
-            string modifiedPath = "ModifiedWorkbook.xlsx";
-            originalWorkbook.Save(modifiedPath);
-            Console.WriteLine($"Modified workbook saved at: {modifiedPath}");
+            // Save the modified original workbook
+            originalWorkbook.Save("ModifiedWorkbook.xlsx");
         }
     }
 }

@@ -1,28 +1,17 @@
 using System;
 using Aspose.Cells;
 
-class LoadWorkbookDemo
+class Program
 {
     static void Main()
     {
-        // Path to the Excel file on disk
-        string filePath = "example.xlsx";
+        // Author note: simple example to load an XLSX file
+        string filePath = "sample.xlsx";
 
-        // Load the workbook using the string constructor (Workbook(string))
+        // Load the workbook from disk (no special load options needed)
         Workbook workbook = new Workbook(filePath);
 
-        // Access the first worksheet in the workbook
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Output worksheet information
-        Console.WriteLine($"Worksheet Name: {worksheet.Name}");
-        Console.WriteLine($"Number of Cells: {worksheet.Cells.Count}");
-
-        // Example: display the value of cell A1 if it exists
-        var cell = worksheet.Cells["A1"];
-        if (cell.Value != null)
-        {
-            Console.WriteLine($"A1 Value: {cell.Value}");
-        }
+        // Demonstrate that the workbook is loaded
+        Console.WriteLine($"Number of worksheets: {workbook.Worksheets.Count}");
     }
 }

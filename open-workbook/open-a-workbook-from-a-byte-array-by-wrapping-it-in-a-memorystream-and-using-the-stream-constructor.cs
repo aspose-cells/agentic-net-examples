@@ -1,52 +1,55 @@
+// Title: Open an Excel workbook from a byte[] using Aspose.Cells .NET (MemoryStream)
+// Description: Demonstrates how to read an XLSX file into a byte array, wrap it in a MemoryStream, instantiate a Workbook from the stream, read the first worksheet name, and save the workbook to a new file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells load workbook from byte array | MemoryStream Excel .NET | Workbook constructor stream | read Excel bytes C# | save workbook after stream load
+// Common Searches: open Excel file from byte[] Aspose.Cells | Aspose.Cells MemoryStream example | load workbook from byte array C# | read first worksheet name from byte array Aspose
+// Developer Intent: Load an Excel workbook from a byte array via MemoryStream and optionally save or inspect it.
+// Use Cases: Process an uploaded Excel file received as a byte[] in a web service without writing to disk. | Convert an in‑memory Excel byte array to another format (e.g., PDF, CSV) by opening it with a MemoryStream. | Validate the worksheet name of a byte‑array Excel payload before further business logic.
+// AI Prompts: Provide C# code that opens an Excel workbook from a byte[] with Aspose.Cells, changes cell B2 on the second sheet, and returns the modified file as a byte array. | Generate a method that accepts a byte[] Excel file, reads the first worksheet name using Aspose.Cells, and logs it. | Explain best practices for handling large Excel files when loading them from a byte array with Aspose.Cells to minimize memory consumption.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsDemo
 {
+    // Demonstrates how to read an XLSX file into a byte array, wrap it in a MemoryStream, instantiate a Workbook from the stream, read the first worksheet name, and save the workbook to a new file with Aspose.Cells for .NET.
     public class OpenWorkbookFromByteArrayDemo
     {
         public static void Run()
         {
             try
             {
-                // Obtain a byte array that contains an Excel file.
-                byte[] excelBytes = GetSampleExcelBytes();
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Wrap the byte array in a MemoryStream.
-                using (MemoryStream memoryStream = new MemoryStream(excelBytes))
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    // Ensure the stream is positioned at the beginning.
-                    memoryStream.Position = 0;
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
 
-                    // Load the workbook from the stream.
-                    Workbook workbook = new Workbook(memoryStream);
+                // Load Excel file bytes
+                byte[] excelData = File.ReadAllBytes(inputPath);
 
-                    // Access the first worksheet and read a cell value.
+                // Wrap the byte array in a MemoryStream
+                using (MemoryStream stream = new MemoryStream(excelData))
+                {
+                    // Open the workbook from the stream
+                    Workbook workbook = new Workbook(stream);
+
+                    // Access the first worksheet
                     Worksheet sheet = workbook.Worksheets[0];
-                    Console.WriteLine("Cell A1 value: " + sheet.Cells["A1"].StringValue);
+                    Console.WriteLine($"First worksheet name: {sheet.Name}");
 
-                    // Save the loaded workbook to a new file.
-                    string outputPath = "LoadedFromBytes.xlsx";
+                    // Save the workbook to a new file
                     workbook.Save(outputPath, SaveFormat.Xlsx);
                     Console.WriteLine($"Workbook saved to '{outputPath}'.");
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        private static byte[] GetSampleExcelBytes()
-        {
-            // Create a simple workbook in memory and return its byte representation.
-            using (MemoryStream tempStream = new MemoryStream())
-            {
-                Workbook tempWorkbook = new Workbook();
-                tempWorkbook.Worksheets[0].Cells["A1"].PutValue("Hello from byte array");
-                tempWorkbook.Save(tempStream, SaveFormat.Xlsx);
-                return tempStream.ToArray();
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

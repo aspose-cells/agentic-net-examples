@@ -1,44 +1,39 @@
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-class Program
+public class ConfidentialWatermarkPdf
 {
-    static void Main()
+    public static void Main()
     {
-        // Create a new workbook and add some sample content
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
+
+        // Optional: add some sample data so the PDF has visible content
         sheet.Cells["A1"].PutValue("Sample data for PDF");
 
-        // Define the font for the watermark text
-        RenderingFont font = new RenderingFont("Arial", 36)
-        {
-            Bold = true,
-            Color = Color.Red
-        };
+        // Create a rendering font for the watermark text
+        RenderingFont font = new RenderingFont("Arial", 36);
 
-        // Create a text watermark with the word "CONFIDENTIAL"
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-        {
-            // Center horizontally, align to the bottom of each page
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Bottom,
-            // Slight offset from the bottom edge (optional)
-            OffsetY = 20,
-            // Make the watermark semi‑transparent and overlay on top of content
-            Opacity = 0.3f,
-            IsBackground = false
-        };
+        // Initialize the watermark with the desired text and font
+        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font);
 
-        // Configure PDF save options to use the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
+        // Position the watermark at the bottom‑center of each page
+        watermark.HAlignment = TextAlignmentType.Center;   // horizontal center
+        watermark.VAlignment = TextAlignmentType.Bottom;   // vertical bottom
 
-        // Save the workbook as a PDF with the watermark applied to every page
-        workbook.Save("ConfidentialBottom.pdf", pdfOptions);
+        // Adjust appearance: no rotation, light opacity, full page scaling
+        watermark.Rotation = 0f;
+        watermark.Opacity = 0.2f;               // 20 % opacity
+        watermark.ScaleToPagePercent = 100;    // scale to page size
+
+        // Attach the watermark to PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.Watermark = watermark;
+
+        // Save the workbook as a PDF with the watermark applied
+        workbook.Save("Confidential.pdf", pdfOptions);
     }
 }
+// Author: Aspose.Cells .NET example – adds a cross‑string “CONFIDENTIAL” watermark at the bottom of each PDF page.

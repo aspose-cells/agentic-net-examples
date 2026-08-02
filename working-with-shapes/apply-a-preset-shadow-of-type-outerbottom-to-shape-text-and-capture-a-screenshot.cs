@@ -1,10 +1,17 @@
+// Title: Apply Outer Bottom Preset Shadow to Shape Text and Export as PNG – Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, inserts a rectangle auto‑shape with the text "Shadow Demo", sets the text's shadow to the OffsetBottom preset, saves the file, and renders the shape to a PNG image using Shape.ToImage with custom image options.
+// Keywords: Aspose.Cells C# shape shadow | PresetShadowType.OffsetBottom | shape to PNG | Shape.ToImage example | auto shape rectangle Aspose.Cells
+// Common Searches: Aspose.Cells add outer bottom shadow to shape text | C# capture shape as PNG with Aspose.Cells | How to use Shape.ToImage in Aspose.Cells | PresetShadowType OffsetBottom sample code
+// Developer Intent: Add an outer‑bottom preset shadow to a shape’s text and generate a PNG screenshot of that shape using Aspose.Cells for .NET.
+// Use Cases: Produce diagram assets with shadowed labels for documentation or slide decks. | Create thumbnail previews of styled shapes for a reporting dashboard. | Automate generation of branded graphics where visual effects are applied before exporting as image files.
+// AI Prompts: Show how to change the preset shadow to OffsetTop and export the shape as a JPEG with Aspose.Cells. | Provide code that captures screenshots of every shape on a worksheet and merges them into one image. | Explain how to adjust shadow offset, blur radius, and color for shape text in Aspose.Cells for .NET.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
-using Aspose.Cells.Rendering;   // Required for ImageOrPrintOptions
+using Aspose.Cells.Rendering;
 
+// Creates a workbook, inserts a rectangle auto‑shape with the text "Shadow Demo", sets the text's shadow to the OffsetBottom preset, saves the file, and renders the shape to a PNG image using Shape.ToImage with custom image options.
 class Program
 {
     static void Main()
@@ -15,37 +22,26 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape with specified size and position
-            Shape shape = sheet.Shapes.AddAutoShape(
-                AutoShapeType.Rectangle, // shape type
-                4,   // upper left row
-                4,   // top (pixels)
-                4,   // upper left column
-                4,   // left (pixels)
-                200, // height (pixels)
-                100  // width (pixels)
-            );
+            // Add a rectangle shape with some text
+            Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.Rectangle, 2, 2, 2, 2, 200, 100);
+            shape.Text = "Shadow Demo";
 
-            // Set the shape's text
-            shape.Text = "Sample Text";
+            // Apply an outer bottom preset shadow to the shape's text
+            shape.TextOptions.Shadow.PresetType = PresetShadowType.OffsetBottom;
 
-            // Access the text options for the shape's characters
-            FontSetting fontSetting = shape.Characters(0, "Sample Text".Length);
-            TextOptions textOptions = fontSetting.TextOptions;
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("ShadowDemo.xlsx", SaveFormat.Xlsx);
 
-            // Apply an outer bottom shadow (preset type OffsetBottom)
-            textOptions.Shadow.PresetType = PresetShadowType.OffsetBottom;
+            // Set image options for PNG format
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                SaveFormat = SaveFormat.Png,
+                HorizontalResolution = 96,
+                VerticalResolution = 96
+            };
 
-            // Capture a screenshot of the shape and save it as an image file
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // defaults to PNG
-            string imagePath = "shape.png";
-            shape.ToImage(imagePath, imgOptions);
-            Console.WriteLine($"Shape image saved to: {Path.GetFullPath(imagePath)}");
-
-            // Save the workbook to a file
-            string workbookPath = "output.xlsx";
-            workbook.Save(workbookPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
+            // Capture a screenshot of the shape and save it as an image
+            shape.ToImage("ShadowDemoShape.png", imgOptions);
         }
         catch (Exception ex)
         {

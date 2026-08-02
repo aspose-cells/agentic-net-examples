@@ -1,37 +1,67 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class HideYAxisGridlines
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class HideYAxisGridlinesDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+                // Populate sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
 
-        // Insert a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+                // Add a column chart to the worksheet
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
 
-        // Define the chart data range
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+                // Set the chart's data source
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-        // Hide the Y‑axis (value axis) major gridlines for a cleaner look
-        chart.ValueAxis.MajorGridLines.IsVisible = false;
+                // Hide the Y‑axis (value axis) major gridlines for a cleaner look
+                chart.ValueAxis.MajorGridLines.IsVisible = false;
 
-        // Save the workbook to a file
-        workbook.Save("HideYAxisGridlines.xlsx");
+                // Define output file path
+                string outputPath = "HideYAxisGridlinesDemo.xlsx";
+
+                // Ensure any existing file is overwritten safely
+                if (File.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            HideYAxisGridlinesDemo.Run();
+        }
     }
 }

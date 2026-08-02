@@ -1,50 +1,44 @@
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCustomSort
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data: Product Category and Sales
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Electronics");
-            sheet.Cells["A3"].PutValue("Furniture");
-            sheet.Cells["A4"].PutValue("Clothing");
-            sheet.Cells["A5"].PutValue("Books");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["B3"].PutValue(800);
-            sheet.Cells["B4"].PutValue(450);
-            sheet.Cells["B5"].PutValue(300);
+        // Populate sample data: Product Category and Sales
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Sales");
+        worksheet.Cells["A2"].PutValue("Electronics");
+        worksheet.Cells["A3"].PutValue("Furniture");
+        worksheet.Cells["A4"].PutValue("Clothing");
+        worksheet.Cells["B2"].PutValue(1200);
+        worksheet.Cells["B3"].PutValue(800);
+        worksheet.Cells["B4"].PutValue(500);
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIdx];
+        // Add a pivot table based on the data range
+        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-            // Add the Category field to the Row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        // Add the Category field as a row field
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        // Add the Sales field as a data field
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add the Sales field to the Data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+        // Retrieve the Category pivot field
+        PivotField categoryField = pivotTable.RowFields[0];
 
-            // Apply custom descending alphabetical sort to the Category pivot field
-            // -1 indicates sorting by the field's own labels (alphabetical)
-            PivotField categoryField = pivotTable.RowFields[0];
-            categoryField.SortBy(SortOrder.Descending, -1);
+        // Apply descending alphabetical sort (sort by labels, descending)
+        categoryField.SortBy(SortOrder.Descending, -1);
 
-            // Refresh and calculate the pivot table to apply sorting
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+        // Refresh and calculate the pivot table to apply sorting
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-            // Save the workbook
-            workbook.Save("PivotTable_CustomDescendingAlphabeticalSort.xlsx");
-        }
+        // Save the workbook with the sorted pivot table
+        workbook.Save("PivotCategoryDescAlphabetical.xlsx");
     }
 }

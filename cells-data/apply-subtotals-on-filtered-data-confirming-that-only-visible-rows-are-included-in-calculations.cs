@@ -9,50 +9,85 @@ namespace AsposeCellsSubtotalFilteredDataDemo
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate sample data (Header + 8 rows)
-            // Columns: A - Region, B - Sales
+            // Populate sample data with a header row
+            // Columns: Region (A), Product (B), Sales (C)
             cells["A1"].PutValue("Region");
-            cells["B1"].PutValue("Sales");
-            string[] regions = { "North", "South", "North", "East", "South", "West", "North", "East" };
-            int[] sales =   { 5000,   3000,   4500,   2000,   3500,   4000,   2500,   1500 };
+            cells["B1"].PutValue("Product");
+            cells["C1"].PutValue("Sales");
 
-            for (int i = 0; i < regions.Length; i++)
+            object[,] data = new object[,]
             {
-                cells[i + 1, 0].PutValue(regions[i]);   // Column A
-                cells[i + 1, 1].PutValue(sales[i]);    // Column B
+                {"North", "Widget", 5000},
+                {"North", "Gadget", 3000},
+                {"South", "Widget", 6000},
+                {"South", "Gadget", 4000},
+                {"West",  "Widget", 4500},
+                {"West",  "Gadget", 3500}
+            };
+
+            // Fill data starting from row 2 (zero‑based index 1)
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                cells[i + 1, 0].PutValue(data[i, 0]); // Region
+                cells[i + 1, 1].PutValue(data[i, 1]); // Product
+                cells[i + 1, 2].PutValue(data[i, 2]); // Sales
             }
 
-            // Apply an AutoFilter on the Region column (A)
-            sheet.AutoFilter.Range = "A1:B9";
+            // Apply an AutoFilter on the header row (A1:C1)
+            worksheet.AutoFilter.Range = "A1:C1";
 
             // Filter to show only rows where Region = "North"
-            sheet.AutoFilter.AddFilter(0, "North");
-            // Refresh the filter – hidden rows will be marked as hidden
-            sheet.AutoFilter.Refresh();
+            // Column index 0 corresponds to "Region"
+            worksheet.AutoFilter.AddFilter(0, "North");
+            // Refresh the filter to hide non‑matching rows
+            worksheet.AutoFilter.Refresh();
 
-            // Define the cell area that contains the data (including header)
-            CellArea area = CellArea.CreateCellArea("A1", "B9");
+            // Verify which rows are hidden (for demonstration)
+            Console.WriteLine("Row visibility after filter:");
+            for (int row = 1; row <= data.GetLength(0); row++)
+            {
+                bool hidden = cells.IsRowHidden(row);
+                Console.WriteLine($"Row {row + 1} hidden: {hidden}");
+            }
+
+            // Define the cell area that includes the header and all data rows
+            // StartRow = 0, StartColumn = 0 (A1), EndRow = data rows count + 1, EndColumn = 2 (C)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = data.GetLength(0), // includes header row
+                EndColumn = 2
+            };
 
             // Add subtotals:
-            // - Group by the first column (Region)
-            // - Use SUM function on the Sales column (index 1)
+            // - Group by column 0 (Region)
+            // - Use SUM function
+            // - Subtotal the Sales column (index 2)
             // - Replace existing subtotals, no page breaks, summary placed below data
-            cells.Subtotal(
-                area,
-                0,                                 // groupBy column index (Region)
-                ConsolidationFunction.Sum,         // subtotal function
-                new int[] { 1 },                   // columns to subtotal (Sales)
-                true,                              // replace existing subtotals
-                false,                             // no page breaks between groups
-                true                               // place summary below data
-            );
+            cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 }, true, false, true);
 
-            // Retrieve the subtotal setting to confirm the SummaryBelowData flag
+            // Retrieve the subtotal setting to confirm configuration
             SubtotalSetting setting = cells.RetrieveSubtotalSetting(area);
-            Console.WriteLine("SummaryBelowData flag is set to: " + setting.SummaryBelowData);
+            Console.WriteLine("\nSubtotal Setting:");
+            Console.WriteLine($"GroupBy column index: {setting.GroupBy}");
+            Console.WriteLine($"Function: {setting.SubtotalFunction}");
+            Console.WriteLine($"SummaryBelowData: {setting.SummaryBelowData}");
+            Console.WriteLine($"TotalList column indexes: {string.Join(",", setting.TotalList)}");
+
+            // Compute the sum of visible Sales values manually to confirm that hidden rows are excluded
+            double visibleSum = 0;
+            for (int row = 1; row <= data.GetLength(0); row++)
+            {
+                if (!cells.IsRowHidden(row))
+                {
+                    visibleSum += Convert.ToDouble(cells[row, 2].Value);
+                }
+            }
+            Console.WriteLine($"\nManual sum of visible Sales rows: {visibleSum}");
 
             // Save the workbook
             workbook.Save("SubtotalFilteredDataDemo.xlsx");

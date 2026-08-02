@@ -1,8 +1,7 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-class CustomPdfMarginDemo
+class Program
 {
     static void Main()
     {
@@ -10,27 +9,22 @@ class CustomPdfMarginDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add some sample data to visualize the margins
-        sheet.Cells["A1"].PutValue("Custom PDF Margin Demo");
-        sheet.Cells["A2"].PutValue("Left, Right, Top, Bottom margins are set via PageSetup.");
+        // Sample data (optional)
+        sheet.Cells["A1"].PutValue("Custom Page Margin Demo");
+        sheet.Cells["A2"].PutValue("Margins are set via PageSetup properties.");
 
-        // Set custom page margins (values are in centimeters)
-        // Example: 2 cm left, 2 cm right, 3 cm top, 1.5 cm bottom
-        sheet.PageSetup.LeftMargin = 2.0;
-        sheet.PageSetup.RightMargin = 2.0;
-        sheet.PageSetup.TopMargin = 3.0;
-        sheet.PageSetup.BottomMargin = 1.5;
+        // Set custom page margins (values are in inches)
+        sheet.PageSetup.LeftMargin   = 0.5; // left margin
+        sheet.PageSetup.RightMargin  = 0.5; // right margin
+        sheet.PageSetup.TopMargin    = 1.0; // top margin
+        sheet.PageSetup.BottomMargin = 1.0; // bottom margin
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Create PdfSaveOptions to control PDF saving
+        PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-        // (Optional) Set additional options, e.g., optimize for minimum size
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-        // Save the workbook as PDF with the custom margin settings
-        string outputPath = "CustomMarginsDemo.pdf";
-        workbook.Save(outputPath, pdfOptions);
-
-        Console.WriteLine($"PDF saved to '{outputPath}' with custom page margins.");
+        // Save the workbook as PDF using the custom margin settings
+        workbook.Save("CustomMargins.pdf", saveOptions);
     }
 }
+
+// Author: Aspose.Cells .NET example demonstrating custom PDF page margins.

@@ -1,39 +1,36 @@
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedRangeHiddenSheet
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Add a worksheet that will be used for internal calculations
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
+        // Add a hidden worksheet that will hold internal data
+        Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenData");
+        hiddenSheet.IsVisible = false; // Hide the worksheet
 
-            // Hide the worksheet so it is not visible to end users
-            hiddenSheet.IsVisible = false;
+        // Populate the hidden worksheet with some values
+        hiddenSheet.Cells["A1"].PutValue(10);
+        hiddenSheet.Cells["A2"].PutValue(20);
+        hiddenSheet.Cells["A3"].PutValue(30);
 
-            // Populate some sample data on the hidden sheet (range A1:B5)
-            for (int row = 0; row < 5; row++)
-            {
-                hiddenSheet.Cells[row, 0].PutValue(row + 1);          // Column A
-                hiddenSheet.Cells[row, 1].PutValue((row + 1) * 10);   // Column B
-            }
+        // Add a visible worksheet for user interaction (optional)
+        Worksheet mainSheet = workbook.Worksheets[0];
+        mainSheet.Name = "Main";
 
-            // Create a named range that refers to the range on the hidden worksheet
-            int nameIndex = workbook.Worksheets.Names.Add("CalcRange");
-            Name calcRange = workbook.Worksheets.Names[nameIndex];
-            // The RefersTo formula must start with an equal sign
-            calcRange.RefersTo = $"=HiddenSheet!$A$1:$B$5";
+        // Create a named range that refers to the range on the hidden worksheet
+        int nameIndex = workbook.Worksheets.Names.Add("CalcRange");
+        Name calcRange = workbook.Worksheets.Names[nameIndex];
+        calcRange.RefersTo = "=HiddenData!$A$1:$A$3"; // Reference must start with '='
+        calcRange.IsVisible = false; // Keep the name hidden as well (optional)
 
-            // Optionally make the name itself invisible (not shown in Name Manager)
-            calcRange.IsVisible = false;
+        // Use the named range in a formula on the visible sheet
+        mainSheet.Cells["B1"].Formula = "=SUM(CalcRange)";
+        workbook.CalculateFormula();
 
-            // Save the workbook to a file
-            workbook.Save("WorkbookWithHiddenNamedRange.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("HiddenNamedRange.xlsx");
     }
 }

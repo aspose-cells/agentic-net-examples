@@ -1,105 +1,86 @@
+// Title: C# Utility to Apply Paragraph Formatting and Auto‑Fit Shapes with Aspose.Cells
+// Description: Reusable C# method that loops through all TextParagraph objects in a Shape’s TextBody, sets line spacing, alignment, margins, first‑line indent, and spacing before/after, then calls FitToTextSize to resize the shape. Includes a full example that creates a workbook, adds a text box, applies the formatting, and saves the file.
+// Keywords: Aspose.Cells shape formatting | C# paragraph formatting Aspose.Cells | FitToTextSize Aspose.Cells | text box line spacing .NET | shape margins Aspose.Cells | Excel shape paragraph style | Aspose.Cells TextParagraph API | C# Excel shape utilities
+// Common Searches: Aspose.Cells set paragraph line spacing in a shape | center text inside a text box using Aspose.Cells .NET | auto resize shape to fit text Aspose.Cells | apply left and right margins to shape paragraphs Aspose.Cells | custom paragraph formatting for Excel shapes C#
+// Developer Intent: The developer wants a simple, reusable way to apply consistent paragraph styling to any shape’s text body and have the shape automatically adjust its size to the formatted content.
+// Use Cases: Standardize multi‑paragraph text boxes in automatically generated Excel reports. | Apply uniform paragraph styles to shapes used as comments, annotations, or callouts across worksheets. | Maintain layout integrity by auto‑resizing shapes after paragraph formatting changes.
+// AI Prompts: Generate a C# method that sets line spacing, alignment, margins, first‑line indent, and spacing before/after for all paragraphs in an Aspose.Cells Shape and then calls FitToTextSize. | Show how to refactor the utility to accept custom formatting parameters (e.g., spacing, alignment, margins) instead of hard‑coded values. | Provide sample code that creates a workbook, adds a text box shape, invokes the formatting utility, and saves the workbook.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsDemo
+// Reusable C# method that loops through all TextParagraph objects in a Shape’s TextBody, sets line spacing, alignment, margins, first‑line indent, and spacing before/after, then calls FitToTextSize to resize the shape. Includes a full example that creates a workbook, adds a text box, applies the formatting, and saves the file.
+public static class ShapeFormattingUtility
 {
-    public static class ShapeFormattingUtility
+    // Applies predefined paragraph formatting to the given shape.
+    public static void ApplyParagraphFormatting(Shape shape)
     {
-        /// <summary>
-        /// Applies predefined paragraph formatting to all paragraphs of the given shape.
-        /// </summary>
-        /// <param name="shape">The shape whose text paragraphs will be formatted.</param>
-        public static void ApplyParagraphFormatting(Shape shape)
+        if (shape == null) return;
+
+        // Iterate through all paragraphs in the shape's text body.
+        foreach (TextParagraph paragraph in shape.TextBody.TextParagraphs)
         {
-            try
-            {
-                // Ensure the shape contains a text body.
-                if (shape?.TextBody?.TextParagraphs == null)
-                    return;
+            // Set line spacing to 20 points.
+            paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
+            paragraph.LineSpace = 20;
 
-                foreach (TextParagraph paragraph in shape.TextBody.TextParagraphs)
-                {
-                    // Center alignment.
-                    paragraph.AlignmentType = TextAlignmentType.Center;
+            // Center align the paragraph.
+            paragraph.AlignmentType = TextAlignmentType.Center;
 
-                    // Line spacing (15 points).
-                    paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-                    paragraph.LineSpace = 15;
+            // Set left and right margins.
+            paragraph.LeftMargin = 5;
+            paragraph.RightMargin = 5;
 
-                    // Left and right margins (5 points each).
-                    paragraph.LeftMargin = 5;
-                    paragraph.RightMargin = 5;
+            // Set first line indent.
+            paragraph.FirstLineIndent = 10;
 
-                    // Space before and after (8 points each). 
-                    // The default size type is Points, so explicit enum assignment is unnecessary.
-                    paragraph.SpaceBefore = 8;
-                    paragraph.SpaceAfter = 8;
+            // Set space before and after the paragraph (default unit is points).
+            paragraph.SpaceBefore = 5;
+            paragraph.SpaceAfter = 5;
+        }
 
-                    // First line indent (10 points).
-                    paragraph.FirstLineIndent = 10;
-                }
+        // Adjust the shape size to fit the new formatting.
+        shape.FitToTextSize();
+    }
+}
 
-                // Recalculate the shape's text layout after formatting.
-                shape.CalculateTextSize();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error while applying paragraph formatting: {ex.Message}");
-            }
+// Example usage of the utility method.
+public class Example
+{
+    public static void Run()
+    {
+        try
+        {
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Add a text box shape to the worksheet.
+            int textBoxIndex = worksheet.TextBoxes.Add(10, 10, 200, 100);
+            TextBox textBox = worksheet.TextBoxes[textBoxIndex];
+            textBox.Text = "First paragraph\nSecond paragraph";
+
+            // Apply predefined paragraph formatting to the text box.
+            ShapeFormattingUtility.ApplyParagraphFormatting(textBox);
+
+            // Save the workbook.
+            workbook.Save("FormattedShape.xlsx");
+            Console.WriteLine("Workbook saved successfully as FormattedShape.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
+}
 
-    internal class Program
+// Entry point for the application.
+public class Program
+{
+    public static void Main(string[] args)
     {
-        private static void Main()
-        {
-            const string inputPath = "Template.xlsx";
-            const string outputPath = "Formatted.xlsx";
-
-            try
-            {
-                // Verify that the input file exists.
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook.
-                var workbook = new Workbook(inputPath);
-                var worksheet = workbook.Worksheets[0];
-
-                // Find the first shape that contains a text body.
-                Shape targetShape = null;
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape.TextBody != null)
-                    {
-                        targetShape = shape;
-                        break;
-                    }
-                }
-
-                if (targetShape == null)
-                {
-                    Console.WriteLine("No shape with a text body was found in the worksheet.");
-                    return;
-                }
-
-                // Apply paragraph formatting to the shape.
-                ShapeFormattingUtility.ApplyParagraphFormatting(targetShape);
-
-                // Save the modified workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Runtime error: {ex.Message}");
-            }
-        }
+        Example.Run();
     }
 }

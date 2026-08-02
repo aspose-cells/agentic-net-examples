@@ -2,65 +2,50 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace Demo
+namespace AsposeCellsPivotRefreshDemo
 {
-    public class RefreshPivotTableDemo
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate source data for the pivot table
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(200);
-                sheet.Cells["A4"].PutValue("A");
-                sheet.Cells["B4"].PutValue(150);
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(850);
+            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["B4"].PutValue(300);
+            sheet.Cells["A5"].PutValue("Banana");
+            sheet.Cells["B5"].PutValue(400);
 
-                // Add a pivot table based on the source range A1:B4, placed at E3
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Add a pivot table based on the data range A1:B5, place it at E3
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "E3", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Configure the pivot table: Product as row field, Sales as data field
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);
+            // Configure the pivot table: Product as row field, Sales as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Initial calculation of the pivot table
-                pivot.CalculateData();
+            // Initial calculation to populate the pivot table
+            pivotTable.CalculateData();
 
-                // Modify the source data after the initial calculation
-                sheet.Cells["B2"].PutValue(120); // Updated sales for product A
-                sheet.Cells["B3"].PutValue(250); // Updated sales for product B
+            // Modify the source data (e.g., change a sales value)
+            sheet.Cells["B2"].PutValue(1500); // Updated sales for Apple
 
-                // Refresh the pivot cache to reflect the changed source data
-                pivot.RefreshData();
+            // Refresh the pivot table data from the modified source range
+            pivotTable.RefreshData();
 
-                // Recalculate the pivot table after refreshing the data
-                pivot.CalculateData();
+            // Recalculate the pivot table after refresh
+            pivotTable.CalculateData();
 
-                // Save the workbook with the refreshed pivot table
-                workbook.Save("RefreshPivotTableDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RefreshPivotTableDemo.Run();
+            // Save the workbook to a file
+            workbook.Save("PivotTable_RefreshDemo.xlsx");
         }
     }
 }

@@ -3,50 +3,44 @@ using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-class Program
+class AutoPopulateExample
 {
     static void Main()
     {
-        // ------------------------------------------------------------
-        // 1. Prepare CSV data that exceeds Excel's maximum row limit
-        //    (1,048,576 rows). Here we generate 1,050,000 rows.
-        // ------------------------------------------------------------
-        const int totalRows = 1_050_000;
+        // Generate CSV data that exceeds the maximum rows per worksheet (1,048,576)
+        const int totalRows = 1_050_000; // 1,050,000 rows will force overflow
         var sb = new StringBuilder();
 
-        for (int i = 0; i < totalRows; i++)
+        // Header row
+        sb.AppendLine("Index,Value");
+
+        // Populate rows
+        for (int i = 1; i <= totalRows; i++)
         {
-            // Simple two‑column CSV: Index, Value
-            sb.AppendLine($"Row{i},Value{i}");
+            sb.AppendLine($"{i},Data_{i}");
         }
 
-        // Convert the CSV string to a UTF‑8 byte array
-        byte[] csvBytes = Encoding.UTF8.GetBytes(sb.ToString());
+        // Convert CSV string to a memory stream (UTF‑8 encoding)
+        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
 
-        // ------------------------------------------------------------
-        // 2. Configure TxtLoadOptions to enable auto‑populate (spill)
-        //    to a new worksheet when the current sheet reaches its row limit.
-        // ------------------------------------------------------------
+        // Enable the auto‑populate (spill‑over) feature
         var loadOptions = new TxtLoadOptions
         {
-            ExtendToNextSheet = true   // Enable spilling to the next sheet
+            ExtendToNextSheet = true   // When row limit is hit, data continues on a new sheet
         };
 
-        // ------------------------------------------------------------
-        // 3. Load the CSV data into a Workbook using the options above.
-        // ------------------------------------------------------------
-        using (var stream = new MemoryStream(csvBytes))
+        // Load the CSV data into a workbook using the specified options
+        var workbook = new Workbook(csvStream, loadOptions);
+
+        // Optional: display information about the created workbook
+        Console.WriteLine($"Worksheets created: {workbook.Worksheets.Count}");
+        Console.WriteLine($"Rows in first sheet: {workbook.Worksheets[0].Cells.MaxDataRow + 1}");
+        if (workbook.Worksheets.Count > 1)
         {
-            var workbook = new Workbook(stream, loadOptions);
-
-            // Optional: adjust column widths for better readability
-            workbook.Worksheets[0].AutoFitColumns();
-
-            // ------------------------------------------------------------
-            // 4. Save the resulting workbook. The excess rows will be placed
-            //    in a newly created worksheet (e.g., "Sheet2").
-            // ------------------------------------------------------------
-            workbook.Save("SpillData.xlsx");
+            Console.WriteLine($"Rows in second sheet: {workbook.Worksheets[1].Cells.MaxDataRow + 1}");
         }
+
+        // Save the workbook to an XLSX file
+        workbook.Save("SpillOverResult.xlsx", SaveFormat.Xlsx);
     }
 }

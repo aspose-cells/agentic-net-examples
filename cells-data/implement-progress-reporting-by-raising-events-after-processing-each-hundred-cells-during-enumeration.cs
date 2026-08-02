@@ -4,46 +4,57 @@ using Aspose.Cells;
 
 namespace AsposeCellsProgressDemo
 {
-    // Delegate for progress notification
-    public delegate void ProgressChangedHandler(int processedCells);
+    // Event arguments containing the number of cells processed so far
+    public class CellsProcessedEventArgs : EventArgs
+    {
+        public int ProcessedCount { get; }
 
-    // Handles cell enumeration and raises progress events every 100 cells
+        public CellsProcessedEventArgs(int processedCount)
+        {
+            ProcessedCount = processedCount;
+        }
+    }
+
+    // Processor that enumerates cells and raises an event after each 100 cells
     public class CellProcessor
     {
-        // Event raised after each batch of 100 cells is processed
-        public event ProgressChangedHandler ProgressChanged;
+        // Event raised after each batch of 100 cells
+        public event EventHandler<CellsProcessedEventArgs> CellsBatchProcessed;
 
-        // Enumerates all cells in the worksheet and raises progress events
+        // Helper to invoke the event safely
+        protected virtual void OnCellsBatchProcessed(int count)
+        {
+            CellsBatchProcessed?.Invoke(this, new CellsProcessedEventArgs(count));
+        }
+
+        // Enumerates all cells in the given worksheet and reports progress
         public void ProcessCells(Worksheet worksheet)
         {
             if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
 
-            // Get the cells enumerator
             IEnumerator enumerator = worksheet.Cells.GetEnumerator();
-
-            int processedCount = 0;
+            int processed = 0;
 
             while (enumerator.MoveNext())
             {
-                // Access the current cell (optional processing can be added here)
                 Cell cell = (Cell)enumerator.Current;
-                // Example: just read the value to simulate work
+
+                // Example processing: just read the value (could be any logic)
                 var value = cell.Value;
 
-                processedCount++;
+                processed++;
 
-                // Every 100 cells, raise the progress event
-                if (processedCount % 100 == 0)
+                // Raise event after each 100 cells
+                if (processed % 100 == 0)
                 {
-                    ProgressChanged?.Invoke(processedCount);
+                    OnCellsBatchProcessed(processed);
                 }
             }
 
-            // If the total number of cells is not a multiple of 100,
-            // raise a final event to indicate completion
-            if (processedCount % 100 != 0)
+            // If total cells is not a multiple of 100, raise a final event
+            if (processed % 100 != 0)
             {
-                ProgressChanged?.Invoke(processedCount);
+                OnCellsBatchProcessed(processed);
             }
         }
     }
@@ -52,13 +63,13 @@ namespace AsposeCellsProgressDemo
     {
         static void Main()
         {
-            // Create a new workbook (using the standard Aspose.Cells creation rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate the worksheet with sample data (e.g., 1050 cells)
-            int rows = 35;
-            int cols = 30; // 35 * 30 = 1050 cells
+            // Populate the worksheet with sample data (e.g., 550 cells)
+            int rows = 55;
+            int cols = 10;
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
@@ -69,19 +80,19 @@ namespace AsposeCellsProgressDemo
 
             // Instantiate the processor and subscribe to the progress event
             CellProcessor processor = new CellProcessor();
-            processor.ProgressChanged += OnProgressChanged;
+            processor.CellsBatchProcessed += Processor_CellsBatchProcessed;
 
             // Process cells with progress reporting
             processor.ProcessCells(sheet);
 
-            // Save the workbook (using the standard Aspose.Cells saving rule)
+            // Save the workbook
             workbook.Save("ProgressDemo.xlsx");
         }
 
-        // Event handler that receives progress updates
-        private static void OnProgressChanged(int processedCells)
+        // Event handler that receives progress notifications
+        private static void Processor_CellsBatchProcessed(object sender, CellsProcessedEventArgs e)
         {
-            Console.WriteLine($"Processed {processedCells} cells.");
+            Console.WriteLine($"Processed {e.ProcessedCount} cells.");
         }
     }
 }

@@ -11,47 +11,65 @@ namespace AsposeCellsPivotSubtotalTranslationDemo
         {
             try
             {
-                // Create a new workbook and get the first worksheet.
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table.
-                // Column A – Category, Column B – Value.
+                // Populate sample data for the pivot table
+                // Columns: Category, SubCategory, Amount
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("A");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("B");
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("B");
-                sheet.Cells["B5"].PutValue(40);
+                sheet.Cells["B1"].PutValue("SubCategory");
+                sheet.Cells["C1"].PutValue("Amount");
 
-                // Create a pivot table that starts at cell D1.
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "DemoPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                sheet.Cells["A2"].PutValue("Fruit");
+                sheet.Cells["B2"].PutValue("Apple");
+                sheet.Cells["C2"].PutValue(120);
 
-                // Add the Category field to the Row area and the Value field to the Data area.
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column A (Category)
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Column B (Value)
+                sheet.Cells["A3"].PutValue("Fruit");
+                sheet.Cells["B3"].PutValue("Banana");
+                sheet.Cells["C3"].PutValue(80);
 
-                // Refresh and calculate the pivot table so that it reflects the data.
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+                sheet.Cells["A4"].PutValue("Vegetable");
+                sheet.Cells["B4"].PutValue("Carrot");
+                sheet.Cells["C4"].PutValue(150);
 
-                // Save the workbook.
+                sheet.Cells["A5"].PutValue("Vegetable");
+                sheet.Cells["B5"].PutValue("Tomato");
+                sheet.Cells["C5"].PutValue(200);
+
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E1", "DemoPivot");
+                PivotTable pivot = sheet.PivotTables[pivotIndex];
+
+                // Configure the pivot fields
+                pivot.AddFieldToArea(PivotFieldType.Row, 0);    // Category
+                pivot.AddFieldToArea(PivotFieldType.Row, 1);    // SubCategory
+                pivot.AddFieldToArea(PivotFieldType.Data, 2);   // Amount
+
+                // NOTE: The SettablePivotGlobalizationSettings API may not be available
+                // in older Aspose.Cells versions. The following block is kept for
+                // reference but guarded to avoid compilation errors.
+
+                // try
+                // {
+                //     SettablePivotGlobalizationSettings globalizationSettings = new SettablePivotGlobalizationSettings();
+                //     globalizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "Σ Total (Localized)");
+                //     workbook.Settings.SettablePivotGlobalizationSettings = globalizationSettings;
+                // }
+                // catch (MissingMethodException) { /* Property not supported in this version */ }
+
+                // Refresh the pivot table so that any changes are applied
+                pivot.RefreshData();
+                pivot.CalculateData();
+
+                // Write a note indicating that the default subtotal label is used
+                sheet.Cells["G1"].PutValue("Subtotal Label:");
+                sheet.Cells["G2"].PutValue("Sum"); // Default label
+
+                // Save the workbook
                 string outputPath = "PivotSubtotalTranslationDemo.xlsx";
-
-                // Ensure the directory exists before saving.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {

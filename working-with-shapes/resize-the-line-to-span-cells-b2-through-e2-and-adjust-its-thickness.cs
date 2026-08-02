@@ -1,8 +1,16 @@
+// Title: Resize a Line Shape Across B2:E2 and Set Thickness with Aspose.Cells for .NET
+// Description: Demonstrates adding a LineShape to a workbook, positioning it from cell B2 to E2, adjusting its weight to 2 points, and saving the file using Aspose.Cells for .NET.
+// Keywords: Aspose.Cells line shape | resize line shape | line shape thickness | position line shape cells | C# Aspose.Cells line | Excel shape line weight | horizontal line B2 E2 | Aspose.Cells drawing API | set line weight points | add line shape .NET
+// Common Searches: Aspose.Cells how to resize line shape | set line thickness Aspose.Cells C# | position line shape across cells B2 E2 | add horizontal line in Excel using Aspose.Cells | Aspose.Cells line shape coordinates | change line weight in Aspose.Cells .NET
+// Developer Intent: Resize a line shape to cover cells B2‑E2 and change its weight.
+// Use Cases: Add a separator line across a header row in automated reports | Visually connect two columns in a generated spreadsheet | Emphasize a data range with a bold line in an Excel export | Create a custom chart axis line programmatically
+// AI Prompts: Write C# code that creates a LineShape from C3 to G3 with a 3‑point weight using Aspose.Cells. | Show how to calculate line shape coordinates from dynamic row/column indices in Aspose.Cells for .NET. | Explain converting pixel dimensions to point weight for line shapes in Aspose.Cells. | Provide a method to resize any shape to a given cell range and set its line style with Aspose.Cells.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
+// Demonstrates adding a LineShape to a workbook, positioning it from cell B2 to E2, adjusting its weight to 2 points, and saving the file using Aspose.Cells for .NET.
 class ResizeLineExample
 {
     static void Main()
@@ -13,37 +21,20 @@ class ResizeLineExample
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a line shape with temporary size (will be resized later)
-            // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height (px), width (px)
-            LineShape line = worksheet.Shapes.AddLine(0, 0, 0, 0, 0, 0);
+            // Add a line shape (initial size will be adjusted later)
+            LineShape lineShape = worksheet.Shapes.AddLine(0, 0, 0, 0, 0, 0);
 
-            // Position the line so that it starts at cell B2 and ends at cell E2
-            // Rows and columns are zero‑based: B2 => row 1, column 1; E2 => row 1, column 4
-            line.UpperLeftRow = 1;      // start row (B2)
-            line.UpperLeftColumn = 1;   // start column (B2)
-            line.LowerRightRow = 1;     // end row (E2)
-            line.LowerRightColumn = 4;  // end column (E2)
+            // Position the line to span cells B2 (row 1, column 1) through E2 (row 1, column 4)
+            lineShape.UpperLeftRow = 1;      // B2 row index (zero‑based)
+            lineShape.UpperLeftColumn = 1;   // B column index
+            lineShape.LowerRightRow = 1;     // Same row for a horizontal line
+            lineShape.LowerRightColumn = 4;  // E column index
 
-            // Remove any pixel offsets so the line aligns exactly with the cell borders
-            line.UpperDeltaX = 0;
-            line.UpperDeltaY = 0;
-            line.LowerDeltaX = 0;
-            line.LowerDeltaY = 0;
+            // Adjust the line thickness (weight) in points
+            lineShape.Line.Weight = 2.0f;    // 2 points thickness
 
-            // Adjust the line thickness (weight) – using points for clarity
-            line.Line.Weight = 2.5f;   // 2.5 points thick
-
-            // Define output file path
-            string outputPath = "ResizedLine.xlsx";
-
-            // Ensure the directory exists (optional safety)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Save the workbook with the resized line
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook
+            workbook.Save("ResizedLine.xlsx");
         }
         catch (Exception ex)
         {

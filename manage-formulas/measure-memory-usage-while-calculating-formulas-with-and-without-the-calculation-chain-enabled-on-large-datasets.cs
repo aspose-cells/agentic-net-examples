@@ -1,99 +1,95 @@
+// Title: C# – Measure Aspose.Cells Formula Calculation Memory With and Without Calculation Chain
+// Description: Creates a 5,000‑row, 10‑column workbook of dependent formulas, runs CalculateFormula twice (EnableCalculationChain = false and true), captures GC memory before and after each run, reports the memory delta, and saves both workbooks. Shows the memory impact of the calculation chain on large spreadsheets.
+// Keywords: Aspose.Cells | C# | .NET | memory profiling | formula calculation | EnableCalculationChain | large workbook performance | GC.GetTotalMemory | benchmark | Excel formula chain
+// Common Searches: Aspose.Cells memory usage formula calculation | EnableCalculationChain performance test | C# measure memory before and after CalculateFormula | benchmark Aspose.Cells formula engine | how to profile memory in large Excel workbook using Aspose
+// Developer Intent: The developer wants to compare the memory consumption of Aspose.Cells formula evaluation when the calculation chain is disabled versus enabled on a sizable worksheet.
+// Use Cases: Identify the most memory‑efficient EnableCalculationChain setting for processing massive spreadsheets. | Detect memory leaks by tracking GC usage before and after CalculateFormula in long‑running services. | Evaluate file‑size and performance differences between workbooks saved with and without the calculation chain.
+// AI Prompts: Write a reusable C# method that logs peak memory usage for Aspose.Cells CalculateFormula with a toggle for EnableCalculationChain. | Provide a step‑by‑step guide to benchmark formula calculation memory across different workbook sizes in Aspose.Cells. | Suggest optimization techniques to lower memory consumption when evaluating formulas on large Excel files with Aspose.Cells.
+
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryMeasurement
+namespace FormulaChainMemoryMeasurement
 {
+    // Creates a 5,000‑row, 10‑column workbook of dependent formulas, runs CalculateFormula twice (EnableCalculationChain = false and true), captures GC memory before and after each run, reports the memory delta, and saves both workbooks. Shows the memory impact of the calculation chain on large spreadsheets.
     class Program
     {
         static void Main()
         {
-            // Define size of the test data set
-            const int rows = 5000;   // number of rows
-            const int cols = 10;     // number of columns with formulas
+            try
+            {
+                // Measure memory usage without calculation chain
+                Workbook wbNoChain = CreateWorkbookWithFormulas();
+                wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false;
 
-            // -------------------- Scenario 1: Calculation chain disabled --------------------
-            Workbook wbNoChain = new Workbook();                     // create workbook
-            FillData(wbNoChain, rows, cols);                        // populate with formulas
-            wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false; // disable chain
+                long memoryBeforeNoChain = GC.GetTotalMemory(true);
+                wbNoChain.CalculateFormula();
+                long memoryAfterNoChain = GC.GetTotalMemory(true);
 
-            // Force garbage collection before measurement
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+                Console.WriteLine("=== Calculation Chain Disabled ===");
+                Console.WriteLine($"Memory before calculation: {memoryBeforeNoChain:N0} bytes");
+                Console.WriteLine($"Memory after calculation : {memoryAfterNoChain:N0} bytes");
+                Console.WriteLine($"Memory used by calculation: {memoryAfterNoChain - memoryBeforeNoChain:N0} bytes");
 
-            long memBeforeNoChain = GC.GetTotalMemory(true);        // memory before calculation
-            wbNoChain.CalculateFormula();                           // calculate formulas
-            long memAfterNoChain = GC.GetTotalMemory(true);         // memory after calculation
+                string noChainPath = "WithoutChain.xlsx";
+                wbNoChain.Save(noChainPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(noChainPath)}");
 
-            Console.WriteLine("=== Calculation Chain Disabled ===");
-            Console.WriteLine($"Memory before calculation: {FormatBytes(memBeforeNoChain)}");
-            Console.WriteLine($"Memory after  calculation: {FormatBytes(memAfterNoChain)}");
-            Console.WriteLine($"Memory increase: {FormatBytes(memAfterNoChain - memBeforeNoChain)}");
+                // Measure memory usage with calculation chain
+                Workbook wbWithChain = CreateWorkbookWithFormulas();
+                wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true;
 
-            // Save the workbook (uses the provided save rule)
-            wbNoChain.Save("LargeDataset_NoChain.xlsx");
+                long memoryBeforeWithChain = GC.GetTotalMemory(true);
+                wbWithChain.CalculateFormula();
+                long memoryAfterWithChain = GC.GetTotalMemory(true);
 
-            // -------------------- Scenario 2: Calculation chain enabled --------------------
-            Workbook wbWithChain = new Workbook();                   // create another workbook
-            FillData(wbWithChain, rows, cols);                      // populate with the same data
-            wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true; // enable chain
+                Console.WriteLine("\n=== Calculation Chain Enabled ===");
+                Console.WriteLine($"Memory before calculation: {memoryBeforeWithChain:N0} bytes");
+                Console.WriteLine($"Memory after calculation : {memoryAfterWithChain:N0} bytes");
+                Console.WriteLine($"Memory used by calculation: {memoryAfterWithChain - memoryBeforeWithChain:N0} bytes");
 
-            // Force garbage collection before measurement
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            long memBeforeWithChain = GC.GetTotalMemory(true);      // memory before calculation
-            wbWithChain.CalculateFormula();                         // calculate formulas
-            long memAfterWithChain = GC.GetTotalMemory(true);       // memory after calculation
-
-            Console.WriteLine("\n=== Calculation Chain Enabled ===");
-            Console.WriteLine($"Memory before calculation: {FormatBytes(memBeforeWithChain)}");
-            Console.WriteLine($"Memory after  calculation: {FormatBytes(memAfterWithChain)}");
-            Console.WriteLine($"Memory increase: {FormatBytes(memAfterWithChain - memBeforeWithChain)}");
-
-            // Save the workbook (uses the provided save rule)
-            wbWithChain.Save("LargeDataset_WithChain.xlsx");
+                string withChainPath = "WithChain.xlsx";
+                wbWithChain.Save(withChainPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(withChainPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
-        // Populates the workbook with a large set of inter‑dependent formulas.
-        // Each cell in column B..K contains a formula that adds the value of the cell
-        // to the left plus a constant, creating a long dependency chain.
-        static void FillData(Workbook workbook, int rows, int cols)
+        // Creates a workbook populated with a large number of formulas.
+        // Each cell in column B contains a formula that depends on the cell to its left.
+        private static Workbook CreateWorkbookWithFormulas()
         {
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Initialize first column with numeric values
+            int rows = 5000;   // Adjust for desired dataset size
+            int cols = 10;
+
+            // Fill column A with numeric values
             for (int r = 0; r < rows; r++)
             {
-                cells[r, 0].PutValue(r + 1); // A column
+                cells[r, 0].PutValue(r + 1);
             }
 
-            // Create formulas that depend on the previous column
+            // Create dependent formulas in subsequent columns
             for (int c = 1; c < cols; c++)
             {
+                // Convert previous column index to column letter (e.g., 0 -> "A")
+                string prevColLetter = CellsHelper.ColumnIndexToName(c - 1);
                 for (int r = 0; r < rows; r++)
                 {
-                    // Example formula: =B1+1 (where B is the previous column)
-                    string colLetterPrev = CellsHelper.ColumnIndexToName(c - 1);
-                    string colLetterCurr = CellsHelper.ColumnIndexToName(c);
-                    cells[r, c].Formula = $"={colLetterPrev}{r + 1}+1";
+                    // Formula: =PreviousColumn{row}*1.01
+                    string formula = $"={prevColLetter}{r + 1}*1.01";
+                    cells[r, c].Formula = formula;
                 }
             }
-        }
 
-        // Helper to format byte values into a readable string.
-        static string FormatBytes(long bytes)
-        {
-            const long KB = 1024;
-            const long MB = KB * 1024;
-            const long GB = MB * 1024;
-
-            if (bytes >= GB) return $"{bytes / (double)GB:F2} GB";
-            if (bytes >= MB) return $"{bytes / (double)MB:F2} MB";
-            if (bytes >= KB) return $"{bytes / (double)KB:F2} KB";
-            return $"{bytes} B";
+            return workbook;
         }
     }
 }

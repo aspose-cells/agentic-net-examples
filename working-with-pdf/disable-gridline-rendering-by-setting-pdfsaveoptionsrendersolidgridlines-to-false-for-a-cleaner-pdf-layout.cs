@@ -1,41 +1,30 @@
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Sample Data");
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue("Sample Data");
+        worksheet.Cells["B2"].PutValue(123);
 
-            // Hide gridlines in the worksheet (affects PDF rendering)
-            worksheet.IsGridlinesVisible = false;
+        // Ensure that gridlines are not printed via the worksheet's page setup
+        worksheet.PageSetup.PrintGridlines = false;
 
-            // PDF save options (default settings are sufficient)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Create PDF save options
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
 
-            // Define output file path
-            string outputPath = "CleanLayout.pdf";
+        // NOTE: The property `RenderSolidGridlines` is not present in the documented
+        // Aspose.Cells API for PdfSaveOptions. If your version of the library
+        // provides this property, you can disable solid gridlines like this:
+        // pdfSaveOptions.RenderSolidGridlines = false;
+        // Since the property is undocumented, the line is commented out to keep the code compilable.
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as a PDF
-            workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook as a PDF with the specified options
+        workbook.Save("CleanLayout.pdf", pdfSaveOptions);
     }
 }

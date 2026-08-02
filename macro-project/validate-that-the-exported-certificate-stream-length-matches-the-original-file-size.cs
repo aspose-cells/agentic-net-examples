@@ -1,97 +1,87 @@
+// Title: Validate Exported Certificate Size Against Original PFX in Aspose.Cells (C#)
+// Description: Loads a .pfx certificate, records its byte length, signs an Aspose.Cells workbook, saves it to a MemoryStream, reloads the file, extracts the embedded certificate, and checks that the exported certificate size matches the original file size.
+// Keywords: Aspose.Cells digital signature | C# certificate size validation | exported certificate length | compare PFX byte size | Excel workbook signing | Aspose.Cells certificate export | certificate byte count check
+// Common Searches: Aspose.Cells verify exported certificate size | C# compare original pfx size with signed workbook certificate | digital signature certificate length mismatch Aspose.Cells | how to validate certificate byte count after signing Excel file
+// Developer Intent: Ensure that the certificate extracted from a signed workbook has the identical byte length as the original .pfx file.
+// Use Cases: Sign an Excel workbook with a .pfx certificate using Aspose.Cells. | Persist the signed workbook to a MemoryStream and reload it for verification. | Export the embedded certificate from the loaded workbook and compare its size to the source file. | Log or handle cases where the certificate size does not match, indicating potential corruption.
+// AI Prompts: Write C# code that signs an Aspose.Cells workbook with a .pfx certificate and confirms the exported certificate size equals the original file size. | Create a reusable function that takes a certificate path and a Workbook, applies a digital signature, reloads the workbook, and returns true if the certificate byte count matches. | Explain steps to troubleshoot a size mismatch when validating an exported certificate from a signed Excel file using Aspose.Cells.
+
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.DigitalSignatures;
 
 namespace AsposeCellsCertificateValidation
 {
-    public class CertificateStreamValidator
+    // Loads a .pfx certificate, records its byte length, signs an Aspose.Cells workbook, saves it to a MemoryStream, reloads the file, extracts the embedded certificate, and checks that the exported certificate size matches the original file size.
+    class Program
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main()
         {
             try
             {
                 // Path to the original certificate file (e.g., .pfx)
-                string certificatePath = "test.pfx";
+                string certPath = "certificate.pfx";
 
                 // Ensure the certificate file exists
-                if (!File.Exists(certificatePath))
+                if (!File.Exists(certPath))
                 {
-                    Console.WriteLine($"Certificate file not found: {certificatePath}");
+                    Console.WriteLine($"Certificate file not found: {certPath}");
                     return;
                 }
 
-                // Read the original certificate file into a byte array
-                byte[] originalCertificateBytes = File.ReadAllBytes(certificatePath);
-                long originalFileSize = originalCertificateBytes.Length;
+                // Load the original certificate bytes and get its size
+                byte[] originalCertBytes = File.ReadAllBytes(certPath);
+                long originalSize = originalCertBytes.Length;
+                Console.WriteLine($"Original certificate size: {originalSize} bytes");
 
-                // Export the certificate to a memory stream (simulating an export operation)
-                using (MemoryStream exportedStream = new MemoryStream())
-                {
-                    exportedStream.Write(originalCertificateBytes, 0, originalCertificateBytes.Length);
-                    exportedStream.Flush();
-
-                    long exportedLength = exportedStream.Length;
-                    bool isLengthMatch = exportedLength == originalFileSize;
-
-                    Console.WriteLine($"Original file size: {originalFileSize} bytes");
-                    Console.WriteLine($"Exported stream length: {exportedLength} bytes");
-                    Console.WriteLine($"Length match: {isLengthMatch}");
-                }
-
-                // Create a new workbook and add a digital signature using the certificate data
+                // Create a new workbook and add some data
                 Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Demo for certificate validation");
 
+                // Create a digital signature collection and add a signature using the certificate
                 DigitalSignatureCollection signatures = new DigitalSignatureCollection();
                 DigitalSignature signature = new DigitalSignature(
-                    originalCertificateBytes,   // certificate data
-                    "certificatePassword",     // password for the certificate (if any)
-                    "Demo Signature",          // comments (used as description)
-                    DateTime.Now);             // signing time
-
+                    originalCertBytes,   // certificate data
+                    "certPassword",      // certificate password (if any)
+                    "Demo Signature",    // signature comment
+                    DateTime.Now);       // signing time
                 signatures.Add(signature);
+
+                // Apply the digital signature to the workbook
                 workbook.SetDigitalSignature(signatures);
 
-                // Save the signed workbook to a file
-                string signedWorkbookPath = "signed_workbook.xlsx";
-                workbook.Save(signedWorkbookPath, SaveFormat.Xlsx);
-
-                // Ensure the signed workbook was saved before loading
-                if (!File.Exists(signedWorkbookPath))
+                // Save to a memory stream and reload to verify the signature
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    Console.WriteLine($"Signed workbook not found: {signedWorkbookPath}");
-                    return;
-                }
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    ms.Position = 0; // reset stream position for reading
 
-                // Load the signed workbook and retrieve the signature to verify the certificate length again
-                Workbook loadedWorkbook = new Workbook(signedWorkbookPath);
-                DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
+                    // Load the workbook back from the memory stream
+                    Workbook loadedWorkbook = new Workbook(ms);
 
-                foreach (DigitalSignature loadedSignature in loadedSignatures)
-                {
-                    // Output signature information (comments and signing time)
-                    Console.WriteLine("Signature comments: " + loadedSignature.Comments);
-                    Console.WriteLine("Signature signing time: " + loadedSignature.SignTime);
-                    Console.WriteLine("Assumed certificate length matches original: " +
-                                      (originalCertificateBytes.Length == originalFileSize));
+                    // Retrieve the digital signatures from the loaded workbook
+                    DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
+
+                    // Iterate through signatures and compare certificate sizes
+                    foreach (DigitalSignature loadedSignature in loadedSignatures)
+                    {
+                        // Export the certificate from the loaded signature (PKCS#12 format)
+                        byte[] exportedCertBytes = loadedSignature.Certificate?.Export(X509ContentType.Pkcs12) ?? Array.Empty<byte>();
+                        long exportedSize = exportedCertBytes.Length;
+                        Console.WriteLine($"Exported certificate size: {exportedSize} bytes");
+
+                        // Validate that the exported size matches the original size
+                        bool isSizeMatch = exportedSize == originalSize;
+                        Console.WriteLine($"Size match: {isSizeMatch}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Catch any runtime errors within Run
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

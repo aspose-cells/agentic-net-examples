@@ -5,23 +5,42 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (template)
+        // -------------------------------------------------
+        // 1. Create a new workbook (template) and a worksheet
+        // -------------------------------------------------
         Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Example cell containing a leading apostrophe
-        workbook.Worksheets[0].Cells["A1"].PutValue("'SampleText");
+        // Place a smart marker where the value will be inserted.
+        // The marker references the "Text" property of the data source named "Data".
+        sheet.Cells["A1"].PutValue("&Data.Text");
 
-        // Configure the workbook so that leading apostrophes are treated as literal characters
-        // (i.e., they are kept in the cell value and not applied as QuotePrefix style)
+        // -------------------------------------------------
+        // 2. Configure the workbook to keep leading apostrophes
+        //    as literal characters (not as formatting).
+        // -------------------------------------------------
+        // When QuotePrefixToStyle is false, a leading single quote is stored
+        // as part of the cell value instead of being treated as a style flag.
         workbook.Settings.QuotePrefixToStyle = false;
 
-        // Initialize the WorkbookDesigner with the prepared workbook
+        // -------------------------------------------------
+        // 3. Prepare a data source that contains a leading apostrophe
+        // -------------------------------------------------
+        var dataSource = new
+        {
+            Text = "'Value that starts with an apostrophe"
+        };
+
+        // -------------------------------------------------
+        // 4. Initialise WorkbookDesigner, bind the data source and process
+        // -------------------------------------------------
         WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource("Data", dataSource);
+        designer.Process(); // populate the smart marker
 
-        // Process any smart markers (none in this simple example)
-        designer.Process();
-
-        // Save the workbook; the cell will retain the leading apostrophe as part of its value
-        workbook.Save("Output.xlsx");
+        // -------------------------------------------------
+        // 5. Save the resulting workbook
+        // -------------------------------------------------
+        workbook.Save("Result.xlsx");
     }
 }

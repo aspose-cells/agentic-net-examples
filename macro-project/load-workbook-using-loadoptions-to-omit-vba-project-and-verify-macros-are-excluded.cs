@@ -1,56 +1,31 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMacroOmitDemo
+class LoadWorkbookWithoutMacro
 {
-    // Custom load filter that loads everything except VBA projects
-    class NoVbaLoadFilter : LoadFilter
+    static void Main()
+    {
+        // Configure LoadOptions to exclude VBA projects
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.LoadFilter = new CustomLoadFilter();
+
+        // Load a macro‑enabled workbook with the specified options
+        Workbook workbook = new Workbook("sample.xlsm", loadOptions);
+
+        // Verify that macros are not present after loading
+        Console.WriteLine("HasMacro after load: " + workbook.HasMacro);
+
+        // Save the workbook as a macro‑free file (optional)
+        workbook.Save("sample_no_macro.xlsx", SaveFormat.Xlsx);
+    }
+
+    // Custom LoadFilter that loads only the workbook structure, omitting VBA
+    private class CustomLoadFilter : LoadFilter
     {
         public override void StartSheet(Worksheet sheet)
         {
-            // Load all data but exclude VBA (bitwise remove VBA flag)
-            LoadDataFilterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.VBA;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to a macro‑enabled workbook (e.g., .xlsm) that contains VBA code
-            string inputPath = "sample_with_macro.xlsm";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            try
-            {
-                // Configure load options to use the custom filter that skips VBA
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    LoadFilter = new NoVbaLoadFilter()
-                };
-
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Verify that macros have been omitted
-                Console.WriteLine("HasMacro after load with filter: " + workbook.HasMacro); // Expected: False
-
-                // Optionally save the macro‑free workbook
-                string outputPath = "macro_free.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine("Macro‑free workbook saved to: " + outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Load only the structural information; VBA (macro) data is excluded
+            LoadDataFilterOptions = LoadDataFilterOptions.Structure;
         }
     }
 }

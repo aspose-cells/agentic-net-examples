@@ -1,10 +1,18 @@
+// Title: Render a PivotTable Timeline with a Pie Chart (percentage labels, custom font) and export as PNG using Aspose.Cells for .NET
+// Description: Creates a workbook, adds category, value and date data, builds a PivotTable with a date page filter, inserts a Timeline linked to that PivotTable, draws a Pie chart that shows only percentages with a 14‑point font, and saves the worksheet (timeline + chart) as a PNG image.
+// Keywords: Aspose.Cells | .NET | C# | timeline | pivot table | pie chart | percentage data labels | custom label font | export PNG | chart image generation
+// Common Searches: Aspose.Cells add timeline to pivot table and save as PNG | C# pie chart show only percentages Aspose.Cells | change data label font size in Aspose.Cells chart | export worksheet with timeline and chart to image | how to create timeline slicer in Aspose.Cells .NET
+// Developer Intent: Generate a worksheet that combines a PivotTable‑driven timeline and a pie chart with percentage‑only labels at a specific font size, then output the result as a PNG file.
+// Use Cases: Build an interactive sales dashboard where the timeline filters data and the pie chart visualizes category share with clear percentage labels. | Create printable PNG snapshots of analysis reports that include both a timeline slicer and a chart for slide decks. | Automate email attachments that contain a single image summarizing pivot‑filtered data and its distribution.
+// AI Prompts: Write C# code with Aspose.Cells to add a timeline linked to a pivot table and export the sheet as a PNG image. | Show how to configure a pie chart in Aspose.Cells so data labels display only percentages and use a 14‑point font. | Explain how to position a timeline and a chart on the same worksheet before rendering them to an image.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 
+// Creates a workbook, adds category, value and date data, builds a PivotTable with a date page filter, inserts a Timeline linked to that PivotTable, draws a Pie chart that shows only percentages with a 14‑point font, and saves the worksheet (timeline + chart) as a PNG image.
 class Program
 {
     static void Main()
@@ -13,64 +21,68 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate worksheet with sample data (dates, categories, amounts)
-            cells["A1"].PutValue("Date");
-            cells["B1"].PutValue("Category");
-            cells["C1"].PutValue("Amount");
+            // Populate sample data (used for both the chart and the pivot table)
+            cells["A1"].PutValue("Category");
+            cells["A2"].PutValue("A");
+            cells["A3"].PutValue("B");
+            cells["A4"].PutValue("C");
 
-            // Define a style for date cells (m/d/yyyy)
-            Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14; // Built‑in date format
+            cells["B1"].PutValue("Value");
+            cells["B2"].PutValue(10);
+            cells["B3"].PutValue(20);
+            cells["B4"].PutValue(30);
 
-            DateTime baseDate = new DateTime(2023, 1, 1);
-            for (int i = 0; i < 5; i++)
-            {
-                cells[1 + i, 0].PutValue(baseDate.AddMonths(i)); // Date
-                cells[1 + i, 0].SetStyle(dateStyle);            // Apply date format
-                cells[1 + i, 1].PutValue("Item " + (i + 1));    // Category
-                cells[1 + i, 2].PutValue((i + 1) * 10);         // Amount
-            }
+            // Add a Date column required for the Timeline (must be a date/time field)
+            cells["C1"].PutValue("Date");
+            cells["C2"].PutValue(new DateTime(2023, 1, 1));
+            cells["C3"].PutValue(new DateTime(2023, 2, 1));
+            cells["C4"].PutValue(new DateTime(2023, 3, 1));
 
-            // Create a pivot table based on the data
-            PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIndex = pivots.Add("A1:C6", "E1", "PivotTable1");
+            // -------------------------------------------------
+            // Create a PivotTable – required as a data source for the Timeline
+            // -------------------------------------------------
+            PivotTableCollection pivots = worksheet.PivotTables;
+            int pivotIndex = pivots.Add("A1:C4", "D1", "PivotTable");
             PivotTable pivot = pivots[pivotIndex];
 
-            // Configure pivot fields
-            pivot.AddFieldToArea(PivotFieldType.Page, "Date");      // Required for Timeline
+            // Row field: Category
             pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+            // Data field: Value
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+            // Page (filter) field: Date (required for Timeline)
+            pivot.AddFieldToArea(PivotFieldType.Page, "Date");
+
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Add a Timeline control linked to the pivot table (Date field)
-            sheet.Timelines.Add(pivot, 12, 0, "Date");
+            // -------------------------------------------------
+            // Add a Timeline linked to the PivotTable (Date)
+            // -------------------------------------------------
+            worksheet.Timelines.Add(pivot, 10, 5, "Date");
 
-            // Add a pie chart that will display percentages in data labels
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 20, 0, 35, 15);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("C2:C6", true);
-            chart.NSeries.CategoryData = "A2:A6";
+            // -------------------------------------------------
+            // Add a Pie chart and configure data labels
+            // -------------------------------------------------
+            int chartIndex = worksheet.Charts.Add(ChartType.Pie, 5, 0, 15, 8);
+            Chart chart = worksheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Enable data labels and configure them to show percentages
+            // Enable data labels, show percentages, hide raw values
             DataLabels dataLabels = chart.NSeries[0].DataLabels;
-            dataLabels.ShowPercentage = true;   // display percentage values
-            dataLabels.ShowValue = false;       // hide raw values
-            dataLabels.Font.Size = 14;          // set desired font size
-            dataLabels.ApplyFont();             // apply the font settings to all labels
+            dataLabels.ShowPercentage = true;
+            dataLabels.ShowValue = false;
 
-            // Ensure output directory exists
-            string outputPath = "TimelineChart.png";
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
+            // Adjust the font size of the data labels
+            dataLabels.Font.Size = 14;
 
-            // Render the worksheet (including the timeline and chart) to a PNG image
-            workbook.Save(outputPath, SaveFormat.Png);
+            // -------------------------------------------------
+            // Save the worksheet (including the Timeline and chart) as a PNG image
+            // -------------------------------------------------
+            workbook.Save("TimelineChart.png", SaveFormat.Png);
         }
         catch (Exception ex)
         {

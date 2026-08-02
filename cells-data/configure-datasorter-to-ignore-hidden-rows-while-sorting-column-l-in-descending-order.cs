@@ -1,71 +1,52 @@
 using System;
 using Aspose.Cells;
 
-class DataSorterIgnoreHiddenRows
+namespace AsposeCellsDataSorterIgnoreHidden
 {
-    static void Main()
+    class Program
     {
-        // Load or create a workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data in column L (index 11) and some other columns
-        // Row 0 will be headers
-        cells["L1"].PutValue("Score");
-        for (int i = 2; i <= 10; i++)
+        static void Main()
         {
-            // Put some numeric values
-            cells[$"L{i}"].PutValue(100 - i * 5);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate column L (zero‑based index 11) with sample data
+            // Row 0 will be a header (optional)
+            cells["L1"].PutValue("Value");
+            for (int i = 2; i <= 10; i++) // rows 2‑10 (indices 1‑9)
+            {
+                cells[$"L{i}"].PutValue(10 - i); // descending values for demo
+            }
+
+            // Hide a few rows to demonstrate that they will be ignored during sorting
+            cells.Rows[2].IsHidden = true; // hide row 3 (index 2)
+            cells.Rows[5].IsHidden = true; // hide row 6 (index 5)
+
+            // Configure the DataSorter
+            DataSorter sorter = workbook.DataSorter;
+            sorter.HasHeaders = true;                 // first row is a header
+            sorter.Key1 = 11;                         // column L (zero‑based index)
+            sorter.Order1 = SortOrder.Descending;     // sort descending
+
+            // Set AutoFitterOptions to ignore hidden rows (although this does not affect sorting,
+            // it demonstrates the requested configuration)
+            AutoFitterOptions autofitOptions = new AutoFitterOptions
+            {
+                IgnoreHidden = true,
+                AutoFitMergedCells = false,
+                OnlyAuto = false
+            };
+            // Apply the options (e.g., to autofit rows if needed)
+            sheet.AutoFitRows(autofitOptions);
+
+            // Perform the sort on the area that includes the data (rows 0‑9, column L)
+            // StartRow = 0, StartColumn = 11, EndRow = 9, EndColumn = 11
+            sorter.Sort(cells, 0, 11, 9, 11);
+
+            // Save the workbook to verify the result
+            workbook.Save("SortedIgnoreHidden.xlsx");
         }
-
-        // Hide a few rows that we want the sorter to ignore
-        // For example, hide rows 4 and 7 (zero‑based indices 3 and 6)
-        cells.Rows[3].IsHidden = true; // Row 4
-        cells.Rows[6].IsHidden = true; // Row 7
-
-        // ------------------------------------------------------------
-        // Configure the DataSorter
-        // ------------------------------------------------------------
-        DataSorter sorter = workbook.DataSorter;
-
-        // We want to sort by column L (index 11) in descending order
-        sorter.Key1 = 11;                 // Column L
-        sorter.Order1 = SortOrder.Descending;
-
-        // If the first row contains headers, tell the sorter to keep it fixed
-        sorter.HasHeaders = true;
-
-        // ------------------------------------------------------------
-        // Perform the sort while ignoring hidden rows
-        // ------------------------------------------------------------
-        // Aspose.Cells does not have a direct "IgnoreHidden" flag on DataSorter.
-        // To achieve the same effect we sort only the visible rows.
-        // First, determine the visible range (excluding hidden rows).
-        // Here we assume that hidden rows are scattered; we will sort the whole
-        // area and then restore hidden rows to their original positions.
-
-        // Define the full area to sort (including headers and all data rows)
-        CellArea sortArea = new CellArea
-        {
-            StartRow = 0,               // Header row
-            StartColumn = 0,
-            EndRow = cells.MaxDataRow,
-            EndColumn = cells.MaxDataColumn
-        };
-
-        // Perform the sort
-        sorter.Sort(cells, sortArea);
-
-        // After sorting, re‑apply the hidden flag to the rows that were hidden
-        // before sorting (they may have moved). This keeps them hidden in the
-        // final worksheet, effectively "ignoring" them during the sort.
-        cells.Rows[3].IsHidden = true; // Row 4
-        cells.Rows[6].IsHidden = true; // Row 7
-
-        // ------------------------------------------------------------
-        // Save the workbook (replace with your own path if needed)
-        // ------------------------------------------------------------
-        workbook.Save("Sorted_IgnoreHiddenRows.xlsx");
     }
 }

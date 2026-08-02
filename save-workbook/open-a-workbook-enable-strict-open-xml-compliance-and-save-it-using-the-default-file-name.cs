@@ -5,16 +5,14 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (uses the Workbook() constructor rule)
         Workbook workbook = new Workbook();
 
-        // Enable strict Open XML compliance (ISO/IEC 29500:2008 Strict)
+        // Enable strict Open XML compliance (uses WorkbookSettings.Compliance property)
         workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
 
-        // (Optional) Add a sample value to demonstrate the workbook is usable
-        workbook.Worksheets[0].Cells["A1"].PutValue("Strict compliance enabled");
-
-        // Save the workbook using a default file name
-        workbook.Save("StrictComplianceWorkbook.xlsx");
+        // Define a default file name and save the workbook (uses Workbook.Save(string) method)
+        workbook.FileName = "StrictComplianceWorkbook.xlsx";
+        workbook.Save(workbook.FileName);
     }
 }

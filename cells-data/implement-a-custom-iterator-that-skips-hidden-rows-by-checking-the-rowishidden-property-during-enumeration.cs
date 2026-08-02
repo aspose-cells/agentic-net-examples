@@ -3,14 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
+class VisibleRowEnumerable : IEnumerable<Row>
+{
+    private readonly RowCollection _rows;
+
+    public VisibleRowEnumerable(RowCollection rows)
+    {
+        _rows = rows;
+    }
+
+    public IEnumerator<Row> GetEnumerator()
+    {
+        // Get the default row enumerator
+        IEnumerator enumerator = _rows.GetEnumerator();
+        while (enumerator.MoveNext())
+        {
+            Row row = (Row)enumerator.Current;
+            // Skip hidden rows
+            if (!row.IsHidden)
+            {
+                yield return row;
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
+
 class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
         // Populate sample data in column A
         for (int i = 0; i < 10; i++)
@@ -18,38 +48,20 @@ class Program
             cells[i, 0].PutValue($"Row {i + 1}");
         }
 
-        // Hide a few rows (zero‑based indices)
-        sheet.Cells.HideRow(2); // Hide row 3
-        sheet.Cells.HideRow(6); // Hide row 7
+        // Hide some rows (zero‑based indices)
+        cells.HideRow(1); // Hide row 2
+        cells.HideRow(4); // Hide row 5
+        cells.HideRow(7); // Hide row 8
 
-        // Use the custom iterator to enumerate only visible rows
-        foreach (Row row in GetVisibleRows(sheet))
+        // Iterate only over visible rows using the custom iterator
+        var visibleRows = new VisibleRowEnumerable(worksheet.Cells.Rows);
+        foreach (Row row in visibleRows)
         {
-            // Output the index and first cell value of each visible row
-            Console.WriteLine($"Visible Row Index: {row.Index}, Value: {row[0].StringValue}");
+            // Output the index (1‑based for readability) and first cell value
+            Console.WriteLine($"Visible Row {row.Index + 1}: {row.FirstCell.StringValue}");
         }
 
         // Save the workbook (optional)
-        workbook.Save("HiddenRowsSkipped.xlsx");
-    }
-
-    // Custom iterator that yields rows whose IsHidden property is false
-    static IEnumerable<Row> GetVisibleRows(Worksheet worksheet)
-    {
-        // Obtain the row collection enumerator
-        IEnumerator enumerator = worksheet.Cells.Rows.GetEnumerator();
-
-        // Iterate through all rows in the collection
-        while (enumerator.MoveNext())
-        {
-            Row row = (Row)enumerator.Current;
-
-            // Skip hidden rows
-            if (row.IsHidden)
-                continue;
-
-            // Return visible row
-            yield return row;
-        }
+        workbook.Save("VisibleRowsDemo.xlsx");
     }
 }

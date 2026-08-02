@@ -1,45 +1,34 @@
+// Title: Export a Waterfall Chart to PDF with Aspose.Cells for .NET (C#)
+// Description: Loads "WaterfallChart.xlsx", accesses the first worksheet and its first chart, then uses Aspose.Cells' Chart.ToPdf method to render the Waterfall chart as an embedded image in "WaterfallChart.pdf".
+// Keywords: Aspose.Cells | C# | Waterfall chart | Export chart to PDF | Chart.ToPdf | embed chart image | Excel to PDF conversion | .NET chart export
+// Common Searches: Aspose.Cells export chart to PDF C# | How to save an Excel chart as PDF using Aspose | Waterfall chart PDF conversion Aspose.Cells | Chart.ToPdf example .NET | Convert specific chart to PDF programmatically
+// Developer Intent: Convert a Waterfall chart inside an Excel workbook to a PDF file with the chart rendered as an image.
+// Use Cases: Create a PDF report that contains only the Waterfall chart from a financial model. | Generate printable PDFs of selected charts for slide decks without exporting full worksheets. | Automate batch processing to save each chart in a workbook as an individual PDF for archiving.
+// AI Prompts: Show a C# snippet that selects a chart by name and saves it as a PDF using Aspose.Cells. | Explain how to set page size, orientation, and margins when exporting a chart to PDF with Aspose.Cells. | Provide code that iterates through all charts in a workbook and creates separate PDF files for each.
+
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsWaterfallToPdf
+// Loads "WaterfallChart.xlsx", accesses the first worksheet and its first chart, then uses Aspose.Cells' Chart.ToPdf method to render the Waterfall chart as an embedded image in "WaterfallChart.pdf".
+class WaterfallChartToPdf
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook that contains the Waterfall chart
+        Workbook workbook = new Workbook("WaterfallChart.xlsx");
 
-            // Populate sample data for the Waterfall chart
-            // Category column
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Start");
-            sheet.Cells["A3"].PutValue("Revenue");
-            sheet.Cells["A4"].PutValue("Cost");
-            sheet.Cells["A5"].PutValue("Profit");
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Values column
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(5000);
-            sheet.Cells["B3"].PutValue(8000);
-            sheet.Cells["B4"].PutValue(-3000);
-            sheet.Cells["B5"].PutValue(0); // Final total will be calculated automatically
+        // Retrieve the first chart in the worksheet (assumed to be the Waterfall chart)
+        Chart chart = worksheet.Charts[0];
 
-            // Add a Waterfall chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
+        // Export the chart directly to a PDF file.
+        // The chart is rendered as an image inside the PDF.
+        chart.ToPdf("WaterfallChart.pdf");
 
-            // Set the data range for the chart (including both categories and values)
-            chart.SetChartDataRange("A1:B5", true);
-            chart.Title.Text = "Waterfall Chart Example";
-
-            // Export the chart (which includes the Waterfall image) to a PDF file
-            // This uses the Chart.ToPdf(string) method as defined in the documentation
-            chart.ToPdf("WaterfallChart.pdf");
-
-            Console.WriteLine("Waterfall chart has been exported to PDF successfully.");
-        }
+        // (Optional) Save the original workbook if you need a copy.
+        // workbook.Save("WaterfallChart_copy.xlsx");
     }
 }

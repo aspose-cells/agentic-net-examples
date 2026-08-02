@@ -1,62 +1,75 @@
+// Title: Flag Initialized Cells with No Value Using the Cells Enumerator in Aspose.Cells for .NET (C#)
+// Description: Creates a workbook, populates sample data, iterates over only instantiated cells with Cells.GetEnumerator(), identifies cells whose Value is null, highlights them with a yellow style, prints their addresses, and saves the result. Demonstrates how to detect and flag empty initialized cells in Aspose.Cells.
+// Keywords: Aspose.Cells C# | Cells.GetEnumerator | detect empty cells | highlight null cells | flag initialized cells | Excel workbook validation | list cell addresses | apply style to empty cells | Aspose.Cells enumeration | C# Excel automation
+// Common Searches: Aspose.Cells enumerate only instantiated cells | how to find cells with null value in Aspose.Cells | highlight empty initialized cells C# Aspose | list addresses of empty cells using Aspose.Cells | flag cells without data in .NET Excel library
+// Developer Intent: Locate every instantiated cell that lacks a value, mark it for review, and retrieve its address for further processing.
+// Use Cases: Generate a validation report that flags cells created but left blank before publishing a workbook. | Apply visual cues (e.g., yellow background) to highlight missing data during spreadsheet review. | Collect addresses of empty initialized cells to feed into data‑cleaning or audit workflows.
+// AI Prompts: Write C# code with Aspose.Cells that enumerates all instantiated cells, adds those with a null or empty string Value to a list, and applies a red background style. | Explain how to modify the example to treat cells containing only whitespace as empty and flag them as well. | Show how to export the list of flagged cell addresses to a CSV file while preserving the workbook's formatting.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsEnumeratorExample
+namespace AsposeCellsExamples
 {
-    class Program
+    // Creates a workbook, populates sample data, iterates over only instantiated cells with Cells.GetEnumerator(), identifies cells whose Value is null, highlights them with a yellow style, prints their addresses, and saves the result. Demonstrates how to detect and flag empty initialized cells in Aspose.Cells.
+    public class FlagEmptyInitializedCells
     {
-        static void Main()
+        public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Populate sample data (some cells are intentionally left empty)
+            cells["A1"].PutValue("Header");
+            cells["B1"].PutValue(100);
+            cells["C1"].PutValue(null); // empty cell
+            cells["A2"].PutValue("Item 1");
+            cells["B2"].PutValue(200);
+            cells["C2"].PutValue(null); // empty cell
+            cells["A3"].PutValue("Item 2");
+            cells["B3"].PutValue(300);
+            // C3 remains uninitialized (no cell object)
+
+            // List to hold cells that are initialized but have no value
+            List<Cell> emptyInitializedCells = new List<Cell>();
+
+            // Get the cells enumerator and iterate through all instantiated cells
+            IEnumerator enumerator = cells.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Cell cell = (Cell)enumerator.Current;
 
-                // Populate some cells – some with values, some left empty (initialized but no value)
-                cells["A1"].PutValue("Hello");
-                cells["B1"].PutValue(123);
-                _ = cells["C1"]; // Initialized cell without a value (discarded)
-                _ = cells["A2"]; // Initialized cell without a value (discarded)
-                cells["B2"].PutValue(DateTime.Now);
-                cells["C2"].PutValue(null); // Explicitly set to null (treated as no value)
-
-                // List to hold addresses of cells that are initialized but lack a value
-                List<string> flaggedCells = new List<string>();
-
-                // Use the Cells.GetEnumerator method to iterate through all instantiated cells
-                IEnumerator enumerator = cells.GetEnumerator();
-                while (enumerator.MoveNext())
+                // Check if the cell's Value is null (i.e., no value assigned)
+                if (cell.Value == null)
                 {
-                    Cell cell = (Cell)enumerator.Current;
-                    // Cell is instantiated; check if its Value is null (no data)
-                    if (cell != null && cell.Value == null)
-                    {
-                        flaggedCells.Add(cell.Name);
-                    }
+                    emptyInitializedCells.Add(cell);
                 }
-
-                // Output the flagged cells for further analysis
-                Console.WriteLine("Initialized cells without a value:");
-                foreach (string address in flaggedCells)
-                {
-                    Console.WriteLine(address);
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle compliance)
-                string outputPath = "EnumeratorFlaggedCells.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
+
+            // Flag the identified cells by applying a yellow background style
+            Style flagStyle = workbook.CreateStyle();
+            flagStyle.ForegroundColor = Color.Yellow;
+            flagStyle.Pattern = BackgroundType.Solid;
+
+            foreach (Cell emptyCell in emptyInitializedCells)
             {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                emptyCell.SetStyle(flagStyle);
             }
+
+            // Output the addresses of flagged cells for further analysis
+            Console.WriteLine("Initialized cells without a value:");
+            foreach (Cell emptyCell in emptyInitializedCells)
+            {
+                Console.WriteLine(emptyCell.Name);
+            }
+
+            // Save the workbook to verify the highlighting
+            workbook.Save("FlaggedEmptyCells.xlsx");
         }
     }
 }

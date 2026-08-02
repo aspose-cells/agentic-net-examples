@@ -2,59 +2,48 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-public class WorkbookCompressionExample
+namespace AsposeCellsCompressionDemo
 {
-    public static void Main(string[] args)
+    class Program
     {
-        try
+        static void Main()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
-    }
+            // ------------------------------------------------------------
+            // 1. Create a simple workbook and save it to a memory stream.
+            // ------------------------------------------------------------
+            Workbook initialWorkbook = new Workbook();                     // create workbook
+            Worksheet sheet = initialWorkbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["B1"].PutValue(123);
 
-    public static void Run()
-    {
-        try
-        {
-            // Create a sample workbook and save it to a memory stream (represents the input stream)
-            using (MemoryStream inputStream = new MemoryStream())
+            using (MemoryStream sourceStream = new MemoryStream())
             {
-                Workbook sampleWorkbook = new Workbook();
-                sampleWorkbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-                sampleWorkbook.Save(inputStream, SaveFormat.Xlsx);
-                inputStream.Position = 0; // Reset for reading
+                // Save the workbook into the stream in XLSX format.
+                initialWorkbook.Save(sourceStream, SaveFormat.Xlsx);
+                sourceStream.Position = 0; // reset for reading
 
-                // Load the workbook from the input stream
-                Workbook workbook = new Workbook(inputStream);
+                // ------------------------------------------------------------
+                // 2. Load a workbook from the existing stream.
+                // ------------------------------------------------------------
+                Workbook loadedWorkbook = new Workbook(sourceStream); // load from stream
 
-                // Configure OOXML save options with Level6 compression
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+                // ------------------------------------------------------------
+                // 3. Prepare OoxmlSaveOptions with Level6 compression.
+                // ------------------------------------------------------------
+                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
+                saveOptions.CompressionType = OoxmlCompressionType.Level6; // set compression level
+
+                // ------------------------------------------------------------
+                // 4. Save the loaded workbook to a new MemoryStream using the options.
+                // ------------------------------------------------------------
+                using (MemoryStream resultStream = new MemoryStream())
                 {
-                    CompressionType = OoxmlCompressionType.Level6
-                };
-
-                // Save the workbook to an output memory stream using the configured options
-                using (MemoryStream outputStream = new MemoryStream())
-                {
-                    workbook.Save(outputStream, saveOptions);
-                    outputStream.Position = 0; // Ready for further processing
-
-                    // Example: write the compressed workbook to a file (optional)
-                    string outputPath = "CompressedWorkbook.xlsx";
-                    File.WriteAllBytes(outputPath, outputStream.ToArray());
-                    Console.WriteLine($"Compressed workbook saved to '{outputPath}'.");
+                    loadedWorkbook.Save(resultStream, saveOptions); // save with compression
+                    // The resultStream now contains the compressed XLSX file.
+                    // It can be used further, e.g., written to a file or returned from a method.
+                    Console.WriteLine($"Compressed workbook size: {resultStream.Length} bytes");
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime exceptions
-            Console.Error.WriteLine($"Runtime exception: {ex.Message}");
-            throw;
         }
     }
 }

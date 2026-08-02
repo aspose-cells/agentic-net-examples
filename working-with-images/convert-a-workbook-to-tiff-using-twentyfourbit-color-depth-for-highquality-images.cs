@@ -2,37 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering; // for ImageOrPrintOptions, ColorDepth, TiffCompression
 
-namespace AsposeCellsTiffDemo
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (lifecycle create)
+        Workbook workbook = new Workbook();
+
+        // Add sample data to the first worksheet
+        Worksheet ws = workbook.Worksheets[0];
+        ws.Cells["A1"].PutValue("Sample data for 24-bit TIFF conversion");
+        ws.Cells["B2"].PutValue(12345);
+
+        // Configure image options for TIFF with 24‑bit color depth
+        ImageOrPrintOptions options = new ImageOrPrintOptions
         {
-            // 1. Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
+            ImageType = ImageType.Tiff,
+            TiffColorDepth = ColorDepth.Format24bpp,
+            TiffCompression = TiffCompression.CompressionLZW // optional, default is LZW
+        };
 
-            // 2. Add some sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF 24‑bit Demo");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["B1"].PutValue(12345);
-            sheet.Cells["B2"].PutValue(67890);
+        // Create a workbook renderer using the configured options
+        WorkbookRender renderer = new WorkbookRender(workbook, options);
 
-            // 3. Configure image rendering options for TIFF with 24‑bit color depth
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Tiff,                 // Specify TIFF output
-                TiffColorDepth = ColorDepth.Format24bpp,    // 24‑bit color depth
-                TiffCompression = TiffCompression.CompressionLZW // Optional: LZW compression
-            };
+        // Save the entire workbook as a multi‑page TIFF file (lifecycle save)
+        renderer.ToImage("output_24bit.tiff");
 
-            // 4. Render the entire workbook to a multi‑page TIFF file (save rule)
-            WorkbookRender renderer = new WorkbookRender(workbook, options);
-            renderer.ToImage("Workbook_24bit.tiff");
+        // Release resources
+        renderer.Dispose();
 
-            Console.WriteLine("Workbook successfully rendered to 24‑bit TIFF: Workbook_24bit.tiff");
-        }
+        Console.WriteLine("Workbook successfully saved as 24‑bit TIFF.");
     }
 }

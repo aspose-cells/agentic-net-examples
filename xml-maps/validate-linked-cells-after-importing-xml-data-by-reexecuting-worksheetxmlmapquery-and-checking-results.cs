@@ -1,75 +1,85 @@
 using System;
 using System.Collections;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsXmlMapValidation
 {
-    class Program
+    public class ValidateLinkedCells
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Sample XML data to import
-            string xmlData = @"<?xml version='1.0' encoding='UTF-8'?>
-                <Root>
-                    <Data>
-                        <Item>Value1</Item>
-                        <Item>Value2</Item>
-                    </Data>
-                </Root>";
-
-            // Convert XML string to a stream for ImportXml overload
-            using (MemoryStream xmlStream = new MemoryStream())
-            using (StreamWriter writer = new StreamWriter(xmlStream))
+            try
             {
-                writer.Write(xmlData);
-                writer.Flush();
-                xmlStream.Position = 0;
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-                // Import XML data into the first worksheet starting at cell A1
-                workbook.ImportXml(xmlStream, "Sheet1", 0, 0);
-            }
+                // Sample XML data to import
+                string xmlData = @"<?xml version='1.0' encoding='UTF-8'?>
+<Root>
+    <Data>
+        <Item>Value1</Item>
+        <Item>Value2</Item>
+    </Data>
+</Root>";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Import the XML data into the first worksheet starting at cell A1
+                // This creates an XML map automatically
+                workbook.ImportXml(xmlData, "Sheet1", 0, 0);
 
-            // Retrieve the XML map that was created during import
-            if (workbook.Worksheets.XmlMaps.Count == 0)
-            {
-                Console.WriteLine("No XML map was created after import.");
-                return;
-            }
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
+                // Retrieve the automatically created XML map
+                XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
 
-            // Define the XML path we want to validate
-            string xmlPath = "/Root/Data/Item";
+                // OPTIONAL: Manually link a cell to a specific XML path
+                // This demonstrates linking after import
+                worksheet.Cells.LinkToXmlMap(xmlMap.Name, 5, 0, "/Root/Data/Item");
 
-            // Query cells linked to the specified XML path
-            ArrayList linkedAreas = worksheet.XmlMapQuery(xmlPath, xmlMap);
+                // Define the XML path we want to validate
+                string queryPath = "/Root/Data/Item";
 
-            // Validate the query results
-            if (linkedAreas.Count == 0)
-            {
-                Console.WriteLine($"No cells are linked to the XML path '{xmlPath}'.");
-            }
-            else
-            {
-                Console.WriteLine($"Cells linked to XML path '{xmlPath}':");
-                foreach (CellArea area in linkedAreas)
+                // Re‑execute the XmlMapQuery to obtain all cell areas linked to the path
+                ArrayList linkedAreas = worksheet.XmlMapQuery(queryPath, xmlMap);
+
+                // Check the query result
+                if (linkedAreas.Count == 0)
                 {
-                    // For each linked area, output its address and current cell value
-                    string address = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                    string value = worksheet.Cells[area.StartRow, area.StartColumn].StringValue;
-                    Console.WriteLine($" - {address}: \"{value}\"");
+                    Console.WriteLine($"No cells are linked to the path '{queryPath}'.");
                 }
-            }
+                else
+                {
+                    Console.WriteLine($"Found {linkedAreas.Count} linked cell area(s) for path '{queryPath}':");
 
-            // Save the workbook (optional, demonstrates lifecycle rule)
-            workbook.Save("XmlMapValidationResult.xlsx");
+                    // Iterate through each CellArea and display its address and value
+                    foreach (CellArea area in linkedAreas)
+                    {
+                        // For simplicity, assume each area is a single cell (StartRow/StartColumn)
+                        string cellName = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                        string cellValue = worksheet.Cells[area.StartRow, area.StartColumn].StringValue;
+
+                        Console.WriteLine($"- Cell {cellName}: \"{cellValue}\"");
+                    }
+                }
+
+                // Save the workbook (optional, demonstrates lifecycle rule)
+                string outputPath = "ValidatedXmlMap.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ValidateLinkedCells.Run();
         }
     }
 }

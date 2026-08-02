@@ -1,55 +1,41 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Metadata;
 
-class Program
+namespace AsposeCellsPasswordProtectedMetadataDemo
 {
-    static void Main()
+    public class Program
     {
-        // Path to the password‑protected workbook
-        string filePath = "ProtectedWorkbook.xlsx";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
+        public static void Main()
         {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
-        }
+            // Path to the existing password‑protected workbook
+            string sourcePath = "protected.xlsx";
 
-        try
-        {
-            // Load the workbook with the required password
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = "secure123"
-            };
-            Workbook workbook = new Workbook(filePath, loadOptions);
+            // Load the workbook using LoadOptions with the required password
+            LoadOptions loadOptions = new LoadOptions();
+            loadOptions.Password = "myPassword";
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // (Optional) modify workbook content
-            workbook.Worksheets[0].Cells["A1"].PutValue("Demo content");
+            // (Optional) Modify workbook content if needed
+            // workbook.Worksheets[0].Cells["A1"].PutValue("Updated value");
 
-            // Prepare metadata options for document properties with the same password
-            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties)
-            {
-                Password = "secure123"
-            };
+            // Prepare metadata options for document properties and set the same password
+            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+            metaOptions.Password = "myPassword";
 
-            // Load workbook metadata
-            WorkbookMetadata metadata = new WorkbookMetadata(filePath, metaOptions);
+            // Load metadata from the workbook using the metadata options
+            WorkbookMetadata metadata = new WorkbookMetadata(sourcePath, metaOptions);
 
             // Add a custom document property
-            metadata.CustomDocumentProperties.Add("Project", "AsposeDemo");
+            metadata.CustomDocumentProperties.Add("ReviewedBy", "John Doe");
 
-            // Save metadata changes back to the file
-            metadata.Save(filePath);
+            // Save the workbook together with the updated metadata to a new file
+            string outputPath = "protected_with_metadata.xlsx";
+            metadata.Save(outputPath);
 
-            // Save any workbook content changes (overwrites the same file)
-            workbook.Save(filePath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Verify that the file is still password‑protected by loading it again
+            Workbook verifiedWorkbook = new Workbook(outputPath, loadOptions);
+            Console.WriteLine("Verification successful. Cell A1 value: " + verifiedWorkbook.Worksheets[0].Cells["A1"].Value);
         }
     }
 }

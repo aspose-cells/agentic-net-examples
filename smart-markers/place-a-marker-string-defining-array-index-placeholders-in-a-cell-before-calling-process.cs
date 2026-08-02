@@ -2,49 +2,63 @@ using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerArrayDemo
+namespace AsposeCellsSmartMarkerDemo
 {
-    // Simple data class representing a product
-    public class Product
+    // Callback implementation to observe smart marker processing
+    public class MarkerCallback : ISmartMarkerCallBack
     {
-        public string Name { get; set; }
-        public double Price { get; set; }
+        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+        {
+            // This method is invoked for each smart marker cell before it is populated
+            Console.WriteLine($"Callback - Sheet:{sheetIndex}, Row:{rowIndex}, Col:{colIndex}, Table:{tableName}, Column:{columnName}");
+        }
     }
 
-    public class Program
+    // Simple data class used as a data source
+    public class Item
     {
-        public static void Main()
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
+            // ---------- Create a new workbook ----------
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Place a smart marker with an array index placeholder in a cell.
-            //    The placeholder ${i} will be replaced by the current index during processing.
-            //    Syntax: &=[DataSourceName][${index}].PropertyName
-            //    Here we use "Products" as the data source name and "Name" as the property.
-            sheet.Cells["A1"].PutValue("&=Products[${i}].Name");
+            // ---------- Place a marker string with array index placeholders ----------
+            // The placeholder ${row} will be replaced by the current row index during processing
+            // Syntax: &=$Items[${row}].Name  (smart marker for a collection named "Items")
+            sheet.Cells["A1"].PutValue("&=$Items[${row}].Name");
+            sheet.Cells["B1"].PutValue("&=$Items[${row}].Quantity");
 
-            // 3. Prepare a list of products that will be used as the data source.
-            List<Product> productList = new List<Product>
+            // ---------- Prepare data source ----------
+            List<Item> items = new List<Item>
             {
-                new Product { Name = "Apple",  Price = 1.20 },
-                new Product { Name = "Banana", Price = 0.80 },
-                new Product { Name = "Cherry", Price = 2.50 }
+                new Item { Name = "Apple",  Quantity = 10 },
+                new Item { Name = "Banana", Quantity = 20 },
+                new Item { Name = "Cherry", Quantity = 30 }
             };
 
-            // 4. Create a WorkbookDesigner, assign the workbook and set the data source.
+            // ---------- Configure WorkbookDesigner ----------
             WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook = workbook
+                Workbook = workbook,
+                CallBack = new MarkerCallback()   // optional: observe processing
             };
-            designer.SetDataSource("Products", productList);
 
-            // 5. Process the smart markers. The placeholder ${i} will be replaced with 0,1,2...
+            // Set the collection as a data source; the name must match the smart marker table name ("Items")
+            designer.SetDataSource("Items", items);
+
+            // ---------- Process smart markers ----------
+            // This will replace the markers with actual data, using the row index placeholder
             designer.Process();
 
-            // 6. Save the resulting workbook.
-            workbook.Save("SmartMarkerArrayResult.xlsx");
+            // ---------- Save the result ----------
+            workbook.Save("SmartMarkerWithArrayIndexPlaceholders.xlsx");
         }
     }
 }

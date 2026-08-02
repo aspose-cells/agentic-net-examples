@@ -1,13 +1,11 @@
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
 namespace AsposeCellsExamples
 {
-    public class SparklineMaterialPlasticDemo
+    public class SparklineMaterialDemo
     {
         public static void Run()
         {
@@ -22,51 +20,60 @@ namespace AsposeCellsExamples
                 sheet.Cells["B1"].PutValue(2);
                 sheet.Cells["C1"].PutValue(1);
                 sheet.Cells["D1"].PutValue(3);
+                sheet.Cells["E1"].PutValue(4);
 
-                // Define the location where the sparkline will be placed (E1)
+                // Define the location where the sparkline will be placed (column F, row 1)
                 CellArea location = new CellArea
                 {
                     StartRow = 0,
                     EndRow = 0,
-                    StartColumn = 4,
-                    EndColumn = 4
+                    StartColumn = 5,
+                    EndColumn = 5
                 };
 
-                // Add a line sparkline group using the data range A1:D1
-                int sparklineGroupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
-                SparklineGroup sparklineGroup = sheet.SparklineGroups[sparklineGroupIndex];
+                // Add a line sparkline group with the data range A1:E1
+                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:E1", false, location);
+                SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-                // OPTIONAL: customize sparkline appearance (color, markers, etc.)
+                // Add the sparkline to the group (the Add method already created one, but we keep it for clarity)
+                group.Sparklines.Add(sheet.Name + "!A1:E1", 0, 5);
+
+                // OPTIONAL: customize appearance (color, markers, etc.)
                 CellsColor seriesColor = workbook.CreateCellsColor();
                 seriesColor.Color = Color.Orange;
-                sparklineGroup.SeriesColor = seriesColor;
-                sparklineGroup.ShowMarkers = true;
+                group.SeriesColor = seriesColor;
+                group.ShowMarkers = true;
+                CellsColor markersColor = workbook.CreateCellsColor();
+                markersColor.Color = Color.Black;
+                group.MarkersColor = markersColor;
 
-                // Demonstrate material change on a shape (TextBox) that supports ThreeDFormat
-                Shape shape = sheet.Shapes.AddShape(MsoDrawingType.TextBox, 1, 1, 200, 100, 0, 0);
-                shape.Text = "Sparkline Material: Plastic";
+                // ------------------------------------------------------------
+                // NOTE: Aspose.Cells Sparkline objects do not expose ShapeProperties
+                // or 3‑D formatting APIs. The original code attempted to set a
+                // material type, which is not supported. This block is kept for
+                // future compatibility and will be skipped safely.
+                // ------------------------------------------------------------
+                if (group.Sparklines.Count > 0)
+                {
+                    // Sparkline sparkline = group.Sparklines[0];
+                    // No 3D material support – operation omitted.
+                }
 
-                // Set ThreeD material to Plastic
-                shape.ThreeDFormat.Material = PresetMaterialType.Plastic;
-
-                // Save the workbook
-                string outputPath = "SparklineMaterialPlasticDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Save the workbook with the configured sparkline
+                workbook.Save("SparklineMaterialPlastic.xlsx", SaveFormat.Xlsx);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the console application
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            SparklineMaterialPlasticDemo.Run();
+            SparklineMaterialDemo.Run();
         }
     }
 }

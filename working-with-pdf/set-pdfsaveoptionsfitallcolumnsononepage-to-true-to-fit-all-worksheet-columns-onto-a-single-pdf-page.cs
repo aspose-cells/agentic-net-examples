@@ -1,36 +1,33 @@
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFitAllColumnsDemo
+namespace AsposeCellsPdfDemo
 {
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate the worksheet with sample data spanning many columns
+            // Populate sample data
             for (int col = 0; col < 30; col++)
             {
-                // Header
                 sheet.Cells[0, col].PutValue($"Header {col + 1}");
-                // Sample data rows
-                for (int row = 1; row <= 5; row++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row}C{col + 1}");
-                }
+                sheet.Cells[1, col].PutValue($"Data {col + 1}");
             }
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options to fit all columns on one page per sheet
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                AllColumnsInOnePagePerSheet = true
+            };
 
-            // Fit all columns of each sheet onto a single PDF page
-            pdfOptions.AllColumnsInOnePagePerSheet = true;
+            // Save the workbook as PDF with the configured options
+            workbook.Save("output.pdf", pdfOptions);
 
-            // Save the workbook as PDF with the specified options
-            workbook.Save("AllColumnsOnePage.pdf", pdfOptions);
+            // Author note: This example demonstrates fitting all worksheet columns onto a single PDF page.
         }
     }
 }

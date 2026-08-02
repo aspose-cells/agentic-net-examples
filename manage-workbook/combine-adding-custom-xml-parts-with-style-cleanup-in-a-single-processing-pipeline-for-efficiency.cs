@@ -1,57 +1,104 @@
 using System;
 using System.Text;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Markup;
 
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    public class CustomXmlAndStyleCleanupDemo
     {
-        // Create a new workbook (lifecycle create)
-        Workbook wb = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = wb.Worksheets[0];
-
-        // Populate cells with data and apply distinct styles
-        for (int i = 0; i < 10; i++)
+        public static void Run()
         {
-            Cell cell = sheet.Cells[i, 0];
-            cell.PutValue($"Item {i + 1}");
+            try
+            {
+                // Create a new workbook
+                Workbook wb = new Workbook();
 
-            // Create a style for each cell
-            Style style = wb.CreateStyle();
-            style.Font.Name = "Arial";
-            style.Font.Size = 10 + i;
-            style.Font.IsBold = (i % 2 == 0);
-            cell.SetStyle(style);
+                // -------------------------------------------------
+                // 1. Add sample data with distinct styles
+                // -------------------------------------------------
+                Worksheet sheet = wb.Worksheets[0];
+                for (int i = 0; i < 5; i++)
+                {
+                    // Populate a cell
+                    Cell cell = sheet.Cells[i, 0];
+                    cell.PutValue($"Item {i + 1}");
+
+                    // Create a unique style for each cell
+                    Style style = wb.CreateStyle();
+                    style.Font.Name = "Arial";
+                    style.Font.Size = 10 + i;
+                    style.Font.IsBold = (i % 2 == 0);
+                    style.Font.Color = (i % 2 == 0) ? System.Drawing.Color.Blue : System.Drawing.Color.Green;
+
+                    // Apply the style
+                    cell.SetStyle(style);
+                }
+
+                // Delete some rows to make some styles unused
+                sheet.Cells.DeleteRows(3, 2); // rows 3 and 4 are removed, their styles become unused
+
+                // -------------------------------------------------
+                // 2. Add a custom XML part (data + optional schema)
+                // -------------------------------------------------
+                string xmlData = "<MyData xmlns=\"http://example.com\"><Item>Value</Item></MyData>";
+                string xmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                 + "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\""
+                                 + " targetNamespace=\"http://example.com\""
+                                 + " xmlns=\"http://example.com\" elementFormDefault=\"qualified\">"
+                                 + "<xs:element name=\"MyData\"><xs:complexType><xs:sequence>"
+                                 + "<xs:element name=\"Item\" type=\"xs:string\"/>"
+                                 + "</xs:sequence></xs:complexType></xs:element>"
+                                 + "</xs:schema>";
+
+                // Convert strings to UTF‑8 byte arrays
+                byte[] dataBytes = Encoding.UTF8.GetBytes(xmlData);
+                byte[] schemaBytes = Encoding.UTF8.GetBytes(xmlSchema);
+
+                // Add the custom XML part to the workbook
+                int xmlPartIndex = wb.CustomXmlParts.Add(dataBytes, schemaBytes);
+
+                // Optionally set a custom ID for the part
+                CustomXmlPart part = wb.CustomXmlParts[xmlPartIndex];
+                part.ID = Guid.NewGuid().ToString();
+
+                // -------------------------------------------------
+                // 3. Remove all unused styles in one step
+                // -------------------------------------------------
+                wb.RemoveUnusedStyles();
+
+                // -------------------------------------------------
+                // 4. Save the workbook (the same file contains the custom XML part)
+                // -------------------------------------------------
+                string outputPath = "CustomXmlAndStyleCleanup.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                wb.Save(outputPath);
+
+                // Inform the user
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Custom XML parts count: {wb.CustomXmlParts.Count}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
+    }
 
-        // Delete rows to leave some styles unused (simulates real‑world cleanup)
-        sheet.Cells.DeleteRows(5, 5);
-
-        // Prepare custom XML data and its schema
-        string xmlData = "<MyXmlData xmlns=\"http://my.namespace.com\"/>";
-        string xmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                         + "<ds:datastoreItem ds:itemID=\"{GUID}\" xmlns:ds=\"http://schemas.openxmlformats.org/officeDocument/2006/customXml\">"
-                         + "<ds:schemaRefs>"
-                         + "<ds:schemaRef ds:uri=\"http://my.namespace.com\"/>"
-                         + "</ds:schemaRefs>"
-                         + "</ds:datastoreItem>";
-
-        byte[] dataBytes = Encoding.UTF8.GetBytes(xmlData);
-        byte[] schemaBytes = Encoding.UTF8.GetBytes(xmlSchema);
-
-        // Add the custom XML part to the workbook (rule: CustomXmlPartCollection.Add)
-        int xmlPartIndex = wb.CustomXmlParts.Add(dataBytes, schemaBytes);
-
-        // Optionally assign a unique ID to the added part
-        wb.CustomXmlParts[xmlPartIndex].ID = Guid.NewGuid().ToString();
-
-        // Remove all unused styles in one step (rule: Workbook.RemoveUnusedStyles)
-        wb.RemoveUnusedStyles();
-
-        // Save the workbook (lifecycle save)
-        wb.Save("CombinedOutput.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CustomXmlAndStyleCleanupDemo.Run();
+        }
     }
 }

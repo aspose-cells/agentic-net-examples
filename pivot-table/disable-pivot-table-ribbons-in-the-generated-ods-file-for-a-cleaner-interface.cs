@@ -1,36 +1,42 @@
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Ods;
 
-class DisablePivotTableRibbons
+namespace PivotRibbonDisableDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Amount");
-        sheet.Cells["A2"].PutValue("Food");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["A3"].PutValue("Clothing");
-        sheet.Cells["B3"].PutValue(80);
-        sheet.Cells["A4"].PutValue("Travel");
-        sheet.Cells["B4"].PutValue(200);
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(850);
+            sheet.Cells["A4"].PutValue("Banana");
+            sheet.Cells["B4"].PutValue(430);
 
-        // Add a pivot table to the worksheet
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Product column as rows
+            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column as values
 
-        // Hide the pivot field list (ribbon UI) for a cleaner ODS interface
-        workbook.Settings.HidePivotFieldList = true;
+            // Configure ODS save options to ignore pivot tables (removes pivot ribbons)
+            OdsSaveOptions saveOptions = new OdsSaveOptions
+            {
+                IgnorePivotTables = true   // Disables pivot table ribbons in the ODS output
+            };
 
-        // Save the workbook as ODS using default OdsSaveOptions
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        workbook.Save("CleanPivot.ods", saveOptions);
+            // Save the workbook as ODS with the specified options
+            workbook.Save("CleanPivotTable.ods", saveOptions);
+        }
     }
 }

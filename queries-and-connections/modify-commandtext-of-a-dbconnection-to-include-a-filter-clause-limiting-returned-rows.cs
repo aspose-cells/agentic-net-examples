@@ -2,68 +2,44 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class ModifyDbConnectionCommand
+    static void Main()
     {
-        public static void Main()
+        // Load an existing workbook that contains a DBConnection
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the collection of external connections
+        ExternalConnectionCollection connections = workbook.DataConnections;
+
+        // Iterate through the connections to find the first DBConnection
+        foreach (ExternalConnection connection in connections)
         {
-            // Load an existing workbook that already contains a DBConnection.
-            // Replace "input.xlsx" with the path to your source workbook.
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Access the collection of external connections in the workbook.
-            ExternalConnectionCollection connections = workbook.DataConnections;
-
-            // Locate the first DBConnection object (if any).
-            DBConnection dbConn = null;
-            foreach (ExternalConnection conn in connections)
+            if (connection is DBConnection dbConn)
             {
-                if (conn is DBConnection dbConnection)
+                // Read the current command text
+                string originalCommand = dbConn.Command;
+
+                // Define the filter clause you want to apply
+                string filterClause = " WHERE Id > 100";
+
+                // If the original command already contains a WHERE clause, append using AND
+                // Otherwise, simply add the new WHERE clause
+                if (!originalCommand.Contains("WHERE", StringComparison.OrdinalIgnoreCase))
                 {
-                    dbConn = dbConnection;
-                    break;
-                }
-            }
-
-            if (dbConn == null)
-            {
-                Console.WriteLine("No DBConnection objects found in the workbook.");
-            }
-            else
-            {
-                // Show the original command for reference.
-                Console.WriteLine("Original Command: " + dbConn.Command);
-
-                // Define the filter clause you want to apply.
-                // Example: limit rows to those where Country = 'USA'.
-                string filterClause = " WHERE Country = 'USA'";
-
-                // If the command already contains a WHERE clause, append using AND.
-                // Simple check for the word "WHERE" (case‑insensitive).
-                if (dbConn.Command.IndexOf("WHERE", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    // Replace the first occurrence of "WHERE" with "WHERE ... AND"
-                    // This is a naive approach suitable for demonstration purposes.
-                    int wherePos = dbConn.Command.IndexOf("WHERE", StringComparison.OrdinalIgnoreCase);
-                    string beforeWhere = dbConn.Command.Substring(0, wherePos + 5); // include "WHERE"
-                    string afterWhere = dbConn.Command.Substring(wherePos + 5);
-                    dbConn.Command = beforeWhere + " " + afterWhere.Trim() + " AND Country = 'USA'";
+                    dbConn.Command = originalCommand + filterClause;
                 }
                 else
                 {
-                    // Append the filter clause directly.
-                    dbConn.Command = dbConn.Command.TrimEnd() + filterClause;
+                    dbConn.Command = originalCommand + " AND Id > 100";
                 }
 
-                // Display the updated command.
+                // Output the updated command for verification
                 Console.WriteLine("Updated Command: " + dbConn.Command);
             }
-
-            // Save the modified workbook.
-            // Replace "output.xlsx" with the desired output path.
-            workbook.Save("output.xlsx");
-            Console.WriteLine("Workbook saved as output.xlsx");
         }
+
+        // Save the workbook with the modified DBConnection command
+        workbook.Save("output.xlsx");
     }
 }

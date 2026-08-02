@@ -1,99 +1,84 @@
+// Title: C# – Batch Decrypt, Mask Columns, and Re‑Encrypt Excel Files with Aspose.Cells
+// Description: A C# utility that scans a folder, detects password‑protected .xlsx files, opens them with the old password, replaces values in specified columns with a mask, applies a new password, and saves the secured workbooks to an output directory.
+// Keywords: Aspose.Cells | C# Excel encryption | batch decrypt Excel | data masking Excel | re‑encrypt workbook | password protected workbook | bulk Excel processing | detect encrypted Excel file | column redaction | Excel security automation
+// Common Searches: how to decrypt multiple Excel files with Aspose.Cells | C# code to mask sensitive columns in encrypted workbooks | batch re‑encrypt Excel files with a new password .NET | detect and open password protected .xlsx using Aspose.Cells | automate GDPR redaction in Excel spreadsheets C#
+// Developer Intent: Open each workbook, mask defined columns, and save it encrypted with a new password.
+// Use Cases: Sanitize personal data in a collection of password‑protected reports before sharing. | Migrate legacy encrypted spreadsheets to a new security policy while obscuring confidential fields. | Automate GDPR‑compliant redaction of specific columns across many Excel files. | Create a secure archive of Excel workbooks with updated passwords after data masking.
+// AI Prompts: Generate C# code using Aspose.Cells to bulk open encrypted .xlsx files, replace values in columns B and D with "*****", and save them with a new password. | Show an Aspose.Cells example that detects if an Excel file is password protected, loads it with a given password, masks selected columns, and re‑encrypts it with another password. | Explain how to extend the program to log processed file names, masking actions, and errors to a CSV report. | Provide guidance on customizing the mask placeholder and adding column selection via a configuration file.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-class BatchDecryptMaskEncrypt
+// A C# utility that scans a folder, detects password‑protected .xlsx files, opens them with the old password, replaces values in specified columns with a mask, applies a new password, and saves the secured workbooks to an output directory.
+class Program
 {
+    // Adjust these values as needed
+    private static readonly string InputFolder = @"C:\InputExcelFiles";
+    private static readonly string OutputFolder = @"C:\OutputExcelFiles";
+    private static readonly string OldPassword = "oldPass123";
+    private static readonly string NewPassword = "newPass456";
+
+    // Zero‑based column indexes that contain sensitive data (e.g., B and D columns)
+    private static readonly int[] SensitiveColumns = { 1, 3 };
+
     static void Main()
     {
-        // Folder containing the source Excel files
-        string sourceFolder = @"C:\InputExcelFiles";
-        // Folder where the processed files will be saved
-        string outputFolder = @"C:\OutputExcelFiles";
+        // Ensure output directory exists
+        Directory.CreateDirectory(OutputFolder);
 
-        // Old password used to open encrypted files (if any)
-        string oldPassword = "oldPassword123";
-        // New password to protect the processed files
-        string newPassword = "newPassword456";
-
-        // Zero‑based column indexes that contain sensitive data (e.g., 1 = B, 3 = D)
-        int[] sensitiveColumns = { 1, 3 };
-
-        // Ensure the output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify the source folder exists before enumerating files
-        if (!Directory.Exists(sourceFolder))
-        {
-            Console.WriteLine($"Source folder not found: {sourceFolder}");
-            return;
-        }
-
-        // Process each Excel file in the source folder
-        foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+        // Process each Excel file in the input folder
+        foreach (string filePath in Directory.GetFiles(InputFolder, "*.xlsx"))
         {
             try
             {
-                // Guard against missing files (should not happen after GetFiles, but kept for safety)
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                // Detect file format and encryption status
+                // Detect whether the file is encrypted
                 FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
                 Workbook workbook;
 
-                // Load the workbook with appropriate password if it is encrypted
                 if (formatInfo.IsEncrypted)
                 {
-                    LoadOptions loadOptions = new LoadOptions
-                    {
-                        Password = oldPassword
-                    };
+                    // Load encrypted workbook using the old password
+                    LoadOptions loadOptions = new LoadOptions();
+                    loadOptions.Password = OldPassword;
                     workbook = new Workbook(filePath, loadOptions);
                 }
                 else
                 {
+                    // Load unencrypted workbook
                     workbook = new Workbook(filePath);
                 }
 
-                // Apply data masking on each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    int lastRow = sheet.Cells.MaxDataRow; // last row with data
+                // Apply simple masking to each sensitive column in the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                int totalRows = sheet.Cells.Rows.Count;
 
-                    for (int row = 0; row <= lastRow; row++)
+                for (int row = 0; row < totalRows; row++)
+                {
+                    foreach (int col in SensitiveColumns)
                     {
-                        foreach (int colIndex in sensitiveColumns)
+                        var cell = sheet.Cells[row, col];
+                        if (cell != null && cell.Value != null)
                         {
-                            Cell cell = sheet.Cells[row, colIndex];
-                            if (cell.Value != null && !string.IsNullOrWhiteSpace(cell.StringValue))
-                            {
-                                cell.PutValue("****");
-                            }
+                            // Replace the original value with a masked placeholder
+                            cell.PutValue("*****");
                         }
                     }
                 }
 
-                // Set the new password for the workbook
-                workbook.Settings.Password = newPassword;
+                // Set a new password for the workbook
+                workbook.Settings.Password = NewPassword;
 
-                // Build the output file path
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-
-                // Save the processed workbook
+                // Save the re‑encrypted workbook to the output folder
+                string outputPath = Path.Combine(OutputFolder, Path.GetFileName(filePath));
                 workbook.Save(outputPath);
-                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                Console.WriteLine($"Processed and saved: {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
-
-        Console.WriteLine("Batch processing completed.");
     }
 }

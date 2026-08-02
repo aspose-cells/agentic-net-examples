@@ -1,54 +1,49 @@
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-class RemoveWorkbookPassword
+class RemovePasswordProtection
 {
     static void Main()
     {
-        // Path to the password‑protected workbook
+        // Input and output file paths
         string inputPath = "protected.xlsx";
-
-        // Password used for protecting the workbook and its worksheets
-        string password = "myPassword";
-
-        // Output path for the unprotected workbook
         string outputPath = "unprotected.xlsx";
 
-        try
+        // Password that protects the workbook (structure/window) and possibly worksheets
+        string password = "myPassword";
+
+        // Load the workbook with the password (required for encrypted files)
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.Password = password;
+        Workbook workbook = new Workbook(inputPath, loadOptions);
+
+        // Remove workbook protection (structure/window) if it is set
+        if (workbook.IsWorkbookProtectedWithPassword)
         {
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook with the supplied password
-            LoadOptions loadOptions = new LoadOptions { Password = password };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Remove workbook protection
             workbook.Unprotect(password);
+        }
 
-            // Remove protection from each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+        // Iterate through all worksheets and remove their protection
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            if (sheet.IsProtected)
             {
-                sheet.Unprotect(password);
+                // Try to unprotect with the known password; if it fails, attempt parameterless unprotect
+                try
+                {
+                    sheet.Unprotect(password);
+                }
+                catch
+                {
+                    sheet.Unprotect();
+                }
             }
+        }
 
-            // Save the workbook without any password protection
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File error: {ex.Message}");
-        }
-        catch (CellsException ex)
-        {
-            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
+        // Remove file encryption password (if any)
+        workbook.Settings.Password = null;
+
+        // Save the workbook without any password protection
+        workbook.Save(outputPath);
     }
 }

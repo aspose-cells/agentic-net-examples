@@ -2,12 +2,14 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class RemoveCustomGroupings
+class RemovePivotFieldGroupings
 {
     static void Main()
     {
-        // Load the workbook containing the pivot table
+        // Load the workbook (replace with your source file)
         Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
         // Ensure there is at least one pivot table
@@ -17,39 +19,20 @@ class RemoveCustomGroupings
             return;
         }
 
-        // Access the first pivot table
+        // Get the first pivot table
         PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Helper action to ungroup a field if it has grouping settings
-        Action<PivotField> ungroupIfGrouped = field =>
+        // Ungroup all row fields (removes any custom grouping)
+        foreach (PivotField rowField in pivotTable.RowFields)
         {
-            if (field.GroupSettings != null)
-            {
-                // Remove all custom groupings from the field
-                field.Ungroup();
-            }
-        };
-
-        // Ungroup all row fields
-        foreach (PivotField field in pivotTable.RowFields)
-        {
-            ungroupIfGrouped(field);
+            rowField.Ungroup();
         }
 
-        // Ungroup all column fields
-        foreach (PivotField field in pivotTable.ColumnFields)
+        // Ungroup all column fields (removes any custom grouping)
+        foreach (PivotField colField in pivotTable.ColumnFields)
         {
-            ungroupIfGrouped(field);
+            colField.Ungroup();
         }
-
-        // Ungroup any base fields that might be grouped
-        foreach (PivotField field in pivotTable.BaseFields)
-        {
-            ungroupIfGrouped(field);
-        }
-
-        // Recalculate the pivot table data after ungrouping
-        pivotTable.CalculateData();
 
         // Save the modified workbook
         workbook.Save("output.xlsx");

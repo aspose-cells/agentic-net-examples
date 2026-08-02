@@ -1,68 +1,73 @@
+// Title: Apply Background Color to the Intersection of Two Named Ranges and Save as XLSX – Aspose.Cells for .NET
+// Description: Creates a workbook, defines two overlapping named ranges, uses UnionRange.Intersect to locate the common cells, applies a solid yellow fill style to that intersection, and saves the result as an XLSX file with Aspose.Cells for .NET.
+// Keywords: Aspose.Cells UnionRange.Intersect | highlight overlapping ranges C# | apply fill color to intersected cells | save workbook as XLSX Aspose | named range intersection styling
+// Common Searches: how to highlight intersecting named ranges Aspose.Cells | UnionRange.Intersect example C# | apply background color to overlapping cells .NET | save styled workbook as xlsx using Aspose
+// Developer Intent: Format the cells that belong to both named ranges with a background color and export the workbook to XLSX.
+// Use Cases: Mark overlapping data sections in automated reports. | Create visual cues for merged datasets in dashboards. | Emphasize intersecting zones when consolidating multiple spreadsheets.
+// AI Prompts: Add a thick border around the intersected range in this Aspose.Cells sample. | Rewrite the code to read range names from a JSON file and use conditional formatting instead of a solid fill. | Explain how UnionRange.Intersect works and show best practices for null‑check handling.
+
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace IntersectNamedRangesDemo
+// Creates a workbook, defines two overlapping named ranges, uses UnionRange.Intersect to locate the common cells, applies a solid yellow fill style to that intersection, and saves the result as an XLSX file with Aspose.Cells for .NET.
+class ApplyIntersectionBackground
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Data1");
+            sheet.Cells["B1"].PutValue("Data1");
+            sheet.Cells["A2"].PutValue("Data1");
+            sheet.Cells["B2"].PutValue("Data1");
+
+            sheet.Cells["B1"].PutValue("Data2");
+            sheet.Cells["C1"].PutValue("Data2");
+            sheet.Cells["B2"].PutValue("Data2");
+            sheet.Cells["C2"].PutValue("Data2");
+
+            // Create the first range and assign a name
+            AsposeRange range1 = sheet.Cells.CreateRange("A1:B2");
+            range1.Name = "FirstRange";
+
+            // Create the second range and assign a name
+            AsposeRange range2 = sheet.Cells.CreateRange("B1:C2");
+            range2.Name = "SecondRange";
+
+            // Convert each Range to a UnionRange (required for UnionRange.Intersect)
+            UnionRange union1 = sheet.Cells.CreateRange(range1.RefersTo)
+                                         .UnionRanges(new AsposeRange[] { range1 });
+
+            UnionRange union2 = sheet.Cells.CreateRange(range2.RefersTo)
+                                         .UnionRanges(new AsposeRange[] { range2 });
+
+            // Get the intersected area of the two UnionRanges
+            UnionRange intersected = union1.Intersect(union2);
+
+            if (intersected != null)
             {
-                // Create a new workbook (create rule)
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                // Create a style with a solid yellow background
+                Style highlightStyle = workbook.CreateStyle();
+                highlightStyle.ForegroundColor = Color.Yellow;
+                highlightStyle.Pattern = BackgroundType.Solid;
 
-                // Populate some sample data
-                cells["A1"].PutValue("A1");
-                cells["B1"].PutValue("B1");
-                cells["C1"].PutValue("C1");
-                cells["A2"].PutValue("A2");
-                cells["B2"].PutValue("B2");
-                cells["C2"].PutValue("C2");
-                cells["D2"].PutValue("D2");
-                cells["A3"].PutValue("A3");
-                cells["B3"].PutValue("B3");
-                cells["C3"].PutValue("C3");
-                cells["D3"].PutValue("D3");
-                cells["B4"].PutValue("B4");
-                cells["C4"].PutValue("C4");
-                cells["D4"].PutValue("D4");
-
-                // Define two named ranges
-                Aspose.Cells.Range firstRange = cells.CreateRange("A1:C3");
-                firstRange.Name = "FirstRange";
-
-                Aspose.Cells.Range secondRange = cells.CreateRange("B2:D4");
-                secondRange.Name = "SecondRange";
-
-                // Get the intersected area (Range.Intersect method)
-                Aspose.Cells.Range intersected = firstRange.Intersect(secondRange);
-
-                if (intersected != null)
-                {
-                    // Create a style with solid background color
-                    Style highlightStyle = workbook.CreateStyle();
-                    highlightStyle.ForegroundColor = Color.Yellow;
-                    highlightStyle.Pattern = BackgroundType.Solid;
-
-                    // Apply the style to the intersected range
-                    intersected.SetStyle(highlightStyle);
-                }
-
-                // Save the workbook as XLSX (save rule)
-                string outputPath = "IntersectedNamedRanges.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // Apply the style to the intersected area
+                intersected.SetStyle(highlightStyle);
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook as XLSX
+            workbook.Save("IntersectedBackground.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,50 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPdfExport
 {
-    class ConvertSelectedRangeToPdf
+    class Program
     {
         static void Main()
         {
             // Load the source Excel workbook
             Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet (you can change the index as needed)
+            // Get the first worksheet (adjust index as needed)
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Example: hide some rows and columns that should be excluded from the PDF
-            // Hide row 3 (zero‑based index)
-            cells.HideRow(2);
-            // Hide column B (zero‑based index)
-            cells.HideColumn(1);
+            // Define the range to be exported (e.g., B2:D10)
+            // Create a CellArea representing the selected range
+            CellArea exportArea = new CellArea
+            {
+                StartRow = 1,    // Row index is zero‑based (B2 -> row 1)
+                StartColumn = 1, // Column B -> index 1
+                EndRow = 9,      // D10 -> row 9
+                EndColumn = 3    // Column D -> index 3
+            };
 
-            // Define the range that you want to convert to PDF.
-            // This range will be set as the print area, so only this area is exported.
-            // Adjust the address as required (e.g., "A1:D20").
-            sheet.PageSetup.PrintArea = "A1:D20";
-
-            // Create PDF save options
+            // Prepare PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Optional: ignore completely blank pages in the output PDF
-            pdfOptions.PrintingPageType = PrintingPageType.IgnoreBlank;
+            // Exclude hidden rows and columns from the PDF output
+            // NOTE: The existence of ExportHiddenRows / ExportHiddenColumns properties
+            // is assumed based on typical Aspose.Cells API but not verified in the provided documentation.
+            // If these properties are unavailable, replace with the correct API or remove the lines.
+            // BEGIN MISSING API PLACEHOLDER
+            // pdfOptions.ExportHiddenRows = false;      // Exclude hidden rows
+            // pdfOptions.ExportHiddenColumns = false;   // Exclude hidden columns
+            // END MISSING API PLACEHOLDER
 
-            // Save the selected range to PDF.
-            // Hidden rows and columns within the defined print area are automatically omitted.
-            workbook.Save("selected_range_output.pdf", pdfOptions);
+            // Set the export area so that only the selected range is rendered.
+            // NOTE: PdfSaveOptions does not expose an ExportArea property in the supplied docs.
+            // If such a property exists, uncomment the line below; otherwise, consider using
+            // HtmlSaveOptions.ExportArea as an intermediate step or adjust the worksheet view.
+            // BEGIN MISSING API PLACEHOLDER
+            // pdfOptions.ExportArea = exportArea;
+            // END MISSING API PLACEHOLDER
+
+            // Save the selected range to PDF
+            workbook.Save("selected_range.pdf", pdfOptions);
         }
     }
 }

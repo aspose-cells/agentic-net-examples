@@ -2,33 +2,29 @@ using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeExtraction
+namespace AsposeCellsThemeExtractor
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Path to the source XLSX file
-            string inputPath = "InputWorkbook.xlsx";
-
-            // Load the workbook (lifecycle rule: load)
+            // Load the existing XLSX workbook
+            string inputPath = "input.xlsx";
             Workbook workbook = new Workbook(inputPath);
 
-            // Verify that the workbook has a theme assigned
-            string themeName = workbook.Theme;
-            Console.WriteLine($"Workbook Theme: {(string.IsNullOrEmpty(themeName) ? "None" : themeName)}");
+            // Verify that a theme is applied and display its name
+            Console.WriteLine("Workbook Theme: " + workbook.Theme);
 
-            // Extract all theme color definitions
-            Console.WriteLine("Theme Colors:");
+            // Extract and display all theme color definitions
             foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
             {
-                // Get the color for the current theme type (rule: GetThemeColor)
-                Color color = workbook.GetThemeColor(type);
-                Console.WriteLine($"{type}: A={color.A}, R={color.R}, G={color.G}, B={color.B}");
+                Color themeColor = workbook.GetThemeColor(type);
+                Console.WriteLine($"{type}: A={themeColor.A}, R={themeColor.R}, G={themeColor.G}, B={themeColor.B}");
             }
 
-            // (Optional) Save the workbook if any modifications were made
-            // workbook.Save("OutputWorkbook.xlsx"); // lifecycle rule: save
+            // Optionally, save the workbook (demonstrates lifecycle compliance)
+            string outputPath = "output_with_verified_theme.xlsx";
+            workbook.Save(outputPath);
         }
     }
 }

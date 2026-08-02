@@ -1,30 +1,37 @@
 using System;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsSkipExample
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Prepare data that will be placed in alternating rows
-        // Each pair (string, int) represents a row's values
-        object[] data = new object[]
+        static void Main()
         {
-            "Item1", 100,
-            "Item2", 200,
-            "Item3", 300,
-            "Item4", 400
-        };
+            // Create a new workbook (or load a template workbook)
+            Workbook workbook = new Workbook(); // new workbook instance
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Import the data vertically starting at row 0, column 0
-        // The 'skip' parameter is set to 1, which means one empty row will be left between each entry
-        // Resulting rows: 0, 2, 4, 6 ... will contain the data; rows 1,3,5,... remain empty
-        worksheet.Cells.ImportObjectArray(data, firstRow: 0, firstColumn: 0, isVertical: true, skip: 1);
+            // Sample data to be inserted into the worksheet
+            // The data will be placed vertically, one entry per row,
+            // with a blank row skipped between each entry.
+            object[] data = new object[]
+            {
+                "First Entry",
+                "Second Entry",
+                "Third Entry",
+                "Fourth Entry"
+            };
 
-        // Save the workbook to a file
-        workbook.Save("AlternatingEntries.xlsx");
+            // Import the data array starting at row 0, column 0.
+            // Parameters:
+            //   firstRow   = 0          (start at the first row)
+            //   firstColumn= 0          (start at the first column)
+            //   isVertical = true       (import vertically)
+            //   skip       = 1          (skip one row after each entry)
+            sheet.Cells.ImportObjectArray(data, 0, 0, true, 1);
+
+            // Save the workbook to a file
+            workbook.Save("AlternatingEntries.xlsx");
+        }
     }
 }

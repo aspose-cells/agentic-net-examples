@@ -1,6 +1,7 @@
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
+using System.Linq;
 
 namespace SmartMarkerSortingDemo
 {
@@ -12,11 +13,17 @@ namespace SmartMarkerSortingDemo
         public decimal Price { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create unsorted list of products
+            // Load a workbook that contains smart markers (e.g., &=$ProductID, &=$ProductName, &=$Price)
+            Workbook workbook = new Workbook("Template.xlsx");
+
+            // Create a WorkbookDesigner instance for processing smart markers
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Prepare unsorted data
             List<Product> products = new List<Product>
             {
                 new Product { ProductID = 3, ProductName = "Product C", Price = 15.99m },
@@ -24,27 +31,17 @@ namespace SmartMarkerSortingDemo
                 new Product { ProductID = 2, ProductName = "Product B", Price = 12.75m }
             };
 
-            // Sort the list by ProductID (ascending) before merging
-            products.Sort((x, y) => x.ProductID.CompareTo(y.ProductID));
+            // Sort the collection by the required property (ProductID) before merging
+            List<Product> sortedProducts = products.OrderBy(p => p.ProductID).ToList();
 
-            // Create a workbook and set up smart markers
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("&=$ProductID");
-            sheet.Cells["B1"].PutValue("&=$ProductName");
-            sheet.Cells["C1"].PutValue("&=$Price");
+            // Set the sorted collection as the data source for the smart markers
+            designer.SetDataSource("Products", sortedProducts);
 
-            // Initialize WorkbookDesigner with the workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // Assign the sorted data source
-            designer.SetDataSource("Products", products);
-
-            // Process smart markers
+            // Process the smart markers and populate the worksheet
             designer.Process();
 
-            // Save the result
-            workbook.Save("SortedProductsOutput.xlsx");
+            // Save the resulting workbook
+            workbook.Save("SortedSmartMarkersOutput.xlsx");
         }
     }
 }

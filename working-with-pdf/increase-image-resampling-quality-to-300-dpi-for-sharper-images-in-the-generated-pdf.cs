@@ -1,23 +1,20 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering; // for PdfSaveOptions
 
+// Author: Aspose.Cells .NET example – increase PDF image resampling to 300 DPI
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your source file)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add some sample data to illustrate the PDF content
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample data for PDF with high‑DPI images");
-        sheet.Cells["A2"].PutValue("Additional content");
-
-        // Configure PDF save options to resample images at 300 DPI with maximum JPEG quality
+        // Configure PDF save options to resample images at 300 PPI with high JPEG quality
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.SetImageResample(300, 100); // desiredPPI = 300, jpegQuality = 100%
+        pdfOptions.SetImageResample(300, 100); // 300 dpi, 100 % JPEG quality
 
         // Save the workbook as a PDF using the configured options
-        workbook.Save("HighDPI_Output.pdf", pdfOptions);
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

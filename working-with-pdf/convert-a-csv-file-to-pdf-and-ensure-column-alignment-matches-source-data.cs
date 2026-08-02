@@ -1,32 +1,33 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving; // PdfSaveOptions
 
+// Author: Aspose.Cells .NET example – CSV to PDF with column alignment
 class CsvToPdfConverter
 {
     static void Main()
     {
-        // Path to the source CSV file
+        // Paths to the source CSV and the target PDF
         string csvPath = "input.csv";
+        string pdfPath = "output.pdf";
 
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load the CSV file. LoadOptions with LoadFormat.Csv ensures proper parsing.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+        Workbook workbook = new Workbook(csvPath, loadOptions);
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Auto‑fit columns so the PDF reflects the exact column widths of the CSV data.
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.AutoFitColumns();
 
-        // Import CSV data (comma delimiter, convert numeric values, start at A1)
-        worksheet.Cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-        // Configure PDF save options to keep all columns on a single page and preserve layout
+        // Configure PDF save options.
+        // AllColumnsInOnePagePerSheet keeps every column on a single page,
+        // preserving the visual alignment of the source data.
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            OnePagePerSheet = true,                     // One page per sheet
-            AllColumnsInOnePagePerSheet = true,         // Fit all columns on that page
-            ExportDocumentStructure = true              // Preserve document structure
+            AllColumnsInOnePagePerSheet = true
         };
 
-        // Save the workbook as PDF with the specified options
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the workbook as a PDF using the configured options.
+        workbook.Save(pdfPath, pdfOptions);
     }
 }

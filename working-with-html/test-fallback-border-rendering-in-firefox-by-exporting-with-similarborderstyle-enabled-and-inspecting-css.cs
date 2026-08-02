@@ -1,83 +1,84 @@
+// Title: C# – Verify Aspose.Cells ExportSimilarBorderStyle Double‑Border Fallback in Firefox
+// Description: Creates a workbook, applies a blue double‑line border to cell A1, saves the sheet as HTML with ExportSimilarBorderStyle enabled and IsBorderCollapsed disabled, extracts the first <style> block, and shows how to open the file in Firefox to confirm the fallback border rendering.
+// Keywords: Aspose.Cells | ExportSimilarBorderStyle | HTMLSaveOptions | double border fallback | Firefox CSS rendering | C# Excel to HTML | cell border style | CSS extraction | IsBorderCollapsed | Aspose.Cells HTML export
+// Common Searches: Aspose.Cells ExportSimilarBorderStyle example C# | how to test double border rendering in Firefox with Aspose.Cells | extract generated CSS from Aspose.Cells HTML output | fallback border styles for unsupported Excel borders | C# save workbook as HTML with similar border style
+// Developer Intent: Generate HTML from an Excel workbook with ExportSimilarBorderStyle enabled to inspect the CSS fallback for double borders, especially in Firefox.
+// Use Cases: Confirm that double‑line borders are rendered using fallback CSS when the browser lacks native support. | Programmatically retrieve the <style> block from the exported HTML for automated validation. | Integrate the export into a CI pipeline that opens the HTML in Firefox and verifies visual appearance.
+// AI Prompts: Write a unit test in C# that saves a workbook with ExportSimilarBorderStyle=true and asserts that the output CSS contains a fallback rule for double borders. | Provide a PowerShell script that launches Firefox headlessly, loads the generated HTML, and checks the computed style of the cell for the expected border width and color. | Explain the internal mapping Aspose.Cells uses to convert unsupported Excel border types (e.g., Double) to CSS properties when ExportSimilarBorderStyle is enabled.
+
 using System;
 using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlBorderDemo
+namespace AsposeCellsBorderFallbackDemo
 {
+    // Creates a workbook, applies a blue double‑line border to cell A1, saves the sheet as HTML with ExportSimilarBorderStyle enabled and IsBorderCollapsed disabled, extracts the first <style> block, and shows how to open the file in Firefox to confirm the fallback border rendering.
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Prepare a style with a border type that is not widely supported by browsers (e.g., Double)
+            Style doubleBorderStyle = workbook.CreateStyle();
+            doubleBorderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Double;
+            doubleBorderStyle.Borders[BorderType.TopBorder].Color = Color.Blue;
+            doubleBorderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Double;
+            doubleBorderStyle.Borders[BorderType.BottomBorder].Color = Color.Blue;
+            doubleBorderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Double;
+            doubleBorderStyle.Borders[BorderType.LeftBorder].Color = Color.Blue;
+            doubleBorderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Double;
+            doubleBorderStyle.Borders[BorderType.RightBorder].Color = Color.Blue;
+
+            // Apply the style to a cell
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Double Border");
+            cell.SetStyle(doubleBorderStyle);
+
+            // Create HTML save options with ExportSimilarBorderStyle enabled
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                ExportSimilarBorderStyle = true, // Enable fallback border rendering
+                IsBorderCollapsed = false        // Keep borders separate for clearer CSS
+            };
 
-                // Prepare a style with a double border (many browsers do not support this directly)
-                Style doubleBorderStyle = workbook.CreateStyle();
-                doubleBorderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Double;
-                doubleBorderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Double;
-                doubleBorderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Double;
-                doubleBorderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Double;
-                doubleBorderStyle.Borders[BorderType.TopBorder].Color = Color.DarkBlue;
-                doubleBorderStyle.Borders[BorderType.BottomBorder].Color = Color.DarkBlue;
-                doubleBorderStyle.Borders[BorderType.LeftBorder].Color = Color.DarkBlue;
-                doubleBorderStyle.Borders[BorderType.RightBorder].Color = Color.DarkBlue;
+            // Define output HTML path
+            string outputHtml = Path.Combine(Environment.CurrentDirectory, "BorderFallback.html");
 
-                // Apply the style to a range of cells so the border is visible in the HTML output
-                Aspose.Cells.Range range = sheet.Cells.CreateRange("B2:D4");
-                range.ApplyStyle(doubleBorderStyle, new StyleFlag { Borders = true });
+            // Save the workbook as HTML using the specified options
+            workbook.Save(outputHtml, htmlOptions);
 
-                // Fill the range with sample data
-                for (int row = 1; row <= 3; row++)
+            Console.WriteLine($"HTML file saved to: {outputHtml}");
+
+            // Read the generated HTML and output the CSS block that defines the cell borders
+            // This helps to inspect how Aspose.Cells rendered the fallback style.
+            string htmlContent = File.ReadAllText(outputHtml);
+            Console.WriteLine("\n--- Extracted CSS for cell borders ---\n");
+
+            // Simple extraction: locate the first <style> block and print its content
+            int styleStart = htmlContent.IndexOf("<style");
+            if (styleStart >= 0)
+            {
+                int styleEnd = htmlContent.IndexOf("</style>", styleStart);
+                if (styleEnd > styleStart)
                 {
-                    for (int col = 1; col <= 3; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"R{row}C{col}");
-                    }
-                }
-
-                // Configure HTML save options to export a similar border style when the original is not supported
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
-                {
-                    ExportSimilarBorderStyle = true, // Enable fallback border rendering
-                    IsBorderCollapsed = false        // Keep borders separate for clearer CSS inspection
-                };
-
-                // Define output HTML file path
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "FallbackBorderDemo.html");
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"HTML file saved to: {outputPath}");
-
-                // Read the generated HTML and output CSS border definitions for manual inspection
-                if (File.Exists(outputPath))
-                {
-                    string[] htmlLines = File.ReadAllLines(outputPath);
-                    Console.WriteLine("\n--- Extracted CSS Border Rules ---");
-                    foreach (string line in htmlLines)
-                    {
-                        // Look for CSS rules that contain the word 'border'
-                        if (line.IndexOf("border", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            Console.WriteLine(line.Trim());
-                        }
-                    }
-                    Console.WriteLine("--- End of CSS Extraction ---");
+                    string styleBlock = htmlContent.Substring(styleStart, styleEnd - styleStart + 8);
+                    Console.WriteLine(styleBlock);
                 }
                 else
                 {
-                    Console.WriteLine("Failed to locate the generated HTML file.");
+                    Console.WriteLine("No closing </style> tag found.");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No <style> block found in the generated HTML.");
             }
+
+            // Note: Open the generated HTML file in Firefox to visually verify the fallback border rendering.
         }
     }
 }

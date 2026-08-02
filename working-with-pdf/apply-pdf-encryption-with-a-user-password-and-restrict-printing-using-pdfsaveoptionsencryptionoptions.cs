@@ -2,35 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering.PdfSecurity;
 
-class Program
+namespace AsposeCellsPdfEncryptionDemo
 {
-    static void Main()
+    // Author: Aspose.Cells .NET example – PDF encryption with user password, printing disabled
+    class Program
     {
-        // Create a new workbook and add some content
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].Value = "PDF with user password and printing disabled";
-
-        // Initialize PDF save options
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-
-        // Set up security options
-        PdfSecurityOptions securityOptions = new PdfSecurityOptions
+        static void Main()
         {
-            // Password required to open the PDF
-            UserPassword = "user123",
-            // Owner password grants full access
-            OwnerPassword = "owner123",
-            // Disallow printing
-            PrintPermission = false,
-            // Additional restrictions (optional)
-            ModifyDocumentPermission = false,
-            ExtractContentPermission = false
-        };
+            // Create a new workbook and add some content
+            Workbook workbook = new Workbook();
+            workbook.Worksheets[0].Cells["A1"].Value = "Secure PDF Example";
 
-        // Attach security options to the PDF save options
-        pdfSaveOptions.SecurityOptions = securityOptions;
+            // Configure PDF save options
+            PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-        // Save the workbook as a secured PDF
-        workbook.Save("SecuredNoPrint.pdf", pdfSaveOptions);
+            // Set up security options: user password required, printing not allowed
+            PdfSecurityOptions securityOptions = new PdfSecurityOptions
+            {
+                UserPassword = "user123",          // Password needed to open the PDF
+                OwnerPassword = "owner456",        // Owner password (full access)
+                PrintPermission = false            // Disallow printing
+                // Other permissions remain at their default values (false)
+            };
+
+            // Assign the security options to the save options
+            saveOptions.SecurityOptions = securityOptions;
+
+            // Save the workbook as a protected PDF
+            workbook.Save("SecureDocument.pdf", saveOptions);
+
+            Console.WriteLine("PDF created with user password protection and printing disabled.");
+        }
     }
 }

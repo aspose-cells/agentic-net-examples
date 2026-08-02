@@ -1,9 +1,18 @@
+// Title: Toggle English ↔ German formulas using FormulaLocal in Aspose.Cells for .NET
+// Description: A C# demo that creates a workbook, sets its region to Germany, adds a bidirectional mapping from the English function SUM to the German SUMME via SettableGlobalizationSettings, and illustrates using both the standard Formula property and the localized FormulaLocal property. After calculation the results match, and the workbook is saved with both formula representations.
+// Keywords: Aspose.Cells | .NET | FormulaLocal | formula localization | English German formulas | SettableGlobalizationSettings | custom globalization | SUM to SUMME | region Germany | toggle formula language | localized functions
+// Common Searches: Aspose.Cells FormulaLocal German example | map English SUM to German SUMME Aspose.Cells | toggle between English and localized formulas .NET | set workbook region Germany Aspose.Cells | custom globalization settings C# Aspose.Cells
+// Developer Intent: Demonstrate switching between English and German formulas in an Aspose.Cells workbook using FormulaLocal and a custom globalization mapping.
+// Use Cases: Generate spreadsheets for German users by mapping English functions to their German equivalents and entering formulas with FormulaLocal. | Read workbooks containing localized formulas while accessing the standard English syntax via the Formula property. | Produce multi‑region reports where users input formulas in their native language but calculations are performed uniformly.
+// AI Prompts: Create C# code that maps the French function 'SOMME' to English 'SUM' using SettableGlobalizationSettings and shows FormulaLocal usage. | Provide an Aspose.Cells example that toggles between English and Spanish formulas with FormulaLocal and verifies the results. | Explain how to preserve both English and localized formulas when saving a workbook with Aspose.Cells.
+
 using System;
 using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
+    // A C# demo that creates a workbook, sets its region to Germany, adds a bidirectional mapping from the English function SUM to the German SUMME via SettableGlobalizationSettings, and illustrates using both the standard Formula property and the localized FormulaLocal property. After calculation the results match, and the workbook is saved with both formula representations.
     public class ToggleFormulaLocalizationDemo
     {
         public static void Run()
@@ -14,76 +23,69 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the workbook region to Germany to demonstrate German localization
+                // Set the workbook region to German to demonstrate localization
                 workbook.Settings.Region = CountryCode.Germany;
 
                 // Create customizable globalization settings
-                SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
+                SettableGlobalizationSettings settings = new SettableGlobalizationSettings();
 
-                // Map the standard English function name "SUM" to the German name "SUMME"
+                // Map the standard English function name "SUM" to the German localized name "SUMME"
                 // The bidirectional flag makes the mapping work both ways
-                gSettings.SetLocalFunctionName("SUM", "SUMME", true);
+                settings.SetLocalFunctionName("SUM", "SUMME", true);
 
                 // Apply the custom globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings = gSettings;
+                workbook.Settings.GlobalizationSettings = settings;
 
                 // ------------------------------------------------------------
-                // 1. Use the standard (English) function name in a formula
+                // 1. Use the standard (English) formula syntax
                 // ------------------------------------------------------------
-                Cell cellEnglish = sheet.Cells["A1"];
-                cellEnglish.Formula = "=SUM(B1:B3)";
-
-                // Populate the source range
+                // Fill some sample data
                 sheet.Cells["B1"].PutValue(10);
                 sheet.Cells["B2"].PutValue(20);
                 sheet.Cells["B3"].PutValue(30);
 
-                Console.WriteLine("Standard Formula (English): " + cellEnglish.Formula);
-                Console.WriteLine("Localized Formula (German): " + cellEnglish.FormulaLocal);
+                // Set formula using the standard English name
+                Cell cellEnglish = sheet.Cells["A1"];
+                cellEnglish.Formula = "=SUM(B1:B3)";
+
+                // Display both the standard and the localized representation
+                Console.WriteLine("After setting Formula (English):");
+                Console.WriteLine("Standard Formula   : " + cellEnglish.Formula);
+                Console.WriteLine("Localized Formula  : " + cellEnglish.FormulaLocal);
 
                 // ------------------------------------------------------------
-                // 2. Use the localized (German) function name via FormulaLocal
+                // 2. Use the localized (German) formula syntax via FormulaLocal
                 // ------------------------------------------------------------
+                // Change the formula using the localized name
                 Cell cellLocalized = sheet.Cells["A2"];
-                cellLocalized.FormulaLocal = "=SUMME(C1:C3)";
+                cellLocalized.FormulaLocal = "=SUMME(B1:B3)";
 
-                // Populate the source range for the second formula
-                sheet.Cells["C1"].PutValue(5);
-                sheet.Cells["C2"].PutValue(15);
-                sheet.Cells["C3"].PutValue(25);
-
-                Console.WriteLine("Localized Formula (German) set via FormulaLocal: " + cellLocalized.FormulaLocal);
-                Console.WriteLine("Standard Formula (English) derived from localized: " + cellLocalized.Formula);
+                // Display both representations again
+                Console.WriteLine("\nAfter setting FormulaLocal (German):");
+                Console.WriteLine("Standard Formula   : " + cellLocalized.Formula);
+                Console.WriteLine("Localized Formula  : " + cellLocalized.FormulaLocal);
 
                 // ------------------------------------------------------------
-                // Calculate all formulas to verify correctness
+                // 3. Calculate formulas to verify they work identically
                 // ------------------------------------------------------------
                 workbook.CalculateFormula();
 
-                Console.WriteLine("Result of A1 (SUM): " + cellEnglish.Value);
-                Console.WriteLine("Result of A2 (SUMME): " + cellLocalized.Value);
+                Console.WriteLine("\nCalculated Results:");
+                Console.WriteLine("A1 (English)  = " + cellEnglish.Value);
+                Console.WriteLine("A2 (German)   = " + cellLocalized.Value);
 
                 // Save the workbook to verify the formulas are stored correctly
-                string outputPath = "ToggleFormulaLocalizationDemo.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ToggleFormulaLocalizationDemo.xlsx");
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"\nWorkbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

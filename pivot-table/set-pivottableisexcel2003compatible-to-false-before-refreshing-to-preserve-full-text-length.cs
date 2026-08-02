@@ -2,42 +2,52 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-class Program
+namespace AsposeCellsPivotDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and get the first worksheet for source data
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate the worksheet with sample data, including a long text (>255 chars)
-        dataSheet.Cells["A1"].Value = "Product";
-        dataSheet.Cells["B1"].Value = "Description";
+            // Get the first worksheet and add sample data
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-        dataSheet.Cells["A2"].Value = "Item1";
-        // Long description to test Excel 2003 compatibility
-        dataSheet.Cells["B2"].Value = new string('X', 300);
+            dataSheet.Cells["A1"].Value = "Product";
+            dataSheet.Cells["B1"].Value = "Description";
+            dataSheet.Cells["C1"].Value = "Quantity";
 
-        // Add a new worksheet that will contain the pivot table
-        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+            dataSheet.Cells["A2"].Value = "Item1";
+            dataSheet.Cells["B2"].Value = "Short description";
+            dataSheet.Cells["C2"].Value = 10;
 
-        // Create a pivot table based on the data range A1:B2, place it starting at cell A4
-        int pivotIndex = pivotSheet.PivotTables.Add("A1:B2", "A4", "PivotTable1");
-        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            dataSheet.Cells["A3"].Value = "Item2";
+            // Very long text that exceeds 255 characters
+            dataSheet.Cells["B3"].Value = new string('X', 300);
+            dataSheet.Cells["C3"].Value = 20;
 
-        // Configure the pivot table fields: Product as row, Description as data
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Product
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Description
+            // Add a new worksheet for the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-        // Disable Excel 2003 compatibility to preserve full text length
-        pivotTable.IsExcel2003Compatible = false;
+            // Create the pivot table (source range A1:C3, destination at A4)
+            int pivotIndex = pivotSheet.PivotTables.Add("A1:C3", "A4", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-        // Refresh the pivot table data and calculate the results
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Configure fields: Product as row, Description as data (count)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);     // Description
 
-        // Save the workbook to a file
-        workbook.Save("PivotExcel2003Compatibility.xlsx");
+            // Disable Excel 2003 compatibility to keep full text length
+            pivotTable.IsExcel2003Compatible = false;
+
+            // Refresh data and calculate the pivot table
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook
+            workbook.Save("PivotTable_Excel2003Compatibility.xlsx");
+        }
     }
 }

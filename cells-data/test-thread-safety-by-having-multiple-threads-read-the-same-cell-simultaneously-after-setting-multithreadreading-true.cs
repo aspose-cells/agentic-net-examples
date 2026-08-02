@@ -1,3 +1,11 @@
+// Title: Aspose.Cells C# MultiThreadReading Demo – Safe Concurrent Cell Reads
+// Description: A complete C# example that creates a workbook, activates Cells.MultiThreadReading, fills the first column with OADate values, and launches several threads that read distinct row ranges simultaneously. The code uses Interlocked for completion tracking, captures any exceptions, reports the outcome, and saves the workbook, illustrating thread‑safe read‑only access in Aspose.Cells.
+// Keywords: Aspose.Cells | MultiThreadReading | thread safety | C# concurrent cell read | parallel Excel access | Aspose.Cells .NET example | multi‑thread reading workbook | Excel cell thread safety | Aspose.Cells performance | cell reading multithread
+// Common Searches: enable MultiThreadReading Aspose.Cells C# | C# read Excel cells from multiple threads | Aspose.Cells thread safety example | test concurrent cell reads Aspose.Cells | MultiThreadReading performance Aspose.Cells
+// Developer Intent: Confirm that setting Cells.MultiThreadReading = true allows multiple threads to read the same cells concurrently without throwing exceptions.
+// Use Cases: Validate read‑only thread safety before processing large worksheets in parallel. | Benchmark multi‑threaded cell‑read performance versus single‑threaded execution. | Integrate safe concurrent Excel data extraction into high‑throughput services. | Create unit tests that ensure Aspose.Cells read operations are race‑condition free. | Demonstrate proper synchronization (Interlocked, StringBuilder) when verifying thread safety.
+// AI Prompts: Write a C# unit test that sets Cells.MultiThreadReading = true, spawns N threads to read a shared range, and asserts no exceptions occur. | Explain how Aspose.Cells implements thread‑safe reading when MultiThreadReading is enabled and list any configuration limits. | Suggest modifications to measure per‑thread read latency and detect subtle race conditions during concurrent cell access.
+
 using System;
 using System.Text;
 using System.Threading;
@@ -5,94 +13,80 @@ using Aspose.Cells;
 
 namespace AsposeCellsThreadSafetyDemo
 {
-    public class MultiThreadReadDemo
+    // A complete C# example that creates a workbook, activates Cells.MultiThreadReading, fills the first column with OADate values, and launches several threads that read distinct row ranges simultaneously. The code uses Interlocked for completion tracking, captures any exceptions, reports the outcome, and saves the workbook, illustrating thread‑safe read‑only access in Aspose.Cells.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet's cells collection
+            Workbook workbook = new Workbook();
+            Cells cells = workbook.Worksheets[0].Cells;
+
+            // Enable multi‑thread reading on the cells collection
+            cells.MultiThreadReading = true;
+
+            // Populate the first column with sample data (dates stored as OADate)
+            int totalRows = 1000;
+            for (int i = 0; i < totalRows; i++)
             {
-                // Create a new workbook and obtain its cells collection
-                Workbook wb = new Workbook();
-                Cells cells = wb.Worksheets[0].Cells;
+                cells[i, 0].PutValue(DateTime.Now.AddDays(i).ToOADate());
+            }
 
-                // Enable multi‑thread reading support
-                cells.MultiThreadReading = true;
+            // Prepare thread‑synchronization helpers
+            int threadCount = 5;
+            int rowsPerThread = totalRows / threadCount;
+            int[] finished = new int[1];                     // used with Interlocked
+            StringBuilder errors = new StringBuilder();
 
-                // Populate the first column with sample data (dates)
-                int rowCount = 1000;
-                for (int i = 0; i < rowCount; i++)
+            // Launch multiple threads that read the same column concurrently
+            for (int t = 0; t < threadCount; t++)
+            {
+                int startRow = t * rowsPerThread;
+                int endRow = (t == threadCount - 1) ? totalRows : startRow + rowsPerThread;
+
+                Thread thread = new Thread(() =>
                 {
-                    cells[i, 0].PutValue(DateTime.Now.AddDays(i).ToOADate());
-                }
-
-                // Set up thread coordination variables
-                int threadCount = 5;
-                int cellsPerThread = rowCount / threadCount;
-                int finished = 0;
-                StringBuilder errors = new StringBuilder();
-
-                // Launch multiple threads that read the same column concurrently
-                for (int t = 0; t < threadCount; t++)
-                {
-                    int start = t * cellsPerThread;
-                    int end = (t == threadCount - 1) ? rowCount : start + cellsPerThread;
-
-                    Thread thread = new Thread(() =>
+                    try
                     {
-                        try
+                        for (int row = startRow; row < endRow; row++)
                         {
-                            for (int r = start; r < end; r++)
-                            {
-                                // Read the cell value (no modification)
-                                object value = cells[r, 0].Value;
-                                Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{r},0] = {value}");
-                            }
-                            Interlocked.Increment(ref finished);
+                            // Read the cell value; no modification is performed
+                            object value = cells[row, 0].Value;
+                            Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{row},0] = {value}");
                         }
-                        catch (Exception ex)
+                        Interlocked.Increment(ref finished[0]);
+                    }
+                    catch (Exception ex)
+                    {
+                        lock (errors)
                         {
-                            lock (errors)
-                            {
-                                errors.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
-                            }
+                            errors.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");
                         }
-                    });
-                    thread.Start();
-                }
+                    }
+                });
 
-                // Wait for all threads to finish
-                while (Volatile.Read(ref finished) < threadCount)
-                {
-                    Thread.Sleep(100);
-                }
-
-                // Report any errors encountered during reading
-                if (errors.Length > 0)
-                {
-                    Console.WriteLine("Errors occurred during multi‑thread reading:");
-                    Console.WriteLine(errors.ToString());
-                }
-                else
-                {
-                    Console.WriteLine("All threads completed successfully.");
-                }
-
-                // Save the workbook (demonstrates proper lifecycle usage)
-                wb.Save("MultiThreadReadDemo.xlsx");
+                thread.Start();
             }
-            catch (Exception ex)
+
+            // Wait until all threads have signaled completion
+            while (finished[0] < threadCount)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Thread.Sleep(200);
             }
-        }
-    }
 
-    // Entry point required for console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            MultiThreadReadDemo.Run();
+            // Report any errors that occurred during reading
+            if (errors.Length > 0)
+            {
+                Console.WriteLine("Errors occurred during multi‑thread reading:");
+                Console.WriteLine(errors.ToString());
+            }
+            else
+            {
+                Console.WriteLine("All threads completed successfully without errors.");
+            }
+
+            // Optionally save the workbook (demonstrates normal lifecycle usage)
+            workbook.Save("ThreadSafetyDemo.xlsx");
         }
     }
 }

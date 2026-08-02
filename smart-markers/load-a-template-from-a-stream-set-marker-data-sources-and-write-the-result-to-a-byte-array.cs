@@ -1,103 +1,55 @@
 using System;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using Aspose.Cells;
 
-public class SmartMarkerProcessor
+class Program
 {
-    // Loads an Excel template from a byte array, fills smart markers, and returns the result as a byte array.
-    public static byte[] ProcessTemplate(byte[] templateBytes)
+    static void Main()
     {
-        try
+        // Load the template file into a byte array (replace with your source as needed)
+        byte[] templateBytes = File.ReadAllBytes("template.xlsx");
+
+        // Create a memory stream from the template bytes
+        using (MemoryStream templateStream = new MemoryStream(templateBytes))
         {
-            // Load the workbook from the provided byte array
-            using (MemoryStream templateStream = new MemoryStream(templateBytes))
+            // Load the workbook from the stream
+            Workbook workbook = new Workbook(templateStream);
+
+            // Initialize WorkbookDesigner with the loaded workbook
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook workbook = new Workbook(templateStream);
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                Workbook = workbook
+            };
 
-                // -------------------------
-                // Prepare sample data source
-                // -------------------------
-                ArrayList data = new ArrayList();
+            // Prepare a sample data source for smart markers
+            var persons = new ArrayList
+            {
+                new Person { Name = "John Doe", Age = 30 },
+                new Person { Name = "Jane Smith", Age = 28 }
+            };
 
-                // Helper to load image bytes safely
-                byte[] LoadImage(string path)
-                {
-                    return File.Exists(path) ? File.ReadAllBytes(path) : Array.Empty<byte>();
-                }
+            // Set the data source (the name must match the smart marker prefix in the template)
+            designer.SetDataSource("Persons", persons);
 
-                // First record
-                data.Add(new
-                {
-                    Name = "John Doe",
-                    Age = 30,
-                    Photo = LoadImage("photo1.jpg")
-                });
+            // Process the smart markers and populate the workbook
+            designer.Process();
 
-                // Second record
-                data.Add(new
-                {
-                    Name = "Jane Smith",
-                    Age = 28,
-                    Photo = LoadImage("photo2.jpg")
-                });
+            // Save the processed workbook to a memory stream (returns a MemoryStream)
+            MemoryStream resultStream = workbook.SaveToStream();
 
-                // Set the data source for the smart markers (use the name defined in the template)
-                designer.SetDataSource("People", data);
+            // Convert the memory stream to a byte array
+            byte[] resultBytes = resultStream.ToArray();
 
-                // Process the smart markers
-                designer.Process();
-
-                // Save the processed workbook to a memory stream (Excel 97-2003 format)
-                using (MemoryStream resultStream = new MemoryStream())
-                {
-                    workbook.Save(resultStream, SaveFormat.Excel97To2003);
-                    return resultStream.ToArray();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error processing template: {ex.Message}");
-            return Array.Empty<byte>();
+            // (Optional) Write the result to a file for verification
+            File.WriteAllBytes("result.xlsx", resultBytes);
         }
     }
 
-    // Example usage
-    public static void Main()
+    // Simple POCO class used as a data source for smart markers
+    public class Person
     {
-        try
-        {
-            const string templatePath = "TemplateWithSmartMarkers.xlsx";
-
-            if (!File.Exists(templatePath))
-            {
-                Console.Error.WriteLine($"Template file not found: {templatePath}");
-                return;
-            }
-
-            // Load template file into a byte array
-            byte[] templateBytes = File.ReadAllBytes(templatePath);
-
-            // Process the template
-            byte[] resultBytes = ProcessTemplate(templateBytes);
-
-            if (resultBytes.Length == 0)
-            {
-                Console.Error.WriteLine("Processing failed; no output generated.");
-                return;
-            }
-
-            // Write the result to a file to verify
-            const string outputPath = "ProcessedResult.xls";
-            File.WriteAllBytes(outputPath, resultBytes);
-
-            Console.WriteLine($"Template processed and saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
-        }
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 }

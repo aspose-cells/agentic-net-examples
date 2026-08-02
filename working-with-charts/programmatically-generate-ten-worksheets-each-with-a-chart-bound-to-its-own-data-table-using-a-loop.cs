@@ -1,59 +1,80 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsTenSheetsWithCharts
+namespace AsposeCellsExamples
 {
-    class Program
+    public class TenSheetsWithCharts
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            // Create a new workbook (first worksheet is created by default)
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook (no template file needed)
             Workbook workbook = new Workbook();
 
             // Loop to create 10 worksheets, each with its own data and chart
-            for (int i = 0; i < 10; i++)
+            for (int i = 1; i <= 10; i++)
             {
-                // Use the default first worksheet for i == 0, otherwise add a new one
-                Worksheet sheet;
-                if (i == 0)
-                {
-                    sheet = workbook.Worksheets[0];
-                    sheet.Name = $"Sheet{i + 1}";
-                }
-                else
-                {
-                    sheet = workbook.Worksheets.Add($"Sheet{i + 1}");
-                }
+                // Add a new worksheet with a unique name
+                string sheetName = $"Sheet{i}";
+                Worksheet sheet = workbook.Worksheets.Add(sheetName);
 
-                // Populate a simple data table: Category (A) and Value (B)
+                // Populate sample data for the chart
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["B1"].PutValue("Value");
 
-                // Add 4 rows of sample data; values are varied per worksheet
-                for (int row = 2; row <= 5; row++)
+                // Data rows (A‑E categories)
+                for (int row = 2; row <= 6; row++)
                 {
-                    sheet.Cells[row - 1, 0].PutValue($"Item {row - 1}");
-                    // Example value: (worksheet index + 1) * row * 10
-                    sheet.Cells[row - 1, 1].PutValue((i + 1) * row * 10);
+                    char category = (char)('A' + row - 2);
+                    sheet.Cells[$"A{row}"].PutValue(category.ToString());
+                    sheet.Cells[$"B{row}"].PutValue(i * 10 + (row - 2));
                 }
 
-                // Add a column chart to the worksheet
-                // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 5);
+                // Add a column chart to the current worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Bind the chart to the data range created above
-                // Series values (Y) are in column B, categories (X) are in column A
-                chart.NSeries.Add($"{sheet.Name}!B2:B5", true);
-                chart.NSeries.CategoryData = $"{sheet.Name}!A2:A5";
+                // Bind the chart to the data range of this worksheet
+                chart.NSeries.Add($"{sheetName}!B2:B6", true);
+                chart.NSeries.CategoryData = $"{sheetName}!A2:A6";
 
-                // Optional: set a title for each chart
-                chart.Title.Text = $"Chart {i + 1}";
+                // Optional: give the chart a title
+                chart.Title.Text = $"Chart {i}";
             }
 
             // Save the workbook containing all worksheets and charts
-            workbook.Save("TenSheetsWithCharts.xlsx");
+            string outputPath = "TenSheetsWithCharts.xlsx";
+
+            try
+            {
+                // Ensure the directory exists
+                string directory = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                throw;
+            }
         }
     }
 }

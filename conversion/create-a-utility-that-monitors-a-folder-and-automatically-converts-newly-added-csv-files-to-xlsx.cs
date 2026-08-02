@@ -1,58 +1,135 @@
+// Title: C# FileSystemWatcher: Auto‑convert CSV files to XLSX using Aspose.Cells
+// Description: A ready‑to‑run example that watches a folder for new *.csv files, waits until each file is fully written, and instantly converts it to an .xlsx workbook with Aspose.Cells.Utility.ConversionUtility. The conversion runs on a thread‑pool thread, logs success or errors, and can be started or stopped from a console application.
+// Keywords: Aspose.Cells CSV to XLSX | C# FileSystemWatcher conversion | auto convert CSV to Excel .NET | folder monitoring Aspose.Cells | ConversionUtility example | real‑time CSV to XLSX | C# background service Excel export
+// Common Searches: How to watch a folder and convert CSV to XLSX in C# | Aspose.Cells example for automatic CSV to Excel conversion | FileSystemWatcher convert CSV to Excel on creation | C# code to monitor drop folder and generate XLSX files | Convert CSV to XLSX using Aspose.Cells Utility
+// Developer Intent: Automatically transform any CSV file dropped into a specified directory into an Excel workbook using Aspose.Cells.
+// Use Cases: Live ingestion of CSV data feeds into Excel for downstream reporting. | Zero‑touch processing of exported CSV files from third‑party systems. | Background service that watches a drop folder, converts incoming CSVs to XLSX, and archives the results for analytics.
+// AI Prompts: Create a method that moves the generated XLSX file to an "Archive" subfolder after conversion. | Add exponential‑backoff retry logic to handle transient file‑access errors during conversion. | Write unit tests for CsvToXlsxWatcher using temporary files and a mock FileSystemWatcher to verify the conversion trigger.
+
 using System;
 using System.IO;
+using System.Threading;
 using Aspose.Cells.Utility;
 
-namespace CsvToXlsxWatcher
+namespace AsposeCellsFolderWatcher
 {
-    // Utility that watches a folder and converts new CSV files to XLSX using Aspose.Cells ConversionUtility.
-    class Program
+    // A ready‑to‑run example that watches a folder for new *.csv files, waits until each file is fully written, and instantly converts it to an .xlsx workbook with Aspose.Cells.Utility.ConversionUtility. The conversion runs on a thread‑pool thread, logs success or errors, and can be started or stopped from a console application.
+    public class CsvToXlsxWatcher
     {
-        // Folder to monitor – change as needed.
-        private const string WatchFolder = @"C:\WatchedFolder";
+        private readonly string _watchFolder;
+        private readonly FileSystemWatcher _watcher;
 
-        static void Main()
+        public CsvToXlsxWatcher(string watchFolder)
         {
-            // Ensure the folder exists.
-            if (!Directory.Exists(WatchFolder))
-            {
-                Console.WriteLine($"Folder does not exist: {WatchFolder}");
-                return;
-            }
+            _watchFolder = watchFolder;
 
-            // Set up the FileSystemWatcher.
-            using (FileSystemWatcher watcher = new FileSystemWatcher())
+            // Initialize the FileSystemWatcher to monitor only *.csv files.
+            _watcher = new FileSystemWatcher(_watchFolder, "*.csv")
             {
-                watcher.Path = WatchFolder;
-                watcher.Filter = "*.csv";               // Watch only CSV files.
-                watcher.Created += OnCreated;           // Event raised when a new file appears.
-                watcher.EnableRaisingEvents = true;     // Start monitoring.
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime,
+                EnableRaisingEvents = false,
+                IncludeSubdirectories = false
+            };
 
-                Console.WriteLine($"Monitoring folder: {WatchFolder}");
-                Console.WriteLine("Press ENTER to exit.");
-                Console.ReadLine(); // Keep the application running.
-            }
+            // Subscribe to the Created event.
+            _watcher.Created += OnCsvCreated;
         }
 
-        // Event handler called when a new CSV file is created.
-        private static void OnCreated(object sender, FileSystemEventArgs e)
+        /// <summary>
+        /// Starts monitoring the folder.
+        /// </summary>
+        public void Start()
         {
-            // Give the OS a moment to release the file lock.
-            System.Threading.Thread.Sleep(500);
+            Console.WriteLine($"Starting CSV to XLSX watcher on folder: {_watchFolder}");
+            _watcher.EnableRaisingEvents = true;
+        }
 
-            string sourcePath = e.FullPath;
-            string destPath = Path.ChangeExtension(sourcePath, ".xlsx");
+        /// <summary>
+        /// Stops monitoring the folder.
+        /// </summary>
+        public void Stop()
+        {
+            _watcher.EnableRaisingEvents = false;
+            _watcher.Created -= OnCsvCreated;
+            _watcher.Dispose();
+            Console.WriteLine("Watcher stopped.");
+        }
 
+        // Event handler invoked when a new CSV file appears.
+        private void OnCsvCreated(object sender, FileSystemEventArgs e)
+        {
+            // Run conversion on a separate thread to avoid blocking the watcher.
+            ThreadPool.QueueUserWorkItem(_ => ConvertCsvToXlsx(e.FullPath));
+        }
+
+        // Performs the actual conversion using Aspose.Cells ConversionUtility.
+        private void ConvertCsvToXlsx(string csvPath)
+        {
             try
             {
-                // Use Aspose.Cells ConversionUtility to convert CSV to XLSX.
-                // This follows the provided rule: ConversionUtility.Convert(string, string)
-                ConversionUtility.Convert(sourcePath, destPath);
-                Console.WriteLine($"Converted: {Path.GetFileName(sourcePath)} -> {Path.GetFileName(destPath)}");
+                // Ensure the file is accessible (it may still be being written).
+                WaitForFileReady(csvPath);
+
+                // Determine the output XLSX file path (same name, .xlsx extension).
+                string xlsxPath = Path.ChangeExtension(csvPath, ".xlsx");
+
+                // Use the provided ConversionUtility.Convert method (source, destination).
+                ConversionUtility.Convert(csvPath, xlsxPath);
+
+                Console.WriteLine($"Converted '{Path.GetFileName(csvPath)}' to '{Path.GetFileName(xlsxPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
+                Console.WriteLine($"Error converting '{Path.GetFileName(csvPath)}': {ex.Message}");
             }
+        }
+
+        // Helper method that waits until the file can be opened for reading.
+        private void WaitForFileReady(string filePath)
+        {
+            const int maxAttempts = 10;
+            const int delayMs = 500;
+
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                try
+                {
+                    using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        if (stream.Length > 0)
+                            return; // File is ready.
+                    }
+                }
+                catch (IOException)
+                {
+                    // File is still locked; wait and retry.
+                }
+
+                Thread.Sleep(delayMs);
+            }
+
+            throw new IOException($"File '{filePath}' is not ready for reading after multiple attempts.");
+        }
+    }
+
+    // Example program demonstrating the watcher.
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Specify the folder to monitor. Adjust as needed.
+            string folderToWatch = Path.Combine(Environment.CurrentDirectory, "CsvInput");
+
+            // Ensure the folder exists.
+            Directory.CreateDirectory(folderToWatch);
+
+            var watcher = new CsvToXlsxWatcher(folderToWatch);
+            watcher.Start();
+
+            Console.WriteLine("Press ENTER to exit.");
+            Console.ReadLine();
+
+            watcher.Stop();
         }
     }
 }

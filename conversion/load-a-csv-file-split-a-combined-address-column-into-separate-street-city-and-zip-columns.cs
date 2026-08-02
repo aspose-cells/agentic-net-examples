@@ -1,34 +1,48 @@
+// Title: C# – Split a Combined Address Column from CSV into Street, City, and ZIP with Aspose.Cells
+// Description: Import a CSV file using Aspose.Cells, apply TxtLoadOptions and the TextToColumns method to separate the first column into street, city, and ZIP fields, and save the transformed data as an XLSX workbook.
+// Keywords: Aspose.Cells | C# CSV import | TextToColumns | address parsing | split column | CSV to XLSX conversion | TxtLoadOptions | data transformation | Excel automation | .NET spreadsheet library
+// Common Searches: Aspose.Cells split address column CSV | C# TextToColumns example for address fields | How to separate street city zip in Aspose.Cells | Convert CSV to Excel and split columns .NET | Parse combined address with Aspose.Cells
+// Developer Intent: Load a CSV file, divide a combined address column into separate street, city, and ZIP columns, and export the result as an Excel workbook.
+// Use Cases: Prepare mailing lists by converting raw CSV exports into Excel files with distinct address components for mail‑merge. | Enable reporting on customer locations by splitting address data into separate columns after importing CSV data. | Automate legacy data migration where address fields are concatenated, ensuring each part is stored in its own Excel column.
+// AI Prompts: Write C# code that uses Aspose.Cells to import a CSV, split the first column into street, city, and ZIP using TextToColumns, and save the output as XLSX. | Explain the role of TxtLoadOptions when configuring the separator for TextToColumns in Aspose.Cells. | Suggest robust error‑handling for missing address columns or irregular delimiters when applying TextToColumns in a CSV import workflow.
+
 using System;
 using Aspose.Cells;
 
-class SplitAddressExample
+namespace AddressSplitExample
 {
-    static void Main()
+    // Import a CSV file using Aspose.Cells, apply TxtLoadOptions and the TextToColumns method to separate the first column into street, city, and ZIP fields, and save the transformed data as an XLSX workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet's cells collection
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        static void Main()
+        {
+            // Path to the source CSV file
+            string csvPath = "input.csv";
 
-        // Import the CSV file (assumed to be comma‑separated)
-        string csvPath = "input.csv";
-        // Parameters: file name, delimiter, convert numeric data, first row, first column
-        cells.ImportCSV(csvPath, ",", true, 0, 0);
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
 
-        // Index of the combined address column (zero‑based). Adjust as needed.
-        int addressColumnIndex = 2; // e.g., column C
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Configure TextToColumns options to split by comma
-        TxtLoadOptions txtOptions = new TxtLoadOptions();
-        txtOptions.Separator = ',';
+            // Import the CSV data into the worksheet (lifecycle: load)
+            // Using comma as the delimiter and converting numeric data where possible
+            cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-        // Number of rows to process (including header if present)
-        int totalRows = cells.MaxDataRow + 1;
+            // Determine the number of rows that contain data after import
+            int totalRows = cells.MaxDataRow + 1;
 
-        // Split the address column into separate columns (street, city, zip)
-        cells.TextToColumns(0, addressColumnIndex, totalRows, txtOptions);
+            // Configure split options: use comma as the separator
+            TxtLoadOptions splitOptions = new TxtLoadOptions();
+            splitOptions.Separator = ',';
 
-        // Save the workbook with the split columns
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Split the combined address column (assumed to be column A, index 0)
+            // into separate columns for street, city, and zip (lifecycle: transform)
+            cells.TextToColumns(0, 0, totalRows, splitOptions);
+
+            // Save the resulting workbook (lifecycle: save)
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

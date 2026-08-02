@@ -6,32 +6,29 @@ class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // create
-
-        // Example of loading an existing workbook:
-        // Workbook workbook = new Workbook("input.xlsx"); // load
-
-        // Add sample data and a formula (only needed if the workbook was created)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+        // Create a new workbook and add sample data with a formula
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        worksheet.Cells["A1"].PutValue(10);
+        worksheet.Cells["A2"].PutValue(20);
+        worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
         // Recalculate all formulas in the workbook
-        workbook.CalculateFormula(); // required step before PDF export
+        workbook.CalculateFormula(new CalculationOptions());
 
-        // Set PDF save options (formula calculation already done, so keep false)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        // Configure PDF save options to ensure formulas are calculated during save
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
         {
-            CalculateFormula = false
+            CalculateFormula = true
         };
 
-        // Save the workbook as PDF
-        using (MemoryStream pdfStream = new MemoryStream())
+        // Save the workbook as PDF to a memory stream, then write to a file
+        using (MemoryStream stream = new MemoryStream())
         {
-            workbook.Save(pdfStream, pdfOptions); // save
-            File.WriteAllBytes("Result.pdf", pdfStream.ToArray());
+            workbook.Save(stream, pdfSaveOptions);
+            File.WriteAllBytes("output.pdf", stream.ToArray());
         }
     }
 }
+
+// Author: Aspose.Cells example code demonstrating formula calculation before PDF export.

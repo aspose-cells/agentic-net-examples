@@ -1,85 +1,59 @@
+// Title: C# – Create a Dynamic Column Chart Linked to a Named Spill Range and Update It with Aspose.Cells
+// Description: Demonstrates how to build a workbook, set a SEQUENCE dynamic array in B2, define a named range that points to the spill range (using the # operator), attach a column chart to that named range, save the file, then programmatically change the row count, refresh dynamic array formulas, recalculate, and save the updated workbook so the chart reflects the new data.
+// Keywords: Aspose.Cells C# dynamic chart | named range spill range | SEQUENCE function chart data | refresh dynamic array formulas | programmatic chart update | column chart from dynamic array | Aspose.Cells chart binding
+// Common Searches: bind Aspose.Cells chart to spill range using named range | expand SEQUENCE array and refresh chart in .NET | dynamic chart data source Aspose.Cells C# | update chart after changing source cell Aspose.Cells | create column chart from dynamic array formula
+// Developer Intent: Generate a column chart that reads from a dynamic spill range via a named range and automatically reflects changes made to the source array.
+// Use Cases: Automatically grow a chart when the number of rows returned by a SEQUENCE formula changes. | Use a named range with the # spill operator to keep chart data linked to a dynamic array. | Refresh dynamic array formulas and recalculate the workbook to update chart visuals without manual steps.
+// AI Prompts: Show how to bind an Aspose.Cells column chart to a named range that references a spill range (#) in C#. | Provide code to change the size of a SEQUENCE‑based dynamic array and refresh the linked chart using Aspose.Cells. | Explain the steps required for a chart to update automatically after modifying the cell that controls a dynamic array.
+
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Properties;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsDynamicChartDemo
 {
+    // Demonstrates how to build a workbook, set a SEQUENCE dynamic array in B2, define a named range that points to the spill range (using the # operator), attach a column chart to that named range, save the file, then programmatically change the row count, refresh dynamic array formulas, recalculate, and save the updated workbook so the chart reflects the new data.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // ---------- Create a new workbook ----------
+            Workbook wb = new Workbook();
+            Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // 2. Populate sample data (categories in column A, values in column B)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                string[] categories = { "A", "B", "C", "D", "E" };
-                double[] values = { 10, 20, 30, 40, 50 };
-                for (int i = 0; i < categories.Length; i++)
-                {
-                    sheet.Cells[i + 2, 0].PutValue(categories[i]); // A2:A6
-                    sheet.Cells[i + 2, 1].PutValue(values[i]);    // B2:B6
-                }
+            // ---------- Prepare data for dynamic array ----------
+            // Cell B1 will hold the number of rows for the SEQUENCE function
+            cells["B1"].PutValue(5);                     // initial count = 5
+            // Set a dynamic array formula in B2 that spills vertically
+            cells["B2"].SetDynamicArrayFormula("=SEQUENCE(B1)", new FormulaParseOptions(), true);
 
-                // 3. Set a dynamic array formula in D1 that filters non‑empty values from column B
-                //    The formula will spill into D1:D5 (or fewer rows if data changes)
-                Cell dynamicCell = sheet.Cells["D1"];
-                dynamicCell.SetDynamicArrayFormula("=FILTER(B2:B6, A2:A6<>\"\")", new FormulaParseOptions(), true);
+            // ---------- Create a named range that points to the spill range ----------
+            // The spill range is referenced with the # symbol
+            int nameIdx = wb.Worksheets.Names.Add("ChartData");
+            wb.Worksheets.Names[nameIdx].RefersTo = "=Sheet1!$B$2#";
 
-                // 4. Create a named range that points to the spill range of the dynamic array (D1#)
-                int nameIndex = sheet.Workbook.Worksheets.Names.Add("ChartData");
-                Name chartDataName = sheet.Workbook.Worksheets.Names[nameIndex];
-                chartDataName.RefersTo = "=Sheet1!$D$1#";
+            // ---------- Add a column chart that uses the named range ----------
+            // Use the Add method that accepts dataRange (named range) and orientation flag
+            int chartIdx = sheet.Charts.Add(ChartType.Column, "ChartData", true, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.Title.Text = "Dynamic Data Chart";
 
-                // 5. Retrieve the range via the Name object (demonstrates GetRange rule)
-                AsposeRange chartDataRange = chartDataName.GetRange();
-                Console.WriteLine($"Named range 'ChartData' refers to address: {chartDataRange.RefersTo}");
+            // ---------- Save the initial workbook ----------
+            wb.Save("DynamicChart_Initial.xlsx");
 
-                // 6. Add a column chart to the worksheet
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 25, 8);
-                Chart chart = sheet.Charts[chartIndex];
+            // ---------- Update the dynamic array range programmatically ----------
+            // Change the count in B1 to expand the spill range
+            cells["B1"].PutValue(8); // new count = 8
 
-                // 7. Link the chart to the named range using SetChartDataRange
-                //    The second parameter (true) indicates that the series are plotted by column
-                chart.SetChartDataRange("ChartData", true);
+            // Refresh dynamic array formulas so the spill range updates
+            wb.RefreshDynamicArrayFormulas(true);
 
-                // 8. Set chart title and enable legend
-                chart.Title.Text = "Dynamic Chart Linked to Named Range";
-                chart.ShowLegend = true;
+            // Optionally recalculate the workbook (not strictly required for the chart)
+            wb.CalculateFormula();
 
-                // 9. Save the initial workbook
-                string initialPath = "DynamicChart_Initial.xlsx";
-                workbook.Save(initialPath);
-                Console.WriteLine($"Saved: {Path.GetFullPath(initialPath)}");
-
-                // ------------------------------------------------------------
-                // 10. Update the underlying data programmatically (change B4 value)
-                sheet.Cells["B4"].PutValue(99); // Change value for category "C"
-
-                // 11. Refresh dynamic array formulas so the spill range updates
-                workbook.RefreshDynamicArrayFormulas(true);
-
-                // 12. Recalculate the chart to reflect the new data points
-                chart.Calculate();
-
-                // 13. Save the workbook after the update
-                string updatedPath = "DynamicChart_Updated.xlsx";
-                workbook.Save(updatedPath);
-                Console.WriteLine($"Saved: {Path.GetFullPath(updatedPath)}");
-
-                Console.WriteLine("Workbook saved. Dynamic chart reflects updated data.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // ---------- Save the workbook after update ----------
+            wb.Save("DynamicChart_Updated.xlsx");
         }
     }
 }

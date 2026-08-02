@@ -3,101 +3,60 @@ using System.Collections;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfBookmarksDemo
+namespace PdfBookmarkDemo
 {
+    // Author: Aspose.Cells .NET example
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and add three worksheets (chapters)
+            // Create a new workbook and add three worksheets
             Workbook workbook = new Workbook();
-            Worksheet chapter1 = workbook.Worksheets[0];
-            chapter1.Name = "Chapter 1";
-            Worksheet chapter2 = workbook.Worksheets.Add("Chapter 2");
-            Worksheet chapter3 = workbook.Worksheets.Add("Chapter 3");
+            Worksheet chapterSheet = workbook.Worksheets[0];
+            Worksheet sectionSheet1 = workbook.Worksheets.Add("Section1");
+            Worksheet sectionSheet2 = workbook.Worksheets.Add("Section2");
 
-            // Populate a cell in each worksheet that will serve as the bookmark destination
-            chapter1.Cells["A1"].PutValue("Content of Chapter 1");
-            chapter2.Cells["A1"].PutValue("Content of Chapter 2");
-            chapter3.Cells["A1"].PutValue("Content of Chapter 3");
+            // Set values that will serve as bookmark destinations
+            chapterSheet.Cells["A1"].PutValue("Chapter 1 Content");
+            sectionSheet1.Cells["A1"].PutValue("Section 1.1 Content");
+            sectionSheet2.Cells["A1"].PutValue("Section 1.2 Content");
 
             // ----- Build hierarchical PDF bookmarks -----
-            // Root bookmark (invisible, its children will appear at top level)
-            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
-            {
-                Text = null,                     // Invisible root
-                SubEntry = new ArrayList(),
-                IsOpen = true
-            };
-
-            // Chapter 1 bookmark (parent)
-            PdfBookmarkEntry chapter1Bookmark = new PdfBookmarkEntry
+            // Root bookmark representing the chapter
+            PdfBookmarkEntry chapterBookmark = new PdfBookmarkEntry
             {
                 Text = "Chapter 1",
-                Destination = chapter1.Cells["A1"],
-                IsOpen = true,
+                Destination = chapterSheet.Cells["A1"],
+                IsOpen = true,          // Expanded by default
                 SubEntry = new ArrayList()
             };
 
-            // Sections under Chapter 1
-            PdfBookmarkEntry section1_1 = new PdfBookmarkEntry
+            // Child bookmark for Section 1.1
+            PdfBookmarkEntry sectionBookmark1 = new PdfBookmarkEntry
             {
                 Text = "Section 1.1",
-                Destination = chapter1.Cells["B1"] // Example destination; can be any cell
+                Destination = sectionSheet1.Cells["A1"]
             };
-            PdfBookmarkEntry section1_2 = new PdfBookmarkEntry
+
+            // Child bookmark for Section 1.2
+            PdfBookmarkEntry sectionBookmark2 = new PdfBookmarkEntry
             {
                 Text = "Section 1.2",
-                Destination = chapter1.Cells["C1"]
-            };
-            chapter1Bookmark.SubEntry.Add(section1_1);
-            chapter1Bookmark.SubEntry.Add(section1_2);
-
-            // Chapter 2 bookmark (parent) with no sub‑sections
-            PdfBookmarkEntry chapter2Bookmark = new PdfBookmarkEntry
-            {
-                Text = "Chapter 2",
-                Destination = chapter2.Cells["A1"],
-                IsOpen = true
+                Destination = sectionSheet2.Cells["A1"]
             };
 
-            // Chapter 3 bookmark (parent) with nested sections
-            PdfBookmarkEntry chapter3Bookmark = new PdfBookmarkEntry
-            {
-                Text = "Chapter 3",
-                Destination = chapter3.Cells["A1"],
-                IsOpen = true,
-                SubEntry = new ArrayList()
-            };
-            PdfBookmarkEntry section3_1 = new PdfBookmarkEntry
-            {
-                Text = "Section 3.1",
-                Destination = chapter3.Cells["B1"]
-            };
-            PdfBookmarkEntry section3_2 = new PdfBookmarkEntry
-            {
-                Text = "Section 3.2",
-                Destination = chapter3.Cells["C1"]
-            };
-            chapter3Bookmark.SubEntry.Add(section3_1);
-            chapter3Bookmark.SubEntry.Add(section3_2);
-
-            // Assemble the hierarchy under the invisible root
-            rootBookmark.SubEntry.Add(chapter1Bookmark);
-            rootBookmark.SubEntry.Add(chapter2Bookmark);
-            rootBookmark.SubEntry.Add(chapter3Bookmark);
+            // Attach child entries to the chapter bookmark
+            chapterBookmark.SubEntry.Add(sectionBookmark1);
+            chapterBookmark.SubEntry.Add(sectionBookmark2);
 
             // Configure PDF save options with the bookmark hierarchy
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Bookmark = rootBookmark,
-                ExportDocumentStructure = true   // Preserve structure for better navigation
+                Bookmark = chapterBookmark
             };
 
-            // Save the workbook as PDF with hierarchical bookmarks
+            // Save the workbook as a PDF with hierarchical bookmarks
             workbook.Save("HierarchicalBookmarks.pdf", pdfOptions);
-
-            Console.WriteLine("PDF with hierarchical bookmarks created successfully.");
         }
     }
 }

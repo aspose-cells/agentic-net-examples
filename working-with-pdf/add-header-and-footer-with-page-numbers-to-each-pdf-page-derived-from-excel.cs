@@ -1,44 +1,31 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHeaderFooterPdf
+namespace AsposeCellsPdfHeaderFooter
 {
+    // Author: Aspose.Cells .NET example – adds header/footer with page numbers and saves as PDF
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Load an existing Excel workbook (replace with your file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Iterate through all worksheets and set header/footer
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Header: left section – "Page X of Y"
+                sheet.PageSetup.SetHeader(0, "Page &P of &N");
 
-            // Get the PageSetup object to configure headers and footers
-            PageSetup pageSetup = worksheet.PageSetup;
+                // Footer: center section – "Page X of Y"
+                sheet.PageSetup.SetFooter(1, "Page &P of &N");
+            }
 
-            // Set header sections:
-            // Left: file name without path
-            // Center: page number of current page and total pages
-            // Right: current date
-            pageSetup.SetHeader(0, "&F");                 // Left section
-            pageSetup.SetHeader(1, "Page &P of &N");      // Center section
-            pageSetup.SetHeader(2, "&D");                 // Right section
-
-            // Set footer sections (optional, similar to header)
-            pageSetup.SetFooter(0, "&A");                 // Left: sheet name
-            pageSetup.SetFooter(1, "Confidential");       // Center: custom text
-            pageSetup.SetFooter(2, "&T");                 // Right: current time
-
-            // Optionally, ensure that the same header/footer appears on all pages
-            pageSetup.IsHFDiffFirst = false;
-            pageSetup.IsHFDiffOddEven = false;
-
-            // Save the workbook as PDF
+            // Prepare PDF save options (default options are sufficient for header/footer)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            workbook.Save("WorkbookWithHeaderFooter.pdf", pdfOptions);
 
-            Console.WriteLine("PDF saved with headers and footers.");
+            // Save the workbook as PDF; each page will contain the defined header/footer
+            workbook.Save("output.pdf", pdfOptions);
         }
     }
 }

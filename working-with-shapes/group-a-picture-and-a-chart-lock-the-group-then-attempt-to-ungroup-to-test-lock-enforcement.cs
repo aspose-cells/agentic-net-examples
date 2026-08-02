@@ -1,98 +1,85 @@
+// Title: Lock a GroupShape of a picture and chart and verify ungroup protection with Aspose.Cells for .NET
+// Description: Demonstrates how to add an image and a column chart to a worksheet, group them, lock the GroupShape (including the Ungroup property), protect the sheet, and attempt to ungroup to confirm that the lock is enforced. The workbook is saved as "GroupLockDemo.xlsx".
+// Keywords: Aspose.Cells group shape lock | lock grouped picture chart .NET | prevent ungroup Aspose.Cells | worksheet protection shape lock C# | GroupShape Ungroup restriction
+// Common Searches: how to lock a grouped shape in Aspose.Cells | prevent ungrouping of chart and image Aspose.Cells C# | group picture and chart then protect worksheet Aspose.Cells | test shape lock enforcement Aspose.Cells .NET | lock GroupShape Ungroup property
+// Developer Intent: Group a picture and a chart, lock the group, protect the worksheet, and confirm that ungrouping is blocked.
+// Use Cases: Create a read‑only dashboard where visual elements stay together. | Distribute Excel templates that keep grouped objects intact while allowing cell edits. | Validate shape‑locking behavior by programmatically attempting an ungroup operation.
+// AI Prompts: Show C# code to lock a GroupShape and disable its Ungroup operation using Aspose.Cells. | Explain how to protect a worksheet while keeping grouped shapes locked for end users. | Provide a method to check the lock status of a GroupShape before calling Ungroup.
+
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
 
 namespace AsposeCellsGroupLockDemo
 {
-    class Program
+    // Demonstrates how to add an image and a column chart to a worksheet, group them, lock the GroupShape (including the Ungroup property), protect the sheet, and attempt to ungroup to confirm that the lock is enforced. The workbook is saved as "GroupLockDemo.xlsx".
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // Add a picture to the worksheet (if the file exists)
-                // -------------------------------------------------
-                Picture? picture = null;
-                const string imagePath = "example.jpg";
-
+                // Add a picture to the worksheet if the file exists
+                Picture picture = null;
+                string imagePath = "example.jpg";
                 if (File.Exists(imagePath))
                 {
-                    int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
-                    picture = sheet.Pictures[pictureIndex];
+                    int pictureIndex = worksheet.Pictures.Add(0, 0, imagePath);
+                    picture = worksheet.Pictures[pictureIndex];
                 }
                 else
                 {
-                    Console.WriteLine($"Image file \"{imagePath}\" not found. Skipping picture addition.");
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
                 }
 
-                // -------------------------------------------------
                 // Add a chart to the worksheet
-                // -------------------------------------------------
-                // Add returns the chart index; retrieve the Chart object afterwards
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 0);
-                Chart chart = sheet.Charts[chartIndex];
-                // Set chart size
-                chart.ChartObject.Width = 400;
-                chart.ChartObject.Height = 300;
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = worksheet.Charts[chartIndex];
+                Shape chartShape = chart.ChartObject;
 
-                // -------------------------------------------------
-                // Group the picture (if added) and the chart shape
-                // -------------------------------------------------
-                Shape[] shapesToGroup = picture != null
-                    ? new Shape[] { picture, chart.ChartObject }
-                    : new Shape[] { chart.ChartObject };
-
-                GroupShape group = sheet.Shapes.Group(shapesToGroup);
-
-                // -------------------------------------------------
-                // Lock the group (prevent ungrouping when sheet is protected)
-                // -------------------------------------------------
-                group.SetLockedProperty(ShapeLockType.Group, true);
-                group.IsLocked = true;
-
-                // -------------------------------------------------
-                // Protect the worksheet to enforce the lock
-                // -------------------------------------------------
-                sheet.Protection.AllowEditingObject = false;
-                sheet.Protect(ProtectionType.All);
-
-                // -------------------------------------------------
-                // Attempt to ungroup the locked group and capture the result
-                // -------------------------------------------------
-                try
+                // Ensure we have both shapes before grouping
+                if (picture != null)
                 {
-                    group.Ungroup();
-                    Console.WriteLine("Ungroup succeeded (lock not enforced).");
+                    // Group the picture and the chart shape together
+                    GroupShape groupShape = worksheet.Shapes.Group(new Shape[] { picture, chartShape });
+
+                    // Lock the group shape to prevent modifications when the sheet is protected
+                    groupShape.IsLocked = true;
+                    // Additionally lock the ungroup operation specifically
+                    groupShape.SetLockedProperty(ShapeLockType.Ungroup, true);
+
+                    // Protect the worksheet so that locked objects cannot be edited
+                    worksheet.Protect(ProtectionType.All);
+
+                    // Attempt to ungroup the locked group shape and capture the result
+                    try
+                    {
+                        groupShape.Ungroup();
+                        Console.WriteLine("Ungroup succeeded (unexpected).");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ungroup failed as expected: " + ex.Message);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Ungroup failed as expected: {ex.Message}");
+                    Console.WriteLine("Picture not added; skipping grouping and locking operations.");
                 }
 
-                // -------------------------------------------------
                 // Save the workbook
-                // -------------------------------------------------
-                const string outputPath = "GroupLockTest.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
-                }
+                workbook.Save("GroupLockDemo.xlsx");
+                Console.WriteLine("Workbook saved as 'GroupLockDemo.xlsx'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
             }
         }
     }

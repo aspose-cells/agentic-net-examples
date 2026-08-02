@@ -8,25 +8,25 @@ namespace AsposeCellsPivotRefreshOnOpenDemo
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(850);
-            sheet.Cells["A4"].PutValue("Orange");
-            sheet.Cells["B4"].PutValue(950);
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue(1000);
+            worksheet.Cells["A3"].PutValue("Banana");
+            worksheet.Cells["B3"].PutValue(2000);
+            worksheet.Cells["A4"].PutValue("Orange");
+            worksheet.Cells["B4"].PutValue(3000);
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add a pivot table based on the sample data
+            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-            // Configure the pivot table (row field and data field)
+            // Configure the pivot table (row and data fields)
             pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
             pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales column
 

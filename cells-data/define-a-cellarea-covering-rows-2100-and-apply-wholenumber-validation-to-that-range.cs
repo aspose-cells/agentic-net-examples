@@ -1,42 +1,42 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsValidationDemo
 {
-    static void Main()
+    class Program
     {
-        try
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Define a CellArea that covers rows 2‑100 (zero‑based indices 1‑99) in column A (column index 0)
-            CellArea area = CellArea.CreateCellArea(1, 0, 99, 0);
+            // Define a cell area that covers rows 2‑100 in column A (zero‑based indices)
+            // Row 2 -> index 1, Row 100 -> index 99, Column A -> index 0
+            CellArea validationArea = CellArea.CreateCellArea(1, 0, 99, 0);
 
-            // Add a validation for the defined area
-            int validationIndex = sheet.Validations.Add(area);
+            // Add a whole‑number validation to the defined area
+            int validationIndex = sheet.Validations.Add(validationArea);
             Validation validation = sheet.Validations[validationIndex];
 
-            // Configure the validation as whole‑number type
+            // Configure the validation as a whole‑number between 1 and 1000
             validation.Type = ValidationType.WholeNumber;
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = "1";      // Minimum allowed value
+            validation.Formula2 = "1000";   // Maximum allowed value
+            validation.ShowInput = true;
+            validation.ShowError = true;
+            validation.InCellDropDown = false;
 
-            // Aspose.Cells versions prior to 20.9 do not have OperatorType.GreaterThanOrEqual.
-            // Use GreaterThan with a threshold of -1 to achieve ">= 0".
-            validation.Operator = OperatorType.GreaterThan;
-            validation.Formula1 = "-1";
-
-            // Determine output path
-            string outputPath = "WholeNumberValidation.xlsx";
+            // Optionally, put some sample data in the range
+            for (int row = 1; row <= 99; row++)
+            {
+                cells[row, 0].PutValue(row); // Example values
+            }
 
             // Save the workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            workbook.Save("WholeNumberValidation.xlsx", SaveFormat.Xlsx);
         }
     }
 }

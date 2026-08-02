@@ -2,17 +2,27 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-class Program
+namespace AsposeCellsCustomPropertyDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            // Path to the existing workbook to open
+            string inputPath = "input.xlsx";
 
-        // Add a custom Boolean property named "IsReviewed" with value true
-        workbook.CustomDocumentProperties.Add("IsReviewed", true);
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook to a file
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Add a custom Boolean property named "IsReviewed" with value true
+            workbook.CustomDocumentProperties.Add("IsReviewed", true);
+
+            // Save the workbook with the new property
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+
+            // Optional: Verify that the property was added
+            Console.WriteLine($"Custom Property 'IsReviewed' Value: {workbook.CustomDocumentProperties["IsReviewed"].Value}");
+        }
     }
 }

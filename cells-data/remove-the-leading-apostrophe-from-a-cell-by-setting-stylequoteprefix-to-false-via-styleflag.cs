@@ -7,13 +7,14 @@ namespace AsposeCellsQuotePrefixDemo
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Access a cell and set a value that starts with a single quote (apostrophe)
-            Cell cell = worksheet.Cells["B2"];
-            cell.PutValue("'12345"); // The leading apostrophe forces Excel to treat the value as text
+            // Put a value that starts with a single quote (apostrophe)
+            Cell cell = cells["B2"];
+            cell.PutValue("'12345"); // Excel treats this as text with QuotePrefix = true
 
             // Create a style and set QuotePrefix to false (remove the leading apostrophe)
             Style style = workbook.CreateStyle();
@@ -23,17 +24,15 @@ namespace AsposeCellsQuotePrefixDemo
             StyleFlag flag = new StyleFlag();
             flag.QuotePrefix = true;
 
-            // Apply the style to the cell using the flag (lifecycle: set style)
+            // Apply the style to the cell using the flag
             cell.SetStyle(style, flag);
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("QuotePrefixRemoved.xlsx", SaveFormat.Xlsx);
+            // Verify the change (should be false)
+            Console.WriteLine("QuotePrefix after removal: " + cell.GetStyle().QuotePrefix);
+            Console.WriteLine("Cell value after removal: " + cell.StringValue);
 
-            // Optional: Verify the change by reading the property back
-            Workbook loaded = new Workbook("QuotePrefixRemoved.xlsx");
-            Cell loadedCell = loaded.Worksheets[0].Cells["B2"];
-            Console.WriteLine("QuotePrefix after removal: " + loadedCell.GetStyle().QuotePrefix);
-            Console.WriteLine("Cell value: " + loadedCell.StringValue);
+            // Save the workbook
+            workbook.Save("QuotePrefixRemoved.xlsx");
         }
     }
 }

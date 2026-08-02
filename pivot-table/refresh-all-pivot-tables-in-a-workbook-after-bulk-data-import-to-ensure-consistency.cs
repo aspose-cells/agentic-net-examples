@@ -1,46 +1,42 @@
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotRefreshDemo
+class RefreshPivotTablesAfterImport
 {
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook that contains one or more PivotTables.
+        // Replace "SourceData.xlsx" with the path to your workbook.
+        Workbook workbook = new Workbook("SourceData.xlsx");
+
+        // -----------------------------------------------------------------
+        // Bulk data import – example of updating a data range.
+        // Adjust the range and values according to your actual import logic.
+        // -----------------------------------------------------------------
+        Worksheet dataSheet = workbook.Worksheets[0]; // assuming data is on the first sheet
+
+        // Example: write header
+        dataSheet.Cells["A1"].PutValue("Product");
+        dataSheet.Cells["B1"].PutValue("Sales");
+
+        // Example: import 5 rows of data
+        string[] products = { "Apple", "Orange", "Banana", "Grape", "Mango" };
+        int[] sales = { 1200, 1500, 800, 950, 1100 };
+
+        for (int i = 0; i < products.Length; i++)
         {
-            // Create a new workbook and get the first worksheet for data import
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
-
-            // Simulate bulk data import by filling a range with sample values
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Amount");
-            for (int i = 2; i <= 101; i++)
-            {
-                // Alternate categories "A" and "B"
-                dataSheet.Cells[$"A{i}"].PutValue(i % 2 == 0 ? "A" : "B");
-                // Populate amount with a simple calculation
-                dataSheet.Cells[$"B{i}"].PutValue(i * 10);
-            }
-
-            // Add a new worksheet that will contain the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-            // Create a pivot table based on the imported data range
-            // Note: the range includes the sheet name ("Data!") to reference the source worksheet
-            int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B101", "D3", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Configure the pivot table: rows = Category, data = Sum of Amount
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Amount
-
-            // Refresh all pivot tables in the workbook to reflect the newly imported data
-            workbook.Worksheets.RefreshPivotTables();
-
-            // Save the workbook with the refreshed pivot table
-            workbook.Save("PivotRefreshAfterImport.xlsx");
+            dataSheet.Cells[i + 2, 0].PutValue(products[i]);   // Column A
+            dataSheet.Cells[i + 2, 1].PutValue(sales[i]);     // Column B
         }
+
+        // ---------------------------------------------------------------
+        // Refresh all PivotTables in the workbook to reflect the new data.
+        // Uses WorksheetCollection.RefreshPivotTables() method.
+        // ---------------------------------------------------------------
+        workbook.Worksheets.RefreshPivotTables();
+
+        // Save the updated workbook.
+        // Replace "RefreshedData.xlsx" with your desired output path.
+        workbook.Save("RefreshedData.xlsx");
     }
 }

@@ -1,12 +1,22 @@
+// Title: Import a Mixed‑Type ArrayList into Excel with Aspose.Cells (C#)
+// Description: Creates a Workbook, converts an ArrayList that holds a string, int, double, DateTime and bool into an object array, and uses Cells.ImportObjectArray to write the values horizontally starting at A1 while preserving each data type. The workbook is then saved as an XLSX file.
+// Keywords: Aspose.Cells | ImportObjectArray | ArrayList to Excel | mixed data types | C# Excel export | preserve data types | DateTime cell formatting | boolean Excel value | numeric formatting | Excel worksheet import
+// Common Searches: Aspose.Cells import ArrayList mixed types C# | ImportObjectArray preserve DateTime and bool | How to export heterogeneous collection to Excel .NET | C# write string, int, double, DateTime to Excel in one row
+// Developer Intent: Write a heterogeneous ArrayList to an Excel worksheet while keeping each element’s native type.
+// Use Cases: Export a product catalog row (name, quantity, price, expiry date, in‑stock flag) in a single call. | Generate daily status reports that include dates and boolean flags directly from a collection. | Populate a template row with mixed‑type test data for QA or demo purposes.
+// AI Prompts: Show C# code that converts a List<object> containing strings, numbers, dates and booleans into an object array and imports it into a specific Excel range using Aspose.Cells ImportObjectArray, then applies appropriate number and date formats. | Explain how to use Aspose.Cells ImportObjectArray to write mixed‑type data to a worksheet while preserving each type, and how to save the workbook as XLSX.
+
 using System;
 using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsArrayListImportDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    // Creates a Workbook, converts an ArrayList that holds a string, int, double, DateTime and bool into an object array, and uses Cells.ImportObjectArray to write the values horizontally starting at A1 while preserving each data type. The workbook is then saved as an XLSX file.
+    public class ImportArrayListWithMixedTypes
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
@@ -14,89 +24,42 @@ namespace AsposeCellsArrayListImportDemo
                 Workbook workbook = new Workbook();
                 Cells cells = workbook.Worksheets[0].Cells;
 
-                // -----------------------------------------------------------------
-                // 1. Prepare header row (string values) and import it horizontally
-                // -----------------------------------------------------------------
-                ArrayList header = new ArrayList
+                // Prepare an ArrayList containing mixed data types
+                ArrayList mixedData = new ArrayList
                 {
-                    "Name",      // Text
-                    "Age",       // Integer
-                    "Salary",    // Double
-                    "HireDate",  // DateTime
-                    "Active"     // Boolean
+                    "Product",                     // string
+                    150,                           // integer
+                    99.99,                         // double
+                    new DateTime(2023, 12, 31),    // DateTime
+                    true                           // boolean
                 };
 
-                // Import header at row 0, column 0 (A1) horizontally (isVertical = false)
-                cells.ImportArrayList(header, 0, 0, false);
+                // Convert the ArrayList to an object array – ImportObjectArray preserves each value's type
+                object[] dataArray = (object[])mixedData.ToArray(typeof(object));
 
-                // ---------------------------------------------------------------
-                // 2. Prepare data rows with mixed types and import them
-                // ---------------------------------------------------------------
-                // Row 1
-                ArrayList row1 = new ArrayList
-                {
-                    "John Doe",
-                    30,
-                    55000.75,
-                    new DateTime(2022, 5, 1),
-                    true
-                };
-                cells.ImportArrayList(row1, 1, 0, false); // starts at A2
+                // Import the data horizontally starting at cell A1 (row 0, column 0)
+                cells.ImportObjectArray(dataArray, 0, 0, false);
 
-                // Row 2
-                ArrayList row2 = new ArrayList
-                {
-                    "Jane Smith",
-                    28,
-                    62000.00,
-                    new DateTime(2021, 11, 15),
-                    false
-                };
-                cells.ImportArrayList(row2, 2, 0, false); // starts at A3
+                // Define output file path
+                string outputPath = "ImportArrayListMixedTypes.xlsx";
 
-                // Row 3
-                ArrayList row3 = new ArrayList
-                {
-                    "Bob Johnson",
-                    45,
-                    72000.5,
-                    new DateTime(2020, 2, 20),
-                    true
-                };
-                cells.ImportArrayList(row3, 3, 0, false); // starts at A4
-
-                // ---------------------------------------------------------------
-                // 3. Apply column-specific formatting to ensure correct cell types
-                // ---------------------------------------------------------------
-                // Column B (Age) – integer format (no decimal places)
-                Style intStyle = workbook.CreateStyle();
-                intStyle.Number = 0; // integer without decimals
-                StyleFlag intFlag = new StyleFlag { All = true };
-                cells.Columns[1].ApplyStyle(intStyle, intFlag);
-
-                // Column C (Salary) – two decimal places
-                Style doubleStyle = workbook.CreateStyle();
-                doubleStyle.Number = 2; // number with two decimal places
-                StyleFlag doubleFlag = new StyleFlag { All = true };
-                cells.Columns[2].ApplyStyle(doubleStyle, doubleFlag);
-
-                // Column D (HireDate) – custom date format
-                Style dateStyle = workbook.CreateStyle();
-                dateStyle.Custom = "yyyy-mm-dd";
-                StyleFlag dateFlag = new StyleFlag { All = true };
-                cells.Columns[3].ApplyStyle(dateStyle, dateFlag);
-
-                // Column E (Active) – display as TRUE/FALSE (default text is fine)
-
-                // ---------------------------------------------------------------
-                // 4. Save the workbook
-                // ---------------------------------------------------------------
-                workbook.Save("ArrayListMixedTypes.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ImportArrayListWithMixedTypes.Run();
         }
     }
 }

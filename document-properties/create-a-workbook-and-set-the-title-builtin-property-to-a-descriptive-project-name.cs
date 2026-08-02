@@ -1,26 +1,42 @@
 using System;
 using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsTitleDemo
+namespace AsposeCellsExamples
 {
-    class Program
+    public class SetWorkbookTitleDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook (uses the Workbook constructor - lifecycle create rule)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook (lifecycle: create)
+                Workbook workbook = new Workbook();
 
-            // Set the built‑in Title property to a descriptive project name
-            workbook.BuiltInDocumentProperties.Title = "Project XYZ - Financial Report";
+                // Set the built‑in Title property to a descriptive project name
+                workbook.BuiltInDocumentProperties.Title = "Project XYZ - Financial Report";
 
-            // Optionally display the title to verify
-            Console.WriteLine("Workbook Title: " + workbook.BuiltInDocumentProperties.Title);
+                // Define output file path
+                string outputPath = "ProjectReport.xlsx";
 
-            // Save the workbook to a file (uses the Save method - lifecycle save rule)
-            string outputPath = "ProjectXYZ_Report.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+                // Save the workbook to a file (lifecycle: save)
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log any runtime errors
+                Console.Error.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            Console.WriteLine("Workbook saved to: " + outputPath);
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            SetWorkbookTitleDemo.Run();
         }
     }
 }

@@ -1,7 +1,8 @@
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-class Program
+class SparklineEmptyCellAsZero
 {
     static void Main()
     {
@@ -9,37 +10,34 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate row 9 (index 8) with sample data, leaving some cells empty
-        sheet.Cells["A9"].PutValue(10);
-        sheet.Cells["B9"].PutValue(null); // empty cell
-        sheet.Cells["C9"].PutValue(5);
-        sheet.Cells["D9"].PutValue(null); // empty cell
-        sheet.Cells["E9"].PutValue(7);
-        sheet.Cells["F9"].PutValue(3);
-        sheet.Cells["G9"].PutValue(null); // empty cell
-        sheet.Cells["H9"].PutValue(2);
-        sheet.Cells["I9"].PutValue(4);
-        sheet.Cells["J9"].PutValue(null); // empty cell
-        sheet.Cells["K9"].PutValue(6);
-        sheet.Cells["L9"].PutValue(8);
+        // Sample data for the sparkline (you can adjust the range as needed)
+        sheet.Cells["A1"].PutValue(5);
+        sheet.Cells["B1"].PutValue(null); // empty cell
+        sheet.Cells["C1"].PutValue(3);
+        sheet.Cells["D1"].PutValue(7);
 
-        // Define the location where the sparkline will be placed (cell M9)
+        // Define the location where the sparkline will be placed: cell M9
+        // Column M = 12 (0‑based), Row 9 = 8 (0‑based)
         CellArea location = new CellArea
         {
-            StartRow = 8,   // Row 9 (zero‑based index)
-            EndRow = 8,
-            StartColumn = 12, // Column M (zero‑based index)
-            EndColumn = 12
+            StartColumn = 12,
+            EndColumn = 12,
+            StartRow = 8,
+            EndRow = 8
         };
 
-        // Add a line sparkline group that uses the data range A9:L9
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A9:L9", false, location);
-        SparklineGroup group = sheet.SparklineGroups[groupIndex];
+        // Add a sparkline group with the data range A1:D1 and place it at M9
+        int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
+        SparklineGroup group = sheet.SparklineGroups[groupIdx];
 
-        // Configure the group to treat empty cells as zeros for accurate totals
+        // Ensure empty cells are plotted as zeros for accurate totals
         group.PlotEmptyCellsType = PlotEmptyCellsType.Zero;
 
+        // (Optional) Add the sparkline to the group – Add method also creates the sparkline
+        // The data range is already specified in the Add call above, so this line is not strictly required.
+        // group.Sparklines.Add(sheet.Name + "!A1:D1", 8, 12);
+
         // Save the workbook
-        workbook.Save("SparklineEmptyAsZero.xlsx");
+        workbook.Save("SparklineWithZeroEmptyCells.xlsx");
     }
 }

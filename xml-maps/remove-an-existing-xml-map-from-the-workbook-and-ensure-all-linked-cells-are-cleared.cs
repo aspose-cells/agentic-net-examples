@@ -2,53 +2,40 @@ using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsXmlMapRemoval
 {
-    public class RemoveXmlMapAndClearLinkedCells
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            Run();
-        }
-
-        public static void Run()
-        {
-            const string inputPath = "InputWithXmlMap.xlsx";
-            const string outputPath = "OutputWithoutXmlMap.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             try
             {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
                 // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Remove all XML maps if any exist
-                if (workbook.Worksheets.XmlMaps.Count > 0)
-                {
-                    for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
-                    {
-                        XmlMap map = workbook.Worksheets.XmlMaps[i];
-                        Console.WriteLine($"Removing XML map: {map.Name}");
-                    }
+                // Remove all XML maps from the workbook
+                workbook.Worksheets.XmlMaps.Clear();
 
-                    workbook.Worksheets.XmlMaps.Clear();
-                }
-
-                // Clear contents of every worksheet
+                // Clear the contents of all cells in each worksheet
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Determine the used range; if sheet is empty, skip clearing
+                    // Determine the used range
                     int maxRow = sheet.Cells.MaxDataRow;
                     int maxColumn = sheet.Cells.MaxDataColumn;
 
+                    // Skip empty sheets
                     if (maxRow < 0 || maxColumn < 0)
-                        continue; // nothing to clear
+                        continue;
 
                     // Define the area covering all used cells
                     CellArea area = new CellArea
@@ -59,16 +46,16 @@ namespace AsposeCellsExamples
                         EndColumn = maxColumn
                     };
 
-                    // Clear values, formulas and formatting within the area
                     sheet.Cells.ClearContents(area);
                 }
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine("XML maps removed and linked cells cleared successfully.");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
+                // Log any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

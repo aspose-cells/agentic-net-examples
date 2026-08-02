@@ -1,49 +1,20 @@
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+class Program
 {
-    public class ConvertStringToNumericInFirstSheet
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        public static void Run()
-        {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+        // Access the first worksheet's cells collection
+        Cells firstSheetCells = workbook.Worksheets[0].Cells;
 
-                // Verify input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+        // Convert all string values that can be interpreted as numbers (or dates) to numeric values
+        firstSheetCells.ConvertStringToNumericValue();
 
-                // Load the workbook from the input file
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (index 0)
-                Worksheet firstSheet = workbook.Worksheets[0];
-
-                // Convert string values that can be interpreted as numbers to numeric values
-                firstSheet.Cells.ConvertStringToNumericValue();
-
-                // Save the modified workbook to the output file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display the error message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Save the workbook; other worksheets remain unchanged
+        workbook.Save("output.xlsx");
     }
 }

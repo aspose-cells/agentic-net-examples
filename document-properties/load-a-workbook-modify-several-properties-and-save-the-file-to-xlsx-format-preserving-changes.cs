@@ -7,31 +7,30 @@ namespace AsposeCellsDemo
     {
         static void Main()
         {
-            // Load an existing workbook from disk
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            // Path to the source workbook (must exist)
+            string sourcePath = "input.xlsx";
 
-            // Modify built‑in document properties
-            workbook.BuiltInDocumentProperties["Author"].Value = "Jane Doe";
-            workbook.BuiltInDocumentProperties["Title"].Value = "Modified Workbook";
+            // Load the workbook using the string constructor (provided rule)
+            using (Workbook workbook = new Workbook(sourcePath))
+            {
+                // Modify default style
+                workbook.DefaultStyle.Font.Name = "Arial";
+                workbook.DefaultStyle.Font.Size = 12;
 
-            // Add a custom document property
-            workbook.CustomDocumentProperties.Add("Reviewed", true);
+                // Update built‑in document property
+                workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
 
-            // Change the default style (font name and size)
-            workbook.DefaultStyle.Font.Name = "Calibri";
-            workbook.DefaultStyle.Font.Size = 11;
+                // Add a custom document property
+                workbook.CustomDocumentProperties.Add("Reviewed", true);
 
-            // Add a new worksheet and insert some data
-            int newSheetIndex = workbook.Worksheets.Add();
-            Worksheet newSheet = workbook.Worksheets[newSheetIndex];
-            newSheet.Name = "Summary";
-            newSheet.Cells["A1"].PutValue("Report generated on:");
-            newSheet.Cells["B1"].PutValue(DateTime.Now);
+                // Enable iterative calculation in workbook settings
+                workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
+                workbook.Settings.FormulaSettings.MaxIteration = 100;
+                workbook.Settings.FormulaSettings.MaxChange = 0.001;
 
-            // Save the modified workbook as XLSX, preserving all changes
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+                // Save the modified workbook to XLSX format (provided Save rule)
+                workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            }
         }
     }
 }

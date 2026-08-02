@@ -29,11 +29,9 @@ class Program
         // Add the Category field to the row area
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
 
-        // Add the Amount field to the data area
+        // Add the Amount field to the data area and set its consolidation function to Average
         int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
         PivotField amountField = pivotTable.DataFields[dataFieldPos];
-
-        // Change the consolidation function to Average
         amountField.Function = ConsolidationFunction.Average;
 
         // Refresh the pivot cache and calculate the pivot data
@@ -41,6 +39,6 @@ class Program
         pivotTable.CalculateData();
 
         // Save the workbook with the updated pivot table
-        workbook.Save("PivotAverageFunction.xlsx");
+        workbook.Save("PivotTable_AverageFunction.xlsx");
     }
 }

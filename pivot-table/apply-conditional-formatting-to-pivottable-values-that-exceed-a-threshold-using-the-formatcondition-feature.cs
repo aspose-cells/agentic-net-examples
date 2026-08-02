@@ -7,9 +7,9 @@ namespace AsposeCellsPivotConditionalFormatting
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
@@ -39,33 +39,37 @@ namespace AsposeCellsPivotConditionalFormatting
             int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
             PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // Configure the pivot fields
+            // Configure pivot fields
             pivot.AddFieldToArea(PivotFieldType.Row, "Product");
             pivot.AddFieldToArea(PivotFieldType.Column, "Region");
             pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Refresh data and calculate the pivot table
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Define the threshold for conditional formatting
+            const double threshold = 1000;
 
             // Add a conditional format to the pivot table
             int formatIdx = pivot.ConditionalFormats.Add();
             PivotConditionalFormat pcf = pivot.ConditionalFormats[formatIdx];
 
-            // Apply the format to the data field (Sales)
+            // Apply the format to the data field area
             pcf.AddFieldArea(PivotFieldType.Data, pivot.DataFields[0]);
 
-            // Define the condition: highlight cells with Sales >= 1000
+            // Set the scope to Data (applies to all data cells)
+            pcf.ScopeType = PivotConditionFormatScopeType.Data;
+
+            // Create a format condition: cells with value >= threshold
             int conditionIdx = pcf.FormatConditions.AddCondition(FormatConditionType.CellValue);
             FormatCondition condition = pcf.FormatConditions[conditionIdx];
             condition.Operator = OperatorType.GreaterOrEqual;
-            condition.Formula1 = "1000";
+            condition.Formula1 = threshold.ToString(); // formula as string
+            condition.Style.BackgroundColor = Color.LightCoral; // highlight color
 
-            // Set the style for the condition (red background)
-            condition.Style.BackgroundColor = Color.Red;
-
-            // Refresh and calculate the pivot table to apply formatting
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTableConditionalFormatting.xlsx");
+            // Save the workbook with the applied conditional formatting
+            workbook.Save("PivotTable_ConditionalFormatting.xlsx");
         }
     }
 }

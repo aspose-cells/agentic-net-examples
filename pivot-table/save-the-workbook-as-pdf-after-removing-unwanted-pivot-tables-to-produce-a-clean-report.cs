@@ -1,7 +1,8 @@
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-class CleanPdfReport
+class Program
 {
     static void Main()
     {
@@ -11,10 +12,13 @@ class CleanPdfReport
         // Remove all pivot tables from every worksheet in the workbook
         workbook.Worksheets.ClearPivottables();
 
-        // Recalculate formulas to ensure the PDF reflects the latest data
-        workbook.CalculateFormula();
+        // Optional: configure PDF save options (e.g., ignore blank pages)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            PrintingPageType = PrintingPageType.IgnoreBlank
+        };
 
         // Save the cleaned workbook as a PDF file
-        workbook.Save("CleanReport.pdf", SaveFormat.Pdf);
+        workbook.Save("clean_report.pdf", pdfOptions);
     }
 }

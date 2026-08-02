@@ -5,11 +5,27 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    public class VerifyWorkbookLanguage
+    public class VerifyLanguageCultureDemo
     {
+        public static void Main(string[] args)
+        {
+            // Determine file path from arguments or use a default placeholder
+            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+
+            try
+            {
+                Run(filePath);
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions to prevent the program from crashing
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+
         public static void Run(string filePath)
         {
-            // Prevent FileNotFoundException
+            // Ensure the input file exists before attempting to load it
             if (!File.Exists(filePath))
             {
                 Console.WriteLine($"File not found: {filePath}");
@@ -18,49 +34,41 @@ namespace AsposeCellsExamples
 
             try
             {
-                // Load the workbook with default load options
+                // Create default load options
                 LoadOptions loadOptions = new LoadOptions();
+
+                // Load the workbook with the specified load options
                 Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Retrieve the language property from built‑in document properties
+                // Retrieve the Language property from the built‑in document properties
                 string language = workbook.BuiltInDocumentProperties.Language;
 
-                // Report if the property is missing
-                if (string.IsNullOrWhiteSpace(language))
-                {
-                    Console.WriteLine("The workbook does not contain a language property.");
-                    return;
-                }
+                // Assume the language is valid until proven otherwise
+                bool isValidCulture = true;
 
-                // Validate the language code
+                // Attempt to create a CultureInfo instance; if it fails, the culture code is invalid
                 try
                 {
                     CultureInfo culture = new CultureInfo(language);
-                    Console.WriteLine($"Valid language code found: {language} ({culture.DisplayName})");
                 }
                 catch (CultureNotFoundException)
                 {
-                    Console.WriteLine($"Invalid language code: {language}");
+                    isValidCulture = false;
                 }
+
+                // Output the result
+                Console.WriteLine($"Language property: '{language}'. Valid .NET culture: {isValidCulture}");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                // Specific handling for missing file during workbook loading
+                Console.WriteLine($"Error loading workbook: {fnfEx.Message}");
             }
             catch (Exception ex)
             {
+                // General exception handling for any other errors
                 Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
-        }
-
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            string filePath = args.Length > 0 ? args[0] : string.Empty;
-
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                Console.Write("Enter the path to the Excel file: ");
-                filePath = Console.ReadLine();
-            }
-
-            Run(filePath);
         }
     }
 }

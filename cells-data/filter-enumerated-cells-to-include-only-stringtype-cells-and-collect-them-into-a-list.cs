@@ -3,45 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-class Program
+namespace AsposeCellsStringFilterDemo
 {
-    static void Main()
+    class Program
     {
-        // Create a new workbook and populate it with mixed data types
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        cells["A1"].PutValue("Hello");
-        cells["B1"].PutValue(123);
-        cells["A2"].PutValue("World");
-        cells["B2"].PutValue(DateTime.Now);
-        cells["C3"].PutValue("Aspose");
-
-        // List to collect cells whose value type is string
-        List<Cell> stringCells = new List<Cell>();
-
-        // Enumerate all cells in the worksheet
-        IEnumerator enumerator = cells.GetEnumerator();
-        while (enumerator.MoveNext())
+        static void Main()
         {
-            Cell cell = (Cell)enumerator.Current;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Filter only string‑type cells
-            if (cell.Type == CellValueType.IsString)
+            // Populate sample data (mix of strings, numbers, dates, booleans)
+            cells["A1"].PutValue("Apple");
+            cells["B1"].PutValue(123);
+            cells["C1"].PutValue(DateTime.Now);
+            cells["A2"].PutValue("Banana");
+            cells["B2"].PutValue(true);
+            cells["C2"].PutValue("Cherry");
+
+            // List to hold string‑type cell values
+            List<string> stringValues = new List<string>();
+
+            // Get the enumerator for all cells in the worksheet
+            IEnumerator enumerator = cells.GetEnumerator();
+
+            // Iterate through each cell
+            while (enumerator.MoveNext())
             {
-                stringCells.Add(cell);
+                Cell cell = (Cell)enumerator.Current;
+
+                // Check if the cell's value type is string
+                if (cell.Type == CellValueType.IsString)
+                {
+                    // Add the string value to the list
+                    stringValues.Add(cell.StringValue);
+                }
             }
-        }
 
-        // Display the collected string cells
-        Console.WriteLine($"String‑type cells found: {stringCells.Count}");
-        foreach (Cell sc in stringCells)
-        {
-            Console.WriteLine($"{sc.Name}: {sc.StringValue}");
-        }
+            // Output the collected string values
+            Console.WriteLine("String‑type cells collected:");
+            foreach (string val in stringValues)
+            {
+                Console.WriteLine(val);
+            }
 
-        // Save the workbook (optional)
-        workbook.Save("FilteredStrings.xlsx");
+            // Save the workbook (optional, demonstrates usage of save rule)
+            workbook.Save("StringFilterResult.xlsx");
+        }
     }
 }

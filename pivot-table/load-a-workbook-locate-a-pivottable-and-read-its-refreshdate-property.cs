@@ -2,39 +2,36 @@ using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace PivotRefreshDateDemo
+namespace PivotTableRefreshDateDemo
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the existing workbook that contains a PivotTable
+            // Path to the workbook that contains a pivot table
             string workbookPath = "input.xlsx";
 
-            // Load the workbook from the file
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(workbookPath);
 
             // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the collection of PivotTables in the worksheet
-            PivotTableCollection pivotTables = worksheet.PivotTables;
-
-            // Ensure there is at least one PivotTable
-            if (pivotTables.Count == 0)
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine("No PivotTables found in the worksheet.");
+                Console.WriteLine("No pivot tables found in the worksheet.");
                 return;
             }
 
-            // Retrieve the first PivotTable (or use a specific name/index as required)
-            PivotTable pivotTable = pivotTables[0];
+            // Get the first pivot table in the collection
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
             // Read the RefreshDate property
             DateTime refreshDate = pivotTable.RefreshDate;
 
             // Output the refresh date
-            Console.WriteLine("PivotTable Refresh Date: " + refreshDate.ToString("F"));
+            Console.WriteLine("Pivot Table Refresh Date: " + refreshDate.ToString("F"));
         }
     }
 }

@@ -1,44 +1,79 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Properties;
 
-namespace AsposeCellsMetadataUtility
+namespace WorkbookMetadataUtility
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Input and output file paths (adjust as needed)
-            string inputFile = "InputWorkbook.xlsx";
-            string outputFile = "OutputWorkbook_WithMetadata.xlsx";
+            // Paths for the source workbook and the result workbook
+            string sourcePath = "input.xlsx";
+            string resultPath = "output.xlsx";
 
-            // Load the existing workbook (lifecycle: load)
-            Workbook workbook = new Workbook(inputFile);
-
-            // Access the collection of custom document properties
-            CustomDocumentPropertyCollection customProps = workbook.CustomDocumentProperties;
-
-            // Add a new worksheet named "Metadata"
-            Worksheet metadataSheet = workbook.Worksheets.Add("Metadata");
-
-            // Write header titles
-            metadataSheet.Cells["A1"].PutValue("Property Name");
-            metadataSheet.Cells["B1"].PutValue("Property Value");
-
-            // Populate the worksheet with custom properties
-            int rowIndex = 1; // zero‑based index; row 1 is the second row (after header)
-            foreach (DocumentProperty prop in customProps)
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                metadataSheet.Cells[rowIndex, 0].PutValue(prop.Name);   // Column A
-                metadataSheet.Cells[rowIndex, 1].PutValue(prop.Value); // Column B
-                rowIndex++;
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Auto‑fit columns for better readability
-            metadataSheet.AutoFitColumns();
+            try
+            {
+                // Load the workbook from the source file
+                Workbook workbook = new Workbook(sourcePath);
 
-            // Save the modified workbook (lifecycle: save)
-            workbook.Save(outputFile);
+                // Determine if a worksheet named "Metadata" already exists
+                Worksheet metadataSheet = workbook.Worksheets["Metadata"];
+                if (metadataSheet == null)
+                {
+                    // Add a new worksheet and set its name to "Metadata"
+                    int newIndex = workbook.Worksheets.Add();
+                    metadataSheet = workbook.Worksheets[newIndex];
+                    metadataSheet.Name = "Metadata";
+                }
+
+                // Write header titles
+                metadataSheet.Cells["A1"].PutValue("Property Name");
+                metadataSheet.Cells["B1"].PutValue("Property Value");
+
+                // Start writing data from the second row (index 1)
+                int currentRow = 1;
+
+                // Iterate through all custom document properties of the workbook
+                if (workbook.CustomDocumentProperties != null)
+                {
+                    foreach (DocumentProperty prop in workbook.CustomDocumentProperties)
+                    {
+                        // Write property name
+                        metadataSheet.Cells[currentRow, 0].PutValue(prop.Name);
+
+                        // Write property value (convert to string safely)
+                        string valueText = prop.Value != null ? prop.Value.ToString() : string.Empty;
+                        metadataSheet.Cells[currentRow, 1].PutValue(valueText);
+
+                        currentRow++;
+                    }
+                }
+
+                // Ensure the directory for the result file exists
+                string resultDir = Path.GetDirectoryName(resultPath);
+                if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
+                {
+                    Directory.CreateDirectory(resultDir);
+                }
+
+                // Save the modified workbook to the result file
+                workbook.Save(resultPath);
+                Console.WriteLine($"Workbook saved successfully to {resultPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

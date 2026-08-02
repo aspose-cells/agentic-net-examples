@@ -5,9 +5,8 @@ using Aspose.Cells.Properties;
 
 namespace AsposeCellsExamples
 {
-    public class ReadBuiltInLanguageProperty
+    public class ReadBuiltInLanguageDemo
     {
-        // Entry point for the application
         public static void Main(string[] args)
         {
             Run();
@@ -21,31 +20,32 @@ namespace AsposeCellsExamples
             // Verify that the file exists to avoid FileNotFoundException
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {filePath}");
+                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
                 return;
             }
 
             try
             {
-                // Create LoadOptions using the default constructor
+                // Create LoadOptions instance (default constructor)
                 LoadOptions loadOptions = new LoadOptions();
 
-                // Load the workbook with the specified LoadOptions
+                // Load the workbook using the LoadOptions
                 Workbook workbook = new Workbook(filePath, loadOptions);
 
-                // Access the built‑in document properties collection
+                // Get the built‑in document properties collection
                 BuiltInDocumentPropertyCollection builtInProps = workbook.BuiltInDocumentProperties;
 
-                // Read the Language property which indicates the locale settings of the file
+                // Read the Language property (locale information)
                 string language = builtInProps.Language;
 
-                // Output the language value
-                Console.WriteLine($"Built‑in Language property: {language}");
+                // Display the language value
+                Console.WriteLine("Document Language (locale): " + language);
             }
             catch (Exception ex)
             {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine("An error occurred while reading the document language:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

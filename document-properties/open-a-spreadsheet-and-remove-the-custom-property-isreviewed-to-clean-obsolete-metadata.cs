@@ -1,51 +1,29 @@
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Properties;
 
-namespace AsposeCellsExamples
+class RemoveCustomProperty
 {
-    public class RemoveCustomPropertyDemo
+    static void Main()
     {
-        public static void Main()
+        // Paths for the source and destination files
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Open the workbook from a file stream
+        using (FileStream stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
         {
-            Run();
-        }
+            Workbook workbook = new Workbook(stream);
 
-        public static void Run()
-        {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            try
+            // Remove the custom property named "IsReviewed" if it exists
+            if (workbook.CustomDocumentProperties.Contains("IsReviewed"))
             {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load workbook from file stream
-                using (FileStream stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-                {
-                    Workbook workbook = new Workbook(stream);
-
-                    // Remove custom property if it exists
-                    if (workbook.CustomDocumentProperties.Contains("IsReviewed"))
-                    {
-                        workbook.CustomDocumentProperties.Remove("IsReviewed");
-                    }
-
-                    // Save the modified workbook
-                    workbook.Save(outputPath, SaveFormat.Xlsx);
-                }
-
-                Console.WriteLine($"Custom property \"IsReviewed\" removed and file saved to {outputPath}");
+                workbook.CustomDocumentProperties.Remove("IsReviewed");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
     }
 }

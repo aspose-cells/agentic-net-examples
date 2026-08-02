@@ -1,45 +1,45 @@
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
+using Aspose.Cells.Slicers; // Namespace for slicer objects
 
-class RenderSlicerToPdf
+class RenderSlicerAsStaticPdf
 {
     static void Main()
     {
         try
         {
             const string inputPath = "InputWithSlicer.xlsx";
-            const string outputPath = "OutputWithStaticSlicer.pdf";
+            const string outputPath = "OutputStaticSlicer.pdf";
 
-            // Verify that the input workbook exists
+            // Ensure the input workbook exists
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook that contains the slicer
-            Workbook workbook = new Workbook(inputPath);
-
-            // Assume the slicer is on the first worksheet and is the first slicer object
-            Worksheet sheet = workbook.Worksheets[0];
-            SlicerCollection slicers = sheet.Slicers;
-            if (slicers.Count > 0)
             {
-                // Get the first slicer and make it printable (static image in output)
-                Slicer slicer = slicers[0];
-                slicer.IsPrintable = true; // Marks slicer as printable; interactivity will be removed
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Prepare PDF save options (optional, can customize further)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Load the workbook containing slicers
+            Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as PDF; the slicer will appear as a static image
+            // Make each slicer printable so it appears in the PDF as a static image
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Slicer slicer in sheet.Slicers)
+                {
+                    slicer.IsPrintable = true;
+                }
+            }
+
+            // Save the workbook as PDF; slicers will be rendered as static images
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
             workbook.Save(outputPath, pdfOptions);
 
-            Console.WriteLine($"Workbook saved to PDF with slicer rendered as a static image: {outputPath}");
+            Console.WriteLine($"Workbook saved to PDF with slicers rendered as static images: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }
