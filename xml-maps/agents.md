@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-01
+last_reviewed: 2026-08-02
 primary_intent: Map, import, query, and export XML data in Excel workbooks with C#
 primary_apis:
   - WorksheetCollection.XmlMaps
