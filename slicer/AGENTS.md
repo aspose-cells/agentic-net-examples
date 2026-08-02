@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: C# examples for creating table and PivotTable slicers, connecting caches, selecting items, formatting, positioning, removing, and rendering slicers
 primary_apis: [Worksheet.Slicers, SlicerCollection.Add, Slicer, SlicerCache, ListObject, PivotTable]
 search_intents: [create Excel slicer in C#, add slicer to PivotTable, select slicer items, remove Excel slicer]

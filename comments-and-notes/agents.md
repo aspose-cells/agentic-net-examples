@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Add, read, update, format, copy, and remove Excel comments and threaded comments in C#
 primary_apis: [Comment, CommentCollection, ThreadedComment, ThreadedCommentCollection, ThreadedCommentAuthor]
 related_categories: [../cells-data/, ../format-cells/, ../working-with-shapes/]

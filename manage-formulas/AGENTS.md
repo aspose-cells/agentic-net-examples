@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Create, edit, copy, audit, and manage Excel formulas and named ranges in C#
 primary_apis: [Cell.Formula, Cell.FormulaLocal, Cell.SetArrayFormula, Cell.SetSharedFormula, Name.RefersTo, Cell.GetPrecedents, Cell.GetDependents]
 related_categories: [../calculate-formulas/, ../managing-ranges/, ../cells-data/, ../working-with-tables/]

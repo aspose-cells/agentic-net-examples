@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Merge Excel workbooks or selected worksheets in C#
 primary_apis: [Workbook.Combine, Worksheet.Copy, WorksheetCollection.Add, Workbook.Save]
 search_intents: [merge Excel files C#, combine XLSX without Excel, copy worksheet between workbooks, consolidate Excel workbooks]

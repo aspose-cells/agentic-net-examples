@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Create, access, copy, merge, name, style, search, and transform Excel ranges in C#
 primary_apis: [Range, Cells.CreateRange, Cells.Merge, Cells.UnMerge, Range.Copy, Range.ApplyStyle, Name]
 search_intents: [manage Excel ranges in C#, copy cell range, merge Excel cells, create named range]

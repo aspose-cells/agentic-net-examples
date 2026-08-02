@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Export Excel to HTML and import HTML into Excel in C#
 primary_apis: [Workbook.Save, HtmlSaveOptions, HtmlLoadOptions, IStreamProvider, StreamProviderOptions]
 search_intents: [Excel to HTML C#, convert HTML to Excel, single file Excel HTML, embed Excel images as base64]

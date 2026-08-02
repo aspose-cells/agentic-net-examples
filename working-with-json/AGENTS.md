@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Import JSON into Excel cells and export worksheet ranges to JSON in C#
 primary_apis: [JsonUtility.ImportData, JsonLayoutOptions, JsonUtility.ExportRangeToJson, JsonSaveOptions]
 search_intents: [JSON to Excel C#, Excel range to JSON, import JSON with Aspose.Cells, export worksheet data as JSON]

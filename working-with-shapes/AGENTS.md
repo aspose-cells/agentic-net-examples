@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Create and manage Excel drawing shapes in C# without Microsoft Excel
 primary_apis: [Worksheet.Shapes, ShapeCollection, Shape, TextBox, Picture, MsoDrawingType]
 search_intents: [add Excel shape C#, create text box in Excel, format or position worksheet shape, add alternative text to Excel shape]

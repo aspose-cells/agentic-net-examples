@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: C# examples for inserting and deleting rows and columns, hiding, showing, copying, sizing, grouping, and autofitting worksheet structure
 primary_apis: [Cells.InsertRows, Cells.DeleteRows, Cells.InsertColumns, Cells.DeleteColumns, Cells.SetRowHeight, Cells.SetColumnWidth]
 search_intents: [insert Excel row in C#, delete Excel column, autofit Excel rows, hide worksheet columns]

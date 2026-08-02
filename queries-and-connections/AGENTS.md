@@ -7,7 +7,7 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: C# examples for inspecting external connections, updating connection metadata, QueryTables, Power Query formulas, DataMashup, and controlled refresh settings
 primary_apis: [Workbook.DataConnections, ExternalConnection, QueryTable, PowerQueryFormulaCollection, Workbook.DataMashup]
 search_intents: [list Excel data connections in C#, update Excel external connection, inspect Power Query formulas, remove workbook connection]

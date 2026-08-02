@@ -5,7 +5,7 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-06-29
+last_reviewed: 2026-08-01
 primary_intent: Read, write, import, validate, search, sort, and enumerate Excel cell data in C#
 primary_apis: [Cell, Cells, Cell.PutValue, Cell.Value, Cells.ImportArray, Cells.ImportCustomObjects, Cells.Find]
 related_categories: [../managing-ranges/, ../rows-and-columns/, ../format-cells/, ../manage-formulas/]
