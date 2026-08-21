@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "aspose-cells-examples": {
+      "description": "Aspose.Cells for .NET code-example generation, bulk generation, category execution, and retrieval across 5,394 build-validated examples.",
+      "url": "http://faisalabad-examples-mcp.dynabic.com:7006",
+      "type": "http",
+      "endpoint": "http://faisalabad-examples-mcp.dynabic.com:7006/generate"
+    }
+  }
+}
