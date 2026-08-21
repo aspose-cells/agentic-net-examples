@@ -8,7 +8,7 @@ language: C#
 framework: net10.0
 repository: agentic-net-examples
 total_categories: 31
-total_examples: 5394
+total_examples: 5510
 last_reviewed: 2026-08-21
 primary_intent: Generate correct and discoverable C# examples for Excel file generation and spreadsheet automation without Microsoft Excel
 primary_entities:

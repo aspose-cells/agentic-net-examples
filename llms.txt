@@ -13,7 +13,7 @@ This repository contains thousands of production-oriented examples demonstrating
 * Framework: .NET
 * Examples: 5,394
 * Categories: 31
-* Last Updated: 2026-08-01
+* Last Updated: 2026-08-21
 
 ## Agent Resources
 
